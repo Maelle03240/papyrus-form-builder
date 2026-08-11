@@ -21,7 +21,7 @@ import { Modal } from '@/components/ui/Modal';
 import { formatCount, cn } from '@/lib/utils';
 import { useForms } from '@/lib/store/use-forms';
 import { createForm } from '@/lib/store';
-import { getWorkspaces } from '@/lib/store/local-workspaces';
+import { getWorkspaces } from '@/lib/store/workspaces';
 import { cloneTemplate, listTemplatesByScope } from '@/lib/store/templates';
 import { FAVORITES_EVENT, listFavorites } from '@/lib/store/favorites';
 import { toast } from '@/components/ui/Toast';
@@ -31,7 +31,6 @@ import type { Form, Workspace, UserProfile } from '@/types';
 export default function DashboardHome() {
   const forms = useForms();
   const router = useRouter();
-  const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
   const [favorites, setFavorites] = useState<Set<string>>(new Set());
   const [workspacesMap, setWorkspacesMap] = useState<Record<string, string>>({});
   const [workspacesList, setWorkspacesList] = useState<Workspace[]>([]);
@@ -52,43 +51,16 @@ export default function DashboardHome() {
   // Charger les espaces de travail pour afficher leurs noms sur les cartes
   useEffect(() => {
     const loadWorkspacesData = async () => {
-      if (isLocal) {
-        try {
-          const list = getWorkspaces();
-          setWorkspacesList(list);
-          const map: Record<string, string> = {};
-          list.forEach((w) => {
-            map[w.id] = w.name;
-          });
-          setWorkspacesMap(map);
-        } catch (err) {
-          console.error('Failed to load local workspaces:', err);
-        }
-      } else {
-        try {
-          const res = await fetch('/api/teams');
-          if (!res.ok) throw new Error('Failed to fetch teams');
-          const list = await res.json();
-          setWorkspacesList(list.map((t: any) => ({
-            id: t.id,
-            name: t.name,
-            scope: (t.name === 'Mon espace' ? 'personal' : 'team'),
-            is_deletable: t.name !== 'Mon espace',
-            created_by: '',
-            created_at: ''
-          })));
-          const map: Record<string, string> = {};
-          list.forEach((t: any) => {
-            map[t.id] = t.name;
-          });
-          setWorkspacesMap(map);
-        } catch (err) {
-          console.error('Failed to load Supabase workspaces:', err);
-        }
+      try {
+        const list = await getWorkspaces();
+        setWorkspacesList(list);
+        setWorkspacesMap(Object.fromEntries(list.map((workspace) => [workspace.id, workspace.name])));
+      } catch (err) {
+        console.error('Failed to load workspaces:', err);
       }
     };
     loadWorkspacesData();
-  }, [isLocal]);
+  }, []);
 
   // Charger le profil utilisateur pour récupérer le prénom
   useEffect(() => {
@@ -104,7 +76,7 @@ export default function DashboardHome() {
   }, []);
 
   const getWorkspaceName = (form: Form) => {
-    const targetId = isLocal ? form.workspace_id : form.team_id;
+    const targetId = form.team_id;
     return targetId ? workspacesMap[targetId] : null;
   };
 
@@ -143,11 +115,9 @@ export default function DashboardHome() {
     setIsWorkspaceModalOpen(false);
     const targetWsId = wsId || selectedWorkspaceId;
     try {
-      if (!isLocal) {
-        // En mode Supabase, mettre à jour le cookie de l'équipe active
-        if (targetWsId) {
-          document.cookie = `papyrus:active-team-id=${targetWsId}; path=/; max-age=31536000; SameSite=Lax`;
-        }
+      // Mémorise l'espace choisi pour les créations suivantes.
+      if (targetWsId) {
+        document.cookie = `papyrus:active-team-id=${targetWsId}; path=/; max-age=31536000; SameSite=Lax`;
       }
       const f = await createForm('Nouveau formulaire', targetWsId);
       router.push(`/forms/${f.id}/edit`);

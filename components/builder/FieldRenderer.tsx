@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo, useState, useRef } from 'react';
-import { Star, Upload, ImageOff, PlayCircle, Calendar } from 'lucide-react';
+import { Star, Upload, Calendar } from 'lucide-react';
 import type { Field, FieldOption, SubField } from '@/types';
 import { AutoTextarea } from '@/components/ui/AutoTextarea';
 import { PhoneField as BuilderPhoneField } from './fields/PhoneField';
@@ -10,6 +10,8 @@ import { FileUploadField } from '@/components/respondent/fields/FileUploadField'
 import { parseVideoEmbed } from '@/lib/video';
 import { cn } from '@/lib/utils';
 import { LIMITS } from '@/lib/constants/limits';
+import { toast } from '@/components/ui/Toast';
+import { useAttachmentUpload } from '@/lib/hooks/useAttachmentUpload';
 
 /** Retourne les types de fichiers acceptés par défaut selon le type de champ */
 function getDefaultAcceptTypes(type: 'image' | 'video' | 'file'): string {
@@ -689,7 +691,7 @@ function MultipleChoice({
   const displayOptions = useDisplayOptions(field);
 
   function toggle(id: string) {
-    let nextSet = new Set(selected);
+    const nextSet = new Set(selected);
     if (nextSet.has(id)) {
       nextSet.delete(id);
     } else {
@@ -1144,6 +1146,7 @@ function ModeSelector({ field, type, labels, onChange }: {
   onChange?: (patch: Partial<Field>) => void;
 }) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { upload: uploadFile, uploading, progress } = useAttachmentUpload();
 
   function patchValidation(patch: Partial<import('@/types').FieldValidation>) {
     if (!onChange) return;
@@ -1165,31 +1168,26 @@ function ModeSelector({ field, type, labels, onChange }: {
     }
   }
 
-  function handleFileUpload(file: File) {
-    // Validation des fichiers
-    const maxSize = 1.5 * 1024 * 1024; // 1.5 Mo
-    if (file.size > maxSize) {
-      alert(`Fichier trop lourd (${Math.round(file.size / 1024)} Ko). Maximum 1,5 Mo. Compressez-le ou utilisez une URL.`);
-      return;
-    }
-
-    // Validation des extensions selon le type
+  /**
+   * Le fichier est téléversé puis référencé par son URL : images et vidéos vers
+   * Cloudflare R2, documents vers Supabase Storage. Le formulaire ne contient
+   * plus jamais le fichier lui-même.
+   */
+  async function handleFileUpload(file: File) {
     const allowedExtensions = {
-      image: ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'],
-      video: ['.mp4', '.mov', '.avi', '.mkv', '.webm'],
+      image: ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.avif'],
+      video: ['.mp4', '.mov', '.webm', '.m4v'],
       file: ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt', '.csv']
     };
 
-    const fileExt = '.' + file.name.split('.').pop()?.toLowerCase();
+    const fileExt = '.' + (file.name.split('.').pop()?.toLowerCase() ?? '');
     if (!allowedExtensions[type].includes(fileExt)) {
-      alert(`Format non supporté. Extensions autorisées : ${allowedExtensions[type].join(', ')}`);
+      toast.error(`Format non supporté. Extensions autorisées : ${allowedExtensions[type].join(', ')}`);
       return;
     }
 
-    // Convertir en Data URL
-    const reader = new FileReader();
-    reader.onload = () => patchValidation({ media_url: reader.result as string });
-    reader.readAsDataURL(file);
+    const url = await uploadFile(file);
+    if (url) patchValidation({ media_url: url });
   }
 
   const typeDescriptions = {
@@ -1247,6 +1245,12 @@ function ModeSelector({ field, type, labels, onChange }: {
             </span>
           </button>
         </div>
+
+        {uploading && (
+          <p className="text-center text-xs text-text-secondary" role="status">
+            Envoi en cours… {progress}%
+          </p>
+        )}
 
         {/* Input caché pour sélection de fichier */}
         <input
@@ -1383,37 +1387,33 @@ function ExpandedCreatorZone({ field, type, labels, onChange, canSwitchMode, glo
 }) {
   const [urlInput, setUrlInput] = useState(field.validation?.media_url || '');
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { upload: uploadFile, uploading, progress } = useAttachmentUpload();
 
   function patchValidation(patch: Partial<import('@/types').FieldValidation>) {
     if (!onChange) return;
     onChange({ validation: { ...field.validation, ...patch } });
   }
 
-  function handleFileUpload(file: File) {
-    // Validation des fichiers
-    const maxSize = 1.5 * 1024 * 1024; // 1.5 Mo
-    if (file.size > maxSize) {
-      alert(`Fichier trop lourd (${Math.round(file.size / 1024)} Ko). Maximum 1,5 Mo. Compressez-le ou utilisez une URL.`);
-      return;
-    }
-
-    // Validation des extensions selon le type
+  /**
+   * Le fichier est téléversé puis référencé par son URL : images et vidéos vers
+   * Cloudflare R2, documents vers Supabase Storage. Le formulaire ne contient
+   * plus jamais le fichier lui-même.
+   */
+  async function handleFileUpload(file: File) {
     const allowedExtensions = {
-      image: ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp'],
-      video: ['.mp4', '.mov', '.avi', '.mkv', '.webm'],
+      image: ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.avif'],
+      video: ['.mp4', '.mov', '.webm', '.m4v'],
       file: ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.txt', '.csv']
     };
 
-    const fileExt = '.' + file.name.split('.').pop()?.toLowerCase();
+    const fileExt = '.' + (file.name.split('.').pop()?.toLowerCase() ?? '');
     if (!allowedExtensions[type].includes(fileExt)) {
-      alert(`Format non supporté. Extensions autorisées : ${allowedExtensions[type].join(', ')}`);
+      toast.error(`Format non supporté. Extensions autorisées : ${allowedExtensions[type].join(', ')}`);
       return;
     }
 
-    // Convertir en Data URL
-    const reader = new FileReader();
-    reader.onload = () => patchValidation({ media_url: reader.result as string });
-    reader.readAsDataURL(file);
+    const url = await uploadFile(file);
+    if (url) patchValidation({ media_url: url });
   }
 
   return (
@@ -1482,12 +1482,6 @@ function ExpandedCreatorZone({ field, type, labels, onChange, canSwitchMode, glo
                     original_height: field?.validation?.original_height ?? field?.validation?.image_height ?? height
                   });
                 }}
-                onPositionChange={(x, y) => {
-                  patchValidation({
-                    image_position_x: x,
-                    image_position_y: y
-                  });
-                }}
                 globalStyle={globalStyle}
               />
             </div>
@@ -1495,17 +1489,22 @@ function ExpandedCreatorZone({ field, type, labels, onChange, canSwitchMode, glo
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="w-full flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-accent bg-accent/5 p-8 text-center transition hover:bg-accent/10"
+              disabled={uploading}
+              className="w-full flex flex-col items-center gap-3 rounded-xl border-2 border-dashed border-accent bg-accent/5 p-8 text-center transition hover:bg-accent/10 disabled:cursor-wait disabled:opacity-60"
             >
               <Upload className="h-8 w-8 text-accent" />
               <div>
                 <p className="font-medium text-text-primary">
-                  {type === 'image' ? 'Cliquez pour ajouter une image' : 'Cliquez pour ajouter un fichier'}
+                  {uploading
+                    ? `Envoi en cours… ${progress}%`
+                    : type === 'image'
+                      ? 'Cliquez pour ajouter une image'
+                      : 'Cliquez pour ajouter un fichier'}
                 </p>
                 <p className="text-xs text-text-tertiary mt-1">
                   {type === 'image'
-                    ? 'PNG, JPG, SVG, WebP · max 1,5 Mo'
-                    : 'PDF, DOC, XLS, TXT, CSV · max 1,5 Mo'
+                    ? 'PNG, JPG, SVG, WebP · max 10 Mo'
+                    : 'PDF, DOC, XLS, TXT, CSV · max 25 Mo'
                   }
                 </p>
               </div>
@@ -1586,47 +1585,6 @@ function ExpandedRespondentZone({ field, type, labels, onChange }: {
   );
 }
 
-/** Zone créateur dans le builder */
-function CreatorZone({ type, enabled, mediaUrl, alignment, globalStyle }: {
-  type: 'image' | 'video' | 'file';
-  enabled: boolean;
-  mediaUrl?: string;
-  alignment: string;
-  globalStyle?: any;
-}) {
-  if (!enabled) {
-    return (
-      <div className="flex h-24 items-center justify-center rounded-md border-2 border-dashed border-border bg-bg-base text-xs text-text-tertiary">
-        Mode désactivé
-      </div>
-    );
-  }
-
-  if (!mediaUrl) {
-    const icons = {
-      image: <ImageOff className="h-5 w-5" />,
-      video: <PlayCircle className="h-5 w-5" />,
-      file: <Upload className="h-5 w-5" />
-    };
-    const texts = {
-      image: 'Ajoutez une image',
-      video: 'Collez un lien',
-      file: 'Ajoutez un fichier'
-    };
-
-    return (
-      <div className="flex h-24 items-center justify-center rounded-md border-2 border-dashed border-border bg-bg-base text-xs text-text-tertiary">
-        <div className="flex flex-col items-center gap-1">
-          {icons[type]}
-          <span>{texts[type]}</span>
-        </div>
-      </div>
-    );
-  }
-
-  // Affichage du contenu selon le type
-  return <CreatorContent type={type} mediaUrl={mediaUrl} alignment={alignment} compact globalStyle={globalStyle} />;
-}
 
 /** Composant ResizableImage avec poignées de redimensionnement */
 function ResizableImage({
@@ -1634,20 +1592,17 @@ function ResizableImage({
   alt,
   field,
   onSizeChange,
-  onPositionChange,
   alignment = 'center'
 }: {
   src: string;
   alt: string;
   field?: Field;
   onSizeChange?: (width: number, height: number) => void;
-  onPositionChange?: (x: number, y: number) => void;
   alignment?: string;
 }) {
   const imgRef = useRef<HTMLImageElement>(null);
   const [isResizing, setIsResizing] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
-  const [, setResizeHandle] = useState<string>(''); // resizeHandle utilisé pour debug future
+  const [, setResizeHandle] = useState<string>('');
 
   const customWidth = field?.validation?.image_width;
   const customHeight = field?.validation?.image_height;
@@ -1749,36 +1704,6 @@ function ResizableImage({
     document.addEventListener('mouseup', handleMouseUp);
   };
 
-  const handleImageDrag = (e: React.MouseEvent) => {
-    e.preventDefault();
-    setIsDragging(true);
-
-    const startX = e.clientX;
-    const startY = e.clientY;
-    const startPosX = positionX;
-    const startPosY = positionY;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      const deltaX = e.clientX - startX;
-      const deltaY = e.clientY - startY;
-
-      const newX = startPosX + deltaX;
-      const newY = startPosY + deltaY;
-
-      if (onPositionChange) {
-        onPositionChange(newX, newY);
-      }
-    };
-
-    const handleMouseUp = () => {
-      setIsDragging(false);
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-    };
-
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
 
   const handleStyle = "absolute w-2 h-2 bg-blue-500 border border-white rounded-full shadow-sm hover:bg-blue-600 cursor-pointer";
 
@@ -1851,7 +1776,7 @@ function ResizableImage({
 }
 
 /** Affichage du contenu créateur */
-function CreatorContent({ type, mediaUrl, alignment, field, compact = false, preview = false, globalStyle, onSizeChange, onPositionChange }: {
+function CreatorContent({ type, mediaUrl, alignment, field, compact = false, preview = false, globalStyle, onSizeChange }: {
   type: 'image' | 'video' | 'file';
   mediaUrl: string;
   alignment: string;
@@ -1860,12 +1785,11 @@ function CreatorContent({ type, mediaUrl, alignment, field, compact = false, pre
   preview?: boolean;
   globalStyle?: any;
   onSizeChange?: (width: number, height: number) => void;
-  onPositionChange?: (x: number, y: number) => void;
 }) {
   const alignClass = alignment === 'left' ? 'justify-start' :
                     alignment === 'right' ? 'justify-end' : 'justify-center';
 
-  const sizeClass = compact ? 'max-h-24' : 'max-h-80';
+  const _sizeClass = compact ? 'max-h-24' : 'max-h-80';
 
   // Appliquer le même style que les questions normales (comme dans FieldCard.tsx)
   const SIZE_CLASSES: Record<string, string> = {
@@ -1894,8 +1818,8 @@ function CreatorContent({ type, mediaUrl, alignment, field, compact = false, pre
   const labelFont = FONT_CLASSES[resolvedStyle.font_family ?? 'sans'];
   // Utiliser 'medium' comme poids par défaut pour correspondre aux questions normales
   const labelWeight = WEIGHT_CLASSES[resolvedStyle.label_weight ?? 'medium'];
-  const labelClass = cn(labelSize, labelFont, labelWeight, resolvedStyle.label_italic && 'italic');
-  const labelInlineStyle: React.CSSProperties = {
+  const _labelClass = cn(labelSize, labelFont, labelWeight, resolvedStyle.label_italic && 'italic');
+  const _labelInlineStyle: React.CSSProperties = {
     color: resolvedStyle.label_color,
     textAlign: resolvedStyle.label_align
   };
@@ -1941,7 +1865,6 @@ function CreatorContent({ type, mediaUrl, alignment, field, compact = false, pre
         field={field}
         alignment={alignment}
         onSizeChange={onSizeChange}
-        onPositionChange={onPositionChange}
       />
     );
 
@@ -1959,7 +1882,7 @@ function CreatorContent({ type, mediaUrl, alignment, field, compact = false, pre
 
   if (type === 'video') {
     const parsed = parseVideoEmbed(mediaUrl);
-    const showTitle = field?.validation?.show_title ?? false;
+    const _showTitle = field?.validation?.show_title ?? false;
     const title = field?.label?.fr;
 
     if (!parsed) {
@@ -1989,8 +1912,8 @@ function CreatorContent({ type, mediaUrl, alignment, field, compact = false, pre
   }
 
   if (type === 'file') {
-    const showTitle = field?.validation?.show_title ?? false;
-    const title = field?.label?.fr;
+    const _showTitle = field?.validation?.show_title ?? false;
+    const _title = field?.label?.fr;
 
     // Extraire le nom du fichier avec la fonction helper
     const fileName = extractFileName(mediaUrl, 'Fichier téléchargé');
@@ -2047,8 +1970,8 @@ function CreatorContent({ type, mediaUrl, alignment, field, compact = false, pre
         case 'txt':
           return {
             icon: '🗎',
-            color: 'text-gray-600',
-            bgColor: 'bg-gray-50 border-gray-200',
+            color: 'text-text-secondary',
+            bgColor: 'bg-bg-elevated border-border',
             type: 'TXT',
             iconColor: '#6B7280'
           };
@@ -2063,8 +1986,8 @@ function CreatorContent({ type, mediaUrl, alignment, field, compact = false, pre
         default:
           return {
             icon: '🗎',
-            color: 'text-gray-600',
-            bgColor: 'bg-gray-50 border-gray-200',
+            color: 'text-text-secondary',
+            bgColor: 'bg-bg-elevated border-border',
             type: 'FILE',
             iconColor: '#6B7280'
           };
@@ -2104,7 +2027,7 @@ function CreatorContent({ type, mediaUrl, alignment, field, compact = false, pre
             <h4 className={`font-medium text-sm leading-tight mb-1 ${fileConfig.color} truncate`}>
               {fileName.replace(/\.[^/.]+$/, "")}
             </h4>
-            <p className="text-xs text-gray-500 uppercase tracking-wide">
+            <p className="text-xs text-text-secondary uppercase tracking-wide">
               {fileConfig.type} • {mediaUrl.startsWith('data:') ? 'Téléchargé' : 'URL'}
             </p>
           </div>
@@ -2121,7 +2044,7 @@ function CreatorContent({ type, mediaUrl, alignment, field, compact = false, pre
                 link.click();
                 document.body.removeChild(link);
               }}
-              className="flex-shrink-0 rounded-full p-2 text-gray-400 hover:bg-white hover:text-gray-600 transition-all"
+              className="flex-shrink-0 rounded-full p-2 text-text-tertiary hover:bg-white hover:text-text-secondary transition-all"
               title="Télécharger le fichier"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2160,7 +2083,7 @@ function MatrixField({
   const currentValue = value !== undefined ? value : localValue;
 
   const handleChange = (rowId: string, colId: string, checked: boolean) => {
-    let nextValue = { ...currentValue };
+    const nextValue = { ...currentValue };
     if (mode === 'single') {
       if (checked) {
         nextValue[rowId] = colId;

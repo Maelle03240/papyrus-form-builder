@@ -1,95 +1,115 @@
 # Papyrus
 
-Form builder SaaS — successeur de Tally / Typeform, par Mooove.
+Form builder de **Mooove**. Créer, publier et analyser des formulaires — avec
+import depuis Tally.
 
-Stack : Next.js 14 (App Router) · TypeScript · Tailwind · Supabase · Framer Motion · Recharts · @dnd-kit · Resend.
+Next.js 14 (App Router) · TypeScript strict · Tailwind · Supabase auto-hébergé ·
+Cloudflare R2.
 
-## Démarrer (mode local — aucun setup)
+---
 
-L'app démarre par défaut en **mode local** : pas de Supabase, pas d'auth, les formulaires sont stockés dans le `localStorage` du navigateur.
+## Démarrer
 
 ```bash
 npm install
+cp .env.example .env.local   # puis remplir depuis Vaultwarden « MOOOVE IT »
 npm run dev
 ```
 
-http://localhost:3000 → tu peux créer, éditer, supprimer des formulaires immédiatement. Tout reste sur ton ordi.
+L'application exige une connexion : il n'existe plus de mode local hors ligne.
+Pour travailler en local, pointer `.env.local` sur le Supabase auto-hébergé
+(`https://supabase.mooove.group`) — `http://localhost:3000/**` est déjà dans la
+liste de redirections autorisées.
 
-## Passer en mode Supabase (plus tard)
-
-Quand tu es prêt à brancher la base et l'auth :
-
-1. Crée un projet Supabase, lance `supabase/migrations/001_initial.sql` dans le SQL editor.
-2. Dans `.env.local` :
-   ```
-   NEXT_PUBLIC_LOCAL_MODE=false
-   NEXT_PUBLIC_SUPABASE_URL=...
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-   SUPABASE_SERVICE_ROLE_KEY=...
-   ```
-3. `npm run dev` → l'auth Supabase s'active, les pages dashboard liront depuis Postgres.
-
-> Note : la migration des formulaires localStorage → Supabase n'est pas encore automatisée. À ajouter quand tu basculeras.
-
-## Variables d'environnement
-
-| Variable | Rôle |
+| Commande | Effet |
 |---|---|
-| `NEXT_PUBLIC_LOCAL_MODE` | `true` = mode local (localStorage). `false` = Supabase. |
-| `NEXT_PUBLIC_SUPABASE_URL` | URL du projet Supabase (mode Supabase) |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clé publique Supabase |
-| `SUPABASE_SERVICE_ROLE_KEY` | Clé admin (server-only, jamais exposée) |
-| `AI_PROVIDER` | `claude` ou `openai` |
-| `ANTHROPIC_API_KEY` / `OPENAI_API_KEY` | Clé du provider IA |
-| `RESEND_API_KEY` | Pour les emails post-soumission |
-| `NEXT_PUBLIC_APP_URL` | URL publique (`http://localhost:3000` en local) |
+| `npm run dev` | Serveur de développement |
+| `npm run build` | Build de production |
+| `npm run typecheck` | Vérification TypeScript |
+| `npm run lint` | ESLint |
 
-## Architecture
+`build` échoue en cas d'erreur TypeScript ou ESLint : c'est volontaire.
 
-Voir `prompt_papyrus_claude_code.md` pour le brief complet (design system, schéma BDD, règles couleurs, phases).
+---
+
+## Structure
 
 ```
-app/
-  (auth)/         login, signup
-  (dashboard)/    dashboard, forms, templates, settings
-  f/[slug]/       formulaire public
-  api/            routes API
+app/            pages et routes API
+  (auth)/       connexion, inscription
+  (dashboard)/  espace connecté — formulaires, réponses, paramètres
+  f/[slug]/     formulaires publics
+  api/          routes serveur
 components/
-  builder/        canvas, palette, settings, logique
-  dashboard/      cards, charts, stats
-  respondent/     vue côté répondant
-  ui/             primitives (Button, Input, Badge…)
-  layout/         Sidebar, Header
+  builder/      canvas, palette, réglages, logique
+  public/       vues répondant (défilement, sections, une-à-une)
+  respondent/   champs côté répondant
+  ui/           primitives (Button, Input, Modal, Toast…)
 lib/
-  supabase/       clients (browser, server, middleware)
-  ai/             façade interchangeable Claude/GPT
-  actions-engine/ webhook, REST API, email
-  destinations/   Airtable, Google Sheets, Supabase interne
-types/            sources de vérité TS
-supabase/migrations/  SQL versionné
+  auth/         contrôle d'accès (domaines autorisés)
+  storage/      R2 (médias) et Supabase Storage (documents)
+  store/        accès aux données
+  tally/        client et convertisseur d'import
+types/          types TypeScript — source de vérité
+supabase/       migrations SQL
 ```
 
-## État actuel
+---
 
-**Phase 1 — Fondations (en cours)**
+## Règles du projet
 
-- [x] Setup Next.js + Tailwind + design system Parchemin/Mooove
-- [x] Auth Supabase (login/signup) + middleware + RLS
-- [x] Schéma BDD complet + RLS policies + auto-création d'équipe à l'inscription
-- [x] Dashboard shell (sidebar, header, breadcrumbs)
-- [x] CRUD formulaire de base (créer, lister, voir)
-- [x] Builder shell 3 colonnes
-- [ ] Builder drag &amp; drop fonctionnel (`@dnd-kit`)
-- [ ] Soumission formulaire publique `/f/[slug]` + écriture Supabase
-- [ ] Tableau des réponses
+**Médias.** Images et vidéos vont sur **Cloudflare R2**, jamais dans Supabase
+Storage ni en base. Tout envoi passe par `lib/storage/attachments-client.ts`,
+qui route selon le type : média → R2, document → Supabase Storage. Ne pas
+appeler un backend de stockage directement depuis un composant.
 
-**Phase 2** — Thème, logique, traduction IA, exports, graphiques.
-**Phase 3** — Actions (webhook/REST/email), templates, analyse IA, Cmd+K.
+**Schéma base.** Toutes les tables vivent dans le schéma `papyrus`, pas
+`public` — ce Supabase est partagé par une quinzaine d'applications. Le schéma
+est fixé dans les clients Supabase ; les appels `.from('forms')` restent inchangés.
 
-## Règle d'or design
+**Secrets.** Uniquement dans l'onglet Environment du service Easypanel, valeurs
+issues de Vaultwarden. Jamais dans le dépôt, jamais préfixés `NEXT_PUBLIC_` pour
+une clé serveur.
 
-**Ne jamais mélanger Amber `#F6923E` et Cyan `#2AC2DE` dans le même bloc visuel.**
+**RLS.** Une policy par commande, jamais `for all` : sur un `for all`, la clause
+`USING` régit aussi `DELETE`.
 
-- Amber → uniquement avec Navy ou Parchemin (chaleur, highlights rares).
-- Cyan → réservé aux CTAs et au thème sombre.
-- Electric Blue `#3C5EAB` → badges « Publié », statuts d'affirmation.
+**Identité visuelle.** Palette Mooove uniquement, via les tokens CSS de
+`app/globals.css`. Jamais de couleur en dur, jamais d'Ambre et de Cyan dans le
+même bloc visuel.
+
+---
+
+## Import Tally
+
+**Paramètres → Intégrations.**
+
+- **Avec clé API** — structure *et* réponses déjà collectées. La clé est chiffrée
+  (AES-256-GCM) avant enregistrement et n'est jamais réaffichée en clair.
+- **Avec un lien public** `tally.so/r/xxxx` — structure seule : l'API Tally
+  n'expose pas les réponses sans authentification.
+
+La logique conditionnelle Tally n'a pas d'équivalent transférable ; l'import le
+signale au lieu de produire des règles approximatives.
+
+---
+
+## Accès et inscriptions
+
+Connexion par **Google** ou par email/mot de passe.
+
+Google accepte n'importe quel compte Google : le filtre est dans
+**Paramètres → Accès**, où un super-administrateur définit les domaines email
+autorisés. Le contrôle s'applique côté serveur, au retour du callback OAuth.
+
+Le premier compte créé sur une instance neuve devient super-administrateur.
+
+---
+
+## Déploiement
+
+Voir **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** — variables d'environnement,
+mise en service, configuration Google, invariants de sécurité.
+
+Production : `https://papyrus.mooove.group` · Easypanel, projet `main`,
+service `papyrus`.

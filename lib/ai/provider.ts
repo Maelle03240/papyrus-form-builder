@@ -14,7 +14,7 @@ export interface AIMessage {
  * NB: les implémentations concrètes (claude.ts, openai.ts) seront ajoutées
  * dès qu'on installe @anthropic-ai/sdk ou openai. Pour l'instant on stub.
  */
-export async function complete(prompt: string, _systemPrompt?: string): Promise<string> {
+export async function complete(_prompt: string, _systemPrompt?: string): Promise<string> {
   if (PROVIDER === 'openai') {
     throw new Error('Provider OpenAI non encore implémenté — installer `openai` puis créer lib/ai/openai.ts');
   }

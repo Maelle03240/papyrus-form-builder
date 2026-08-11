@@ -108,12 +108,10 @@ export function ChartWidget({
           counts[opt.id] = 0;
         });
 
-        let totalValid = 0;
         submissions.forEach(sub => {
           const val = sub.responses?.[field.id];
           if (val) {
             counts[val] = (counts[val] || 0) + 1;
-            totalValid++;
           }
         });
 
@@ -218,7 +216,7 @@ export function ChartWidget({
                 const formatted = d.toLocaleDateString('fr-FR');
                 counts[formatted] = (counts[formatted] || 0) + 1;
               }
-            } catch (e) {}
+            } catch {}
           }
         });
 

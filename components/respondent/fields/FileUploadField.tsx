@@ -1,16 +1,20 @@
 'use client';
 
-import { useState, useContext } from 'react';
+import { useId, useState, useContext } from 'react';
 import { Upload, CheckCircle } from 'lucide-react';
 import { FieldContext } from '../../public/PublicFieldCard';
+import { useAttachmentUpload } from '@/lib/hooks/useAttachmentUpload';
+import { useFormSlug } from '@/lib/hooks/useFormSlug';
 
 export interface FileUploadFieldProps {
   type: 'image' | 'video' | 'file';
   enabled: boolean;
   required?: boolean;
   preview: boolean;
-  value?: File | string | null;
-  onChange?: (file: File | null) => void;
+  /** URL du fichier déjà téléversé, ou `null`. */
+  value?: string | null;
+  /** Reçoit l'URL publique une fois le fichier téléversé (ou `null` s'il est retiré). */
+  onChange?: (url: string | null) => void;
   accept?: string;
   maxSize?: number;
 }
@@ -26,36 +30,22 @@ export function FileUploadField({
   maxSize
 }: FileUploadFieldProps) {
   const contextField = useContext(FieldContext);
-  const [localFile, setLocalFile] = useState<File | null>(null);
+  const formSlug = useFormSlug();
+  const [localUrl, setLocalUrl] = useState<string | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
-  const file = value !== undefined ? (typeof value === 'string' ? null : value) : localFile;
-  const urlValue = typeof value === 'string' ? value : null;
-  const fileName = file ? file.name : (urlValue ? urlValue.split('/').pop() : null);
+  const { upload, uploading, progress } = useAttachmentUpload({
+    context: 'response',
+    formSlug: formSlug ?? undefined
+  });
 
-  const getFileSize = (): number | null => {
-    if (file) {
-      return file.size;
-    }
-    if (typeof value === 'string' && value.startsWith('data:')) {
-      const base64Content = value.split(',')[1];
-      if (base64Content) {
-        return Math.round((base64Content.length * 3) / 4);
-      }
-    }
-    return null;
-  };
+  const currentUrl = value !== undefined ? value : localUrl;
+  const fileName = currentUrl ? decodeURIComponent(currentUrl.split('/').pop() ?? '') : null;
 
-  const formatFileSize = (bytes: number): string => {
-    if (bytes === 0) return '0 Octet';
-    const k = 1024;
-    const sizes = ['Octets', 'Ko', 'Mo', 'Go'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
-  };
-
-  const inputId = `${type}-${Math.random().toString(36).slice(2, 8)}`;
+  // useId garantit un identifiant stable entre le rendu serveur et le rendu client
+  // (Math.random() provoquait une erreur d'hydratation à chaque chargement).
+  const inputId = `file-upload-${useId()}`;
 
   if (!enabled) {
     return (
@@ -93,13 +83,26 @@ export function FileUploadField({
     file: 'Cliquez pour choisir un fichier ou glissez-le ici'
   };
 
-  const handleFileChange = (selectedFile: File | null) => {
-    // TODO: upload Supabase Storage
-    if (onChange) {
-      onChange(selectedFile);
-    } else {
-      setLocalFile(selectedFile);
+  /**
+   * Téléverse immédiatement le fichier choisi (images/vidéos → Cloudflare R2,
+   * documents → Supabase Storage) et ne conserve que son URL. La réponse
+   * enregistrée est donc un lien, jamais le fichier lui-même.
+   */
+  const handleFileChange = async (selectedFile: File | null) => {
+    if (!selectedFile) {
+      if (onChange) onChange(null);
+      else setLocalUrl(null);
+      return;
     }
+
+    // En aperçu builder, on ne téléverse rien.
+    if (preview) return;
+
+    const url = await upload(selectedFile);
+    if (!url) return;
+
+    if (onChange) onChange(url);
+    else setLocalUrl(url);
   };
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -151,14 +154,7 @@ export function FileUploadField({
       >
         <div className="flex items-center gap-2.5 min-w-0">
           <CheckCircle className="h-5 w-5 text-green-500 shrink-0" />
-          <span className="truncate text-sm font-medium text-text-primary">
-            {fileName}
-            {getFileSize() !== null && (
-              <span className="ml-1.5 text-xs text-text-tertiary font-normal">
-                ({formatFileSize(getFileSize()!)})
-              </span>
-            )}
-          </span>
+          <span className="truncate text-sm font-medium text-text-primary">{fileName}</span>
         </div>
         <button
           type="button"
@@ -185,7 +181,7 @@ export function FileUploadField({
       <Upload className="h-6 w-6 text-text-tertiary" />
       <span className="text-center space-y-1">
         <span className="block text-sm font-medium text-text-primary">
-          {placeholders[type]}
+          {uploading ? `Envoi en cours… ${progress}%` : placeholders[type]}
         </span>
         <span className="block text-xs text-text-tertiary">
           Formats acceptés : {allowedExtensionsText} · Max {maxFileSize} Mo
@@ -196,11 +192,12 @@ export function FileUploadField({
         type="file"
         accept={acceptString}
         className="hidden"
-        required={required && !preview && !file}
-        disabled={preview}
+        required={required && !preview && !currentUrl}
+        disabled={preview || uploading}
         onChange={(e) => {
           const selectedFile = e.target.files?.[0] || null;
           handleFileChange(selectedFile);
+          e.target.value = '';
         }}
       />
     </label>

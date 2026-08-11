@@ -12,7 +12,6 @@ import {
   Copy,
   Download,
   Edit3,
-  ExternalLink,
   FolderOpen,
   LayoutTemplate,
   Link2,
@@ -100,38 +99,26 @@ function FormDashboardContent() {
     fetchSubmissions();
   }, [form?.id]);
 
-  // Charger le nom du workspace
+  // Nom de l'espace de travail auquel appartient le formulaire.
   useEffect(() => {
-    const fetchWorkspaceName = async () => {
-      const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
-      const wsId = isLocal ? form?.workspace_id : form?.team_id;
-      if (!wsId) return;
+    const teamId = form?.team_id;
+    if (!teamId) return;
 
-      if (isLocal) {
-        try {
-          const { getWorkspace } = await import('@/lib/store/local-workspaces');
-          const ws = getWorkspace(wsId);
-          if (ws) setWorkspaceName(ws.name);
-        } catch (err) {
-          console.error(err);
-        }
-      } else {
-        try {
-          const res = await fetch('/api/teams');
-          if (res.ok) {
-            const list = await res.json();
-            const ws = list.find((t: any) => t.id === wsId);
-            if (ws) setWorkspaceName(ws.name);
-          }
-        } catch (err) {
-          console.error(err);
-        }
-      }
+    let cancelled = false;
+
+    fetch('/api/teams')
+      .then((response) => (response.ok ? response.json() : []))
+      .then((teams: { id: string; name: string }[]) => {
+        if (cancelled) return;
+        const workspace = teams.find((team) => team.id === teamId);
+        if (workspace) setWorkspaceName(workspace.name);
+      })
+      .catch((err) => console.error(err));
+
+    return () => {
+      cancelled = true;
     };
-    if (form) {
-      fetchWorkspaceName();
-    }
-  }, [form?.workspace_id, form?.team_id, form]);
+  }, [form?.team_id]);
 
   useEffect(() => {
     const activeTab = searchParams.get('tab') as Tab;
@@ -677,23 +664,23 @@ function generateFormHTML(form: Form): string {
   <title>${esc(form.title)}</title>
   <style>
     *{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F7F0DC;color:#1a1a1a;min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
-    .wrap{background:#FFFDF5;border-radius:16px;padding:48px;max-width:680px;width:100%;border:1px solid #D4B896}
+    body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#EFF9FE;color:#1a1a1a;min-height:100vh;display:flex;justify-content:center;padding:40px 16px}
+    .wrap{background:#FFFFFF;border-radius:16px;padding:48px;max-width:680px;width:100%;border:1px solid #C7EAFB}
     h1{font-size:2rem;font-weight:700;margin-bottom:8px}
     .form-desc{color:#666;margin-bottom:40px;line-height:1.6}
     .field{margin-bottom:28px}
     label{display:block;font-weight:600;font-size:.95rem;margin-bottom:8px}
     .req{color:#e05;margin-left:3px}
     .desc{font-size:.83rem;color:#777;margin-bottom:8px;font-weight:400}
-    input[type=text],input[type=email],input[type=tel],input[type=url],input[type=number],input[type=date],textarea,select{width:100%;padding:10px 14px;border:1.5px solid #D4B896;border-radius:8px;font-size:.95rem;background:#fff;font-family:inherit}
+    input[type=text],input[type=email],input[type=tel],input[type=url],input[type=number],input[type=date],textarea,select{width:100%;padding:10px 14px;border:1.5px solid #C7EAFB;border-radius:8px;font-size:.95rem;background:#fff;font-family:inherit}
     textarea{resize:vertical}
     .choice{display:flex;align-items:center;gap:8px;font-weight:400;margin-top:6px;cursor:pointer}
     .choice input{width:auto;margin:0}
     .rating{font-size:1.8rem;letter-spacing:4px;color:#F6923E;margin-top:4px}
     .nps{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
-    .nps span{width:38px;height:38px;border:1.5px solid #D4B896;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer}
+    .nps span{width:38px;height:38px;border:1.5px solid #C7EAFB;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.9rem;cursor:pointer}
     .section-break{margin:32px 0 20px}
-    .section-break hr{border:none;border-top:1.5px solid #D4B896;margin-bottom:16px}
+    .section-break hr{border:none;border-top:1.5px solid #C7EAFB;margin-bottom:16px}
     .section-break h3{font-size:1.1rem;font-weight:700}
     .statement{color:#555;line-height:1.6;margin-bottom:8px}
     button[type=submit]{margin-top:32px;background:#052139;color:#fff;border:none;padding:14px 32px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;font-family:inherit}

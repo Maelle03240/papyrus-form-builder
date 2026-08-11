@@ -21,7 +21,7 @@ import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
 import { toast } from '@/components/ui/Toast';
 import { formatCount } from '@/lib/utils';
 import { createForm, listTeamMembers, addTeamMember, deleteTeamMember } from '@/lib/store';
-import { getWorkspace, getWorkspaceForms } from '@/lib/store/local-workspaces';
+import { getWorkspace, getWorkspaceForms } from '@/lib/store/workspaces';
 import type { Form, Workspace } from '@/types';
 
 type FilterStatus = 'all' | 'published' | 'draft' | 'closed';
@@ -76,31 +76,21 @@ export default function WorkspacePage() {
   const [memberToRemove, setMemberToRemove] = useState<{ id: string; email: string } | null>(null);
   const [removeLoading, setRemoveLoading] = useState(false);
 
-  const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
-
-  // Récupérer l'utilisateur Supabase connecté
+  // Récupérer l'utilisateur connecté
   useEffect(() => {
-    async function getCurrentUser() {
-      if (!isLocal) {
-        const { createClient } = await import('@/lib/supabase/client');
-        const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        setCurrentUser(user);
-      }
+    async function loadCurrentUser() {
+      const { createClient } = await import('@/lib/supabase/client');
+      const {
+        data: { user }
+      } = await createClient().auth.getUser();
+      setCurrentUser(user);
     }
-    getCurrentUser();
-  }, [isLocal]);
+    loadCurrentUser();
+  }, []);
 
-  // Fonction pour charger les membres de l'équipe
   const loadMembers = async (id: string) => {
     try {
-      if (isLocal) {
-        const { getMembers } = await import('@/lib/store/local-workspaces');
-        setWorkspaceMembers(getMembers(id));
-      } else {
-        const list = await listTeamMembers(id);
-        setWorkspaceMembers(list);
-      }
+      setWorkspaceMembers(await listTeamMembers(id));
     } catch (err) {
       console.error('Error loading workspace members:', err);
     }
@@ -112,19 +102,7 @@ export default function WorkspacePage() {
     setMemberLoading(true);
 
     try {
-      // Ajouter le membre
-      if (isLocal) {
-        const { addMember } = await import('@/lib/store/local-workspaces');
-        addMember({
-          user_id: `user-${Date.now()}`,
-          workspace_id: workspace.id,
-          role: 'member',
-          name: 'Nouveau membre',
-          email: newMemberEmail.trim()
-        });
-      } else {
-        await addTeamMember(workspace.id, newMemberEmail.trim(), 'member');
-      }
+      await addTeamMember(workspace.id, newMemberEmail.trim(), 'member');
 
       // Envoyer l'email d'invitation si demandé
       if (sendEmailInvite) {
@@ -177,12 +155,7 @@ export default function WorkspacePage() {
     setRemoveLoading(true);
 
     try {
-      if (isLocal) {
-        const { removeMember } = await import('@/lib/store/local-workspaces');
-        removeMember(workspace.id, memberToRemove.id);
-      } else {
-        await deleteTeamMember(workspace.id, memberToRemove.id);
-      }
+      await deleteTeamMember(workspace.id, memberToRemove.id);
       await loadMembers(workspace.id);
       toast.success('Membre retiré.');
     } catch (err) {
@@ -198,90 +171,26 @@ export default function WorkspacePage() {
   useEffect(() => {
     async function loadWorkspaceData() {
       try {
-        const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
-        if (isLocal) {
-          const ws = getWorkspace(workspaceId);
-          if (!ws) {
-            router.push('/dashboard');
-            return;
-          }
-          setWorkspace(ws);
+        // Espace et formulaires en parallèle. `getWorkspaceForms` charge les
+        // champs par jointure : l'ancienne version émettait une requête par
+        // formulaire juste pour compter ses questions.
+        const [workspaceData, forms] = await Promise.all([
+          getWorkspace(workspaceId),
+          getWorkspaceForms(workspaceId)
+        ]);
 
-          const forms = getWorkspaceForms(workspaceId);
-          setWorkspaceForms(forms);
-          setLoading(false);
-        } else {
-          // Mode Supabase
-          const { createClient } = await import('@/lib/supabase/client');
-          const supabase = createClient();
-
-          // Récupérer le team (workspace)
-          const { data: team, error: teamError } = await supabase
-            .from('teams')
-            .select('*')
-            .eq('id', workspaceId)
-            .maybeSingle();
-
-          if (teamError || !team) {
-            console.error('Team error:', teamError);
-            router.push('/dashboard');
-            return;
-          }
-
-          // Récupérer le nombre de membres
-          const { data: members } = await supabase
-            .from('team_members')
-            .select('*')
-            .eq('team_id', workspaceId);
-
-          setWorkspace({
-            id: team.id,
-            name: team.name,
-            scope: 'team',
-            is_deletable: false,
-            created_by: '',
-            created_at: team.created_at,
-            members: (members || []).map(m => ({
-              user_id: m.user_id,
-              workspace_id: m.team_id,
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              role: m.role as any,
-              joined_at: m.joined_at
-            })),
-            form_count: 0
-          });
-
-          // Récupérer les formulaires de cette team
-          const { data: forms, error: formsError } = await supabase
-            .from('forms')
-            .select('*')
-            .eq('team_id', workspaceId)
-            .order('updated_at', { ascending: false });
-
-          if (formsError) {
-            console.error('Error fetching workspace forms:', formsError);
-            setWorkspaceForms([]);
-          } else {
-            // Récupérer les champs pour chaque formulaire (pour le nombre de champs affiché)
-            const formsWithFields = await Promise.all(
-              (forms || []).map(async (form) => {
-                const { data: fields = [] } = await supabase
-                  .from('fields')
-                  .select('id')
-                  .eq('form_id', form.id);
-                return {
-                  ...form,
-                  fields: fields
-                };
-              })
-            );
-            setWorkspaceForms(formsWithFields as any);
-          }
-          setLoading(false);
+        if (!workspaceData) {
+          router.push('/dashboard');
+          return;
         }
+
+        setWorkspace(workspaceData);
+        setWorkspaceForms(forms);
       } catch (error) {
         console.error('Error loading workspace:', error);
         router.push('/dashboard');
+      } finally {
+        setLoading(false);
       }
     }
 
@@ -344,14 +253,11 @@ export default function WorkspacePage() {
 
   const handleNewForm = async () => {
     try {
-      // S'assurer que le workspace existe
-      const { initDefaultWorkspace } = await import('@/lib/store/local-workspaces');
-      initDefaultWorkspace('local-user');
-
       const form = await createForm('Nouveau formulaire', workspaceId);
       router.push(`/forms/${form.id}/edit`);
     } catch (error) {
       console.error('Failed to create form:', error);
+      toast.error('Impossible de créer le formulaire.');
     }
   };
 

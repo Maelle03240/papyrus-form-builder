@@ -78,7 +78,7 @@ export function ToastContainer() {
       {toasts.map((t) => {
         let Icon = Info;
         let iconColor = 'text-mooove-cyan';
-        let bgStyle = 'bg-bg-surface border-border';
+        const bgStyle = 'bg-bg-surface border-border';
 
         if (t.type === 'success') {
           Icon = CheckCircle;
@@ -99,8 +99,8 @@ export function ToastContainer() {
               bgStyle
             )}
             style={{
-              backgroundColor: 'var(--papyrus-surface, #FFFDF5)',
-              borderColor: 'var(--papyrus-border, #D4B896)'
+              backgroundColor: 'var(--bg-surface)',
+              borderColor: 'var(--border)'
             }}
           >
             <Icon className={cn('h-5 w-5 shrink-0 mt-0.5', iconColor)} />

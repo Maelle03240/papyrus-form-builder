@@ -289,7 +289,7 @@ export async function changeMemberRole(teamId: string, userId: string, newRole: 
 async function getUserByEmail(email: string): Promise<string | null> {
   const supabase = createClient();
 
-  const { data, error } = await supabase
+  const { data } = await supabase
     .from('profiles')
     .select('id')
     .eq('email', email)

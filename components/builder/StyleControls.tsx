@@ -28,8 +28,8 @@ const FONTS: { value: FontFamily; label: string; preview: string }[] = [
 
 const PRESET_COLORS = [
   '#052139', // navy
-  '#2A1F0E', // ink
-  '#8B7355', // muted
+  '#052139', // ink
+  '#4A6B82', // muted
   '#3C5EAB', // electric
   '#2AC2DE', // cyan
   '#F6923E', // amber
@@ -80,7 +80,7 @@ export function StyleControls({ style, onChange, introColor, onIntroColorChange 
         <Section title="Couleur de l'intro">
           <div className="flex items-center gap-2">
             <DebouncedColorInput
-              value={introColor ?? '#8B7355'}
+              value={introColor ?? '#4A6B82'}
               onChange={(val) => onIntroColorChange(val)}
               className="h-9 w-12 cursor-pointer rounded border border-border-strong bg-bg-base"
               aria-label="Couleur de l'intro"

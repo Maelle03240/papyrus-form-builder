@@ -1,46 +1,74 @@
-import { NextResponse } from 'next/server';
-import { IS_LOCAL_MODE } from '@/lib/mode';
+import { NextResponse, type NextRequest } from 'next/server';
+import { z } from 'zod';
+import { createAdminClient } from '@/lib/supabase/server';
+import { clientIp, rateLimit } from '@/lib/rate-limit';
+
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
 
 /**
- * Vérifie si un email a déjà soumis ce formulaire (toggle "Un seul envoi par personne").
+ * Indique si une adresse email a déjà répondu à ce formulaire, pour l'option
+ * « un seul envoi par personne ».
  *
- * En mode local : pas de back-end, donc on regarde un store local (ou on répond toujours
- * `duplicate: false`). Quand Supabase sera branché, la requête ira sur la table `submissions`
- * et matchera form_id + respondent_email.
+ * Cette route renvoyait systématiquement `duplicate: false` : le réglage était
+ * affiché dans le builder mais n'avait aucun effet.
  *
- * Requête : POST { form_id: string, email: string }
- * Réponse : { duplicate: boolean }
+ * Elle sert uniquement de confort d'interface (prévenir avant de tout ressaisir).
+ * Le contrôle qui fait foi reste celui de /api/submit/[slug], côté écriture.
  */
-export async function POST(req: Request) {
-  let body: { form_id?: string; email?: string };
-  try {
-    body = await req.json();
-  } catch {
-    return NextResponse.json({ error: 'Body JSON invalide.' }, { status: 400 });
-  }
 
-  const { form_id, email } = body;
-  if (!form_id || !email) {
+const BodySchema = z.object({
+  form_id: z.string().uuid(),
+  email: z.string().email().max(254)
+});
+
+export async function POST(request: NextRequest) {
+  // Cette route confirme l'existence d'un email en base : sans limite, elle
+  // permettrait d'énumérer les répondants d'un formulaire.
+  const limit = rateLimit(`dup:${clientIp(request.headers)}`, 20, 60_000);
+  if (!limit.allowed) {
     return NextResponse.json(
-      { error: 'form_id et email sont requis.' },
-      { status: 400 }
+      { error: 'Trop de requêtes.' },
+      { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } }
     );
   }
 
-  if (IS_LOCAL_MODE) {
-    // En local, pas de back-end : on ne peut pas savoir. On renvoie false (non doublon).
-    // Le navigateur peut faire son propre check via localStorage si besoin.
-    return NextResponse.json({ duplicate: false, mode: 'local' });
+  let payload: unknown;
+  try {
+    payload = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Corps JSON invalide.' }, { status: 400 });
   }
 
-  // TODO : quand Supabase sera branché —
-  // const supabase = createServerClient(...);
-  // const { count } = await supabase
-  //   .from('submissions')
-  //   .select('id', { count: 'exact', head: true })
-  //   .eq('form_id', form_id)
-  //   .eq('respondent_email', email.toLowerCase().trim());
-  // return NextResponse.json({ duplicate: (count ?? 0) > 0 });
+  const parsed = BodySchema.safeParse(payload);
+  if (!parsed.success) {
+    return NextResponse.json({ error: 'form_id et email valides sont requis.' }, { status: 400 });
+  }
 
-  return NextResponse.json({ duplicate: false, mode: 'stub' });
+  const supabase = createAdminClient();
+
+  // Le contrôle n'a de sens que sur un formulaire publié qui active l'option.
+  const { data: form } = await supabase
+    .from('forms')
+    .select('id, status, unique_email')
+    .eq('id', parsed.data.form_id)
+    .maybeSingle();
+
+  if (!form || form.status !== 'published' || !form.unique_email) {
+    return NextResponse.json({ duplicate: false });
+  }
+
+  const { count, error } = await supabase
+    .from('submissions')
+    .select('id', { count: 'exact', head: true })
+    .eq('form_id', parsed.data.form_id)
+    .eq('respondent_email', parsed.data.email.trim().toLowerCase());
+
+  if (error) {
+    console.error('Erreur check-duplicate:', error);
+    // En cas d'échec, ne pas bloquer le répondant : /api/submit tranchera.
+    return NextResponse.json({ duplicate: false });
+  }
+
+  return NextResponse.json({ duplicate: (count ?? 0) > 0 });
 }

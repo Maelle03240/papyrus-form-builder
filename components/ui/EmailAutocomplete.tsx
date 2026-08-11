@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { Mail, User, Check } from 'lucide-react';
+import { Mail, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export interface EmailSuggestion {
@@ -111,7 +111,7 @@ export function EmailAutocomplete({
   return (
     <div ref={containerRef} className={cn("relative", className)}>
       {label && (
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="block text-sm font-medium text-text-primary mb-2">
           {label}
         </label>
       )}
@@ -127,19 +127,19 @@ export function EmailAutocomplete({
           placeholder={placeholder}
           disabled={disabled}
           className={cn(
-            "w-full px-3 py-2 pl-10 border border-gray-300 rounded-lg",
+            "w-full px-3 py-2 pl-10 border border-border-strong rounded-lg",
             "focus:ring-2 focus:ring-blue-500 focus:border-transparent",
-            "disabled:bg-gray-50 disabled:text-gray-500 disabled:cursor-not-allowed",
-            "text-sm placeholder:text-gray-400"
+            "disabled:bg-bg-elevated disabled:text-text-secondary disabled:cursor-not-allowed",
+            "text-sm placeholder:text-text-tertiary"
           )}
         />
 
-        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-text-tertiary" />
       </div>
 
       {/* Dropdown des suggestions */}
       {isOpen && filteredSuggestions.length > 0 && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+        <div className="absolute z-50 w-full mt-1 bg-white border border-border rounded-lg shadow-lg max-h-60 overflow-y-auto">
           {filteredSuggestions.map((suggestion, index) => (
             <button
               key={suggestion.email}
@@ -147,8 +147,8 @@ export function EmailAutocomplete({
               onClick={() => selectSuggestion(suggestion)}
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-3 text-left text-sm",
-                "hover:bg-gray-50 focus:bg-gray-50 focus:outline-none",
-                "border-b border-gray-100 last:border-b-0",
+                "hover:bg-bg-elevated focus:bg-bg-elevated focus:outline-none",
+                "border-b border-border last:border-b-0",
                 selectedIndex === index && "bg-blue-50"
               )}
             >
@@ -160,10 +160,10 @@ export function EmailAutocomplete({
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="font-medium text-gray-900 truncate">
+                <div className="font-medium text-text-primary truncate">
                   {suggestion.name || 'Membre de l\'équipe'}
                 </div>
-                <div className="text-gray-600 truncate">
+                <div className="text-text-secondary truncate">
                   {suggestion.email}
                 </div>
               </div>

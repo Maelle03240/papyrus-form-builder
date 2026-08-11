@@ -15,6 +15,7 @@ import { SubfieldsEditor } from './SubfieldsEditor';
 import { Switch } from '@/components/ui/Switch';
 import { LIMITS } from '@/lib/constants/limits';
 import { getFieldIcon, isIconVisible } from '@/lib/field-icons';
+import { useMediaUpload } from '@/lib/hooks/useMediaUpload';
 
 /** Retourne les types de fichiers acceptés par défaut selon le type de champ */
 function getDefaultAcceptTypes(type: 'image' | 'video' | 'file'): string {
@@ -36,7 +37,15 @@ interface Props {
 
 type Tab = 'content' | 'style' | 'logic';
 
-const MAX_IMAGE_BYTES = 1.5 * 1024 * 1024;
+/** Lit les dimensions naturelles d'une image déjà téléversée, sans bloquer si elle échoue. */
+function readImageDimensions(url: string): Promise<{ width: number; height: number } | null> {
+  return new Promise((resolve) => {
+    const img = new window.Image();
+    img.onload = () => resolve({ width: img.naturalWidth, height: img.naturalHeight });
+    img.onerror = () => resolve(null);
+    img.src = url;
+  });
+}
 
 export function FieldSettings({ form, field, globalStyle, onChange, onFormChange }: Props) {
   const [tab, setTab] = useState<Tab>('content');
@@ -130,6 +139,11 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
   const lang = 'fr';
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [pickerTab, setPickerTab] = useState<'icons' | 'emojis'>('icons');
+  const {
+    upload: uploadImage,
+    uploading: uploadingMedia,
+    progress: uploadProgress
+  } = useMediaUpload();
 
   function onFieldStyleChange(stylePatch: Partial<import('@/types').FieldStyle>) {
     onChange({ style: { ...field.style, ...stylePatch } });
@@ -144,36 +158,29 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
     onChange({ validation: { ...field.validation, ...patch } });
   }
 
-  function handleImageUpload(file: File) {
-    if (file.size > MAX_IMAGE_BYTES) {
-      alert(
-        `Image trop lourde (${Math.round(file.size / 1024)} Ko). En mode local, max 1,5 Mo. Compresse-la ou utilise une URL.`
-      );
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const dataUrl = reader.result as string;
+  /**
+   * Envoie l'image vers Cloudflare R2, puis lit ses dimensions naturelles depuis
+   * l'URL publique pour initialiser le cadrage.
+   */
+  async function handleImageUpload(file: File) {
+    const url = await uploadImage(file);
+    if (!url) return;
 
-      // Créer une image temporaire pour obtenir les dimensions naturelles
-      const img = new Image();
-      img.onload = () => {
-        patchValidation({
-          media_url: dataUrl,
-          original_width: img.naturalWidth,
-          original_height: img.naturalHeight,
-          image_width: img.naturalWidth,
-          image_height: img.naturalHeight,
-          ratio_locked: true // Verrouiller le ratio par défaut
-        });
-      };
-      img.src = dataUrl;
-    };
-    reader.readAsDataURL(file);
+    const dimensions = await readImageDimensions(url);
+    patchValidation({
+      media_url: url,
+      ...(dimensions && {
+        original_width: dimensions.width,
+        original_height: dimensions.height,
+        image_width: dimensions.width,
+        image_height: dimensions.height
+      }),
+      ratio_locked: true
+    });
   }
 
   const isLayout = field.type === 'section_break' || field.type === 'statement';
-  const supportsLogic = !isLayout && field.type !== 'image' && field.type !== 'video';
+  const _supportsLogic = !isLayout && field.type !== 'image' && field.type !== 'video';
 
   return (
     <div className="space-y-5">
@@ -319,7 +326,15 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
       </Section>
 
       {(field.type === 'image' || field.type === 'video' || field.type === 'file') && (
-        <MediaSettings field={field} patchValidation={patchValidation} fileInputRef={fileInputRef} handleImageUpload={handleImageUpload} onChange={onChange} />
+        <MediaSettings
+          field={field}
+          patchValidation={patchValidation}
+          fileInputRef={fileInputRef}
+          handleImageUpload={handleImageUpload}
+          onChange={onChange}
+          uploading={uploadingMedia}
+          uploadProgress={uploadProgress}
+        />
       )}
 
       {meta.hasOptions && field.type !== 'matrix' && (
@@ -700,12 +715,22 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
 }
 
 /** Composant unifié pour les paramètres Image, Vidéo, Fichier */
-function MediaSettings({ field, patchValidation, fileInputRef, handleImageUpload, onChange }: {
+function MediaSettings({
+  field,
+  patchValidation,
+  fileInputRef,
+  handleImageUpload,
+  onChange,
+  uploading,
+  uploadProgress
+}: {
   field: Field;
   patchValidation: (patch: Partial<import('@/types').FieldValidation>) => void;
   fileInputRef: React.RefObject<HTMLInputElement>;
   handleImageUpload: (file: File) => void;
   onChange: (patch: Partial<Field>) => void;
+  uploading: boolean;
+  uploadProgress: number;
 }) {
   const creatorModeEnabled = field.validation?.creator_mode_enabled ?? false;
   const respondentModeEnabled = field.validation?.respondent_mode_enabled ?? false;
@@ -803,11 +828,12 @@ function MediaSettings({ field, patchValidation, fileInputRef, handleImageUpload
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
-                  className="flex w-full flex-col items-center gap-2 rounded-md border border-dashed border-border-strong bg-bg-base px-4 py-6 text-sm text-text-secondary transition hover:border-accent"
+                  disabled={uploading}
+                  className="flex w-full flex-col items-center gap-2 rounded-md border border-dashed border-border-strong bg-bg-base px-4 py-6 text-sm text-text-secondary transition hover:border-accent disabled:cursor-wait disabled:opacity-60"
                 >
                   <Upload className="h-5 w-5" />
-                  Téléverser une image
-                  <span className="text-xs text-text-tertiary">PNG, JPG, SVG · max 1,5 Mo</span>
+                  {uploading ? `Envoi en cours… ${uploadProgress}%` : 'Téléverser une image'}
+                  <span className="text-xs text-text-tertiary">PNG, JPG, WebP, SVG · max 10 Mo</span>
                 </button>
               )}
               <input

@@ -1,0 +1,20 @@
+node_modules
+.next
+.git
+.github
+.vscode
+.idea
+.claude
+npm-debug.log*
+*.tsbuildinfo
+
+# Jamais dans l'image : les secrets vivent dans l'environnement Easypanel.
+.env
+.env.*
+!.env.example
+
+# Documentation et notes de travail — inutiles à l'exécution.
+*.md
+!README.md
+docs/
+supabase/.temp/

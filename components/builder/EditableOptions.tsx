@@ -1,7 +1,7 @@
 'use client';
 
 import { useRef, type KeyboardEvent } from 'react';
-import { CheckSquare, ChevronDown, ChevronUp, Circle, Plus, Square, X } from 'lucide-react';
+import { ChevronDown, ChevronUp, Circle, Plus, Square, X } from 'lucide-react';
 import type { Field, FieldOption, FieldValidation, FieldType } from '@/types';
 import { newOptionId } from '@/lib/store';
 import { cn } from '@/lib/utils';

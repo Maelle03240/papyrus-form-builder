@@ -17,6 +17,7 @@ import type { ScoreResult } from '@/lib/scoring';
 import { ScoreDisplay } from '@/components/respondent/ScoreDisplay';
 import { evaluateLogicRules, evaluateConditions } from '@/lib/logic-evaluation';
 import { FormFlowView } from './FormFlowView';
+import { toast } from '@/components/ui/Toast';
 
 interface Props {
   form: Form;
@@ -35,7 +36,6 @@ export function PreviewModal({ form, onClose }: Props) {
     responses,
     scoreResult,
     updateResponse,
-    scoringEnabled,
     showScoreToRespondent
   } = useFormScore(form);
 
@@ -155,7 +155,7 @@ function PreviewToolbar({
   onClose: () => void;
 }) {
   const mode = form.display_mode ?? 'sections';
-  const modeLabel =
+  const _modeLabel =
     mode === 'sections' ? 'Pages' : mode === 'typeform' ? 'Une à une' : 'Défilement';
 
   return (
@@ -451,7 +451,7 @@ function ScrollPreview({
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        alert('Formulaire envoyé (démo)');
+        toast.error('Formulaire envoyé (démo)');
       }}
       className={cn('mx-auto py-12 transition-all', device === 'mobile' ? 'max-w-sm px-4' : 'max-w-2xl px-8')}
     >
@@ -560,7 +560,7 @@ function SectionsPreview({
     // La validation native HTML5 a déjà filtré les erreurs ici (sinon submit ne fire pas)
     e.preventDefault();
     if (isLast) {
-      alert('Formulaire envoyé (démo)');
+      toast.error('Formulaire envoyé (démo)');
     } else {
       setPageIdx((i) => Math.min(total - 1, i + 1));
     }
@@ -754,7 +754,7 @@ function TypeformPreview({
 
     if (triggeredAction) {
       if (triggeredAction.action_type === 'end_form') {
-        alert('Formulaire envoyé (démo)');
+        toast.error('Formulaire envoyé (démo)');
         return;
       }
 
@@ -776,7 +776,7 @@ function TypeformPreview({
     }
 
     if (isLast) {
-      alert('Formulaire envoyé (démo)');
+      toast.error('Formulaire envoyé (démo)');
     } else {
       setDirection('forward');
       setHistory(prev => [...prev, current.id]);
@@ -859,7 +859,7 @@ function TypeformPreview({
           className="mx-auto w-full"
           style={{
             maxWidth: device === 'mobile' ? '24rem' : '48rem',
-            backgroundColor: (form.theme.banner_fit ?? 'cover') === 'contain' ? '#F7F0DC' : undefined
+            backgroundColor: (form.theme.banner_fit ?? 'cover') === 'contain' ? '#EFF9FE' : undefined
           }}
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}

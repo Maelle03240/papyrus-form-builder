@@ -9,11 +9,12 @@ interface BadgeProps {
   className?: string;
 }
 
+/** Statuts d'un formulaire, exprimés dans la palette Mooove. */
 const styles: Record<BadgeVariant, string> = {
+  // Electric Blue = « audace, affirmation » : le statut publié.
   published: 'bg-mooove-electric text-mooove-ice border-transparent',
   draft: 'border-mooove-navy text-mooove-navy bg-transparent',
-  closed:
-    'border-dashed border-papyrus-muted text-papyrus-muted bg-transparent line-through decoration-papyrus-muted',
+  closed: 'border-dashed border-border-strong text-text-tertiary bg-transparent',
   neutral: 'bg-bg-elevated text-text-secondary border-border',
   ai: 'bg-mooove-cyan/10 text-mooove-navy border-mooove-cyan/30'
 };

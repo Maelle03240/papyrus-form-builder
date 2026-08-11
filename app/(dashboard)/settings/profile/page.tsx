@@ -1,12 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { User, Mail, Lock, Save, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Save, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
 import { toast } from '@/components/ui/Toast';
-import type { UserProfile } from '@/types';
+import type {} from '@/types';
 import {
   getUserProfile,
   updateUserProfile,
@@ -127,9 +127,9 @@ export default function ProfileSettingsPage() {
   if (loading) {
     return (
       <div className="space-y-6 animate-pulse">
-        <div className="h-8 bg-gray-200 rounded w-48"></div>
-        <div className="h-32 bg-gray-200 rounded"></div>
-        <div className="h-64 bg-gray-200 rounded"></div>
+        <div className="h-8 bg-bg-overlay rounded w-48"></div>
+        <div className="h-32 bg-bg-overlay rounded"></div>
+        <div className="h-64 bg-bg-overlay rounded"></div>
       </div>
     );
   }
@@ -177,10 +177,10 @@ export default function ProfileSettingsPage() {
           {/* Email */}
           <div className="flex items-center justify-between p-4 border border-papyrus-border rounded-xl bg-papyrus-surface">
             <div className="flex items-center gap-3">
-              <Mail className="w-5 h-5 text-gray-500" />
+              <Mail className="w-5 h-5 text-text-secondary" />
               <div>
-                <div className="font-medium text-gray-900">Adresse email</div>
-                <div className="text-sm text-gray-600">{email}</div>
+                <div className="font-medium text-text-primary">Adresse email</div>
+                <div className="text-sm text-text-secondary">{email}</div>
               </div>
             </div>
             <Button
@@ -195,10 +195,10 @@ export default function ProfileSettingsPage() {
           {/* Mot de passe */}
           <div className="flex items-center justify-between p-4 border border-papyrus-border rounded-xl bg-papyrus-surface">
             <div className="flex items-center gap-3">
-              <Lock className="w-5 h-5 text-gray-500" />
+              <Lock className="w-5 h-5 text-text-secondary" />
               <div>
-                <div className="font-medium text-gray-900">Mot de passe</div>
-                <div className="text-sm text-gray-600">Dernière modification il y a 30 jours</div>
+                <div className="font-medium text-text-primary">Mot de passe</div>
+                <div className="text-sm text-text-secondary">Dernière modification il y a 30 jours</div>
               </div>
             </div>
             <Button
@@ -219,7 +219,7 @@ export default function ProfileSettingsPage() {
         title="Changer le mot de passe"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-text-secondary">
             Saisissez votre mot de passe actuel et votre nouveau mot de passe.
           </p>
 
@@ -235,7 +235,7 @@ export default function ProfileSettingsPage() {
               <button
                 type="button"
                 onClick={() => togglePasswordVisibility('current')}
-                className="absolute right-3 top-9 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-9 text-text-tertiary hover:text-text-secondary"
               >
                 {showPasswords.current ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -252,7 +252,7 @@ export default function ProfileSettingsPage() {
               <button
                 type="button"
                 onClick={() => togglePasswordVisibility('new')}
-                className="absolute right-3 top-9 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-9 text-text-tertiary hover:text-text-secondary"
               >
                 {showPasswords.new ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
@@ -269,14 +269,14 @@ export default function ProfileSettingsPage() {
               <button
                 type="button"
                 onClick={() => togglePasswordVisibility('confirm')}
-                className="absolute right-3 top-9 text-gray-400 hover:text-gray-600"
+                className="absolute right-3 top-9 text-text-tertiary hover:text-text-secondary"
               >
                 {showPasswords.confirm ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
           </div>
 
-          <div className="text-xs text-gray-500">
+          <div className="text-xs text-text-secondary">
             Le mot de passe doit contenir au moins 8 caractères.
           </div>
 
@@ -303,7 +303,7 @@ export default function ProfileSettingsPage() {
         title="Changer l'adresse email"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-text-secondary">
             Un email de confirmation sera envoyé à votre nouvelle adresse.
           </p>
 

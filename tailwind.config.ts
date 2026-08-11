@@ -9,22 +9,33 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Mooove palette
+        /**
+         * Palette Mooove — charte V1.0. Ces six valeurs sont la référence ;
+         * elles ne doivent pas être redéfinies ailleurs.
+         */
         mooove: {
           navy: '#052139',
-          cyan: '#2AC2DE',
-          amber: '#F6923E',
-          electric: '#3C5EAB',
-          ice: '#EFF9FE',
-          sky: '#C7EAFB'
+          cyan: '#2ac2de',
+          amber: '#f6923e',
+          electric: '#3c5eab',
+          ice: '#eff9fe',
+          sky: '#c7eafb'
         },
-        // Papyrus palette
+        /**
+         * Ancien nuancier « parchemin » du produit Papyrus.
+         *
+         * Il est conservé comme alias parce qu'une centaine d'utilisations
+         * (`bg-papyrus-surface`, `border-papyrus-border`…) sont réparties dans
+         * les composants — mais chaque entrée pointe désormais vers un token
+         * sémantique Mooove. Repointer ici plutôt que réécrire chaque fichier
+         * garantit qu'aucun beige n'a été oublié quelque part.
+         */
         papyrus: {
-          bg: '#F7F0DC',
-          surface: '#FFFDF5',
-          border: '#D4B896',
-          muted: '#8B7355',
-          ink: '#2A1F0E'
+          bg: 'var(--bg-base)',
+          surface: 'var(--bg-surface)',
+          border: 'var(--border)',
+          muted: 'var(--text-secondary)',
+          ink: 'var(--text-primary)'
         },
         // Semantic tokens (driven by CSS variables in globals.css)
         bg: {
@@ -58,10 +69,20 @@ const config: Config = {
         serif: 'var(--font-serif)',
         mono: 'var(--font-mono)'
       },
+      /**
+       * Coins arrondis de la charte :
+       *   compact  (8 px)  — inputs, badges
+       *   standard (12 px) — boutons, panneaux
+       *   cards    (20 px) — cartes du dashboard, blocs du builder
+       */
       borderRadius: {
+        DEFAULT: 'var(--radius-sm)',
         sm: 'var(--radius-sm)',
         md: 'var(--radius-md)',
-        lg: 'var(--radius-lg)'
+        lg: 'var(--radius-md)',
+        xl: 'var(--radius-md)',
+        '2xl': 'var(--radius-lg)',
+        '3xl': 'var(--radius-lg)'
       },
       keyframes: {
         'fade-in': {

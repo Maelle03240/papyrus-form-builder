@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Users, Mail, Link as LinkIcon, Crown, User, Trash2, Copy, Check, X, Send, Edit2 } from 'lucide-react';
+import { Mail, Link as LinkIcon, Crown, User, Trash2, Copy, Check, X, Send, Edit2 } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
@@ -152,7 +152,7 @@ export default function TeamSettingsPage() {
         setCopiedStates({ ...copiedStates, [id]: false });
       }, 2000);
       toast.success('Le lien a été copié dans le presse-papier');
-    } catch (error) {
+    } catch {
       toast.error('Impossible de copier le lien');
     }
   };
@@ -209,9 +209,9 @@ export default function TeamSettingsPage() {
   if (loading) {
     return (
       <div className="space-y-6 animate-pulse">
-        <div className="h-8 bg-gray-200 rounded w-48"></div>
-        <div className="h-32 bg-gray-200 rounded"></div>
-        <div className="h-64 bg-gray-200 rounded"></div>
+        <div className="h-8 bg-bg-overlay rounded w-48"></div>
+        <div className="h-32 bg-bg-overlay rounded"></div>
+        <div className="h-64 bg-bg-overlay rounded"></div>
       </div>
     );
   }
@@ -252,8 +252,8 @@ export default function TeamSettingsPage() {
               </div>
             ) : (
               <div>
-                <p className="text-sm text-gray-600">Nom de l'équipe</p>
-                <p className="text-lg font-medium text-gray-900">{teamName}</p>
+                <p className="text-sm text-text-secondary">Nom de l'équipe</p>
+                <p className="text-lg font-medium text-text-primary">{teamName}</p>
               </div>
             )}
           </div>
@@ -302,7 +302,7 @@ export default function TeamSettingsPage() {
           )}
         </div>
 
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-text-secondary">
           {members.length} membre{members.length > 1 ? 's' : ''} • {invitations.filter(inv => inv.status === 'pending').length} invitation{invitations.filter(inv => inv.status === 'pending').length > 1 ? 's' : ''} en attente
         </p>
       </div>
@@ -319,10 +319,10 @@ export default function TeamSettingsPage() {
                   {member.name ? member.name[0].toUpperCase() : (member.email?.[0] || '?').toUpperCase()}
                 </div>
                 <div>
-                  <div className="font-medium text-gray-900">
+                  <div className="font-medium text-text-primary">
                     {member.name || 'Sans nom'}
                   </div>
-                  <div className="text-sm text-gray-600">{member.email || 'Email non disponible'}</div>
+                  <div className="text-sm text-text-secondary">{member.email || 'Email non disponible'}</div>
                 </div>
                 <Badge variant={member.role === 'admin' ? 'published' : 'neutral'}>
                   {member.role === 'admin' ? (
@@ -376,10 +376,10 @@ export default function TeamSettingsPage() {
                     )}
                   </div>
                   <div>
-                    <div className="font-medium text-gray-900">
+                    <div className="font-medium text-text-primary">
                       {invitation.invitation_type === 'email' ? invitation.email : 'Lien d\'invitation'}
                     </div>
-                    <div className="text-sm text-gray-600">
+                    <div className="text-sm text-text-secondary">
                       {invitation.invitation_type === 'email' ? 'Envoyée par email' : 'Invitation par lien'} •
                       Expire le {new Date(invitation.expires_at!).toLocaleDateString()}
                     </div>
@@ -432,7 +432,7 @@ export default function TeamSettingsPage() {
         title="Inviter par email"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-text-secondary">
             Invitez un nouveau membre en saisissant son adresse email. Une invitation lui sera envoyée.
           </p>
 
@@ -446,13 +446,13 @@ export default function TeamSettingsPage() {
             />
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-text-primary mb-2">
                 Rôle
               </label>
               <select
                 value={roleToInvite}
                 onChange={(e) => setRoleToInvite(e.target.value as TeamRole)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full px-3 py-2 border border-border-strong rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               >
                 <option value="member">Membre</option>
                 <option value="admin">Administrateur</option>
@@ -479,18 +479,18 @@ export default function TeamSettingsPage() {
         title="Créer un lien d'invitation"
       >
         <div className="space-y-4">
-          <p className="text-gray-600">
+          <p className="text-text-secondary">
             Créez un lien d'invitation que vous pourrez partager. Toute personne avec ce lien pourra rejoindre votre équipe.
           </p>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-text-primary mb-2">
               Rôle par défaut
             </label>
             <select
               value={roleToInvite}
               onChange={(e) => setRoleToInvite(e.target.value as TeamRole)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full px-3 py-2 border border-border-strong rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="member">Membre</option>
               <option value="admin">Administrateur</option>
@@ -499,7 +499,7 @@ export default function TeamSettingsPage() {
 
           {generatedLink && (
             <div className="space-y-2">
-              <label className="block text-sm font-medium text-gray-700">
+              <label className="block text-sm font-medium text-text-primary">
                 Lien d'invitation
               </label>
               <div className="flex gap-2">
@@ -507,7 +507,7 @@ export default function TeamSettingsPage() {
                   type="text"
                   value={generatedLink}
                   readOnly
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-sm"
+                  className="flex-1 px-3 py-2 border border-border-strong rounded-lg bg-bg-elevated text-sm"
                 />
                 <Button
                   variant="secondary"
@@ -516,7 +516,7 @@ export default function TeamSettingsPage() {
                   {copiedStates['generated'] ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
                 </Button>
               </div>
-              <p className="text-xs text-gray-500">
+              <p className="text-xs text-text-secondary">
                 Ce lien expire dans 7 jours.
               </p>
             </div>

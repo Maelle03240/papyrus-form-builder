@@ -164,12 +164,6 @@ export const COUNTRIES: Country[] = [
   { code: 'BM', name: 'Bermudes', flag: '🇧🇲', dialCode: '+1441' }
 ]
 
-function normalizeForSearch(text: string): string {
-  return text.normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase()
-    .trim()
-}
 
 export function getCountry(code?: string): Country {
   return COUNTRIES.find((c) => c.code === code) ?? COUNTRIES[0]

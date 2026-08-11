@@ -1,6 +1,6 @@
 'use client';
 
-import type { Field, Form, FormStatus, MultilingualText, LogicRule } from '@/types';
+import type { Field, Form, MultilingualText, LogicRule } from '@/types';
 import { createClient } from '@/lib/supabase/client';
 import { uniqueSlug } from '@/lib/utils';
 
@@ -55,21 +55,7 @@ function notifyFormDeleted(formId: string) {
   }
 }
 
-function notifyFieldUpdated(formId: string, fieldId: string, field: Field) {
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('papyrus:field-updated', {
-      detail: { formId, fieldId, field }
-    }));
-  }
-}
 
-function notifyFieldsReordered(formId: string, fields: Field[]) {
-  if (typeof window !== 'undefined') {
-    window.dispatchEvent(new CustomEvent('papyrus:fields-reordered', {
-      detail: { formId, fields }
-    }));
-  }
-}
 
 async function getCurrentUser() {
   const supabase = createClient();
@@ -180,7 +166,7 @@ export async function createForm(title = 'Nouveau formulaire', customTeamId?: st
     is_template: false,
     template_origin_id: null,
     theme: {
-      bg: '#F7F0DC',
+      bg: '#EFF9FE',
       accent: '#052139',
       font: 'Aktiv Grotesk',
       banner_url: null,
@@ -329,7 +315,7 @@ export async function updateForm(id: string, patch: Partial<Form>): Promise<Form
   const supabase = createClient();
 
   // Séparer les champs, logic_rules et workspace_id (non présent dans la BDD Supabase) du reste des données
-  const { fields, logic_rules, workspace_id, ...formPatch } = patch;
+  const { fields, logic_rules, workspace_id: _workspaceIdIgnored, ...formPatch } = patch;
 
   // Mettre à jour le formulaire principal
   const { data: form, error: formError } = await supabase
@@ -971,7 +957,7 @@ export async function importForm(
     is_template: false,
     template_origin_id: null,
     theme: formJson.theme || {
-      bg: '#F7F0DC',
+      bg: '#EFF9FE',
       accent: '#052139',
       font: 'Aktiv Grotesk',
       banner_url: null,
@@ -989,7 +975,7 @@ export async function importForm(
     updated_at: now
   };
   
-  const { data: form, error: formError } = await supabase
+  const { data: _form, error: formError } = await supabase
     .from('forms')
     .insert(formData)
     .select()

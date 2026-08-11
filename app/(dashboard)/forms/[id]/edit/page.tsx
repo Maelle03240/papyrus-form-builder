@@ -86,7 +86,7 @@ export default function BuilderPage() {
       if (queue.pendingRequest) {
         try {
           await queue.pendingRequest;
-        } catch (error) {
+        } catch {
           // Ignorer les erreurs de la requête précédente
         }
       }
@@ -134,7 +134,7 @@ export default function BuilderPage() {
 
       try {
         await queue.pendingRequest;
-      } catch (error) {
+      } catch {
         // Erreur déjà gérée dans le catch ci-dessus
       }
     }, 1500);
@@ -518,7 +518,7 @@ export default function BuilderPage() {
     if (patch.fields_icons_enabled === true && form.fields) {
       updatedFields = form.fields.map(f => {
         if (f.style && 'icon_enabled' in f.style) {
-          const { icon_enabled, ...restStyle } = f.style;
+          const { icon_enabled: _removed, ...restStyle } = f.style;
           return { ...f, style: restStyle };
         }
         return f;
@@ -570,7 +570,7 @@ export default function BuilderPage() {
     if (patch.theme?.fields_icons_enabled === true && updatedFields) {
       updatedFields = updatedFields.map(f => {
         if (f.style && 'icon_enabled' in f.style) {
-          const { icon_enabled, ...restStyle } = f.style;
+          const { icon_enabled: _removed, ...restStyle } = f.style;
           return { ...f, style: restStyle };
         }
         return f;

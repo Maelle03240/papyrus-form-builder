@@ -149,7 +149,7 @@ function calculateMatrixScore(field: Field, response: any): { score: number; max
   const maxScore = rows.length * maxScorePerRow;
 
   // response format: { [rowId]: string | string[] }
-  for (const [rowId, rowResponse] of Object.entries(response)) {
+  for (const [_rowId, rowResponse] of Object.entries(response)) {
     if (mode === 'single') {
       // Une seule réponse par ligne
       const selectedColumn = columns.find(col => col.id === rowResponse);

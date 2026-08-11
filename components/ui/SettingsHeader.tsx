@@ -19,7 +19,7 @@ export function SettingsHeader({ icon: Icon, title, description, className }: Se
         </h1>
       </div>
       {description && (
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-text-secondary">
           {description}
         </p>
       )}

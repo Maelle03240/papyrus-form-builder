@@ -2,7 +2,7 @@
 
 import { useState, useCallback, useMemo } from 'react';
 import type { Form } from '@/types';
-import { calculateFormScore, type FormResponses, type ScoreResult } from '@/lib/scoring';
+import { calculateFormScore, type FormResponses } from '@/lib/scoring';
 
 /**
  * Hook pour gérer le score d'un formulaire en temps réel.

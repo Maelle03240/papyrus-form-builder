@@ -4,48 +4,63 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================================
+   Identité visuelle Mooove — V1.0
+   « Une marque minimaliste. Premium. En mouvement. »
+
+   Six couleurs, une hiérarchie claire :
+     · Navy   ancre la marque dans le sérieux et le premium
+     · Cyan   apporte le mouvement (CTA, énergie)
+     · Ambre  introduit la chaleur humaine
+
+   Règle d'usage (dosage) : 75 % Navy + blanc · 15 % Cyan · 5 % Blue & Sky ·
+   5 % Ambre. L'ambre est une épice : puissante en petite dose, écrasante en
+   excès — et JAMAIS dans le même bloc visuel que le Cyan.
+   ============================================================================ */
+
 :root {
-  /* Palette Mooove — officielle */
-  --mooove-navy: #052139;
-  --mooove-cyan: #2AC2DE;
-  --mooove-amber: #F6923E;
-  --mooove-electric: #3C5EAB;
-  --mooove-ice: #EFF9FE;
-  --mooove-sky: #C7EAFB;
+  /* Palette Mooove — officielle, valeurs de la charte */
+  --mooove-navy: #052139;      /* Couleur principale / autorité */
+  --mooove-cyan: #2ac2de;      /* Accentuation / CTA / énergie */
+  --mooove-amber: #f6923e;     /* Chaleur / humain / contraste chaud */
+  --mooove-electric: #3c5eab;  /* Audace. Affirmation. Ambition. */
+  --mooove-ice: #eff9fe;       /* Couleur texte et fond secondaire */
+  --mooove-sky: #c7eafb;       /* Accents doux / séparateurs */
 
-  /* Palette Papyrus — thème clair */
-  --papyrus-bg: #F7F0DC;
-  --papyrus-surface: #FFFDF5;
-  --papyrus-border: #D4B896;
-  --papyrus-muted: #8B7355;
-  --papyrus-ink: #2A1F0E;
-
-  /* Thème clair (défaut) */
-  --bg-base: #F7F0DC;
-  --bg-surface: #FFFDF5;
-  --bg-elevated: #FFF8E8;
-  --bg-overlay: #F0E6C8;
-  --border: #D4B896;
-  --border-strong: #C4A882;
+  /* ---- Tokens sémantiques — thème clair (défaut) ----
+     Fond Ice Blue plutôt que blanc pur : la charte l'utilise comme fond
+     secondaire, il donne à l'interface sa fraîcheur sans casser le contraste. */
+  --bg-base: #f4fafe;
+  --bg-surface: #ffffff;
+  --bg-elevated: #eff9fe;
+  --bg-overlay: #dff1fb;
+  --border: #c7eafb;
+  --border-strong: #9fd4ee;
   --text-primary: #052139;
-  --text-secondary: #8B7355;
-  --text-tertiary: #B8A080;
+  --text-secondary: #4a6b82;
+  --text-tertiary: #8aa6b8;
   --accent: #052139;
-  --accent-cta: #2AC2DE;
-  --accent-warm: #F6923E;
-  --accent-bold: #3C5EAB;
-  --success: #2AC2DE;
-  --warning: #F6923E;
-  --danger: #C0392B;
+  --accent-cta: #2ac2de;
+  --accent-warm: #f6923e;
+  --accent-bold: #3c5eab;
+  --success: #1a9e73;
+  --warning: #f6923e;
+  --danger: #c0392b;
+
+  /* Coins arrondis — compact / standard / cards */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 20px;
 
-  /* Typographie — par défaut Aktiv Grotesk (identité Mooove). var(--font-aktiv) est
-     chargée par next/font dans app/layout.tsx (DM Sans = substitut libre d'Aktiv Grotesk). */
+  /* ---- Typographie ----
+     « Une seule famille typographique. Deux poids. Zéro compromis. »
+     Aktiv Grotesk est la police de la charte ; elle est sur Adobe Fonts (licence
+     payante). DM Sans, chargée par next/font, en est le substitut libre le plus
+     proche : si un kit Typekit est ajouté au projet, le navigateur prendra
+     Aktiv Grotesk en priorité grâce à l'ordre de ce fallback. */
   --font-body: var(--font-aktiv), 'Aktiv Grotesk', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-display: var(--font-aktiv), 'Aktiv Grotesk', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-serif: Georgia, 'Times New Roman', serif; /* identité Papyrus, en option */
+  --font-serif: Georgia, 'Times New Roman', serif; /* citations uniquement */
   --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 
   /* Sidebar — tailles fluides proportionnelles à l'écran */
@@ -83,23 +98,25 @@
   --input-height: clamp(32px, 4.5vw, 40px);
 }
 
+/* Thème sombre — le Navy passe au fond, le Cyan devient la couleur d'accent
+   principale (version inversée de la charte). */
 [data-theme='dark'] {
   --bg-base: #052139;
-  --bg-surface: #0A3050;
-  --bg-elevated: #0D3A60;
-  --bg-overlay: #1A4A72;
-  --border: #1A4A72;
-  --border-strong: #3C5EAB;
-  --text-primary: #EFF9FE;
-  --text-secondary: #C7EAFB;
-  --text-tertiary: #4A6B8A;
-  --accent: #2AC2DE;
-  --accent-cta: #2AC2DE;
-  --accent-warm: #F6923E;
-  --accent-bold: #3C5EAB;
-  --success: #2AC2DE;
-  --warning: #F6923E;
-  --danger: #E74C3C;
+  --bg-surface: #0a3050;
+  --bg-elevated: #0d3a60;
+  --bg-overlay: #1a4a72;
+  --border: #1a4a72;
+  --border-strong: #3c5eab;
+  --text-primary: #eff9fe;
+  --text-secondary: #c7eafb;
+  --text-tertiary: #6b8ba5;
+  --accent: #2ac2de;
+  --accent-cta: #2ac2de;
+  --accent-warm: #f6923e;
+  --accent-bold: #3c5eab;
+  --success: #2ac2de;
+  --warning: #f6923e;
+  --danger: #e74c3c;
 }
 
 @layer base {
@@ -114,14 +131,31 @@
     background-color: var(--bg-base);
     color: var(--text-primary);
     font-family: var(--font-body);
-    font-size: 1.25rem; /* 20px de base - taille Tally */
+    font-size: 1rem;
     line-height: 1.6;
   }
+  /* Hiérarchie typographique de la charte : titres en Bold, interlettrage
+     resserré, une seule famille. */
   h1,
-  h2 {
+  h2,
+  h3 {
     font-family: var(--font-display);
     letter-spacing: -0.02em;
+    font-weight: 700;
+  }
+  /* Libellés, tags et CTA : petits, semi-bold, en majuscules espacées. */
+  .mooove-label {
+    font-size: 0.6875rem;
     font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-cta);
+  }
+  /* Citations — le seul endroit où l'italique serif est conservé. */
+  blockquote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    color: var(--text-secondary);
   }
   /* Scrollbar discret */
   ::-webkit-scrollbar {
@@ -148,19 +182,21 @@
 
 @layer components {
   .papyrus-divider {
-    border-top: 1px dashed var(--border);
+    border-top: 1px solid var(--border);
   }
-  /* Petites notes "i. ..." — restent en italique serif (flourish Papyrus, marque de fabrique) */
-  .papyrus-meta {
-    color: var(--text-secondary);
-    font-style: italic;
-    font-family: var(--font-serif);
-  }
-  /* Numérotation romaine — idem, on garde la touche serif italique caractéristique */
+  /*
+   * Notes secondaires (« i. … ») et numérotations.
+   *
+   * Elles étaient en Georgia italique — un reste de l'ancienne identité
+   * « parchemin ». La charte Mooove impose une seule famille typographique :
+   * ces libellés passent donc en sans-serif, en petit et en semi-bold, comme
+   * les autres labels de la charte.
+   */
+  .papyrus-meta,
   .papyrus-numeral {
-    font-family: var(--font-serif);
+    font-family: var(--font-body);
+    font-style: normal;
     color: var(--text-secondary);
-    font-style: italic;
   }
 }
 
@@ -170,15 +206,15 @@
 
 /* Override du pseudo-élément indicateur de resize : couleur Parchemin */
 .react-grid-item > .react-resizable-handle::after {
-  border-right-color: var(--papyrus-border);
-  border-bottom-color: var(--papyrus-border);
+  border-right-color: var(--border-strong);
+  border-bottom-color: var(--border-strong);
   width: 8px;
   height: 8px;
 }
 
 /* Fantôme de destination pendant drag/resize — v2 : classe combinée */
 .react-grid-item.react-grid-placeholder {
-  background: var(--papyrus-border) !important;
+  background: var(--border-strong) !important;
   opacity: 0.25 !important;
   border-radius: 20px;
 }

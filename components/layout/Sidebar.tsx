@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
@@ -8,7 +8,6 @@ import {
   FileText,
   Settings,
   CreditCard,
-  Folder,
   Users,
   User,
   ChevronRight,
@@ -23,7 +22,6 @@ import {
   Edit2,
   Copy,
   Trash2,
-  Link2,
   FolderInput,
   Share2
 } from 'lucide-react';
@@ -33,17 +31,15 @@ import {
   getWorkspaces,
   createWorkspace,
   updateWorkspace,
-  deleteWorkspace,
-  initDefaultWorkspace,
-  getWorkspaceForms
-} from '@/lib/store/local-workspaces';
+  deleteWorkspace
+} from '@/lib/store/workspaces';
 import type { Workspace, Form, WorkspaceScope } from '@/types';
 import { Modal } from '@/components/ui/Modal';
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { Button } from '@/components/ui/Button';
 import { toast } from '@/components/ui/Toast';
-import { createForm, createTeam, updateTeamName, cloneForm, deleteForm, updateForm } from '@/lib/store';
+import { createForm, cloneForm, deleteForm, updateForm } from '@/lib/store';
 
 interface Props {
   teamName?: string;
@@ -55,9 +51,7 @@ interface Props {
 }
 
 export function Sidebar({
-  teamName,
   userEmail,
-  activeTeam,
   allTeams,
   isCollapsed = false,
   onToggle
@@ -66,7 +60,6 @@ export function Sidebar({
   const router = useRouter();
   const searchParams = useSearchParams();
   const activeWorkspaceId = searchParams.get('workspace');
-  const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
 
   // Liste des espaces
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
@@ -113,48 +106,32 @@ export function Sidebar({
   const [movingFormId, setMovingFormId] = useState<string | null>(null);
   const formMenuButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
-  // Liste de tous les formulaires Supabase pour filtrage par équipe en mode non-local
+  // Tous les formulaires accessibles, pour les regrouper par espace de travail
   const [allForms, setAllForms] = useState<Form[]>([]);
 
-  function loadWorkspaces(userId?: string) {
-    let list: Workspace[] = [];
-    if (isLocal) {
-      list = getWorkspaces(userId);
-    } else {
-      list = (allTeams || []).map((t) => ({
-        id: t.id,
-        name: t.name,
-        scope: (t.name === 'Mon espace' ? 'personal' : 'team') as WorkspaceScope,
-        is_deletable: t.name !== 'Mon espace',
-        created_by: userId || '',
-        created_at: ''
-      })).sort((a, b) => {
-        if (a.name === 'Mon espace') return -1;
-        if (b.name === 'Mon espace') return 1;
-        return 0;
-      });
-    }
-    setWorkspaces(list);
-    
-    // Ouvrir par défaut le premier workspace perso s'il n'y a aucun état d'ouverture
-    if (Object.keys(openAccordions).length === 0 && list.length > 0) {
-      setOpenAccordions({ [list[0].id]: true });
-    }
-  }
+  /**
+   * Recharge la liste des espaces depuis Supabase.
+   *
+   * `allTeams`, transmis par le layout serveur, sert d'affichage immédiat pour
+   * éviter une sidebar vide au premier rendu ; la requête client prend ensuite
+   * le relais avec les métadonnées complètes (scope, suppressible ou non).
+   */
+  const loadWorkspaces = useCallback(async () => {
+    try {
+      const list = await getWorkspaces();
+      setWorkspaces(list);
 
-  // Helper pour trouver un formulaire par son ID
-  const findFormById = (formId: string): Form | null => {
-    if (isLocal) {
-      for (const ws of workspaces) {
-        const forms = getWorkspaceForms(ws.id);
-        const f = forms.find(form => form.id === formId);
-        if (f) return f;
-      }
-      return null;
-    } else {
-      return allForms.find(f => f.id === formId) || null;
+      setOpenAccordions((current) =>
+        Object.keys(current).length === 0 && list.length > 0 ? { [list[0].id]: true } : current
+      );
+    } catch (err) {
+      console.error('Failed to load workspaces:', err);
     }
-  };
+  }, []);
+
+  /** Retrouve un formulaire déjà chargé. */
+  const findFormById = (formId: string): Form | null =>
+    allForms.find((form) => form.id === formId) ?? null;
 
   const handleRenameFormSubmit = async (formId: string) => {
     if (!editFormTitle.trim()) {
@@ -208,9 +185,8 @@ export function Sidebar({
 
   const handleMoveForm = async (formId: string, targetWorkspaceId: string) => {
     try {
-      const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
-      const patch = isLocal ? { workspace_id: targetWorkspaceId } : { team_id: targetWorkspaceId };
-      await updateForm(formId, patch);
+      // L'espace de travail d'un formulaire, c'est son team_id.
+      await updateForm(formId, { team_id: targetWorkspaceId });
       toast.success('Formulaire déplacé avec succès !');
       setMovingFormId(null);
     } catch (err) {
@@ -245,66 +221,49 @@ export function Sidebar({
   };
 
 
-  // Charger les espaces et initialiser le défaut au montage
+  // Espaces de travail : rendu immédiat depuis le layout serveur, puis rechargement.
   useEffect(() => {
-    async function initWorkspaces() {
-      let userId = 'local-user';
-      if (isLocal) {
-        initDefaultWorkspace('local-user');
-      } else {
-        // Mode Supabase : récupérer l'ID utilisateur et initialiser le workspace
-        const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          userId = user.id;
-          initDefaultWorkspace(user.id);
-        }
-      }
-      loadWorkspaces(userId);
+    if (workspaces.length === 0 && allTeams && allTeams.length > 0) {
+      setWorkspaces(
+        allTeams.map((team) => ({
+          id: team.id,
+          name: team.name,
+          scope: 'team' as WorkspaceScope,
+          is_deletable: true,
+          created_by: '',
+          created_at: ''
+        }))
+      );
     }
 
-    initWorkspaces();
+    loadWorkspaces();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLocal, allTeams]);
+  }, [allTeams, loadWorkspaces]);
 
-  // Écouter les changements de workspaces localStorage
   useEffect(() => {
-    const handleWorkspacesChanged = async () => {
-      let userId = 'local-user';
-      if (!isLocal) {
-        const supabase = createClient();
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user) userId = user.id;
-      }
-      loadWorkspaces(userId);
+    const handleWorkspacesChanged = () => {
+      loadWorkspaces();
     };
     window.addEventListener('papyrus:workspaces-changed', handleWorkspacesChanged);
     return () => {
       window.removeEventListener('papyrus:workspaces-changed', handleWorkspacesChanged);
     };
-  }, [isLocal]);
+  }, [loadWorkspaces]);
 
-  // Charger tous les formulaires et recharger les workspaces en cas de changement
+  // Formulaires, rechargés à chaque mutation signalée par le store.
   useEffect(() => {
     async function loadAllForms() {
-      if (!isLocal) {
-        try {
-          const { listForms } = await import('@/lib/store');
-          const formsList = await listForms();
-          setAllForms(formsList);
-          // Émettre un événement personnalisé quand les formulaires sont chargées
-          window.dispatchEvent(new CustomEvent('papyrus:forms-loaded'));
-        } catch (err) {
-          console.error("Failed to load forms in Sidebar:", err);
-        }
-      } else {
-        // En mode local, recharger les workspaces pour mettre à jour les formulaires
-        loadWorkspaces();
+      try {
+        const { listForms } = await import('@/lib/store');
+        setAllForms(await listForms());
+        window.dispatchEvent(new CustomEvent('papyrus:forms-loaded'));
+      } catch (err) {
+        console.error('Failed to load forms in Sidebar:', err);
       }
     }
+
     loadAllForms();
 
-    // Recharger sur évènement forms-changed
     const handleFormsChanged = () => {
       loadAllForms();
     };
@@ -318,7 +277,7 @@ export function Sidebar({
       window.removeEventListener('papyrus:form-updated', handleFormsChanged);
       window.removeEventListener('papyrus:form-deleted', handleFormsChanged);
     };
-  }, [isLocal]);
+  }, []);
 
   const toggleAccordion = (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
@@ -330,25 +289,12 @@ export function Sidebar({
     if (!newWorkspaceName.trim()) return;
 
     try {
-      if (isLocal) {
-        createWorkspace({
-          name: newWorkspaceName.trim(),
-          scope: 'team',
-          is_deletable: true,
-          created_by: 'local-user'
-        });
-      } else {
-        await createTeam(newWorkspaceName.trim());
-      }
+      await createWorkspace(newWorkspaceName.trim());
       setNewWorkspaceName('');
       setIsCreating(false);
-      
-      if (!isLocal) {
-        router.refresh();
-      } else {
-        loadWorkspaces();
-      }
-      toast.success('Workspace créé avec succès !');
+      await loadWorkspaces();
+      router.refresh();
+      toast.success('Espace de travail créé.');
     } catch (err) {
       console.error(err);
       toast.error('Erreur lors de la création du workspace');
@@ -367,24 +313,11 @@ export function Sidebar({
     if (!renameValue.trim() || !renamingId) return;
 
     try {
-      if (isLocal) {
-        updateWorkspace(renamingId, { name: renameValue.trim() });
-        setRenamingId(null);
-        loadWorkspaces();
-      } else {
-        const res = await fetch('/api/teams', {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ teamId: renamingId, name: renameValue.trim() })
-        });
-        if (!res.ok) {
-          const errData = await res.json();
-          throw new Error(errData.error || 'Erreur lors du renommage');
-        }
-        setRenamingId(null);
-        window.location.reload();
-      }
-      toast.success('Workspace renommé !');
+      await updateWorkspace(renamingId, { name: renameValue.trim() });
+      setRenamingId(null);
+      await loadWorkspaces();
+      router.refresh();
+      toast.success('Espace de travail renommé.');
     } catch (err: any) {
       console.error(err);
       toast.error(err.message || 'Erreur lors de la modification');
@@ -395,24 +328,11 @@ export function Sidebar({
     if (!deletingWorkspace) return;
 
     try {
-      if (isLocal) {
-        deleteWorkspace(deletingWorkspace.id);
-        setDeletingWorkspace(null);
-        loadWorkspaces();
-      } else {
-        const res = await fetch('/api/teams', {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ teamId: deletingWorkspace.id })
-        });
-        if (!res.ok) {
-          const errData = await res.json();
-          throw new Error(errData.error || 'Erreur lors de la suppression');
-        }
-        setDeletingWorkspace(null);
-      }
-      toast.success('Workspace supprimé.');
-      window.location.href = '/dashboard';
+      await deleteWorkspace(deletingWorkspace.id);
+      setDeletingWorkspace(null);
+      toast.success('Espace de travail supprimé.');
+      router.push('/dashboard');
+      router.refresh();
     } catch (err: any) {
       console.error(err);
       toast.error(err.message || 'Erreur lors de la suppression');
@@ -421,14 +341,8 @@ export function Sidebar({
   // Fonction pour charger les membres de l'équipe
   const loadMembers = async (workspaceId: string) => {
     try {
-      if (isLocal) {
-        const { getMembers } = await import('@/lib/store/local-workspaces');
-        setWorkspaceMembers(getMembers(workspaceId));
-      } else {
-        const { listTeamMembers } = await import('@/lib/store');
-        const list = await listTeamMembers(workspaceId);
-        setWorkspaceMembers(list);
-      }
+      const { listTeamMembers } = await import('@/lib/store');
+      setWorkspaceMembers(await listTeamMembers(workspaceId));
     } catch (err) {
       console.error('Error loading workspace members:', err);
     }
@@ -440,20 +354,8 @@ export function Sidebar({
     setMemberLoading(true);
 
     try {
-      // Ajouter le membre
-      if (isLocal) {
-        const { addMember } = await import('@/lib/store/local-workspaces');
-        addMember({
-          user_id: `user-${Date.now()}`,
-          workspace_id: managingWorkspace.id,
-          role: 'member',
-          name: 'Nouveau membre',
-          email: newMemberEmail.trim()
-        });
-      } else {
-        const { addTeamMember } = await import('@/lib/store');
-        await addTeamMember(managingWorkspace.id, newMemberEmail.trim(), 'member');
-      }
+      const { addTeamMember } = await import('@/lib/store');
+      await addTeamMember(managingWorkspace.id, newMemberEmail.trim(), 'member');
 
       // Envoyer l'email d'invitation si demandé
       if (sendEmailInvite) {
@@ -506,13 +408,8 @@ export function Sidebar({
     setRemoveLoading(true);
 
     try {
-      if (isLocal) {
-        const { removeMember } = await import('@/lib/store/local-workspaces');
-        removeMember(managingWorkspace.id, memberToRemove.id);
-      } else {
-        const { deleteTeamMember } = await import('@/lib/store');
-        await deleteTeamMember(managingWorkspace.id, memberToRemove.id);
-      }
+      const { deleteTeamMember } = await import('@/lib/store');
+      await deleteTeamMember(managingWorkspace.id, memberToRemove.id);
       await loadMembers(managingWorkspace.id);
       toast.success('Membre retiré.');
     } catch (err) {
@@ -587,7 +484,7 @@ export function Sidebar({
     { href: '/billing', label: 'Billing', icon: CreditCard, badge: 'Bientôt' }
   ];
 
-  const currentUserEmail = userEmail || 'local@papyrus.dev';
+  const _currentUserEmail = userEmail || 'local@papyrus.dev';
 
   // État pour l'utilisateur Supabase
   const [currentUser, setCurrentUser] = useState<any>(null);
@@ -616,9 +513,7 @@ export function Sidebar({
       // Ouvrir l'accordion du workspace pour afficher le formulaire
       setOpenAccordions((prev) => ({ ...prev, [workspaceId]: true }));
 
-      if (!isLocal) {
-        document.cookie = `papyrus:active-team-id=${workspaceId}; path=/; max-age=31536000; SameSite=Lax`;
-      }
+      document.cookie = `papyrus:active-team-id=${workspaceId}; path=/; max-age=31536000; SameSite=Lax`;
       const newForm = await createForm('Nouveau formulaire', workspaceId);
 
       router.push(`/forms/${newForm.id}/edit`);
@@ -855,9 +750,7 @@ export function Sidebar({
           <div className="space-y-1">
             {workspaces.map((ws) => {
               const isOpen = !!openAccordions[ws.id];
-              const forms = isLocal
-                ? getWorkspaceForms(ws.id)
-                : allForms.filter((f) => f.team_id === ws.id);
+              const forms = allForms.filter((f) => f.team_id === ws.id);
               const hasForms = forms.length > 0;
               const displayedForms = forms.slice(0, 5);
               const hasMoreForms = forms.length > 5;
@@ -867,7 +760,7 @@ export function Sidebar({
                 <div key={ws.id} className="group relative rounded-md transition duration-150">
                   {/* Item ligne workspace */}
                   <div
-                    onClick={(e) => {
+                    onClick={(_e) => {
                       if (renamingId === ws.id) return;
                       router.push(`/forms?workspace=${ws.id}`);
                     }}
@@ -1172,7 +1065,7 @@ export function Sidebar({
               }}
               className="flex items-center justify-center rounded-full bg-mooove-navy text-mooove-ice font-bold font-display"
             >
-              {(isLocal ? 'LO' : (userEmail || currentUser?.email || 'U')).charAt(0).toUpperCase()}
+              {(userEmail || currentUser?.email || 'U').charAt(0).toUpperCase()}
             </div>
             {/* Info text */}
             <div className="flex flex-col leading-tight truncate">
@@ -1180,12 +1073,12 @@ export function Sidebar({
                 style={{ fontSize: 'var(--sidebar-text-sm)' }}
                 className={cn("font-display font-medium text-text-primary truncate transition-all duration-200", isCollapsed && "hidden")}
               >
-                {isLocal ? 'local@papyrus.dev' : (userEmail || currentUser?.email || 'Utilisateur')}
+                {userEmail || currentUser?.email || 'Utilisateur'}
               </span>
             </div>
           </div>
-          
-          {!isLocal && !isCollapsed && (
+
+          {!isCollapsed && (
             <button
               onClick={handleLogout}
               className="p-1.5 rounded-md hover:bg-bg-elevated text-text-tertiary hover:text-danger transition shrink-0"
@@ -1426,8 +1319,7 @@ export function Sidebar({
             <div className="space-y-2 max-h-80 overflow-y-auto">
               {workspaces.map((ws) => {
                 const form = movingFormId ? findFormById(movingFormId) : null;
-                const currentWsId = isLocal ? form?.workspace_id : form?.team_id;
-                const isCurrent = currentWsId === ws.id;
+                const isCurrent = form?.team_id === ws.id;
 
                 return (
                   <button

@@ -36,11 +36,11 @@ export const MOOOOVE_TEMPLATES: Form[] = [
     template_description: 'Score de recommandation 0-10 + raison libre. Le standard pour mesurer la fidélité.',
     template_icon: 'Smile',
     theme: {
-      bg: '#F7F0DC',
+      bg: '#EFF9FE',
       accent: '#052139',
       font: 'Aktiv Grotesk',
       bg_type: 'preset',
-      bg_preset: 'parchemin'
+      bg_preset: 'ice'
     },
     access_type: 'public',
     languages: ['fr'],
@@ -110,11 +110,11 @@ export const MOOOOVE_TEMPLATES: Form[] = [
     template_description: 'Note étoiles + retour structuré pour comprendre ce qui marche et ce qui coince.',
     template_icon: 'Star',
     theme: {
-      bg: '#F7F0DC',
+      bg: '#EFF9FE',
       accent: '#052139',
       font: 'Aktiv Grotesk',
       bg_type: 'preset',
-      bg_preset: 'parchemin'
+      bg_preset: 'ice'
     },
     access_type: 'public',
     languages: ['fr'],
@@ -201,11 +201,11 @@ export const MOOOOVE_TEMPLATES: Form[] = [
     template_description: 'Le brief idéal pour démarrer un projet client : objectifs, deadline, références, budget.',
     template_icon: 'Lightbulb',
     theme: {
-      bg: '#F7F0DC',
+      bg: '#EFF9FE',
       accent: '#052139',
       font: 'Aktiv Grotesk',
       bg_type: 'preset',
-      bg_preset: 'parchemin'
+      bg_preset: 'ice'
     },
     access_type: 'public',
     languages: ['fr'],
@@ -317,11 +317,11 @@ export const MOOOOVE_TEMPLATES: Form[] = [
     template_description: 'Nom, contact, choix de session, restrictions alimentaires. Tout pour organiser sereinement.',
     template_icon: 'Calendar',
     theme: {
-      bg: '#F7F0DC',
+      bg: '#EFF9FE',
       accent: '#052139',
       font: 'Aktiv Grotesk',
       bg_type: 'preset',
-      bg_preset: 'parchemin'
+      bg_preset: 'ice'
     },
     access_type: 'public',
     languages: ['fr'],
@@ -434,11 +434,11 @@ export const MOOOOVE_TEMPLATES: Form[] = [
     template_description: 'Identité, CV, expérience, motivation. Le minimum pour un premier tri propre.',
     template_icon: 'Briefcase',
     theme: {
-      bg: '#F7F0DC',
+      bg: '#EFF9FE',
       accent: '#052139',
       font: 'Aktiv Grotesk',
       bg_type: 'preset',
-      bg_preset: 'parchemin'
+      bg_preset: 'ice'
     },
     access_type: 'public',
     languages: ['fr'],
@@ -564,11 +564,11 @@ export const MOOOOVE_TEMPLATES: Form[] = [
     template_description: 'Court et ciblé : ce qui plaît, ce qui manque, ce qui agace. Idéal après une mise à jour.',
     template_icon: 'MessageSquare',
     theme: {
-      bg: '#F7F0DC',
+      bg: '#EFF9FE',
       accent: '#052139',
       font: 'Aktiv Grotesk',
       bg_type: 'preset',
-      bg_preset: 'parchemin'
+      bg_preset: 'ice'
     },
     access_type: 'public',
     languages: ['fr'],

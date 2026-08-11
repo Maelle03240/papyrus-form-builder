@@ -96,39 +96,6 @@ function getFieldLucideIcon(type: string) {
   }
 }
 
-function getConditionLabel(rule: LogicRule, fields: Field[]): string {
-  if (!rule.conditions || rule.conditions.length === 0) return 'Si rempli';
-
-  const condTexts = rule.conditions.map(c => {
-    const sourceField = fields.find(f => f.id === c.source_field_id);
-    let valText = c.value;
-    if (sourceField && sourceField.options) {
-      const opt = sourceField.options.find(o => o.id === c.value);
-      if (opt && opt.label?.fr) {
-        valText = opt.label.fr;
-      }
-    }
-
-    let opSymbol = '';
-    switch (c.operator) {
-      case 'equals': opSymbol = '='; break;
-      case 'not_equals': opSymbol = '≠'; break;
-      case 'contains': return `contient "${valText}"`;
-      case 'not_contains': return `ne contient pas "${valText}"`;
-      case 'greater_than': opSymbol = '>'; break;
-      case 'less_than': opSymbol = '<'; break;
-      default: opSymbol = c.operator;
-    }
-    return `${opSymbol} "${valText}"`;
-  });
-
-  if (condTexts.length === 1) {
-    return `Si ${condTexts[0]}`;
-  }
-
-  const op = rule.conditions_operator === 'OR' ? ' OU ' : ' ET ';
-  return `Si (${condTexts.join(op)})`;
-}
 
 function getDecisionLines(rule: LogicRule, fields: Field[]): string[] {
   if (!rule.conditions || rule.conditions.length === 0) {
@@ -179,15 +146,7 @@ function getDecisionLines(rule: LogicRule, fields: Field[]): string[] {
   return lines;
 }
 
-function truncateText(text: string, maxLen = 22): string {
-  if (!text) return '';
-  return text.length > maxLen ? text.substring(0, maxLen) + '...' : text;
-}
 
-function getBezierPath(x1: number, y1: number, x2: number, y2: number): string {
-  const dy = Math.abs(y2 - y1) / 2;
-  return `M ${x1} ${y1} C ${x1} ${y1 + dy} ${x2} ${y2 - dy} ${x2} ${y2}`;
-}
 
 export function FormFlowView({ form }: Props) {
   const fields = useMemo(() => {
@@ -555,7 +514,7 @@ export function FormFlowView({ form }: Props) {
             {layout.edges.map(edge => {
               let strokeColor = '#94A3B8';
               let strokeWidth = 1.5;
-              let isDashed = edge.isDefault && !edge.isConditionalSource;
+              const isDashed = edge.isDefault && !edge.isConditionalSource;
               let markerId = 'arrow-default';
 
               if (edge.labelType === 'oui' || edge.isConditionalSource) {

@@ -116,7 +116,7 @@ export default function InviteByTokenPage() {
       <div className="min-h-screen bg-var(--papyrus-bg) flex items-center justify-center">
         <div className="max-w-md mx-auto p-8 bg-var(--papyrus-surface) rounded-2xl border border-var(--papyrus-border) shadow-lg text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-var(--mooove-navy)" />
-          <p className="text-gray-600">Chargement de l'invitation...</p>
+          <p className="text-text-secondary">Chargement de l'invitation...</p>
         </div>
       </div>
     );
@@ -130,7 +130,7 @@ export default function InviteByTokenPage() {
           <h1 className="text-xl font-display font-medium text-var(--mooove-navy) mb-2">
             Invitation invalide
           </h1>
-          <p className="text-gray-600 mb-6">{error}</p>
+          <p className="text-text-secondary mb-6">{error}</p>
           <Button
             variant="primary"
             onClick={() => router.push('/dashboard')}
@@ -151,10 +151,10 @@ export default function InviteByTokenPage() {
           <h1 className="text-xl font-display font-medium text-var(--mooove-navy) mb-2">
             Invitation acceptée !
           </h1>
-          <p className="text-gray-600 mb-6">
+          <p className="text-text-secondary mb-6">
             Vous avez rejoint l'équipe <strong>{teamName}</strong>.
           </p>
-          <div className="flex items-center justify-center text-sm text-gray-500">
+          <div className="flex items-center justify-center text-sm text-text-secondary">
             <span>Redirection en cours...</span>
             <ArrowRight className="w-4 h-4 ml-2" />
           </div>
@@ -172,7 +172,7 @@ export default function InviteByTokenPage() {
             <h1 className="text-xl font-display font-medium text-var(--mooove-navy) mb-2">
               Invitation à rejoindre une équipe
             </h1>
-            <p className="text-gray-600">
+            <p className="text-text-secondary">
               Vous avez été invité à rejoindre l'équipe <strong>{teamName}</strong> sur Papyrus.
             </p>
           </div>
@@ -195,7 +195,7 @@ export default function InviteByTokenPage() {
           </div>
 
           <div className="text-center mt-6">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-text-secondary">
               En acceptant cette invitation, vous pourrez collaborer avec l'équipe {teamName}.
             </p>
           </div>
@@ -212,7 +212,7 @@ export default function InviteByTokenPage() {
           <h1 className="text-xl font-display font-medium text-var(--mooove-navy) mb-2">
             Invitation à rejoindre une équipe
           </h1>
-          <p className="text-gray-600 mb-4">
+          <p className="text-text-secondary mb-4">
             Vous avez été invité à rejoindre l'équipe <strong>{teamName}</strong> sur Papyrus via ce lien d'invitation.
           </p>
 
@@ -276,7 +276,7 @@ export default function InviteByTokenPage() {
 
         {invitation?.expires_at && (
           <div className="text-center mt-6">
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-text-secondary">
               Cette invitation expire le {new Date(invitation.expires_at).toLocaleDateString('fr-FR', {
                 year: 'numeric',
                 month: 'long',

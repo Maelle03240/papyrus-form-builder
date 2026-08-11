@@ -165,7 +165,7 @@ export function FormHeader({ theme, selectedElement, onSelectBanner, onSelectLog
   const imgY = (containerH * posYpct / 100) - (imgH / 2);
 
   // Fonction utilitaire clamp
-  const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+  const _clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
 
   // Initialisation du theme au mount si valeurs manquantes
   useEffect(() => {
@@ -297,17 +297,20 @@ export function FormHeader({ theme, selectedElement, onSelectBanner, onSelectLog
     const onMove = (ev: MouseEvent) => {
       const dx = ev.clientX - sx;
       const dy = ev.clientY - sy;
-      let { x, y, w, h } = snap;
+      // Seules la largeur et la hauteur sont exploitées : le redimensionnement se
+      // traduit en facteur d'échelle, pas en repositionnement. Les x/y calculés
+      // ici n'étaient jamais lus.
+      let { w, h } = snap;
 
-      switch(handle) {
-        case 'tl': x+=dx; y+=dy; w-=dx; h-=dy; break;
-        case 'tm':          y+=dy;        h-=dy; break;
-        case 'tr':          y+=dy; w+=dx; h-=dy; break;
-        case 'ml': x+=dx;         w-=dx;         break;
-        case 'mr':                w+=dx;         break;
-        case 'bl': x+=dx;         w-=dx; h+=dy;  break;
-        case 'bm':                       h+=dy;  break;
-        case 'br':                w+=dx; h+=dy;  break;
+      switch (handle) {
+        case 'tl': w -= dx; h -= dy; break;
+        case 'tm':          h -= dy; break;
+        case 'tr': w += dx; h -= dy; break;
+        case 'ml': w -= dx;          break;
+        case 'mr': w += dx;          break;
+        case 'bl': w -= dx; h += dy; break;
+        case 'bm':          h += dy; break;
+        case 'br': w += dx; h += dy; break;
       }
 
       // Taille minimum

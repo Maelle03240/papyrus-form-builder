@@ -6,8 +6,7 @@ import type { FormTheme } from '@/types';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { cn } from '@/lib/utils';
-
-const MAX_IMAGE_BYTES = 1.5 * 1024 * 1024;
+import { useMediaUpload } from '@/lib/hooks/useMediaUpload';
 
 interface Props {
   theme: FormTheme;
@@ -17,6 +16,7 @@ interface Props {
 
 export function FormHeaderSettings({ theme, selectedElement, onChange }: Props) {
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { upload: uploadImage, uploading, progress } = useMediaUpload();
 
   const [localBannerScale, setLocalBannerScale] = useState(theme.banner_scale ?? 1);
   const [localBannerX, setLocalBannerX] = useState(theme.banner_position_x ?? 50);
@@ -39,21 +39,11 @@ export function FormHeaderSettings({ theme, selectedElement, onChange }: Props) 
     setLocalLogoSize(theme.logo_size ?? 1);
   }, [theme.logo_size]);
 
-  function handleImageUpload(file: File) {
-    if (file.size > MAX_IMAGE_BYTES) {
-      alert(`Image trop lourde (${Math.round(file.size / 1024)} Ko). En mode local, max 1,5 Mo.`);
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const url = reader.result as string;
-      if (selectedElement === 'banner') {
-        onChange({ banner_url: url });
-      } else {
-        onChange({ logo_url: url });
-      }
-    };
-    reader.readAsDataURL(file);
+  /** L'image part directement vers Cloudflare R2 ; le thème ne garde que l'URL publique. */
+  async function handleImageUpload(file: File) {
+    const url = await uploadImage(file);
+    if (!url) return;
+    onChange(selectedElement === 'banner' ? { banner_url: url } : { logo_url: url });
   }
 
   if (selectedElement === 'banner') {
@@ -95,11 +85,12 @@ export function FormHeaderSettings({ theme, selectedElement, onChange }: Props) 
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex w-full flex-col items-center gap-2 rounded-md border border-dashed border-border-strong bg-bg-base px-4 py-6 text-sm text-text-secondary transition hover:border-accent"
+                disabled={uploading}
+                className="flex w-full flex-col items-center gap-2 rounded-md border border-dashed border-border-strong bg-bg-base px-4 py-6 text-sm text-text-secondary transition hover:border-accent disabled:cursor-wait disabled:opacity-60"
               >
                 <Upload className="h-5 w-5" />
-                Téléverser une bannière
-                <span className="text-xs text-text-tertiary">PNG, JPG, SVG · max 1,5 Mo</span>
+                {uploading ? `Envoi en cours… ${progress}%` : 'Téléverser une bannière'}
+                <span className="text-xs text-text-tertiary">PNG, JPG, WebP, SVG · max 10 Mo</span>
               </button>
             )}
 
@@ -276,11 +267,12 @@ export function FormHeaderSettings({ theme, selectedElement, onChange }: Props) 
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="flex w-full flex-col items-center gap-2 rounded-md border border-dashed border-border-strong bg-bg-base px-4 py-6 text-sm text-text-secondary transition hover:border-accent"
+              disabled={uploading}
+              className="flex w-full flex-col items-center gap-2 rounded-md border border-dashed border-border-strong bg-bg-base px-4 py-6 text-sm text-text-secondary transition hover:border-accent disabled:cursor-wait disabled:opacity-60"
             >
               <Upload className="h-5 w-5" />
-              Téléverser un logo
-              <span className="text-xs text-text-tertiary">PNG, JPG, SVG · format carré recommandé · max 1,5 Mo</span>
+              {uploading ? `Envoi en cours… ${progress}%` : 'Téléverser un logo'}
+              <span className="text-xs text-text-tertiary">PNG, JPG, WebP, SVG · format carré recommandé · max 10 Mo</span>
             </button>
           )}
 

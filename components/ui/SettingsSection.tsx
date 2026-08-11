@@ -21,7 +21,7 @@ export function SettingsSection({ icon: Icon, title, description, children, clas
           </h2>
         </div>
         {description && (
-          <p className="text-sm text-gray-600">
+          <p className="text-sm text-text-secondary">
             {description}
           </p>
         )}

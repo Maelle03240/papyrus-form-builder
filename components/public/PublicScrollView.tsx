@@ -3,11 +3,12 @@
 import type { Form, Field } from '@/types';
 import type { ScoreResult } from '@/lib/scoring';
 import { FormHeader } from '@/components/builder/FormHeader';
-import { FieldRenderer } from '@/components/builder/FieldRenderer';
+import {} from '@/components/builder/FieldRenderer';
 import { ScoreDisplay } from '@/components/respondent/ScoreDisplay';
 import { PublicFieldCard } from './PublicFieldCard';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from '@/components/ui/Toast';
 
 interface Props {
   form: Form;
@@ -43,7 +44,7 @@ export function PublicScrollView({
     const validation = validateRequiredFields();
     if (!validation.isValid) {
       const fieldNames = validation.missingFields.map(f => f.label.fr || 'Champ sans nom').join(', ');
-      alert(`Veuillez remplir les champs obligatoires : ${fieldNames}`);
+      toast.error(`Veuillez remplir les champs obligatoires : ${fieldNames}`);
       return;
     }
 

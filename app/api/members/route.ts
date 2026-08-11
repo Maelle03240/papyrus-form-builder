@@ -1,18 +1,61 @@
 import { NextResponse } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 
+export const dynamic = 'force-dynamic';
+
 /**
- * Gère la lecture (GET), l'invitation (POST) et le retrait (DELETE) de membres de workspaces
- * en utilisant le client d'administration côté serveur pour contourner les blocages RLS de team_members.
+ * Membres d'un espace de travail : lecture (GET), ajout (POST), changement de
+ * rôle (PATCH) et retrait (DELETE).
+ *
+ * Toutes les écritures utilisent la clé service_role, donc la RLS ne protège
+ * rien ici : c'est ce fichier, et lui seul, qui garantit qu'un appelant est bien
+ * administrateur de l'espace visé. Chaque handler revérifie ce droit — jamais
+ * une seule fois en amont, jamais sur la base d'un paramètre client.
  */
+
+const VALID_ROLES = ['admin', 'member', 'reader'] as const;
+
+/** Utilisateur de la session, ou `null`. */
+async function requireUser() {
+  const supabase = createClient();
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
+  return user;
+}
+
+function unauthenticated() {
+  return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
+}
+
+/** L'utilisateur est-il administrateur de cet espace ? */
+async function isTeamAdmin(teamId: string, userId: string): Promise<boolean> {
+  const { data } = await createAdminClient()
+    .from('team_members')
+    .select('role')
+    .eq('team_id', teamId)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  return data?.role === 'admin';
+}
+
+/** L'utilisateur appartient-il à cet espace, quel que soit son rôle ? */
+async function isTeamMember(teamId: string, userId: string): Promise<boolean> {
+  const { data } = await createAdminClient()
+    .from('team_members')
+    .select('user_id')
+    .eq('team_id', teamId)
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  return Boolean(data);
+}
 
 export async function GET(request: Request) {
   try {
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
-    }
+    const user = await requireUser();
+    if (!user) return unauthenticated();
 
     const { searchParams } = new URL(request.url);
     const teamId = searchParams.get('teamId');
@@ -20,19 +63,11 @@ export async function GET(request: Request) {
       return NextResponse.json({ error: 'Paramètre teamId manquant' }, { status: 400 });
     }
 
-    const adminSupabase = createAdminClient();
-
-    // Vérifier si l'utilisateur est bien membre de la team (pour pouvoir lister)
-    const { data: membership } = await adminSupabase
-      .from('team_members')
-      .select('role')
-      .eq('team_id', teamId)
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    if (!membership) {
+    if (!(await isTeamMember(teamId, user.id))) {
       return NextResponse.json({ error: 'Droits insuffisants' }, { status: 403 });
     }
+
+    const adminSupabase = createAdminClient();
 
     // Récupérer les membres de l'équipe
     const { data: members, error: membersError } = await adminSupabase
@@ -62,38 +97,32 @@ export async function GET(request: Request) {
 
     return NextResponse.json(formatted);
   } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : String(err);
+    // Le détail reste dans les logs serveur : le renvoyer au client exposerait
+    // la structure de la base et les messages d'erreur Postgres.
     console.error('Error listing team members:', err);
-    return NextResponse.json({ error: errorMsg }, { status: 500 });
+    return NextResponse.json({ error: 'Erreur interne du serveur' }, { status: 500 });
   }
 }
 
 export async function POST(request: Request) {
   try {
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
-    }
+    const user = await requireUser();
+    if (!user) return unauthenticated();
 
     const { teamId, email, role = 'member' } = await request.json();
     if (!teamId || !email?.trim()) {
       return NextResponse.json({ error: 'Paramètres manquants' }, { status: 400 });
     }
 
-    const adminSupabase = createAdminClient();
+    if (!VALID_ROLES.includes(role)) {
+      return NextResponse.json({ error: 'Rôle invalide' }, { status: 400 });
+    }
 
-    // Vérifier si l'utilisateur est bien admin de la team (pour inviter)
-    const { data: membership } = await adminSupabase
-      .from('team_members')
-      .select('role')
-      .eq('team_id', teamId)
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    if (!membership || membership.role !== 'admin') {
+    if (!(await isTeamAdmin(teamId, user.id))) {
       return NextResponse.json({ error: 'Droits insuffisants' }, { status: 403 });
     }
+
+    const adminSupabase = createAdminClient();
 
     // 1. Chercher l'utilisateur par e-mail dans profiles
     const { data: profile, error: profileError } = await adminSupabase
@@ -124,40 +153,99 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : String(err);
     console.error('Error adding team member:', err);
-    return NextResponse.json({ error: errorMsg }, { status: 500 });
+    return NextResponse.json({ error: 'Erreur interne du serveur' }, { status: 500 });
+  }
+}
+
+/** Change le rôle d'un membre. Réservé aux administrateurs de l'espace. */
+export async function PATCH(request: Request) {
+  try {
+    const user = await requireUser();
+    if (!user) return unauthenticated();
+
+    const { teamId, userId, role } = await request.json();
+    if (!teamId || !userId || !VALID_ROLES.includes(role)) {
+      return NextResponse.json({ error: 'Paramètres manquants ou invalides' }, { status: 400 });
+    }
+
+    if (!(await isTeamAdmin(teamId, user.id))) {
+      return NextResponse.json({ error: 'Droits insuffisants' }, { status: 403 });
+    }
+
+    const adminSupabase = createAdminClient();
+
+    // Un espace sans administrateur devient impossible à gérer : on refuse de
+    // rétrograder le dernier admin restant.
+    if (role !== 'admin') {
+      const { count } = await adminSupabase
+        .from('team_members')
+        .select('user_id', { count: 'exact', head: true })
+        .eq('team_id', teamId)
+        .eq('role', 'admin');
+
+      if ((count ?? 0) <= 1) {
+        return NextResponse.json(
+          { error: "Cet espace doit conserver au moins un administrateur." },
+          { status: 409 }
+        );
+      }
+    }
+
+    const { error } = await adminSupabase
+      .from('team_members')
+      .update({ role })
+      .eq('team_id', teamId)
+      .eq('user_id', userId);
+
+    if (error) throw error;
+
+    return NextResponse.json({ success: true });
+  } catch (err: unknown) {
+    console.error('Error updating member role:', err);
+    return NextResponse.json({ error: 'Erreur interne du serveur' }, { status: 500 });
   }
 }
 
 export async function DELETE(request: Request) {
   try {
-    const supabase = createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
-    }
+    const user = await requireUser();
+    if (!user) return unauthenticated();
 
     const { teamId, userId } = await request.json();
     if (!teamId || !userId) {
       return NextResponse.json({ error: 'Paramètres manquants' }, { status: 400 });
     }
 
-    const adminSupabase = createAdminClient();
-
-    // Vérifier si l'utilisateur est bien admin de la team (pour exclure)
-    const { data: membership } = await adminSupabase
-      .from('team_members')
-      .select('role')
-      .eq('team_id', teamId)
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    if (!membership || membership.role !== 'admin') {
+    if (!(await isTeamAdmin(teamId, user.id))) {
       return NextResponse.json({ error: 'Droits insuffisants' }, { status: 403 });
     }
 
-    // Effectuer la suppression
+    const adminSupabase = createAdminClient();
+
+    // Même garde-fou que pour le changement de rôle.
+    const { data: target } = await adminSupabase
+      .from('team_members')
+      .select('role')
+      .eq('team_id', teamId)
+      .eq('user_id', userId)
+      .maybeSingle();
+
+    if (target?.role === 'admin') {
+      const { count } = await adminSupabase
+        .from('team_members')
+        .select('user_id', { count: 'exact', head: true })
+        .eq('team_id', teamId)
+        .eq('role', 'admin');
+
+      if ((count ?? 0) <= 1) {
+        return NextResponse.json(
+          { error: "Cet espace doit conserver au moins un administrateur." },
+          { status: 409 }
+        );
+      }
+    }
+
     const { error } = await adminSupabase
       .from('team_members')
       .delete()
@@ -168,8 +256,7 @@ export async function DELETE(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : String(err);
     console.error('Error removing team member:', err);
-    return NextResponse.json({ error: errorMsg }, { status: 500 });
+    return NextResponse.json({ error: 'Erreur interne du serveur' }, { status: 500 });
   }
 }

@@ -11,6 +11,7 @@ import { PublicFieldCard } from './PublicFieldCard';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { ArrowRight, Check } from 'lucide-react';
+import { toast } from '@/components/ui/Toast';
 
 interface Props {
   form: Form;
@@ -50,56 +51,6 @@ export function PublicTypeformView({
   const progress = total > 0 ? ((currentIdx + 1) / total) * 100 : 0;
   const isLast = currentIdx === total - 1;
 
-  // Commencer par l'intro
-  if (showIntro) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-8">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mx-auto max-w-2xl text-center"
-        >
-          <FormHeader
-            theme={form.theme}
-            selectedElement={null}
-            onSelectBanner={() => { }}
-            onSelectLogo={() => { }}
-            preview={true}
-          />
-
-          <div className="mb-8">
-            <h1 className="font-display text-4xl text-text-primary mb-4">
-              {form.title}
-            </h1>
-            {form.description && (
-              <p
-                className="text-lg leading-relaxed"
-                style={{ color: form.theme.text_color ?? 'var(--text-secondary)' }}
-              >
-                {form.description}
-              </p>
-            )}
-          </div>
-
-          <button
-            onClick={() => setShowIntro(false)}
-            className={cn(
-              'inline-flex items-center gap-2 rounded-xl px-8 py-4 text-lg font-medium transition',
-              'bg-accent text-white hover:opacity-90'
-            )}
-          >
-            Commencer
-            <ArrowRight className="h-5 w-5" />
-          </button>
-
-          <p className="text-sm text-text-tertiary mt-6">
-            {total} question{total > 1 ? 's' : ''} · Appuyez sur Entrée pour avancer
-          </p>
-        </motion.div>
-      </div>
-    );
-  }
-
   // Validation de champ individuel
   const validateCurrentField = () => {
     if (!currentField || !currentField.required) return true;
@@ -127,7 +78,7 @@ export function PublicTypeformView({
   const handleNext = async () => {
     // Validation du champ courant
     if (!validateCurrentField()) {
-      alert('Ce champ est obligatoire');
+      toast.error('Ce champ est obligatoire');
       return;
     }
 
@@ -150,7 +101,7 @@ export function PublicTypeformView({
         // Soumission finale immédiate
         const validation = validateRequiredFields();
         if (!validation.isValid) {
-          alert('Veuillez remplir tous les champs obligatoires');
+          toast.error('Veuillez remplir tous les champs obligatoires');
           return;
         }
         await onSubmit();
@@ -178,7 +129,7 @@ export function PublicTypeformView({
       // Soumission finale
       const validation = validateRequiredFields();
       if (!validation.isValid) {
-        alert('Veuillez remplir tous les champs obligatoires');
+        toast.error('Veuillez remplir tous les champs obligatoires');
         return;
       }
       await onSubmit();
@@ -260,6 +211,63 @@ export function PublicTypeformView({
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [currentIdx, responses, isSubmitting]);
+
+  /*
+   * Les écrans d'intro et « aucune question » sont rendus APRÈS tous les Hooks.
+   *
+   * L'intro sortait auparavant en `return` anticipé placé avant les `useRef` et
+   * `useEffect` ci-dessus : les Hooks n'étaient donc pas appelés tant que l'écran
+   * d'accueil était affiché, puis apparaissaient d'un coup au clic sur
+   * « Commencer ». React refuse ce changement de nombre de Hooks entre deux
+   * rendus et fait planter la page — exactement au moment où le répondant
+   * démarrait le formulaire.
+   */
+  if (showIntro) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-8">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mx-auto max-w-2xl text-center"
+        >
+          <FormHeader
+            theme={form.theme}
+            selectedElement={null}
+            onSelectBanner={() => {}}
+            onSelectLogo={() => {}}
+            preview={true}
+          />
+
+          <div className="mb-8">
+            <h1 className="font-display text-4xl text-text-primary mb-4">{form.title}</h1>
+            {form.description && (
+              <p
+                className="text-lg leading-relaxed"
+                style={{ color: form.theme.text_color ?? 'var(--text-secondary)' }}
+              >
+                {form.description}
+              </p>
+            )}
+          </div>
+
+          <button
+            onClick={() => setShowIntro(false)}
+            className={cn(
+              'inline-flex items-center gap-2 rounded-xl px-8 py-4 text-lg font-medium transition',
+              'bg-accent text-white hover:opacity-90'
+            )}
+          >
+            Commencer
+            <ArrowRight className="h-5 w-5" />
+          </button>
+
+          <p className="text-sm text-text-tertiary mt-6">
+            {total} question{total > 1 ? 's' : ''} · Appuyez sur Entrée pour avancer
+          </p>
+        </motion.div>
+      </div>
+    );
+  }
 
   if (!currentField) {
     return (

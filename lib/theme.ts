@@ -7,37 +7,55 @@ export interface BackgroundPreset {
   apply: Partial<FormTheme>;
 }
 
+/**
+ * Fonds proposés aux créateurs de formulaires.
+ *
+ * Tous sont construits à partir des six couleurs de la charte Mooove. Le
+ * dégradé « Chaleur » est le seul à utiliser l'Ambre — et il n'y a pas de Cyan
+ * dedans, la charte interdisant d'associer les deux dans un même bloc visuel.
+ */
 export const BACKGROUND_PRESETS: BackgroundPreset[] = [
   {
-    id: 'parchemin',
-    label: 'Parchemin',
-    apply: { bg_type: 'color', bg_color: '#F7F0DC', bg: '#F7F0DC' }
+    id: 'ice',
+    label: 'Ice',
+    apply: { bg_type: 'color', bg_color: '#EFF9FE', bg: '#EFF9FE' }
   },
   {
-    id: 'creme',
-    label: 'Crème',
-    apply: { bg_type: 'color', bg_color: '#FFFDF5', bg: '#FFFDF5' }
+    id: 'blanc',
+    label: 'Blanc',
+    apply: { bg_type: 'color', bg_color: '#FFFFFF', bg: '#FFFFFF' }
   },
   {
     id: 'aube',
     label: 'Aube',
     apply: {
       bg_type: 'gradient',
-      bg_gradient_from: '#F7F0DC',
+      bg_gradient_from: '#EFF9FE',
       bg_gradient_to: '#C7EAFB',
       bg_gradient_angle: 160,
-      bg: 'linear-gradient(160deg, #F7F0DC, #C7EAFB)'
+      bg: 'linear-gradient(160deg, #EFF9FE, #C7EAFB)'
     }
   },
   {
-    id: 'crepuscule',
-    label: 'Crépuscule',
+    id: 'chaleur',
+    label: 'Chaleur',
     apply: {
       bg_type: 'gradient',
       bg_gradient_from: '#F6923E',
       bg_gradient_to: '#052139',
       bg_gradient_angle: 180,
       bg: 'linear-gradient(180deg, #F6923E, #052139)'
+    }
+  },
+  {
+    id: 'mouvement',
+    label: 'Mouvement',
+    apply: {
+      bg_type: 'gradient',
+      bg_gradient_from: '#2AC2DE',
+      bg_gradient_to: '#052139',
+      bg_gradient_angle: 165,
+      bg: 'linear-gradient(165deg, #2AC2DE, #052139)'
     }
   },
   {
@@ -65,19 +83,19 @@ export function getBackgroundStyle(theme: FormTheme): CSSProperties {
   switch (type) {
     case 'gradient': {
       const angle = theme.bg_gradient_angle ?? 135;
-      const from = theme.bg_gradient_from ?? '#F7F0DC';
+      const from = theme.bg_gradient_from ?? '#EFF9FE';
       const to = theme.bg_gradient_to ?? '#EFF9FE';
       return { backgroundImage: `linear-gradient(${angle}deg, ${from}, ${to})` };
     }
     case 'image': {
       if (!theme.bg_image_url) {
-        return { backgroundColor: theme.bg_color ?? theme.bg ?? '#F7F0DC' };
+        return { backgroundColor: theme.bg_color ?? theme.bg ?? '#EFF9FE' };
       }
       const opacity = (theme.bg_image_opacity ?? 0) / 100;
-      // Overlay parchemin transparent par-dessus l'image pour atténuer
+      // Voile Ice Blue translucide par-dessus l'image, pour garder le texte lisible
       const overlay =
         opacity > 0
-          ? `linear-gradient(rgba(247, 240, 220, ${opacity}), rgba(247, 240, 220, ${opacity})), `
+          ? `linear-gradient(rgba(239, 249, 254, ${opacity}), rgba(239, 249, 254, ${opacity})), `
           : '';
       return {
         backgroundImage: `${overlay}url(${theme.bg_image_url})`,
@@ -89,7 +107,7 @@ export function getBackgroundStyle(theme: FormTheme): CSSProperties {
     case 'color':
     case 'preset':
     default:
-      return { backgroundColor: theme.bg_color ?? theme.bg ?? '#F7F0DC' };
+      return { backgroundColor: theme.bg_color ?? theme.bg ?? '#EFF9FE' };
   }
 }
 
@@ -100,6 +118,6 @@ export function getBannerStyle(theme: FormTheme): CSSProperties {
   return {
     objectFit: fit,
     objectPosition: position,
-    backgroundColor: fit === 'contain' ? '#F7F0DC' : undefined
+    backgroundColor: fit === 'contain' ? '#EFF9FE' : undefined
   };
 }

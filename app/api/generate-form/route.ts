@@ -1,21 +1,40 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
+import { rateLimit } from '@/lib/rate-limit';
+import { getOpenRouterApiKey } from '@/lib/env';
+import path from 'node:path';
+import { pathToFileURL } from 'node:url';
 import mammoth from 'mammoth';
+import { PDFParse } from 'pdf-parse';
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { PDFParse } = require('pdf-parse');
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+export const maxDuration = 60;
+
+/** Taille maximale d'un document soumis à l'extraction de texte. */
+const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 
 export async function POST(req: Request) {
   try {
-    const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
+    // 1. Authentification — cette route consomme un quota d'API tierce payante,
+    //    elle ne doit jamais être atteignable sans session.
+    const supabase = createClient();
+    const {
+      data: { user },
+      error: authError
+    } = await supabase.auth.getUser();
 
-    // 1. Authentification (seulement si pas en mode local)
-    if (!isLocal) {
-      const supabase = createClient();
-      const { data: { user }, error } = await supabase.auth.getUser();
-      if (error || !user) {
-        return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
-      }
+    if (authError || !user) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
+    }
+
+    // Un appel IA coûte : on borne la cadence par utilisateur.
+    const limit = rateLimit(`generate-form:${user.id}`, 10, 60_000);
+    if (!limit.allowed) {
+      return NextResponse.json(
+        { error: 'Trop de générations lancées. Patientez une minute.' },
+        { status: 429, headers: { 'Retry-After': String(limit.retryAfterSeconds) } }
+      );
     }
 
     // 2. Récupérer le FormData
@@ -27,17 +46,30 @@ export async function POST(req: Request) {
 
     // 3. Extraction du texte selon le type de fichier
     if (file) {
+      if (file.size > MAX_UPLOAD_BYTES) {
+        return NextResponse.json(
+          { error: `Fichier trop volumineux (max ${MAX_UPLOAD_BYTES / 1024 / 1024} Mo).` },
+          { status: 413 }
+        );
+      }
+
       const arrayBuffer = await file.arrayBuffer();
       const buffer = Buffer.from(arrayBuffer);
       const filename = file.name.toLowerCase();
 
       if (filename.endsWith('.pdf') || file.type === 'application/pdf') {
         try {
-          const { pathToFileURL } = require('url');
-          const path = require('path');
-          const workerPath = path.join(process.cwd(), 'node_modules', 'pdfjs-dist', 'legacy', 'build', 'pdf.worker.mjs');
-          const workerUrl = pathToFileURL(workerPath).toString();
-          PDFParse.setWorker(workerUrl);
+          // pdf-parse charge son worker depuis node_modules : en build standalone
+          // il faut lui donner un chemin absolu résolu à l'exécution.
+          const workerPath = path.join(
+            process.cwd(),
+            'node_modules',
+            'pdfjs-dist',
+            'legacy',
+            'build',
+            'pdf.worker.mjs'
+          );
+          PDFParse.setWorker(pathToFileURL(workerPath).toString());
         } catch (workerError) {
           console.warn('Failed to set local PDF worker:', workerError);
         }
@@ -73,9 +105,12 @@ export async function POST(req: Request) {
       );
     }
 
-    const apiKey = process.env.OPENROUTER_API_KEY?.trim();
+    const apiKey = getOpenRouterApiKey();
     if (!apiKey) {
-      return NextResponse.json({ error: 'L\'API key OpenRouter n\'est pas configurée.' }, { status: 500 });
+      return NextResponse.json(
+        { error: "La génération par IA n'est pas configurée sur cette instance." },
+        { status: 503 }
+      );
     }
 
     // 4. Appel OpenRouter avec le prompt système optimisé

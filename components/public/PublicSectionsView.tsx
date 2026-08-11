@@ -9,6 +9,7 @@ import { PublicFieldCard } from './PublicFieldCard';
 import { buildPages } from '@/lib/sections';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { toast } from '@/components/ui/Toast';
 
 interface Props {
   form: Form;
@@ -58,7 +59,7 @@ export function PublicSectionsView({
       const validation = validateRequiredFields();
       if (!validation.isValid) {
         const fieldNames = validation.missingFields.map(f => f.label.fr || 'Champ sans nom').join(', ');
-        alert(`Veuillez remplir les champs obligatoires : ${fieldNames}`);
+        toast.error(`Veuillez remplir les champs obligatoires : ${fieldNames}`);
         return;
       }
 

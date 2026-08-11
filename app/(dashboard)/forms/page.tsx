@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState, useEffect, useRef } from 'react';
+import { useCallback, useMemo, useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -11,7 +11,7 @@ import { Modal } from '@/components/ui/Modal';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { useForms } from '@/lib/store/use-forms';
 import { createForm, deleteForm, cloneForm, updateForm, importForm } from '@/lib/store';
-import { CURRENT_USER_ID } from '@/lib/mode';
+import { getWorkspace, getWorkspaces } from '@/lib/store/workspaces';
 import { cn } from '@/lib/utils';
 import { toast } from '@/components/ui/Toast';
 import type { Form, FormStatus, Workspace } from '@/types';
@@ -106,30 +106,6 @@ Consignes importantes :
 Voici mon brouillon de formulaire à convertir :
 [COLLE TON BROUILLON ICI]`;
 
-const copyToClipboard = async (text: string) => {
-  try {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(text);
-      return;
-    }
-  } catch (err) {
-    console.warn('Navigator clipboard failed, trying fallback', err);
-  }
-  
-  // Fallback
-  const textarea = document.createElement('textarea');
-  textarea.value = text;
-  textarea.style.position = 'fixed';
-  textarea.style.opacity = '0';
-  document.body.appendChild(textarea);
-  textarea.select();
-  try {
-    document.execCommand('copy');
-  } catch (err) {
-    console.error('Fallback copy failed', err);
-  }
-  document.body.removeChild(textarea);
-};
 
 export default function FormsListPage() {
   const allForms = useForms();
@@ -140,7 +116,8 @@ export default function FormsListPage() {
   const [ownerFilter, setOwnerFilter] = useState<OwnerFilter>(null);
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [search, setSearch] = useState('');
-  const [currentUserId, setCurrentUserId] = useState<string>(CURRENT_USER_ID);
+  // Vide jusqu'à ce que la session soit lue, pour ne rien attribuer par erreur.
+  const [currentUserId, setCurrentUserId] = useState<string>('');
   const [workspaceName, setWorkspaceName] = useState<string | null>(null);
   const [workspaces, setWorkspaces] = useState<Workspace[]>([]);
   const [movingFormId, setMovingFormId] = useState<string | null>(null);
@@ -159,100 +136,46 @@ export default function FormsListPage() {
   const [copiedPrompt, setCopiedPrompt] = useState(false);
   const [fileError, setFileError] = useState<string | null>(null);
 
-  // Charger tous les workspaces
+  // Charger tous les espaces de travail
   useEffect(() => {
-    const loadAllWorkspaces = async () => {
-      const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
-      let list: Workspace[] = [];
-      if (isLocal) {
-        try {
-          const { getWorkspaces } = await import('@/lib/store/local-workspaces');
-          list = getWorkspaces();
-        } catch (err) {
-          console.error('Failed to load local workspaces:', err);
-        }
-      } else {
-        try {
-          const res = await fetch('/api/teams');
-          if (res.ok) {
-            const teamsData = await res.json();
-            list = (teamsData || []).map((t: any) => ({
-              id: t.id,
-              name: t.name || 'Mon espace',
-              scope: t.name === 'Mon espace' ? 'personal' : 'team',
-            })) as Workspace[];
-          }
-        } catch (err) {
-          console.error('Failed to load Supabase workspaces:', err);
-        }
-      }
-      setWorkspaces(list);
-    };
-    loadAllWorkspaces();
+    getWorkspaces()
+      .then(setWorkspaces)
+      .catch((err) => console.error('Failed to load workspaces:', err));
   }, []);
 
-  // Charger le nom du workspace s'il y a un paramètre dans l'URL
+  // Nom de l'espace de travail filtré par l'URL
   useEffect(() => {
     if (workspaceIdFromUrl) {
       const match = workspaces.find((ws) => ws.id === workspaceIdFromUrl);
       if (match) {
         setWorkspaceName(match.name);
       } else {
-        const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
-        if (!isLocal) {
-          const loadWorkspaceName = async () => {
-            try {
-              const res = await fetch('/api/teams');
-              if (res.ok) {
-                const teams = await res.json();
-                const found = (teams || []).find((t: any) => t.id === workspaceIdFromUrl);
-                if (found) {
-                  setWorkspaceName(found.name);
-                }
-              }
-            } catch (err) {
-              console.error('Failed to load workspace name:', err);
-            }
-          };
-          loadWorkspaceName();
-        } else {
-          const loadLocalWorkspaceName = async () => {
-            try {
-              const { getWorkspace } = await import('@/lib/store/local-workspaces');
-              const ws = getWorkspace(workspaceIdFromUrl);
-              if (ws) {
-                setWorkspaceName(ws.name);
-              }
-            } catch (err) {
-              console.error('Failed to load local workspace name:', err);
-            }
-          };
-          loadLocalWorkspaceName();
-        }
+        // L'espace n'est pas encore dans la liste chargée : le récupérer seul.
+        getWorkspace(workspaceIdFromUrl)
+          .then((workspace) => {
+            if (workspace) setWorkspaceName(workspace.name);
+          })
+          .catch((err) => console.error('Failed to load workspace name:', err));
       }
     } else {
       setWorkspaceName(null);
     }
   }, [workspaceIdFromUrl, workspaces]);
 
-  // Charger l'ID utilisateur réel si en mode Supabase
+  // Identifiant de l'utilisateur connecté, pour distinguer ses formulaires
   useEffect(() => {
-    const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
-    if (!isLocal) {
-      const loadUser = async () => {
-        try {
-          const { createClient } = await import('@/lib/supabase/client');
-          const supabase = createClient();
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user) {
-            setCurrentUserId(user.id);
-          }
-        } catch (error) {
-          console.error('Failed to load user session:', error);
-        }
-      };
-      loadUser();
-    }
+    const loadUser = async () => {
+      try {
+        const { createClient } = await import('@/lib/supabase/client');
+        const {
+          data: { user }
+        } = await createClient().auth.getUser();
+        if (user) setCurrentUserId(user.id);
+      } catch (error) {
+        console.error('Failed to load user session:', error);
+      }
+    };
+    loadUser();
   }, []);
 
   // Détecter si l'espace courant est personnel (pas de formulaires partagés possibles)
@@ -320,46 +243,8 @@ export default function FormsListPage() {
 
   async function handleNew() {
     try {
-      let targetWorkspaceId = workspaceIdFromUrl;
-
-      // Si aucun workspace n'est défini dans l'URL, on attribue "Mon espace" par défaut
-      if (!targetWorkspaceId) {
-        const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
-        if (!isLocal) {
-          const { createClient } = await import('@/lib/supabase/client');
-          const supabase = createClient();
-          const { data: { user } } = await supabase.auth.getUser();
-          if (user) {
-            const { data: memberships } = await supabase
-              .from('team_members')
-              .select('team_id, teams(name)')
-              .eq('user_id', user.id);
-
-            if (memberships && memberships.length > 0) {
-              const personalTeam = memberships.find((m) => {
-                const t = m.teams as unknown;
-                const teamObj = Array.isArray(t) ? t[0] : (t as { name: string } | null);
-                return teamObj?.name === 'Mon espace';
-              });
-
-              if (personalTeam) {
-                targetWorkspaceId = personalTeam.team_id;
-              } else {
-                targetWorkspaceId = memberships[0].team_id;
-              }
-            }
-          }
-        } else {
-          const { getWorkspaces } = await import('@/lib/store/local-workspaces');
-          const list = getWorkspaces('local-user');
-          const personal = list.find((w) => w.name === 'Mon espace');
-          if (personal) {
-            targetWorkspaceId = personal.id;
-          }
-        }
-      }
-
-      const f = await createForm('Nouveau formulaire', targetWorkspaceId || undefined);
+      const targetWorkspaceId = await resolveTargetWorkspaceId();
+      const f = await createForm('Nouveau formulaire', targetWorkspaceId);
       router.push(`/forms/${f.id}/edit`);
     } catch (error) {
       console.error('Failed to create form:', error);
@@ -428,9 +313,8 @@ export default function FormsListPage() {
 
   const handleMoveForm = async (formId: string, targetWorkspaceId: string) => {
     try {
-      const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
-      const patch = isLocal ? { workspace_id: targetWorkspaceId } : { team_id: targetWorkspaceId };
-      await updateForm(formId, patch);
+      // L'espace de travail d'un formulaire, c'est son team_id.
+      await updateForm(formId, { team_id: targetWorkspaceId });
       toast.success('Formulaire déplacé avec succès !');
       setMovingFormId(null);
     } catch (err) {
@@ -482,39 +366,8 @@ export default function FormsListPage() {
           throw new Error('Le formulaire JSON doit contenir un titre (title)');
         }
 
-        let targetWorkspaceId = workspaceIdFromUrl;
-        
-        if (!targetWorkspaceId) {
-          const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
-          if (!isLocal) {
-            const { createClient } = await import('@/lib/supabase/client');
-            const supabase = createClient();
-            const { data: { user } } = await supabase.auth.getUser();
-            if (user) {
-              const { data: memberships } = await supabase
-                .from('team_members')
-                .select('team_id, teams(name)')
-                .eq('user_id', user.id);
-              if (memberships && memberships.length > 0) {
-                const personalTeam = memberships.find((m) => {
-                  const t = m.teams as unknown;
-                  const teamObj = Array.isArray(t) ? t[0] : (t as { name: string } | null);
-                  return teamObj?.name === 'Mon espace';
-                });
-                targetWorkspaceId = personalTeam ? personalTeam.team_id : memberships[0].team_id;
-              }
-            }
-          } else {
-            const { getWorkspaces } = await import('@/lib/store/local-workspaces');
-            const list = getWorkspaces('local-user');
-            const personal = list.find((w) => w.name === 'Mon espace');
-            if (personal) {
-              targetWorkspaceId = personal.id;
-            }
-          }
-        }
-
-        const newForm = await importForm(parsed, targetWorkspaceId || undefined);
+        const targetWorkspaceId = await resolveTargetWorkspaceId();
+        const newForm = await importForm(parsed, targetWorkspaceId);
         toast.success('Formulaire importé avec succès !');
         router.push(`/forms/${newForm.id}/edit`);
       } catch (err: any) {
@@ -528,38 +381,25 @@ export default function FormsListPage() {
     reader.readAsText(file);
   };
 
-  const resolveTargetWorkspaceId = async (): Promise<string | undefined> => {
+  /**
+   * Espace de destination d'un nouveau formulaire : celui de l'URL si présent,
+   * sinon l'espace personnel, sinon le premier disponible.
+   *
+   * Cette résolution était dupliquée à trois endroits de ce fichier (création,
+   * import JSON, génération IA), avec des variantes qui avaient déjà divergé.
+   */
+  const resolveTargetWorkspaceId = useCallback(async (): Promise<string | undefined> => {
     if (workspaceIdFromUrl) return workspaceIdFromUrl;
-    
-    const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
-    if (!isLocal) {
-      const { createClient } = await import('@/lib/supabase/client');
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-      if (user) {
-        const { data: memberships } = await supabase
-          .from('team_members')
-          .select('team_id, teams(name)')
-          .eq('user_id', user.id);
-        if (memberships && memberships.length > 0) {
-          const personalTeam = memberships.find((m) => {
-            const t = m.teams as unknown;
-            const teamObj = Array.isArray(t) ? t[0] : (t as { name: string } | null);
-            return teamObj?.name === 'Mon espace';
-          });
-          return personalTeam ? personalTeam.team_id : memberships[0].team_id;
-        }
-      }
-    } else {
-      const { getWorkspaces } = await import('@/lib/store/local-workspaces');
-      const list = getWorkspaces('local-user');
-      const personal = list.find((w) => w.name === 'Mon espace');
-      if (personal) {
-        return personal.id;
-      }
+
+    try {
+      const list = await getWorkspaces();
+      if (list.length === 0) return undefined;
+      return (list.find((workspace) => workspace.scope === 'personal') ?? list[0]).id;
+    } catch (err) {
+      console.error('Failed to resolve target workspace:', err);
+      return undefined;
     }
-    return undefined;
-  };
+  }, [workspaceIdFromUrl]);
 
   const handleFileSelect = (file: File) => {
     setSelectedFile(file);
@@ -851,9 +691,7 @@ export default function FormsListPage() {
             <div className="space-y-2 max-h-[300px] overflow-y-auto">
               {workspaces.map((ws) => {
                 const form = movingFormId ? filtered.find(f => f.id === movingFormId) : null;
-                const isLocal = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
-                const currentWsId = isLocal ? form?.workspace_id : form?.team_id;
-                const isCurrent = currentWsId === ws.id;
+                const isCurrent = form?.team_id === ws.id;
 
                 return (
                   <button

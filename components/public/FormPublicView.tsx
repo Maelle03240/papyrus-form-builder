@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import type { Form, LogicRule } from '@/types';
+import type { Form } from '@/types';
+import { toast } from '@/components/ui/Toast';
+import { FormSlugProvider } from '@/lib/hooks/useFormSlug';
 import { useFormScore } from '@/lib/hooks/useFormScore';
 import { evaluateLogicRules } from '@/lib/logic-evaluation';
 import { getBackgroundStyle } from '@/lib/theme';
-import { FormHeader } from '@/components/builder/FormHeader';
+import {} from '@/components/builder/FormHeader';
 import { PublicScrollView } from './PublicScrollView';
 import { PublicTypeformView } from './PublicTypeformView';
 import { PublicSectionsView } from './PublicSectionsView';
@@ -17,7 +18,6 @@ interface Props {
 }
 
 export function FormPublicView({ form }: Props) {
-  const router = useRouter();
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,7 +27,6 @@ export function FormPublicView({ form }: Props) {
     responses,
     scoreResult,
     updateResponse,
-    scoringEnabled,
     showScoreToRespondent
   } = useFormScore(form);
 
@@ -49,35 +48,45 @@ export function FormPublicView({ form }: Props) {
 
   // Soumission du formulaire
   const handleSubmit = async () => {
+    if (isSubmitting) return;
     setIsSubmitting(true);
 
     try {
       const response = await fetch(`/api/submit/${form.slug}`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           responses,
           language: form.default_language || 'fr'
-        }),
+        })
       });
 
+      const body = await response.json().catch(() => null);
+
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}`);
+        // Le serveur renvoie un message exploitable (champ manquant, formulaire
+        // fermé, quota atteint…) : l'afficher plutôt qu'une erreur générique.
+        throw new Error(
+          body?.error ??
+            (response.status === 429
+              ? 'Trop de tentatives. Patientez quelques instants avant de réessayer.'
+              : "Une erreur est survenue lors de l'envoi. Veuillez réessayer.")
+        );
       }
 
-      // Nettoyer le localStorage du save & resume si activé
+      // Nettoyer la sauvegarde locale du save & resume si activé
       if (form.save_and_resume) {
         localStorage.removeItem(`papyrus-progress-${form.id}`);
       }
 
-      // Rediriger vers la page merci
-      router.push(`/f/${form.slug}/merci`);
-
+      setSubmissionId(body?.submission_id ?? null);
+      setIsSubmitted(true);
     } catch (error) {
-      console.error('Erreur lors de la soumission:', error);
-      alert('Une erreur est survenue lors de l\'envoi. Veuillez réessayer.');
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Une erreur est survenue lors de l'envoi. Veuillez réessayer.";
+      toast.error(message);
     } finally {
       setIsSubmitting(false);
     }
@@ -118,6 +127,7 @@ export function FormPublicView({ form }: Props) {
   }
 
   return (
+    <FormSlugProvider slug={form.slug}>
     <div
       className="min-h-screen"
       style={{
@@ -165,5 +175,6 @@ export function FormPublicView({ form }: Props) {
         />
       )}
     </div>
+    </FormSlugProvider>
   );
 }

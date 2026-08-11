@@ -17,8 +17,8 @@ import { DEFAULT_SCORE_LEVELS } from '@/lib/scoring';
 import { cn } from '@/lib/utils';
 import { StyleControls } from './StyleControls';
 import { DebouncedColorInput } from '@/components/ui/DebouncedColorInput';
-
-const MAX_IMAGE_BYTES = 1.5 * 1024 * 1024;
+import { useMediaUpload } from '@/lib/hooks/useMediaUpload';
+import { toast } from '@/components/ui/Toast';
 
 interface Props {
   form: Form;
@@ -238,7 +238,7 @@ function SettingsTab({ form, onFormChange }: { form: Form; onFormChange: (patch:
                   const deleteLevel = () => {
                     const currentLevels = form.theme.score_levels || [...DEFAULT_SCORE_LEVELS];
                     if (currentLevels.length <= 1) {
-                      alert('Vous devez garder au moins un niveau.');
+                      toast.error('Vous devez garder au moins un niveau.');
                       return;
                     }
                     const updated = currentLevels.filter((_, i) => i !== idx);
@@ -419,9 +419,9 @@ const BG_TYPES: { value: BackgroundType; label: string; icon: React.ComponentTyp
 ];
 
 const BLOCK_PRESETS: { value: string | undefined; label: string; preview: string }[] = [
-  { value: undefined, label: 'Crème', preview: '#FFFDF5' },
+  { value: undefined, label: 'Défaut', preview: '#FFFFFF' },
   { value: '#FFFFFF', label: 'Blanc', preview: '#FFFFFF' },
-  { value: '#F7F0DC', label: 'Parchemin', preview: '#F7F0DC' },
+  { value: '#C7EAFB', label: 'Sky', preview: '#C7EAFB' },
   { value: '#EFF9FE', label: 'Ice', preview: '#EFF9FE' },
   { value: 'transparent', label: 'Transparent', preview: 'transparent' },
   { value: '#0A3050', label: 'Sombre', preview: '#0A3050' }
@@ -430,6 +430,8 @@ const BLOCK_PRESETS: { value: string | undefined; label: string; preview: string
 function BackgroundTab({ theme, onChange }: { theme: FormTheme; onChange: (patch: Partial<FormTheme>) => void }) {
   const type: BackgroundType = theme.bg_type ?? 'color';
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const { upload: uploadImage, uploading, progress } = useMediaUpload();
 
   const [localGradientAngle, setLocalGradientAngle] = useState(theme.bg_gradient_angle ?? 135);
   const [localImageOpacity, setLocalImageOpacity] = useState(theme.bg_image_opacity ?? 0);
@@ -442,17 +444,11 @@ function BackgroundTab({ theme, onChange }: { theme: FormTheme; onChange: (patch
     setLocalImageOpacity(theme.bg_image_opacity ?? 0);
   }, [theme.bg_image_opacity]);
 
-  function handleImageUpload(file: File) {
-    if (file.size > MAX_IMAGE_BYTES) {
-      alert(`Image trop lourde (${Math.round(file.size / 1024)} Ko). En mode local, max 1,5 Mo.`);
-      return;
-    }
-    const reader = new FileReader();
-    reader.onload = () => {
-      const url = reader.result as string;
-      onChange({ bg_type: 'image', bg_image_url: url, bg: `url(${url})` });
-    };
-    reader.readAsDataURL(file);
+  /** L'image de fond part sur Cloudflare R2 ; on ne stocke que son URL publique. */
+  async function handleImageUpload(file: File) {
+    const url = await uploadImage(file);
+    if (!url) return;
+    onChange({ bg_type: 'image', bg_image_url: url, bg: `url(${url})` });
   }
 
   return (
@@ -521,14 +517,14 @@ function BackgroundTab({ theme, onChange }: { theme: FormTheme; onChange: (patch
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <DebouncedColorInput
-              value={theme.bg_color ?? theme.bg ?? '#F7F0DC'}
+              value={theme.bg_color ?? theme.bg ?? '#EFF9FE'}
               onChange={(val) => onChange({ bg_color: val, bg: val })}
               className="h-9 w-12 cursor-pointer rounded border border-border-strong bg-bg-base"
             />
             <Input
               value={theme.bg_color ?? theme.bg ?? ''}
               onChange={(e) => onChange({ bg_color: e.target.value, bg: e.target.value })}
-              placeholder="#F7F0DC"
+              placeholder="#EFF9FE"
               className="flex-1 font-mono text-xs h-9 px-3"
             />
           </div>
@@ -542,14 +538,14 @@ function BackgroundTab({ theme, onChange }: { theme: FormTheme; onChange: (patch
             <label className="mb-1 block text-xs text-text-secondary">Couleur 1</label>
             <div className="flex items-center gap-2">
               <DebouncedColorInput
-                value={theme.bg_gradient_from ?? '#F7F0DC'}
+                value={theme.bg_gradient_from ?? '#EFF9FE'}
                 onChange={(val) => onChange({ bg_gradient_from: val })}
                 className="h-9 w-12 cursor-pointer rounded border border-border-strong bg-bg-base"
               />
               <Input
                 value={theme.bg_gradient_from ?? ''}
                 onChange={(e) => onChange({ bg_gradient_from: e.target.value })}
-                placeholder="#F7F0DC"
+                placeholder="#EFF9FE"
                 className="flex-1 font-mono text-xs h-9 px-3"
               />
             </div>
@@ -622,11 +618,12 @@ function BackgroundTab({ theme, onChange }: { theme: FormTheme; onChange: (patch
             <button
               type="button"
               onClick={() => fileInputRef.current?.click()}
-              className="flex w-full flex-col items-center gap-2 rounded-md border border-dashed border-border-strong bg-bg-base px-4 py-6 text-sm text-text-secondary transition hover:border-accent"
+              disabled={uploading}
+              className="flex w-full flex-col items-center gap-2 rounded-md border border-dashed border-border-strong bg-bg-base px-4 py-6 text-sm text-text-secondary transition hover:border-accent disabled:cursor-wait disabled:opacity-60"
             >
               <Upload className="h-5 w-5" />
-              Téléverser une image de fond
-              <span className="text-xs text-text-tertiary">PNG, JPG · max 1,5 Mo</span>
+              {uploading ? `Envoi en cours… ${progress}%` : 'Téléverser une image de fond'}
+              <span className="text-xs text-text-tertiary">PNG, JPG, WebP · max 10 Mo</span>
             </button>
           )}
           <input
@@ -651,7 +648,7 @@ function BackgroundTab({ theme, onChange }: { theme: FormTheme; onChange: (patch
 
           <div>
             <label className="mb-1 flex items-center justify-between text-xs text-text-secondary">
-              <span>Voile parchemin (lisibilité)</span>
+              <span>Voile clair (lisibilité)</span>
               <span className="font-mono text-text-tertiary">{localImageOpacity}%</span>
             </label>
             <input
@@ -714,7 +711,7 @@ function BackgroundTab({ theme, onChange }: { theme: FormTheme; onChange: (patch
 
         <div className="mt-3 flex items-center gap-2">
           <DebouncedColorInput
-            value={theme.field_bg_color ?? '#FFFDF5'}
+            value={theme.field_bg_color ?? '#FFFFFF'}
             onChange={(val) => onChange({ field_bg_color: val })}
             className="h-9 w-12 cursor-pointer rounded border border-border-strong bg-bg-base"
           />

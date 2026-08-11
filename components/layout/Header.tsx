@@ -5,7 +5,6 @@ import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ChevronRight } from 'lucide-react';
 import { useForm } from '@/lib/store/use-forms';
-import { getWorkspace, getWorkspaces } from '@/lib/store/local-workspaces';
 
 const LABELS: Record<string, string> = {
   dashboard: 'Dashboard',
@@ -37,42 +36,29 @@ function FormBreadcrumbSegments({
   const [workspaceId, setWorkspaceId] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!form) return;
+    // L'espace de travail d'un formulaire, c'est son `team_id`.
+    const workspace = form?.team_id;
+    if (!workspace) return;
 
-    const isLocalMode = process.env.NEXT_PUBLIC_LOCAL_MODE === 'true';
+    let cancelled = false;
 
-    if (isLocalMode) {
-      // 1. Try the form's workspace_id
-      if (form.workspace_id) {
-        const ws = getWorkspace(form.workspace_id);
-        if (ws) {
-          setWorkspaceName(ws.name);
-          setWorkspaceId(ws.id);
-          return;
+    fetch('/api/teams')
+      .then((response) => (response.ok ? response.json() : []))
+      .then((teams: { id: string; name: string }[]) => {
+        if (cancelled) return;
+        const found = teams.find((team) => team.id === workspace);
+        if (found) {
+          setWorkspaceName(found.name || 'Mon espace');
+          setWorkspaceId(workspace);
         }
-      }
-      // 2. Fallback: find any personal workspace (covers old forms without workspace_id)
-      const all = getWorkspaces();
-      const personal = all.find(w => w.scope === 'personal');
-      if (personal) {
-        setWorkspaceName(personal.name);
-        setWorkspaceId(personal.id);
-      }
-    } else {
-      // Supabase mode: fetch team name from API
-      const wsId = form.team_id;
-      if (!wsId || wsId === 'local') return;
-      fetch('/api/teams')
-        .then(r => r.ok ? r.json() : [])
-        .then((list: Array<{ id: string; name: string }>) => {
-          const found = list.find(t => t.id === wsId);
-          if (found) {
-            setWorkspaceName(found.name || 'Mon espace');
-            setWorkspaceId(wsId);
-          }
-        })
-        .catch(() => {});
-    }
+      })
+      .catch(() => {
+        // Un fil d'Ariane incomplet ne doit pas casser la page.
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [form]);
 
   const formTitle = loading ? '…' : (form?.title || 'Sans titre');

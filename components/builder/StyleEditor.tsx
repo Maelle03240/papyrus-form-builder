@@ -1,6 +1,6 @@
 'use client';
 
-import type { Field, FieldStyle, FormTheme } from '@/types';
+import type { Field, FieldStyle } from '@/types';
 import { StyleControls } from './StyleControls';
 
 interface Props {
