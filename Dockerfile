@@ -42,8 +42,10 @@ RUN npm run build
 FROM base AS runner
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
+# Port par défaut en local. En production, Easypanel injecte PORT=80 : rien ici
+# ne doit donc supposer 3000 — surtout pas la sonde de vie ci-dessous.
+ENV PORT=3000
 
 # Le serveur ne tourne pas en root.
 RUN addgroup --system --gid 1001 nodejs \
@@ -60,8 +62,20 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules/pdfjs-dist/legacy/bu
 USER nextjs
 EXPOSE 3000
 
-# Sonde de vie : Easypanel et Uptime Kuma s'appuient dessus.
-HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \
-  CMD node -e "fetch('http://127.0.0.1:3000/api/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"
+# Sonde de VIE, pas de disponibilité.
+#
+# Elle vérifie uniquement que le serveur HTTP répond, sur le port réellement
+# utilisé (`$PORT`, injecté par l'orchestrateur). Deux erreurs à ne pas refaire :
+#
+#  · coder le port en dur — la sonde interrogeait 3000 alors que le conteneur
+#    écoutait sur 80, échouait systématiquement, et Swarm arrêtait la tâche ;
+#  · exiger un 200 — /api/health renvoie 503 quand Supabase ou R2 est en panne.
+#    Une base momentanément indisponible ferait alors tuer et redémarrer
+#    l'application en boucle, alors qu'elle doit rester debout et signaler l'état.
+#
+# La surveillance des dépendances revient à Uptime Kuma, qui alerte sur le 503
+# sans rien redémarrer.
+HEALTHCHECK --interval=30s --timeout=5s --start-period=25s --retries=3 \
+  CMD node -e "const p=process.env.PORT||3000;fetch('http://127.0.0.1:'+p+'/api/health').then(()=>process.exit(0)).catch(()=>process.exit(1))"
 
 CMD ["node", "server.js"]
