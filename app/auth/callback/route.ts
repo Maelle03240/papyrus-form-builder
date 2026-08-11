@@ -1,6 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { evaluateAccess } from '@/lib/auth/access-control';
+import { absoluteUrl } from '@/lib/base-url';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -16,24 +17,30 @@ export const dynamic = 'force-dynamic';
  * quoi que ce soit.
  */
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = request.nextUrl;
+  const { searchParams } = request.nextUrl;
   const code = searchParams.get('code');
   const redirectTo = sanitizeRedirect(searchParams.get('redirect'));
   const oauthError = searchParams.get('error_description') ?? searchParams.get('error');
 
+  // `absoluteUrl` bâtit la redirection sur l'URL publique de l'application.
+  // Utiliser `request.nextUrl.origin` renverrait vers `https://0.0.0.0:80/…`,
+  // l'adresse d'écoute du conteneur derrière le proxy Easypanel.
+  const loginUrl = (reason: string) =>
+    absoluteUrl(request, `/login?error=${encodeURIComponent(reason)}`);
+
   if (oauthError) {
-    return NextResponse.redirect(`${origin}/login?error=${encodeURIComponent(oauthError)}`);
+    return NextResponse.redirect(loginUrl(oauthError));
   }
 
   if (!code) {
-    return NextResponse.redirect(`${origin}/login?error=missing_code`);
+    return NextResponse.redirect(loginUrl('missing_code'));
   }
 
   const supabase = createClient();
   const { data, error } = await supabase.auth.exchangeCodeForSession(code);
 
   if (error || !data.user) {
-    return NextResponse.redirect(`${origin}/login?error=exchange_failed`);
+    return NextResponse.redirect(loginUrl('exchange_failed'));
   }
 
   const user = data.user;
@@ -52,12 +59,12 @@ export async function GET(request: NextRequest) {
       console.error('Impossible de supprimer le compte refusé:', deleteError);
     }
 
-    return NextResponse.redirect(`${origin}/login?error=${decision.reason}`);
+    return NextResponse.redirect(loginUrl(decision.reason));
   }
 
   await ensureProfileAndWorkspace(user.id, user.email ?? '', user.user_metadata);
 
-  return NextResponse.redirect(`${origin}${redirectTo}`);
+  return NextResponse.redirect(absoluteUrl(request, redirectTo));
 }
 
 /**

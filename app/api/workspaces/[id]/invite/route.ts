@@ -4,6 +4,7 @@ import { z } from 'zod';
 import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { rateLimit } from '@/lib/rate-limit';
 import { getResendApiKey } from '@/lib/env';
+import { getBaseUrl } from '@/lib/base-url';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -111,7 +112,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     user.email ||
     'Un collaborateur';
 
-  const baseUrl = resolveBaseUrl(request);
+  const baseUrl = getBaseUrl(request);
   const workspaceUrl = `${baseUrl}/workspaces/${workspaceId}`;
 
   const safeWorkspaceName = escapeHtml(team.name);
@@ -144,18 +145,6 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
     console.error('Error in invite API:', error);
     return NextResponse.json({ error: 'Erreur interne du serveur' }, { status: 500 });
   }
-}
-
-/** URL de base réelle : la variable d'env peut pointer vers localhost en production. */
-function resolveBaseUrl(request: NextRequest): string {
-  const configured = process.env.NEXT_PUBLIC_APP_URL ?? '';
-  const isLocalhostConfig = configured.includes('localhost');
-  const requestIsLocal = request.nextUrl.hostname.includes('localhost');
-
-  if (!configured || (isLocalhostConfig && !requestIsLocal)) {
-    return request.nextUrl.origin.replace(/\/$/, '');
-  }
-  return configured.replace(/\/$/, '');
 }
 
 function buildInviteHtml({
