@@ -56,9 +56,17 @@ ailleurs. Aucune de ces valeurs ne doit être commitée.
 | `RESEND_API_KEY` | *Optionnel* — sans lui, les invitations par email sont désactivées |
 | `OPENROUTER_API_KEY` | *Optionnel* — sans lui, la génération IA est désactivée |
 
-Les quatre `NEXT_PUBLIC_*` doivent aussi être déclarées en **Build Args** du
-service : Next.js les inline dans le bundle navigateur au moment du build, les
-fournir seulement à l'exécution ne suffit pas.
+Il n'y a **rien d'autre à faire** pour les variables `NEXT_PUBLIC_*` : sur un
+build Dockerfile, Easypanel passe automatiquement chaque variable de l'onglet
+Environment en `--build-arg`. Le `Dockerfile` déclare les `ARG` correspondants,
+et Next.js peut donc les inliner dans le bundle navigateur au moment du build.
+
+Corollaire utile : seules les quatre `NEXT_PUBLIC_*` sont déclarées en `ARG`.
+Les clés serveur (`SUPABASE_SERVICE_ROLE_KEY`, `R2_SECRET_ACCESS_KEY`,
+`APP_ENCRYPTION_KEY`, `IP_HASH_SALT`) sont bien transmises au build par
+Easypanel, mais comme le Dockerfile ne les déclare pas, elles ne sont ni
+utilisées ni gravées dans une couche de l'image. Ne pas ajouter d'`ARG` pour
+elles : elles apparaîtraient alors dans l'historique de l'image.
 
 ⚠️ Changer `APP_ENCRYPTION_KEY` après coup rend illisibles les clés Tally déjà
 enregistrées ; les équipes concernées devront reconnecter Tally. Sans
