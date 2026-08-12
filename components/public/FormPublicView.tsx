@@ -9,6 +9,7 @@ import { useEmbedBridge } from '@/lib/hooks/useEmbedBridge';
 import { usePartialSubmission } from '@/lib/hooks/usePartialSubmission';
 import { evaluateLogicRules } from '@/lib/logic-evaluation';
 import { getBackgroundStyle } from '@/lib/theme';
+import { isAnswerEmpty } from '@/lib/submission-format';
 import type { EmbedOptions } from '@/lib/embed';
 import {} from '@/components/builder/FormHeader';
 import { PublicScrollView } from './PublicScrollView';
@@ -144,7 +145,15 @@ export function FormPublicView({ form, embed, accessToken }: Props) {
     }
   };
 
-  // Validation des champs requis
+  /**
+   * Validation des champs requis.
+   *
+   * Utilise `isAnswerEmpty`, la même règle que le serveur. La version
+   * précédente testait `!responses[f.id]`, ce qui déclarait vide la réponse
+   * `0` — sur une échelle de notation commençant à zéro, le répondant le plus
+   * critique se voyait refuser l'envoi. Douze modèles du catalogue ont une
+   * échelle obligatoire de ce type.
+   */
   const validateRequiredFields = () => {
     const fields = form.fields || [];
     const visibleRequiredFields = fields.filter(f =>
@@ -156,10 +165,7 @@ export function FormPublicView({ form, embed, accessToken }: Props) {
       f.type !== 'video'
     );
 
-    const missingFields = visibleRequiredFields.filter(f =>
-      !responses[f.id] ||
-      (typeof responses[f.id] === 'string' && (responses[f.id] as string).trim() === '')
-    );
+    const missingFields = visibleRequiredFields.filter((f) => isAnswerEmpty(responses[f.id]));
 
     return { isValid: missingFields.length === 0, missingFields };
   };

@@ -18,6 +18,27 @@ export interface SubmissionColumn {
   field: Field;
 }
 
+/**
+ * Une réponse est-elle vide ?
+ *
+ * Règle unique, partagée par la validation du navigateur et celle du serveur.
+ * Les deux en avaient chacune une version, et elles ne disaient pas la même
+ * chose : le client testait `!valeur`, ce qui déclare vide **la réponse `0`**.
+ * Sur une échelle de notation qui commence à zéro, le répondant le plus critique
+ * — précisément celui qu'on veut entendre — se voyait refuser l'envoi de son
+ * formulaire, sans comprendre pourquoi.
+ *
+ * `false` est également une réponse valable, pour un futur champ de consentement.
+ */
+export function isAnswerEmpty(value: unknown): boolean {
+  if (value === undefined || value === null) return true;
+  if (typeof value === 'string') return value.trim() === '';
+  if (Array.isArray(value)) return value.length === 0;
+  if (typeof value === 'object') return Object.keys(value as object).length === 0;
+  // Un nombre (0 compris) ou un booléen (false compris) est une réponse.
+  return false;
+}
+
 /** Types de champ qui ne collectent aucune réponse. */
 const NON_ANSWERABLE = ['section_break', 'statement', 'image', 'video'] as const;
 

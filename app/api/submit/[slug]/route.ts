@@ -5,12 +5,14 @@ import { calculateFormScore, type FormResponses } from '@/lib/scoring';
 import { sendSubmissionNotifications } from '@/lib/email/notifications';
 import { syncSubmissionToSheets } from '@/lib/integrations/google-sheets-sync';
 import { verifyFormAccessToken } from '@/lib/form-access';
+import { evaluateLogicRules } from '@/lib/logic-evaluation';
+import { isAnswerEmpty } from '@/lib/submission-format';
 import {
   checkDuplicateAnswer,
   checkSubmissionLimit,
   enforceDataRetention
 } from '@/lib/submission-guards';
-import type { Field, Form, FormSettings } from '@/types';
+import type { Field, Form, FormSettings, LogicRule } from '@/types';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -93,7 +95,7 @@ export async function POST(request: NextRequest, { params }: { params: { slug: s
   const { data: form, error: formError } = await supabase
     .from('forms')
     .select(
-      'id, team_id, created_by, title, slug, status, closes_at, access_type, unique_email, scoring_enabled, theme, settings, notification_settings, fields(*)'
+      'id, team_id, created_by, title, slug, status, closes_at, access_type, unique_email, scoring_enabled, theme, settings, notification_settings, fields(*), logic_rules(*)'
     )
     .eq('slug', slug)
     .maybeSingle();
@@ -162,16 +164,35 @@ export async function POST(request: NextRequest, { params }: { params: { slug: s
     }
   }
 
-  // 7. Champs obligatoires.
+  // 7. Logique conditionnelle.
+  //
+  //    Le serveur l'ignorait complètement : il exigeait TOUS les champs marqués
+  //    obligatoires, y compris ceux qu'une règle `show_field` garde masqués. Un
+  //    répondant qui prenait la branche « non » d'une question conditionnelle
+  //    voyait donc son envoi refusé pour une question qu'il n'avait jamais eue à
+  //    l'écran, avec un message qui ne désignait rien de visible. Huit des
+  //    cinquante modèles du catalogue sont dans ce cas.
+  //
+  //    C'est le MÊME évaluateur que celui du navigateur (`lib/logic-evaluation`),
+  //    appelé sur les mêmes réponses : les deux ne peuvent pas diverger.
+  const visibleFieldIds = evaluateLogicRules(
+    (form.logic_rules ?? []) as LogicRule[],
+    responses,
+    fields
+  );
+
+  // Une réponse à un champ devenu invisible n'est pas une réponse : le
+  // répondant est revenu en arrière et a changé de branche. La conserver la
+  // ferait apparaître dans le tableau, l'export et la feuille Google comme une
+  // réponse assumée.
+  for (const key of Object.keys(responses)) {
+    if (!visibleFieldIds.has(key.split('__')[0])) delete responses[key];
+  }
+
+  // 8. Champs obligatoires — parmi les seuls champs réellement visibles.
   const missingFields = answerableFields
-    .filter((f) => f.required)
-    .filter((f) => {
-      const value = responses[f.id];
-      if (value === undefined || value === null) return true;
-      if (typeof value === 'string') return value.trim() === '';
-      if (Array.isArray(value)) return value.length === 0;
-      return false;
-    });
+    .filter((f) => f.required && visibleFieldIds.has(f.id))
+    .filter((f) => isAnswerEmpty(responses[f.id]));
 
   if (missingFields.length > 0) {
     return NextResponse.json(
@@ -183,7 +204,7 @@ export async function POST(request: NextRequest, { params }: { params: { slug: s
     );
   }
 
-  // 8. Une ébauche déjà enregistrée pour cette session sera remplacée, pas
+  // 9. Une ébauche déjà enregistrée pour cette session sera remplacée, pas
   //    dupliquée : elle doit donc être exclue des contrôles d'unicité.
   let existingPartialId: string | null = null;
   if (sessionId) {
@@ -197,7 +218,7 @@ export async function POST(request: NextRequest, { params }: { params: { slug: s
     if (existingPartial?.is_partial) existingPartialId = existingPartial.id;
   }
 
-  // 9. Un seul envoi par personne, si l'option est active.
+  // 10. Un seul envoi par personne, si l'option est active.
   const respondentEmail = findRespondentEmail(answerableFields, responses);
 
   if (form.unique_email) {
@@ -224,7 +245,7 @@ export async function POST(request: NextRequest, { params }: { params: { slug: s
     }
   }
 
-  // 10. Doublon sur le champ désigné comme identifiant unique.
+  // 11. Doublon sur le champ désigné comme identifiant unique.
   const duplicateFailure = await checkDuplicateAnswer(
     form as unknown as Form,
     answerableFields,
@@ -236,7 +257,7 @@ export async function POST(request: NextRequest, { params }: { params: { slug: s
     return NextResponse.json({ error: duplicateFailure.error }, { status: duplicateFailure.status });
   }
 
-  // 11. Score recalculé côté serveur — le client ne peut pas le falsifier.
+  // 12. Score recalculé côté serveur — le client ne peut pas le falsifier.
   const score = form.scoring_enabled
     ? calculateFormScore({ ...(form as unknown as Form), fields }, responses as FormResponses)
     : null;
@@ -271,7 +292,7 @@ export async function POST(request: NextRequest, { params }: { params: { slug: s
     return NextResponse.json({ error: "Erreur lors de l'enregistrement" }, { status: 500 });
   }
 
-  // 12. Effets de bord. Aucun ne peut plus faire échouer l'envoi : la réponse
+  // 13. Effets de bord. Aucun ne peut plus faire échouer l'envoi : la réponse
   //     est en base, le répondant a droit à sa confirmation quoi qu'il arrive
   //     du côté de Resend ou de Google.
   await runPostSubmissionEffects({

@@ -5,6 +5,7 @@ import { evaluateConditions } from '@/lib/logic-evaluation';
 import type { Form, Field } from '@/types';
 import type { ScoreResult } from '@/lib/scoring';
 import type { EmbedOptions } from '@/lib/embed';
+import { isAnswerEmpty } from '@/lib/submission-format';
 import { FormHeader } from '@/components/builder/FormHeader';
 import { ScoreDisplay } from '@/components/respondent/ScoreDisplay';
 import { FieldRenderer } from '@/components/builder/FieldRenderer';
@@ -59,13 +60,11 @@ export function PublicTypeformView({
   const progress = total > 0 ? ((currentIdx + 1) / total) * 100 : 0;
   const isLast = currentIdx === total - 1;
 
-  // Validation de champ individuel
+  // Validation de champ individuel — même règle que la validation finale et que
+  // le serveur. Elle laissait auparavant passer un choix multiple vide (`[]`).
   const validateCurrentField = () => {
     if (!currentField || !currentField.required) return true;
-
-    const value = responses[currentField.id];
-    return value !== undefined && value !== null &&
-      (typeof value !== 'string' || value.trim() !== '');
+    return !isAnswerEmpty(responses[currentField.id]);
   };
 
   const handleBack = () => {

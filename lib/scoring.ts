@@ -1,6 +1,7 @@
 // lib/scoring.ts — Logique de calcul des scores de maturité
 
 import type { Form, Field, FieldOption, ScoreLevel } from '@/types';
+import { evaluateLogicRules } from './logic-evaluation';
 
 /** Structure représentant les réponses d'un répondant */
 export interface FormResponses {
@@ -28,6 +29,13 @@ export interface ScoreResult {
 /**
  * Calcule le score de maturité d'un formulaire basé sur les réponses.
  * Seuls les champs avec scoring activé contribuent au score.
+ *
+ * Les champs masqués par la logique conditionnelle sont exclus du calcul —
+ * numérateur **et** dénominateur. Sans cela, une question notée que le
+ * répondant n'a jamais vue ajoutait son barème au score maximum tout en
+ * rapportant zéro : deux personnes répondant aussi bien l'une que l'autre
+ * obtenaient des pourcentages différents selon la branche empruntée, et celle
+ * qui avait vu moins de questions était pénalisée.
  */
 export function calculateFormScore(form: Form, responses: FormResponses): ScoreResult | null {
   // Si le scoring n'est pas activé, pas de calcul
@@ -36,11 +44,18 @@ export function calculateFormScore(form: Form, responses: FormResponses): ScoreR
   }
 
   const fields = form.fields || [];
+  const rules = form.logic_rules ?? [];
+  // Sans règle, tous les champs comptent : on évite un parcours inutile.
+  const visibleIds =
+    rules.length > 0 ? evaluateLogicRules(rules, responses, fields) : null;
+
   const fieldScores: ScoreResult['fieldScores'] = [];
   let totalScore = 0;
   let maxScore = 0;
 
   for (const field of fields) {
+    if (visibleIds && !visibleIds.has(field.id)) continue;
+
     const fieldScore = calculateFieldScore(field, responses[field.id]);
     if (fieldScore) {
       fieldScores.push({
