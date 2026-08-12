@@ -107,3 +107,43 @@ export function getResendApiKey(): string | null {
 export function getOpenRouterApiKey(): string | null {
   return process.env.OPENROUTER_API_KEY?.trim() || null;
 }
+
+/** Adresse d'expédition par défaut des notifications (doit être un domaine vérifié Resend). */
+export const NOTIFICATION_FROM_EMAIL = (
+  process.env.NOTIFICATION_FROM_EMAIL ?? 'notifications@notifications.mooove.group'
+).trim();
+
+// ----------------------------------------------------------------------------
+// Google — OAuth 2.0 pour l'intégration Google Sheets
+//
+// Le `client_secret` ne sort jamais du serveur : il ne sert qu'à échanger le code
+// d'autorisation et à rafraîchir les jetons, dans les routes /api/integrations/google/*.
+// ----------------------------------------------------------------------------
+
+export interface GoogleOAuthConfig {
+  clientId: string;
+  clientSecret: string;
+  redirectUri: string;
+}
+
+/** Configuration OAuth Google, ou `null` si l'intégration n'est pas configurée. */
+export function getGoogleOAuthConfig(): GoogleOAuthConfig | null {
+  if (typeof window !== 'undefined') {
+    throw new Error('La configuration OAuth Google ne doit jamais être lue côté navigateur.');
+  }
+
+  const clientId = process.env.GOOGLE_CLIENT_ID?.trim();
+  const clientSecret = process.env.GOOGLE_CLIENT_SECRET?.trim();
+  if (!clientId || !clientSecret) return null;
+
+  // L'URI de redirection doit correspondre au caractère près à celle déclarée
+  // dans la console Google Cloud, sinon Google refuse l'échange du code.
+  const base = (process.env.GOOGLE_REDIRECT_URI?.trim() || `${APP_URL}/api/integrations/google/callback`);
+
+  return { clientId, clientSecret, redirectUri: base };
+}
+
+/** Indique si l'intégration Google est utilisable sur cette instance. */
+export function isGoogleConfigured(): boolean {
+  return getGoogleOAuthConfig() !== null;
+}

@@ -18,6 +18,8 @@ import {
   ListChecks,
   MoreHorizontal,
   Pencil,
+  Plug,
+  Settings,
   Share2,
   Trash2,
   TrendingUp,
@@ -40,6 +42,9 @@ import type { Form, Field } from '@/types';
 import { createClient } from '@/lib/supabase/client';
 import { toast } from '@/components/ui/Toast';
 import { ClosingDateModal } from '@/components/dashboard/ClosingDateModal';
+import { FormShareTab } from '@/components/dashboard/FormShareTab';
+import { FormIntegrationsTab } from '@/components/dashboard/FormIntegrationsTab';
+import { FormSettingsTab } from '@/components/dashboard/FormSettingsTab';
 
 import { GridLayout, useContainerWidth, verticalCompactor } from 'react-grid-layout';
 import type { Layout, LayoutItem } from 'react-grid-layout';
@@ -59,7 +64,9 @@ import {
 import { calculateFormScore, DEFAULT_SCORE_LEVELS } from '@/lib/scoring';
 import { Award } from 'lucide-react';
 
-type Tab = 'overview' | 'responses' | 'share';
+type Tab = 'overview' | 'responses' | 'share' | 'integrations' | 'settings';
+
+const TABS: Tab[] = ['overview', 'responses', 'share', 'integrations', 'settings'];
 
 function FormDashboardContent() {
   const params = useParams<{ id: string }>();
@@ -75,6 +82,17 @@ function FormDashboardContent() {
   // Réponses soumises partagées entre les onglets
   const [submissions, setSubmissions] = useState<any[]>([]);
   const [submissionsLoading, setSubmissionsLoading] = useState(true);
+
+  /**
+   * Les ébauches ne sont pas des réponses : elles ne comptent ni dans les
+   * statistiques ni dans les graphiques, sans quoi un formulaire simplement
+   * ouvert et abandonné gonflerait tous les chiffres. Seul l'onglet Réponses
+   * peut les afficher, sur demande explicite.
+   */
+  const completedSubmissions = useMemo(
+    () => submissions.filter((submission) => !submission.is_partial),
+    [submissions]
+  );
 
   // Charger toutes les réponses depuis Supabase
   useEffect(() => {
@@ -122,7 +140,7 @@ function FormDashboardContent() {
 
   useEffect(() => {
     const activeTab = searchParams.get('tab') as Tab;
-    if (activeTab && ['overview', 'responses', 'share'].includes(activeTab)) {
+    if (activeTab && TABS.includes(activeTab)) {
       setTab(activeTab);
     }
   }, [searchParams]);
@@ -224,7 +242,7 @@ function FormDashboardContent() {
       />
 
       {/* Stats — avec les vraies réponses du formulaire */}
-      <StatsRow submissions={submissions} loading={submissionsLoading} />
+      <StatsRow submissions={completedSubmissions} loading={submissionsLoading} />
 
       {/* Onglets */}
       <div className="border-b border-border">
@@ -238,15 +256,25 @@ function FormDashboardContent() {
           <TabButton active={tab === 'share'} onClick={() => setTab('share')} icon={Share2}>
             Partage
           </TabButton>
+          <TabButton
+            active={tab === 'integrations'}
+            onClick={() => setTab('integrations')}
+            icon={Plug}
+          >
+            Intégrations
+          </TabButton>
+          <TabButton active={tab === 'settings'} onClick={() => setTab('settings')} icon={Settings}>
+            Paramètres
+          </TabButton>
         </div>
       </div>
 
       {/* Contenu de l'onglet */}
       {tab === 'overview' && (
-        <OverviewTab 
-          form={form} 
-          submissions={submissions} 
-          loading={submissionsLoading} 
+        <OverviewTab
+          form={form}
+          submissions={completedSubmissions}
+          loading={submissionsLoading}
         />
       )}
       {tab === 'responses' && (
@@ -257,7 +285,9 @@ function FormDashboardContent() {
           loading={submissionsLoading} 
         />
       )}
-      {tab === 'share' && <ShareTab form={form} />}
+      {tab === 'share' && <FormShareTab form={form} />}
+      {tab === 'integrations' && <FormIntegrationsTab form={form} />}
+      {tab === 'settings' && <FormSettingsTab form={form} />}
 
       <ConfirmDialog
         isOpen={showDeleteConfirm}
@@ -1162,12 +1192,23 @@ interface ResponsesTabProps {
   loading: boolean;
 }
 
-function ResponsesTab({ form, submissions, setSubmissions, loading }: ResponsesTabProps) {
+function ResponsesTab({ form, submissions: allSubmissions, setSubmissions, loading }: ResponsesTabProps) {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [editingCell, setEditingCell] = useState<{ subId: string; fieldId: string } | null>(null);
   const [editValue, setEditValue] = useState('');
   const [editedCells, setEditedCells] = useState<Set<string>>(new Set());
   const [copiedCell, setCopiedCell] = useState<string | null>(null);
+  const [showPartials, setShowPartials] = useState(false);
+
+  const partialCount = allSubmissions.filter((s) => s.is_partial).length;
+
+  // Par défaut, le tableau ne montre que les réponses abouties : c'est ce qu'on
+  // exporte, ce qu'on compte, et ce que l'auteur du formulaire appelle « une
+  // réponse ». Les ébauches sont accessibles d'un clic, jamais mélangées sans
+  // qu'on l'ait demandé.
+  const submissions = showPartials
+    ? allSubmissions
+    : allSubmissions.filter((s) => !s.is_partial);
 
   const fields = (form.fields ?? []).filter(
     (f) => f.type !== 'section_break' && f.type !== 'statement' && f.type !== 'image' && f.type !== 'video'
@@ -1296,6 +1337,18 @@ function ResponsesTab({ form, submissions, setSubmissions, loading }: ResponsesT
     return <div className="py-12 text-center papyrus-meta text-sm">Chargement des réponses...</div>;
   }
 
+  const partialToggle = partialCount > 0 && (
+    <button
+      type="button"
+      onClick={() => setShowPartials((v) => !v)}
+      className="text-xs text-accent hover:underline"
+    >
+      {showPartials
+        ? 'Masquer les réponses partielles'
+        : `Afficher les ${partialCount} réponse${partialCount > 1 ? 's' : ''} partielle${partialCount > 1 ? 's' : ''}`}
+    </button>
+  );
+
   if (submissions.length === 0) {
     return (
       <div className="space-y-4">
@@ -1306,6 +1359,7 @@ function ResponsesTab({ form, submissions, setSubmissions, loading }: ResponsesT
           <p className="papyrus-meta mx-auto mt-1 max-w-md text-sm">
             i. Partagez le lien de votre formulaire pour commencer à collecter des réponses.
           </p>
+          {partialToggle && <div className="mt-4">{partialToggle}</div>}
         </div>
       </div>
     );
@@ -1314,7 +1368,10 @@ function ResponsesTab({ form, submissions, setSubmissions, loading }: ResponsesT
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="font-display text-xl">Réponses brutes ({submissions.length})</h2>
+        <div className="flex items-baseline gap-3">
+          <h2 className="font-display text-xl">Réponses brutes ({submissions.length})</h2>
+          {partialToggle}
+        </div>
         <Button
           variant="secondary"
           size="sm"
@@ -1379,6 +1436,14 @@ function ResponsesTab({ form, submissions, setSubmissions, loading }: ResponsesT
                 {/* Date */}
                 <td className="px-4 py-3 whitespace-nowrap font-mono text-xs text-text-secondary">
                   {new Date(sub.completed_at).toLocaleString('fr-FR')}
+                  {sub.is_partial && (
+                    <span
+                      className="ml-2 rounded-full border border-warning/40 bg-warning/10 px-1.5 py-0.5 font-sans text-[10px] font-semibold text-warning"
+                      title="Ébauche : le formulaire n'a jamais été envoyé"
+                    >
+                      partielle
+                    </span>
+                  )}
                 </td>
 
                 {/* Cellules de réponse */}
@@ -1463,150 +1528,4 @@ function ResponsesTab({ form, submissions, setSubmissions, loading }: ResponsesT
       </div>
     </div>
   );
-}
-
-// ============================================================================
-// Onglet Partage — lien, QR code, embed
-// ============================================================================
-function ShareTab({ form }: { form: Form }) {
-  const [copied, setCopied] = useState<'link' | 'embed' | null>(null);
-  const [publishing, setPublishing] = useState(false);
-
-  // En local mode ou production, on utilise getBaseUrl pour s'assurer que c'est dynamique
-  const baseUrl = getBaseUrl();
-  const publicUrl = `${baseUrl}/f/${form.slug}`;
-
-  // QR code via api.qrserver.com
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=0&data=${encodeURIComponent(publicUrl)}`;
-
-  const embedSnippet = `<iframe src="${publicUrl}" width="100%" height="600" frameborder="0" style="border:none;"></iframe>`;
-
-  async function copy(text: string, kind: 'link' | 'embed') {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(kind);
-      window.setTimeout(() => setCopied(null), 2000);
-    } catch {
-      alert('Impossible de copier — copiez manuellement.');
-    }
-  }
-
-  async function handlePublish() {
-    setPublishing(true);
-    try {
-      await updateForm(form.id, {
-        status: 'published',
-        published_at: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error('Failed to publish form:', error);
-      alert('Erreur lors de la publication.');
-    } finally {
-      setPublishing(false);
-    }
-  }
-
-  if (form.status === 'draft') {
-    return (
-      <div className="space-y-6">
-        <div className="flex flex-col gap-4 rounded-lg border border-warning/40 bg-warning/5 p-5 sm:flex-row sm:items-center sm:justify-between">
-          <div className="text-sm text-warning font-medium">
-            i. Publiez le formulaire pour partager le lien
-          </div>
-          <Button
-            onClick={handlePublish}
-            disabled={publishing}
-          >
-            {publishing ? 'Publication...' : 'Publier maintenant'}
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-6">
-      {form.status === 'closed' && (
-        <div className="rounded-md border border-warning/40 bg-warning/5 px-4 py-3 text-sm text-warning">
-          i. Ce formulaire est archivé. Il ne sera plus accessible au public à moins de le repasser en brouillon.
-        </div>
-      )}
-
-      {/* Lien direct */}
-      <section className="rounded-lg border border-border bg-bg-surface p-5">
-        <div className="mb-3 flex items-center gap-2">
-          <Link2 className="h-4 w-4 text-text-secondary" />
-          <h3 className="font-display text-lg">Lien direct</h3>
-        </div>
-        <div className="flex items-center gap-2">
-          <input
-            type="text"
-            readOnly
-            value={publicUrl}
-            onFocus={(e) => e.currentTarget.select()}
-            className="h-10 flex-1 rounded-md border border-border-strong bg-bg-base px-3 font-mono text-sm text-text-primary focus:border-accent focus:outline-none"
-          />
-          <Button
-            variant="secondary"
-            iconLeft={copied === 'link' ? <Check className="h-3.5 w-3.5" /> : <Link2 className="h-3.5 w-3.5" />}
-            onClick={() => copy(publicUrl, 'link')}
-          >
-            {copied === 'link' ? 'Copié !' : 'Copier le lien'}
-          </Button>
-        </div>
-        <p className="papyrus-meta mt-2 text-xs">
-          i. Partagez ce lien — toute personne le recevant pourra remplir le formulaire (sauf si l&apos;accès est restreint).
-        </p>
-      </section>
-
-      {/* QR Code + Embed côte à côte */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        {/* QR Code */}
-        <section className="rounded-lg border border-border bg-bg-surface p-5">
-          <h3 className="mb-3 font-display text-lg">QR Code</h3>
-          <div className="flex flex-col items-center gap-3">
-            <div className="rounded-md border border-border bg-white p-3">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={qrUrl} alt="QR code du formulaire" width={200} height={200} />
-            </div>
-            <a
-              href={qrUrl}
-              download={`papyrus-${form.slug}-qr.png`}
-              className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline"
-            >
-              <Download className="h-3.5 w-3.5" /> Télécharger le QR
-            </a>
-          </div>
-          <p className="papyrus-meta mt-3 text-center text-xs">
-            i. À imprimer ou afficher pour un événement / vitrine.
-          </p>
-        </section>
-
-        {/* Embed */}
-        <section className="rounded-lg border border-border bg-bg-surface p-5">
-          <h3 className="mb-3 font-display text-lg">Intégration (embed)</h3>
-          <textarea
-            readOnly
-            value={embedSnippet}
-            onFocus={(e) => e.currentTarget.select()}
-            rows={4}
-            className="w-full resize-none rounded-md border border-border-strong bg-bg-base px-3 py-2 font-mono text-xs text-text-primary focus:border-accent focus:outline-none"
-          />
-          <div className="mt-2 flex items-center justify-between gap-2">
-            <p className="papyrus-meta text-xs">
-              i. Code à coller dans n&apos;importe quel site.
-            </p>
-            <Button
-              variant="secondary"
-              size="sm"
-              iconLeft={copied === 'embed' ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-              onClick={() => copy(embedSnippet, 'embed')}
-            >
-              {copied === 'embed' ? 'Copié' : 'Copier'}
-            </Button>
-          </div>
-        </section>
-      </div>
-    </div>
-  );
-}
+}

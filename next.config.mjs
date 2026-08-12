@@ -15,6 +15,24 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? '';
 const mediaUrl = process.env.NEXT_PUBLIC_R2_PUBLIC_BASE_URL ?? 'https://media.mooove.ltd';
 const isDev = process.env.NODE_ENV === 'development';
 
+/**
+ * Deux politiques d'intégration, pas une.
+ *
+ * Le tableau de bord ne doit être encadrable que par nos propres domaines : une
+ * iframe hostile qui superpose ses boutons aux nôtres ferait supprimer un
+ * formulaire d'un clic (détournement de clic).
+ *
+ * Les pages `/embed/…`, elles, existent précisément pour être intégrées au site
+ * d'un client — la liste blanche n'a donc pas de sens : elle imposerait de
+ * redéployer l'application à chaque nouveau client. Ces pages n'exposent aucune
+ * action authentifiée : ce sont des formulaires publics, dont le seul effet est
+ * d'enregistrer une réponse.
+ */
+const APP_FRAME_ANCESTORS =
+  "frame-ancestors 'self' https://*.mooove.group https://*.mooove.live https://*.mooove.club https://*.meetyourjob.com https://*.smarttraveller.mu https://*.careerhub.mu";
+
+const EMBED_FRAME_ANCESTORS = 'frame-ancestors *';
+
 const contentSecurityPolicy = [
   "default-src 'self'",
   `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
@@ -28,11 +46,14 @@ const contentSecurityPolicy = [
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
-  // Les formulaires publics doivent rester intégrables sur les sites des marques,
-  // mais uniquement en iframe — pas en tant qu'objet ou embed.
-  "frame-ancestors 'self' https://*.mooove.group https://*.mooove.live https://*.mooove.club https://*.meetyourjob.com https://*.smarttraveller.mu https://*.careerhub.mu",
   'upgrade-insecure-requests'
 ].join('; ');
+
+/** Politique appliquée aux pages destinées à vivre dans le site d'un client. */
+const embedContentSecurityPolicy = [contentSecurityPolicy, EMBED_FRAME_ANCESTORS].join('; ');
+
+/** Politique appliquée à tout le reste — application, API, formulaires publics. */
+const appContentSecurityPolicy = [contentSecurityPolicy, APP_FRAME_ANCESTORS].join('; ');
 
 const nextConfig = {
   // Sortie autonome : image Docker minimale pour Easypanel.
@@ -65,21 +86,34 @@ const nextConfig = {
   },
 
   async headers() {
+    const commonHeaders = [
+      { key: 'X-Content-Type-Options', value: 'nosniff' },
+      { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
+      {
+        key: 'Permissions-Policy',
+        value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()'
+      },
+      {
+        key: 'Strict-Transport-Security',
+        value: 'max-age=63072000; includeSubDomains; preload'
+      }
+    ];
+
     return [
+      // Déclaré avant la règle générale : Next.js applique la première source qui
+      // correspond, donc l'ordre décide laquelle des deux politiques s'applique.
+      {
+        source: '/embed/:path*',
+        headers: [
+          { key: 'Content-Security-Policy', value: embedContentSecurityPolicy },
+          ...commonHeaders
+        ]
+      },
       {
         source: '/:path*',
         headers: [
-          { key: 'Content-Security-Policy', value: contentSecurityPolicy },
-          { key: 'X-Content-Type-Options', value: 'nosniff' },
-          { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()'
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload'
-          }
+          { key: 'Content-Security-Policy', value: appContentSecurityPolicy },
+          ...commonHeaders
         ]
       }
     ];

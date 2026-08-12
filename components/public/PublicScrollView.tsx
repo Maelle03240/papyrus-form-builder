@@ -2,6 +2,7 @@
 
 import type { Form, Field } from '@/types';
 import type { ScoreResult } from '@/lib/scoring';
+import type { EmbedOptions } from '@/lib/embed';
 import { FormHeader } from '@/components/builder/FormHeader';
 import {} from '@/components/builder/FieldRenderer';
 import { ScoreDisplay } from '@/components/respondent/ScoreDisplay';
@@ -20,6 +21,7 @@ interface Props {
   validateRequiredFields: () => { isValid: boolean; missingFields: Field[] };
   scoreResult?: ScoreResult;
   showScoreToRespondent?: boolean;
+  embed?: EmbedOptions;
 }
 
 export function PublicScrollView({
@@ -31,7 +33,8 @@ export function PublicScrollView({
   isSubmitting,
   validateRequiredFields,
   scoreResult,
-  showScoreToRespondent
+  showScoreToRespondent,
+  embed
 }: Props) {
   const fields = form.fields?.filter(f => visibleFields.has(f.id)) || [];
   const hasInputs = fields.some(
@@ -54,29 +57,38 @@ export function PublicScrollView({
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-auto min-h-screen max-w-2xl px-8 py-12"
+      className={cn(
+        'max-w-2xl px-8',
+        // Intégré dans un site tiers, le formulaire ne doit occuper que la place
+        // dont il a besoin : la hauteur d'écran et les marges généreuses de la
+        // page autonome laisseraient un grand vide dans la page hôte.
+        embed?.enabled ? 'py-6' : 'min-h-screen py-12',
+        embed?.alignLeft ? 'mr-auto' : 'mx-auto'
+      )}
     >
       {/* Header avec bannière, logo et titre */}
-      <div className="mb-8">
-        <FormHeader
-          theme={form.theme}
-          selectedElement={null}
-          onSelectBanner={() => { }}
-          onSelectLogo={() => { }}
-          preview={true}
-        />
-        <header className="mb-8">
-          <h1 className="font-display text-4xl text-text-primary">{form.title}</h1>
-          {form.description && (
-            <p
-              className="papyrus-meta mt-2 text-base"
-              style={{ color: form.theme.text_color ?? 'var(--text-secondary)' }}
-            >
-              {form.description}
-            </p>
-          )}
-        </header>
-      </div>
+      {!embed?.hideTitle && (
+        <div className="mb-8">
+          <FormHeader
+            theme={form.theme}
+            selectedElement={null}
+            onSelectBanner={() => { }}
+            onSelectLogo={() => { }}
+            preview={true}
+          />
+          <header className="mb-8">
+            <h1 className="font-display text-4xl text-text-primary">{form.title}</h1>
+            {form.description && (
+              <p
+                className="papyrus-meta mt-2 text-base"
+                style={{ color: form.theme.text_color ?? 'var(--text-secondary)' }}
+              >
+                {form.description}
+              </p>
+            )}
+          </header>
+        </div>
+      )}
 
       {/* Grille de champs */}
       <div className="grid grid-cols-2 gap-4">

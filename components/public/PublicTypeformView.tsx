@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import { evaluateConditions } from '@/lib/logic-evaluation';
 import type { Form, Field } from '@/types';
 import type { ScoreResult } from '@/lib/scoring';
+import type { EmbedOptions } from '@/lib/embed';
 import { FormHeader } from '@/components/builder/FormHeader';
 import { ScoreDisplay } from '@/components/respondent/ScoreDisplay';
 import { FieldRenderer } from '@/components/builder/FieldRenderer';
@@ -23,6 +24,7 @@ interface Props {
   validateRequiredFields: () => { isValid: boolean; missingFields: Field[] };
   scoreResult?: ScoreResult;
   showScoreToRespondent?: boolean;
+  embed?: EmbedOptions;
 }
 
 export function PublicTypeformView({
@@ -34,14 +36,20 @@ export function PublicTypeformView({
   isSubmitting,
   validateRequiredFields,
   scoreResult,
-  showScoreToRespondent
+  showScoreToRespondent,
+  embed
 }: Props) {
   const fields = form.fields?.filter(f => visibleFields.has(f.id)) || [];
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
+    // Faire défiler la page hôte à chaque question serait intrusif.
+    if (embed?.enabled) return;
     window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [currentIdx]);
+  }, [currentIdx, embed?.enabled]);
+
+  /** En mode intégré, l'iframe n'a pas la hauteur de l'écran : on s'y adapte. */
+  const screenClass = embed?.enabled ? 'min-h-[420px]' : 'min-h-screen';
 
   const [showIntro, setShowIntro] = useState(true);
   const [history, setHistory] = useState<string[]>([]);
@@ -224,31 +232,38 @@ export function PublicTypeformView({
    */
   if (showIntro) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-8">
+      <div className={cn(screenClass, 'flex items-center justify-center px-8 py-10')}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mx-auto max-w-2xl text-center"
+          className={cn(
+            'max-w-2xl',
+            embed?.alignLeft ? 'mr-auto text-left' : 'mx-auto text-center'
+          )}
         >
-          <FormHeader
-            theme={form.theme}
-            selectedElement={null}
-            onSelectBanner={() => {}}
-            onSelectLogo={() => {}}
-            preview={true}
-          />
+          {!embed?.hideTitle && (
+            <>
+              <FormHeader
+                theme={form.theme}
+                selectedElement={null}
+                onSelectBanner={() => {}}
+                onSelectLogo={() => {}}
+                preview={true}
+              />
 
-          <div className="mb-8">
-            <h1 className="font-display text-4xl text-text-primary mb-4">{form.title}</h1>
-            {form.description && (
-              <p
-                className="text-lg leading-relaxed"
-                style={{ color: form.theme.text_color ?? 'var(--text-secondary)' }}
-              >
-                {form.description}
-              </p>
-            )}
-          </div>
+              <div className="mb-8">
+                <h1 className="font-display text-4xl text-text-primary mb-4">{form.title}</h1>
+                {form.description && (
+                  <p
+                    className="text-lg leading-relaxed"
+                    style={{ color: form.theme.text_color ?? 'var(--text-secondary)' }}
+                  >
+                    {form.description}
+                  </p>
+                )}
+              </div>
+            </>
+          )}
 
           <button
             onClick={() => setShowIntro(false)}
@@ -271,16 +286,17 @@ export function PublicTypeformView({
 
   if (!currentField) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className={cn(screenClass, 'flex items-center justify-center')}>
         <p>Aucune question disponible</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Barre de progression */}
-      <div className="fixed top-0 left-0 right-0 z-50">
+    <div className={cn(screenClass, 'relative')}>
+      {/* Barre de progression — `absolute` en mode intégré : `fixed` la collerait
+          au haut de la fenêtre du visiteur, pas à celui de l'iframe. */}
+      <div className={cn('left-0 right-0 top-0 z-50', embed?.enabled ? 'absolute' : 'fixed')}>
         <div
           className="h-1 bg-accent transition-all duration-300"
           style={{ width: `${progress}%` }}
@@ -288,14 +304,14 @@ export function PublicTypeformView({
       </div>
 
       {/* Numéro de question */}
-      <div className="fixed top-4 right-4 z-40">
+      <div className={cn('right-4 top-4 z-40', embed?.enabled ? 'absolute' : 'fixed')}>
         <span className="text-sm text-text-tertiary">
           {currentIdx + 1} / {total}
         </span>
       </div>
 
-      <div className="min-h-screen flex items-center justify-center px-8 py-12">
-        <div className="mx-auto w-full max-w-2xl">
+      <div className={cn(screenClass, 'flex items-center justify-center px-8 py-12')}>
+        <div className={cn('w-full max-w-2xl', embed?.alignLeft ? 'mr-auto' : 'mx-auto')}>
 
           <AnimatePresence mode="wait">
             <motion.div

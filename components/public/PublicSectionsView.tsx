@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import type { Form, Field } from '@/types';
 import type { ScoreResult } from '@/lib/scoring';
+import type { EmbedOptions } from '@/lib/embed';
 import { FormHeader } from '@/components/builder/FormHeader';
 import { ScoreDisplay } from '@/components/respondent/ScoreDisplay';
 import { PublicFieldCard } from './PublicFieldCard';
@@ -21,7 +22,11 @@ interface Props {
   validateRequiredFields: () => { isValid: boolean; missingFields: Field[] };
   scoreResult?: ScoreResult;
   showScoreToRespondent?: boolean;
+  embed?: EmbedOptions;
 }
+
+/** Types de question pour lesquels un clic vaut réponse définitive. */
+const AUTO_JUMP_TYPES = ['single_choice', 'dropdown', 'rating', 'nps'];
 
 export function PublicSectionsView({
   form,
@@ -32,15 +37,19 @@ export function PublicSectionsView({
   isSubmitting,
   validateRequiredFields,
   scoreResult,
-  showScoreToRespondent
+  showScoreToRespondent,
+  embed
 }: Props) {
   const fields = form.fields?.filter(f => visibleFields.has(f.id)) || [];
   const pages = buildPages(fields);
   const [pageIdx, setPageIdx] = useState(0);
 
   useEffect(() => {
+    // Intégré dans un site tiers, faire défiler la page hôte serait intrusif :
+    // le répondant verrait la page de son hôte sauter en haut à chaque étape.
+    if (embed?.enabled) return;
     window.scrollTo({ top: 0, behavior: 'instant' });
-  }, [pageIdx]);
+  }, [pageIdx, embed?.enabled]);
 
   const total = pages.length;
   const currentPage = pages[pageIdx] ?? [];
@@ -50,6 +59,45 @@ export function PublicSectionsView({
 
   const pageHeader = currentPage[0]?.type === 'section_break' ? currentPage[0] : null;
   const pageFields = pageHeader ? currentPage.slice(1) : currentPage;
+
+  /**
+   * Passage automatique à la page suivante.
+   *
+   * Comme chez Tally, l'option ne s'applique qu'à une page ne contenant qu'une
+   * seule question à réponse unique : sur une page à plusieurs champs, avancer
+   * dès la première réponse ferait perdre les suivantes. La dernière page est
+   * exclue — envoyer un formulaire sans que le répondant ait cliqué serait
+   * franchement hostile.
+   */
+  const autoJumpField =
+    form.settings?.auto_jump === true &&
+    !isLast &&
+    pageFields.length === 1 &&
+    AUTO_JUMP_TYPES.includes(pageFields[0].type)
+      ? pageFields[0]
+      : null;
+
+  const autoJumpTimer = useRef<number | null>(null);
+
+  const handleAnswer = (fieldId: string, value: unknown) => {
+    updateResponse(fieldId, value);
+
+    if (!autoJumpField || autoJumpField.id !== fieldId) return;
+    if (value === undefined || value === null || value === '') return;
+
+    if (autoJumpTimer.current) window.clearTimeout(autoJumpTimer.current);
+    // Court délai : le répondant doit voir son choix se cocher avant que la page
+    // ne change, sans quoi l'interface paraît avoir décidé à sa place.
+    autoJumpTimer.current = window.setTimeout(() => {
+      setPageIdx(i => Math.min(total - 1, i + 1));
+    }, 400);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (autoJumpTimer.current) window.clearTimeout(autoJumpTimer.current);
+    };
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,7 +119,7 @@ export function PublicSectionsView({
   };
 
   return (
-    <div className="min-h-screen">
+    <div className={embed?.enabled ? 'w-full' : 'min-h-screen'}>
       {/* Barre de progression */}
       <div className="sticky top-0 z-50 bg-white border-b border-border">
         <div
@@ -85,10 +133,13 @@ export function PublicSectionsView({
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="mx-auto max-w-2xl px-8 py-8">
+      <form
+        onSubmit={handleSubmit}
+        className={cn('max-w-2xl px-8 py-8', embed?.alignLeft ? 'mr-auto' : 'mx-auto')}
+      >
 
         {/* Header de formulaire (seulement sur la première page) */}
-        {isFirst && (
+        {isFirst && !embed?.hideTitle && (
           <div className="mb-8">
             <FormHeader
               theme={form.theme}
@@ -136,7 +187,7 @@ export function PublicSectionsView({
                 form={form}
                 span={span}
                 responses={responses}
-                updateResponse={updateResponse}
+                updateResponse={handleAnswer}
               />
             );
           })}

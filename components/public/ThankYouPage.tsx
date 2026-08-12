@@ -2,34 +2,44 @@
 
 import type { Form } from '@/types';
 import type { ScoreResult } from '@/lib/scoring';
+import type { EmbedOptions } from '@/lib/embed';
 import { FormHeader } from '@/components/builder/FormHeader';
 import { ScoreDisplay } from '@/components/respondent/ScoreDisplay';
+import { cn } from '@/lib/utils';
 import { Check } from 'lucide-react';
 
 interface Props {
   form: Form;
   submissionId: string | null;
   scoreResult?: ScoreResult;
+  embed?: EmbedOptions;
 }
 
-export function ThankYouPage({ form, submissionId, scoreResult }: Props) {
+export function ThankYouPage({ form, submissionId, scoreResult, embed }: Props) {
   const confirmationMessage = form.theme.score_description ||
     "Merci pour votre réponse ! Nous avons bien reçu vos informations.";
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-8 py-12">
+    <div
+      className={cn(
+        'flex items-center justify-center px-8 py-12',
+        embed?.enabled ? 'min-h-[320px]' : 'min-h-screen'
+      )}
+    >
       <div className="mx-auto max-w-2xl text-center">
 
         {/* Header avec bannière et logo */}
-        <div className="mb-8">
-          <FormHeader
-            theme={form.theme}
-            selectedElement={null}
-            onSelectBanner={() => {}}
-            onSelectLogo={() => {}}
-            preview={true}
-          />
-        </div>
+        {!embed?.hideTitle && (
+          <div className="mb-8">
+            <FormHeader
+              theme={form.theme}
+              selectedElement={null}
+              onSelectBanner={() => {}}
+              onSelectLogo={() => {}}
+              preview={true}
+            />
+          </div>
+        )}
 
         {/* Icône de succès */}
         <div
@@ -70,10 +80,13 @@ export function ThankYouPage({ form, submissionId, scoreResult }: Props) {
           </p>
         )}
 
-        {/* Message de fermeture */}
-        <p className="text-sm text-text-tertiary mt-8">
-          Vous pouvez fermer cette page.
-        </p>
+        {/* Message de fermeture — sans objet dans une iframe, où il n'y a pas de
+            page à fermer. */}
+        {!embed?.enabled && (
+          <p className="text-sm text-text-tertiary mt-8">
+            Vous pouvez fermer cette page.
+          </p>
+        )}
       </div>
     </div>
   );

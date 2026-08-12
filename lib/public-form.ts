@@ -22,6 +22,12 @@ import type { Field, Form, LogicRule } from '@/types';
 export interface PublicForm extends Form {
   /** Indique qu'un mot de passe protège le formulaire, sans jamais le divulguer. */
   requires_password?: boolean;
+  /**
+   * Le formulaire n'accepte plus de réponses : archivé, date limite dépassée, ou
+   * quota atteint. La vue le calcule elle-même — le compte exact des réponses
+   * n'est pas exposé, seulement le fait que la limite est franchie.
+   */
+  is_closed?: boolean;
 }
 
 function createPublicClient() {
@@ -47,6 +53,48 @@ export const getPublicForm = cache(async (slug: string): Promise<PublicForm | nu
 
   if (error || !form) return null;
 
+  // Un formulaire clos ne divulgue pas ses questions : `public_fields` filtre sur
+  // `status = 'published'` et sur la date limite, donc les deux requêtes qui
+  // suivent renverraient de toute façon des listes vides. On s'épargne l'aller-
+  // retour et on renvoie l'enveloppe nécessaire à l'affichage du message.
+  if ((form as PublicForm).is_closed) {
+    return { ...(form as PublicForm), fields: [], logic_rules: [] };
+  }
+
+  // Un formulaire protégé ne livre pas ses questions avant que le mot de passe
+  // ne soit validé. Les charger ici les embarquerait dans le rendu envoyé au
+  // navigateur : l'écran de saisie ne serait qu'un rideau, contournable en
+  // ouvrant les outils de développement.
+  if ((form as PublicForm).requires_password) {
+    return { ...(form as PublicForm), fields: [], logic_rules: [] };
+  }
+
+  return withRelations(supabase, form as PublicForm);
+});
+
+/**
+ * Formulaire complet, une fois le mot de passe validé.
+ * Réservé aux routes serveur qui ont elles-mêmes vérifié l'accès.
+ */
+export async function getUnlockedPublicForm(slug: string): Promise<PublicForm | null> {
+  const supabase = createPublicClient();
+
+  const { data: form, error } = await supabase
+    .from('public_forms')
+    .select('*')
+    .eq('slug', slug)
+    .maybeSingle();
+
+  if (error || !form) return null;
+  if ((form as PublicForm).is_closed) return null;
+
+  return withRelations(supabase, form as PublicForm);
+}
+
+async function withRelations(
+  supabase: ReturnType<typeof createPublicClient>,
+  form: PublicForm
+): Promise<PublicForm> {
   // Les vues ne peuvent pas être jointes comme des relations PostgREST : on
   // charge champs et règles en parallèle, filtrés sur le formulaire trouvé.
   const [fieldsResult, rulesResult] = await Promise.all([
@@ -61,5 +109,5 @@ export const getPublicForm = cache(async (slug: string): Promise<PublicForm | nu
     (a, b) => (a.rule_order ?? 0) - (b.rule_order ?? 0)
   );
 
-  return { ...(form as PublicForm), fields, logic_rules: logicRules };
-});
+  return { ...form, fields, logic_rules: logicRules };
+}

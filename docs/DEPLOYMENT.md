@@ -51,10 +51,14 @@ ailleurs. Aucune de ces valeurs ne doit être commitée.
 | `R2_SECRET_ACCESS_KEY` | Vaultwarden — **serveur uniquement** |
 | `R2_PUBLIC_BASE_URL` | `https://media.mooove.ltd` |
 | `NEXT_PUBLIC_R2_PUBLIC_BASE_URL` | `https://media.mooove.ltd` |
-| `APP_ENCRYPTION_KEY` | Chiffre les clés API Tally en base. `openssl rand -base64 32` |
+| `APP_ENCRYPTION_KEY` | Chiffre les secrets tiers en base (clés Tally, jetons Google) et signe les jetons d'accès aux formulaires protégés. `openssl rand -base64 32` |
 | `IP_HASH_SALT` | Sel du hachage d'IP des réponses. `openssl rand -hex 16` |
-| `RESEND_API_KEY` | *Optionnel* — sans lui, les invitations par email sont désactivées |
+| `RESEND_API_KEY` | *Optionnel* — sans lui, invitations et notifications de réponse ne partent pas |
+| `NOTIFICATION_FROM_EMAIL` | *Optionnel* — expéditeur des notifications. Domaine vérifié Resend obligatoire |
 | `OPENROUTER_API_KEY` | *Optionnel* — sans lui, la génération IA est désactivée |
+| `GOOGLE_CLIENT_ID` | *Optionnel* — intégration Google Sheets (voir §5) |
+| `GOOGLE_CLIENT_SECRET` | *Optionnel* — **serveur uniquement** |
+| `GOOGLE_REDIRECT_URI` | *Optionnel* — déduit de `NEXT_PUBLIC_APP_URL` si absent |
 
 Il n'y a **rien d'autre à faire** pour les variables `NEXT_PUBLIC_*` : sur un
 build Dockerfile, Easypanel passe automatiquement chaque variable de l'onglet
@@ -85,6 +89,12 @@ rien qu'un hachage réversible).
       docker exec main_supabase-db-1 psql -U postgres -d postgres -v ON_ERROR_STOP=1 -f /tmp/001_papyrus_baseline.sql'
    ```
    Le script est idempotent : il peut être rejoué sans dommage.
+
+   Puis, dans le même ordre, `supabase/migrations/002_form_settings_integrations.sql`
+   — réglages par formulaire, réponses partielles, intégrations. Également
+   idempotent. Il **recrée les vues `public_*`** : les appliquer dans le désordre
+   remettrait `public_forms` dans son état d'origine, sans la colonne `settings`
+   ni le calcul `is_closed`, et les formulaires clos redeviendraient des 404.
 
 2. **Exposer le schéma à PostgREST** — dans
    `/etc/easypanel/projects/main/supabase/code/supabase/code/.env` :
@@ -152,7 +162,37 @@ premier, puis ajouter `mooove.live` aux domaines autorisés.
 
 ---
 
-## 5. Sécurité — invariants à ne pas casser
+## 5. Google Sheets — intégration des réponses
+
+Distincte du §4 : celle-ci sert à **écrire dans les feuilles des utilisateurs**,
+pas à les authentifier. Elle utilise son propre client OAuth, déclaré dans
+Papyrus et non dans Supabase.
+
+1. **Google Cloud** → activer les API **Google Sheets** et **Google Drive**.
+2. Créer un client OAuth « Application Web » :
+   - Origine JavaScript autorisée : `https://papyrus.mooove.group`
+   - URI de redirection autorisée :
+     `https://papyrus.mooove.group/api/integrations/google/callback`
+     — au caractère près, sinon Google refuse l'échange du code.
+3. Renseigner `GOOGLE_CLIENT_ID` et `GOOGLE_CLIENT_SECRET` dans Easypanel.
+4. Écran de consentement : les scopes demandés sont `openid`, `email`,
+   `.../auth/spreadsheets` et `.../auth/drive.file`. `spreadsheets` est un scope
+   **sensible** : en mode « Production », Google exige une vérification. Tant que
+   l'application reste en mode « Test » avec les comptes Mooove en testeurs, rien
+   à faire.
+
+`drive.file` est délibéré : il ne donne accès qu'aux fichiers créés par Papyrus.
+C'est pourquoi la liste « feuille existante » ne montre que les feuilles créées
+depuis Papyrus — une feuille tierce se rattache par son lien, l'écriture passant
+alors par le scope `spreadsheets`. L'alternative, `drive.readonly`, est un scope
+**restreint** : revue de sécurité annuelle payante par un auditeur agréé.
+
+Sans ces variables, l'onglet Intégrations affiche « non configuré » et le reste
+de l'application fonctionne normalement.
+
+---
+
+## 6. Sécurité — invariants à ne pas casser
 
 - **`SUPABASE_SERVICE_ROLE_KEY` et `R2_SECRET_ACCESS_KEY` ne doivent jamais être
   préfixées `NEXT_PUBLIC_`.** Elles seraient inlinées dans le bundle navigateur.
@@ -166,10 +206,21 @@ premier, puis ajouter `mooove.live` aux domaines autorisés.
   un visiteur anonyme de supprimer les champs de n'importe quel formulaire publié.
 - **Le bucket `papyrus-documents` n'a pas de policy `INSERT`.** Tout passe par
   `/api/uploads/document`.
+- **`google_credentials` n'a aucune policy RLS**, comme `tally_credentials` : le
+  jeton de rafraîchissement chiffré n'est atteignable que par `service_role`.
+- **Deux politiques `frame-ancestors`, pas une** (`next.config.mjs`).
+  `/embed/…` est encadrable par n'importe quel site — c'est sa raison d'être.
+  Tout le reste, tableau de bord compris, reste limité aux domaines Mooove :
+  élargir la règle générale exposerait l'application au détournement de clic.
+- **Un formulaire protégé n'envoie pas ses questions avant validation du mot de
+  passe.** `getPublicForm` renvoie une enveloppe vide ; le contenu ne sort que
+  par `/api/forms/access`, qui délivre un jeton signé exigé ensuite par
+  `/api/submit/[slug]`. Charger les champs « puis masquer l'écran » suffirait à
+  contourner la protection depuis les outils de développement.
 
 ---
 
-## 6. Limites connues
+## 7. Limites connues
 
 - Le **rate limiting est en mémoire du processus** (`lib/rate-limit.ts`). Adapté
   à un conteneur unique. Si Papyrus est un jour répliqué, le remplacer par un
@@ -179,10 +230,18 @@ premier, puis ajouter `mooove.live` aux domaines autorisés.
   déplace vers R2 ; il se lance à la demande, jamais automatiquement.
 - La **logique conditionnelle Tally** n'est pas transférable : l'import le
   signale explicitement plutôt que de produire des règles approximatives.
+- La **durée de conservation des réponses est appliquée paresseusement** : la
+  purge se déclenche à chaque nouvelle réponse et à l'enregistrement de l'onglet
+  Paramètres. Papyrus n'a pas d'ordonnanceur ; un formulaire qui ne reçoit plus
+  rien ne se purge donc plus. Si la conformité l'exige, ajouter un `pg_cron` sur
+  `papyrus.submissions`.
+- Un **formulaire protégé par mot de passe intégré en iframe** fonctionne : le
+  jeton d'accès circule dans le corps des requêtes, pas dans un cookie tiers.
+  En revanche le mot de passe est redemandé à chaque chargement de la page hôte.
 
 ---
 
-## 7. Sortie de Vercel
+## 8. Sortie de Vercel
 
 Une fois `papyrus.mooove.group` vérifié en production :
 

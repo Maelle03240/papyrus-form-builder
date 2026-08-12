@@ -50,8 +50,14 @@ export async function updateSession(request: NextRequest) {
   const isPublicRoute =
     pathname === '/' ||
     pathname.startsWith('/f/') || // formulaires publics
+    pathname.startsWith('/embed/') || // même formulaire, rendu pour une iframe
+    pathname === '/embed.js' || // script d'intégration chargé par les sites hôtes
     pathname.startsWith('/invite/') || // acceptation d'invitation
     pathname.startsWith('/api/submit') || // réception des réponses
+    // Déverrouillage d'un formulaire protégé par mot de passe. Exact, et non
+    // `startsWith('/api/forms')` : le reste de /api/forms gère les intégrations
+    // d'un formulaire et doit rester réservé à ses propriétaires.
+    pathname === '/api/forms/access' ||
     pathname.startsWith('/api/check-duplicate') ||
     pathname.startsWith('/api/uploads') || // valide lui-même ses appelants
     pathname.startsWith('/api/health') || // sonde de vie Docker / Uptime Kuma

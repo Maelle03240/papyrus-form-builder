@@ -1,26 +1,40 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import type { Form } from '@/types';
 import { toast } from '@/components/ui/Toast';
 import { FormSlugProvider } from '@/lib/hooks/useFormSlug';
 import { useFormScore } from '@/lib/hooks/useFormScore';
+import { useEmbedBridge } from '@/lib/hooks/useEmbedBridge';
+import { usePartialSubmission } from '@/lib/hooks/usePartialSubmission';
 import { evaluateLogicRules } from '@/lib/logic-evaluation';
 import { getBackgroundStyle } from '@/lib/theme';
+import type { EmbedOptions } from '@/lib/embed';
 import {} from '@/components/builder/FormHeader';
 import { PublicScrollView } from './PublicScrollView';
 import { PublicTypeformView } from './PublicTypeformView';
 import { PublicSectionsView } from './PublicSectionsView';
+import { FormProgressBar } from './FormProgressBar';
 import { ThankYouPage } from './ThankYouPage';
 
 interface Props {
   form: Form;
+  /** Présent uniquement quand le formulaire est rendu dans une iframe (/embed/[slug]). */
+  embed?: EmbedOptions;
+  /**
+   * Jeton délivré par `/api/forms/access` après validation du mot de passe.
+   * Joint à l'envoi : sans lui, un formulaire protégé refuse la soumission.
+   */
+  accessToken?: string;
 }
 
-export function FormPublicView({ form }: Props) {
+export function FormPublicView({ form, embed, accessToken }: Props) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const settings = form.settings ?? {};
+  const language = form.default_language || 'fr';
 
   // Hook pour gérer le scoring en temps réel
   const {
@@ -30,13 +44,26 @@ export function FormPublicView({ form }: Props) {
     showScoreToRespondent
   } = useFormScore(form);
 
+  // Dialogue avec la page hôte quand le formulaire est intégré ailleurs
+  const { emit } = useEmbedBridge(embed ?? null);
+
+  // Enregistrement des réponses partielles, si l'auteur l'a activé
+  const partial = usePartialSubmission({
+    enabled: settings.partial_submissions === true,
+    formId: form.id,
+    slug: form.slug,
+    language,
+    responses,
+    accessToken
+  });
+
   // États pour la logique conditionnelle
   const [visibleFields, setVisibleFields] = useState<Set<string>>(new Set());
 
   // Évaluer la visibilité des champs (changement de réponses, structure ou règles)
   useEffect(() => {
     const fields = form.fields || [];
-    
+
     const newVisibleFields = evaluateLogicRules(
       form.logic_rules || [],
       responses,
@@ -45,6 +72,10 @@ export function FormPublicView({ form }: Props) {
 
     setVisibleFields(newVisibleFields);
   }, [responses, form.logic_rules, form.fields]);
+
+  useEffect(() => {
+    emit('form-loaded', { formId: form.id, slug: form.slug });
+  }, [emit, form.id, form.slug]);
 
   // Soumission du formulaire
   const handleSubmit = async () => {
@@ -57,7 +88,9 @@ export function FormPublicView({ form }: Props) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           responses,
-          language: form.default_language || 'fr'
+          language,
+          ...(partial.sessionId ? { sessionId: partial.sessionId } : {}),
+          ...(accessToken ? { accessToken } : {})
         })
       });
 
@@ -77,6 +110,25 @@ export function FormPublicView({ form }: Props) {
       // Nettoyer la sauvegarde locale du save & resume si activé
       if (form.save_and_resume) {
         localStorage.removeItem(`papyrus-progress-${form.id}`);
+      }
+      partial.clear();
+
+      emit('form-submitted', { formId: form.id, slug: form.slug });
+
+      // Redirection demandée par l'auteur du formulaire. L'URL vient de la vue
+      // publique, donc du formulaire lui-même — mais on refuse tout de même les
+      // schémas exotiques : un `javascript:` enregistré en base s'exécuterait
+      // ici dans le navigateur du répondant.
+      const redirectUrl = safeRedirectUrl(
+        settings.redirect_on_completion ? body?.redirect_url ?? settings.redirect_url : null
+      );
+
+      if (redirectUrl) {
+        // Une iframe ne doit pas détourner la page qui l'héberge : en mode
+        // intégré, la redirection s'ouvre dans un nouvel onglet.
+        if (embed?.enabled) window.open(redirectUrl, '_blank', 'noopener');
+        else window.location.href = redirectUrl;
+        return;
       }
 
       setSubmissionId(body?.submission_id ?? null);
@@ -115,6 +167,33 @@ export function FormPublicView({ form }: Props) {
   // Propage l'accent du formulaire via CSS variables
   const accentStyle = { '--accent': form.theme.accent } as React.CSSProperties;
 
+  // En mode intégré, l'arrière-plan du thème peut être remplacé par la couleur
+  // de la page hôte, et la hauteur ne doit pas être forcée à celle de l'écran.
+  const containerStyle = useMemo(() => {
+    if (embed?.transparentBackground) {
+      return { ...accentStyle, background: 'transparent' } as React.CSSProperties;
+    }
+    return {
+      background: 'var(--papyrus-bg)',
+      ...accentStyle,
+      ...getBackgroundStyle(form.theme)
+    } as React.CSSProperties;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [embed?.transparentBackground, form.theme]);
+
+  const viewProps = {
+    form,
+    responses,
+    updateResponse,
+    visibleFields,
+    onSubmit: handleSubmit,
+    isSubmitting,
+    validateRequiredFields,
+    scoreResult: scoreResult || undefined,
+    showScoreToRespondent,
+    embed
+  };
+
   // Page de remerciement après soumission
   if (isSubmitted) {
     return (
@@ -122,59 +201,44 @@ export function FormPublicView({ form }: Props) {
         form={form}
         submissionId={submissionId}
         scoreResult={showScoreToRespondent ? (scoreResult || undefined) : undefined}
+        embed={embed}
       />
     );
   }
 
   return (
     <FormSlugProvider slug={form.slug}>
-    <div
-      className="min-h-screen"
-      style={{
-        background: 'var(--papyrus-bg)',
-        ...accentStyle,
-        ...getBackgroundStyle(form.theme)
-      }}
-    >
+    <div className={embed?.enabled ? 'w-full' : 'min-h-screen'} style={containerStyle}>
+      {settings.progress_bar && (
+        <FormProgressBar form={form} responses={responses} visibleFields={visibleFields} />
+      )}
+
       {/* Mode d'affichage selon form.display_mode */}
       {form.display_mode === 'typeform' ? (
-        <PublicTypeformView
-          form={form}
-          responses={responses}
-          updateResponse={updateResponse}
-          visibleFields={visibleFields}
-          onSubmit={handleSubmit}
-          isSubmitting={isSubmitting}
-          validateRequiredFields={validateRequiredFields}
-          scoreResult={scoreResult || undefined}
-          showScoreToRespondent={showScoreToRespondent}
-        />
+        <PublicTypeformView {...viewProps} />
       ) : form.display_mode === 'sections' ? (
-        <PublicSectionsView
-          form={form}
-          responses={responses}
-          updateResponse={updateResponse}
-          visibleFields={visibleFields}
-          onSubmit={handleSubmit}
-          isSubmitting={isSubmitting}
-          validateRequiredFields={validateRequiredFields}
-          scoreResult={scoreResult || undefined}
-          showScoreToRespondent={showScoreToRespondent}
-        />
+        <PublicSectionsView {...viewProps} />
       ) : (
-        <PublicScrollView
-          form={form}
-          responses={responses}
-          updateResponse={updateResponse}
-          visibleFields={visibleFields}
-          onSubmit={handleSubmit}
-          isSubmitting={isSubmitting}
-          validateRequiredFields={validateRequiredFields}
-          scoreResult={scoreResult || undefined}
-          showScoreToRespondent={showScoreToRespondent}
-        />
+        <PublicScrollView {...viewProps} />
       )}
     </div>
     </FormSlugProvider>
   );
+}
+
+/**
+ * N'autorise que `http` et `https` pour la redirection de fin.
+ * L'URL est saisie par l'auteur du formulaire, mais elle est exécutée dans le
+ * navigateur du répondant : un `javascript:` y serait une faille XSS stockée.
+ */
+function safeRedirectUrl(candidate: unknown): string | null {
+  if (typeof candidate !== 'string' || !candidate.trim()) return null;
+
+  try {
+    const url = new URL(candidate.trim(), window.location.origin);
+    if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
 }

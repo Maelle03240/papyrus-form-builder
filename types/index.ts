@@ -249,6 +249,128 @@ export interface ScoreLevel {
   color: 'green' | 'blue' | 'orange' | 'red';
 }
 
+// ============================================================================
+// Réglages par formulaire — onglet « Paramètres »
+//
+// Deux objets distincts, stockés dans deux colonnes distinctes :
+//  · `FormSettings` est exposée à la vue publique (le répondant a besoin de
+//    savoir s'il y a une barre de progression, vers où rediriger, etc.) ;
+//  · `NotificationSettings` ne l'est jamais — elle contient des adresses email
+//    et le corps des messages envoyés.
+// ============================================================================
+
+export type EmbedMode = 'standard' | 'popup' | 'fullpage';
+export type PopupTrigger = 'click' | 'time' | 'scroll' | 'exit';
+
+export interface EmbedSettings {
+  mode: EmbedMode;
+  /** Hauteur de l'iframe en pixels, ignorée si `dynamic_height` est actif. */
+  height: number;
+  /** L'iframe annonce sa hauteur au parent, qui la suit. Nécessite embed.js. */
+  dynamic_height: boolean;
+  hide_title: boolean;
+  align_left: boolean;
+  transparent_background: boolean;
+  /** Émet les évènements du formulaire vers la page hôte (dataLayer + CustomEvent). */
+  track_events: boolean;
+  // Mode popup uniquement
+  popup_trigger?: PopupTrigger;
+  /** Délai en secondes pour le déclencheur `time`. */
+  popup_delay?: number;
+  /** Pourcentage de défilement pour le déclencheur `scroll`. */
+  popup_scroll_percent?: number;
+  popup_button_label?: string;
+  /** Ouvre le popup une seule fois par visiteur (localStorage). */
+  popup_once?: boolean;
+}
+
+export interface FormSettings {
+  // --- Général ---
+  /** Langue de l'interface vue par le répondant (boutons, erreurs). */
+  respondent_language?: string;
+  redirect_on_completion?: boolean;
+  redirect_url?: string;
+  progress_bar?: boolean;
+  /** Enregistre les réponses au fil de la saisie, avant l'envoi définitif. */
+  partial_submissions?: boolean;
+  data_retention_enabled?: boolean;
+  data_retention_days?: number;
+
+  // --- Accès ---
+  max_submissions_enabled?: boolean;
+  max_submissions?: number;
+  closed_message_enabled?: boolean;
+  closed_message?: string;
+  /** Empêche deux réponses portant la même valeur sur `duplicate_field_id`. */
+  prevent_duplicates?: boolean;
+  duplicate_field_id?: string;
+
+  // --- Comportement ---
+  /** Passe à la page suivante dès qu'une question à choix unique est répondue. */
+  auto_jump?: boolean;
+
+  /** Dernière configuration d'intégration utilisée — mémorisée pour l'interface. */
+  embed?: EmbedSettings;
+}
+
+export interface SelfNotificationSettings {
+  enabled: boolean;
+  /** Destinataires. Vide = le créateur du formulaire. */
+  to: string[];
+  subject: string;
+  body: string;
+}
+
+export interface RespondentNotificationSettings {
+  enabled: boolean;
+  from_name: string;
+  reply_to: string;
+  /** Champ email du formulaire servant d'adresse de destination. */
+  to_field_id: string;
+  subject: string;
+  body: string;
+  /** Joint un PDF récapitulatif des réponses. */
+  attach_pdf: boolean;
+}
+
+export interface NotificationSettings {
+  self?: SelfNotificationSettings;
+  respondent?: RespondentNotificationSettings;
+}
+
+export type IntegrationProvider = 'google_sheets';
+
+export interface GoogleSheetsConfig {
+  spreadsheet_id: string;
+  spreadsheet_name?: string;
+  spreadsheet_url?: string;
+  sheet_title: string;
+  /** Ajoute les colonnes date d'envoi / langue / identifiant. */
+  include_metadata?: boolean;
+}
+
+export interface FormIntegration {
+  id: string;
+  form_id: string;
+  provider: IntegrationProvider;
+  config: GoogleSheetsConfig | Record<string, unknown>;
+  is_active: boolean;
+  last_synced_at?: string | null;
+  last_error?: string | null;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface IntegrationEvent {
+  id: string;
+  integration_id: string;
+  form_id: string;
+  submission_id?: string | null;
+  status: 'success' | 'error' | 'skipped';
+  message?: string | null;
+  created_at: string;
+}
+
 export interface Form {
   id: string;
   team_id: string;
@@ -286,6 +408,10 @@ export interface Form {
   scoring_enabled?: boolean;
   /** Si vrai, affiche le score final au répondant (nécessite scoring_enabled). */
   show_score_to_respondent?: boolean;
+  /** Réglages de l'onglet « Paramètres » — exposés à la vue publique. */
+  settings?: FormSettings;
+  /** Notifications email — jamais exposées à la vue publique. */
+  notification_settings?: NotificationSettings;
   published_at?: string | null;
   closes_at?: string | null;
   created_at: string;
@@ -392,9 +518,14 @@ export interface FieldTranslation {
 export interface Submission {
   id: string;
   form_id: string;
+  responses?: Record<string, unknown>;
   respondent_language: string;
+  respondent_email?: string | null;
   ip_hash?: string;
   user_agent?: string;
+  /** Ébauche enregistrée avant l'envoi définitif (option « réponses partielles »). */
+  is_partial?: boolean;
+  session_id?: string | null;
   completed_at: string;
   actions_triggered: unknown[];
 }
