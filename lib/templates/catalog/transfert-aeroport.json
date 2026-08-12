@@ -1,0 +1,809 @@
+{
+  "id": "tpl-mooove-transfert-aeroport",
+  "slug": "transfert-aeroport",
+  "category": "Réservations & Voyage",
+  "icon": "Car",
+  "display_mode": "sections",
+  "feasibility": "degraded",
+  "feasibility_note": {
+    "fr": "Papyrus n’a pas de champ « heure » : l’horaire du vol est saisi dans une liste déroulante de créneaux d’une demi-heure, et non avec un véritable sélecteur horaire. Un type `time` reste à développer pour une saisie à la minute.",
+    "en": "Papyrus has no time field, so the flight time is captured through a fixed dropdown of half-hour slots rather than a real time picker. A `time` type still needs to be built for minute-level input."
+  },
+  "title": {
+    "fr": "Demande de transfert aéroport",
+    "en": "Airport transfer request"
+  },
+  "description": {
+    "fr": "Réservez votre navette entre l’aéroport et votre lieu de séjour. Indiquez votre trajet, votre vol, vos bagages et vos coordonnées : nous confirmons sous 24 heures.",
+    "en": "Book your shuttle between the airport and your accommodation. Tell us your route, flight, luggage and contact details: we confirm within 24 hours."
+  },
+  "template_description": {
+    "fr": "Réservation de navette aéroport : trajet, vol, bagages, véhicule et coordonnées en trois étapes.",
+    "en": "Airport shuttle booking: route, flight, luggage, vehicle and contact details in three steps."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "transfert-aeroport-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre trajet",
+        "en": "Your journey"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f2",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quel trajet souhaitez-vous réserver ?",
+        "en": "Which journey would you like to book?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "transfert-aeroport-f2-o1",
+          "label": {
+            "fr": "Aéroport → hôtel ou logement",
+            "en": "Airport → hotel or accommodation"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f2-o2",
+          "label": {
+            "fr": "Hôtel ou logement → aéroport",
+            "en": "Hotel or accommodation → airport"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f2-o3",
+          "label": {
+            "fr": "Aller-retour",
+            "en": "Round trip"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f3",
+      "type": "short_text",
+      "label": {
+        "fr": "Numéro de vol",
+        "en": "Flight number"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "MK 015",
+        "en": "MK 015"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 12
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f4",
+      "type": "date",
+      "label": {
+        "fr": "Date du vol",
+        "en": "Flight date"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f5",
+      "type": "dropdown",
+      "label": {
+        "fr": "Heure d’arrivée ou de décollage du vol",
+        "en": "Flight arrival or departure time"
+      },
+      "description": {
+        "fr": "Créneaux d’une demi-heure. Choisissez le créneau le plus proche de l’horaire indiqué sur votre billet.",
+        "en": "Half-hour slots. Pick the slot closest to the time printed on your ticket."
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un créneau",
+        "en": "Select a slot"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "transfert-aeroport-f5-o1",
+          "label": {
+            "fr": "00 h 00",
+            "en": "00:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o2",
+          "label": {
+            "fr": "00 h 30",
+            "en": "00:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o3",
+          "label": {
+            "fr": "01 h 00",
+            "en": "01:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o4",
+          "label": {
+            "fr": "01 h 30",
+            "en": "01:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o5",
+          "label": {
+            "fr": "02 h 00",
+            "en": "02:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o6",
+          "label": {
+            "fr": "02 h 30",
+            "en": "02:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o7",
+          "label": {
+            "fr": "03 h 00",
+            "en": "03:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o8",
+          "label": {
+            "fr": "03 h 30",
+            "en": "03:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o9",
+          "label": {
+            "fr": "04 h 00",
+            "en": "04:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o10",
+          "label": {
+            "fr": "04 h 30",
+            "en": "04:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o11",
+          "label": {
+            "fr": "05 h 00",
+            "en": "05:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o12",
+          "label": {
+            "fr": "05 h 30",
+            "en": "05:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o13",
+          "label": {
+            "fr": "06 h 00",
+            "en": "06:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o14",
+          "label": {
+            "fr": "06 h 30",
+            "en": "06:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o15",
+          "label": {
+            "fr": "07 h 00",
+            "en": "07:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o16",
+          "label": {
+            "fr": "07 h 30",
+            "en": "07:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o17",
+          "label": {
+            "fr": "08 h 00",
+            "en": "08:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o18",
+          "label": {
+            "fr": "08 h 30",
+            "en": "08:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o19",
+          "label": {
+            "fr": "09 h 00",
+            "en": "09:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o20",
+          "label": {
+            "fr": "09 h 30",
+            "en": "09:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o21",
+          "label": {
+            "fr": "10 h 00",
+            "en": "10:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o22",
+          "label": {
+            "fr": "10 h 30",
+            "en": "10:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o23",
+          "label": {
+            "fr": "11 h 00",
+            "en": "11:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o24",
+          "label": {
+            "fr": "11 h 30",
+            "en": "11:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o25",
+          "label": {
+            "fr": "12 h 00",
+            "en": "12:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o26",
+          "label": {
+            "fr": "12 h 30",
+            "en": "12:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o27",
+          "label": {
+            "fr": "13 h 00",
+            "en": "13:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o28",
+          "label": {
+            "fr": "13 h 30",
+            "en": "13:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o29",
+          "label": {
+            "fr": "14 h 00",
+            "en": "14:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o30",
+          "label": {
+            "fr": "14 h 30",
+            "en": "14:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o31",
+          "label": {
+            "fr": "15 h 00",
+            "en": "15:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o32",
+          "label": {
+            "fr": "15 h 30",
+            "en": "15:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o33",
+          "label": {
+            "fr": "16 h 00",
+            "en": "16:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o34",
+          "label": {
+            "fr": "16 h 30",
+            "en": "16:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o35",
+          "label": {
+            "fr": "17 h 00",
+            "en": "17:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o36",
+          "label": {
+            "fr": "17 h 30",
+            "en": "17:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o37",
+          "label": {
+            "fr": "18 h 00",
+            "en": "18:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o38",
+          "label": {
+            "fr": "18 h 30",
+            "en": "18:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o39",
+          "label": {
+            "fr": "19 h 00",
+            "en": "19:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o40",
+          "label": {
+            "fr": "19 h 30",
+            "en": "19:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o41",
+          "label": {
+            "fr": "20 h 00",
+            "en": "20:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o42",
+          "label": {
+            "fr": "20 h 30",
+            "en": "20:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o43",
+          "label": {
+            "fr": "21 h 00",
+            "en": "21:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o44",
+          "label": {
+            "fr": "21 h 30",
+            "en": "21:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o45",
+          "label": {
+            "fr": "22 h 00",
+            "en": "22:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o46",
+          "label": {
+            "fr": "22 h 30",
+            "en": "22:30"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o47",
+          "label": {
+            "fr": "23 h 00",
+            "en": "23:00"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f5-o48",
+          "label": {
+            "fr": "23 h 30",
+            "en": "23:30"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f6",
+      "type": "short_text",
+      "label": {
+        "fr": "Lieu de prise en charge",
+        "en": "Pick-up location"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Terminal des arrivées, aéroport SSR",
+        "en": "Arrivals terminal, SSR Airport"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 160
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f7",
+      "type": "short_text",
+      "label": {
+        "fr": "Lieu de dépose",
+        "en": "Drop-off location"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Nom de l’hôtel ou adresse complète",
+        "en": "Hotel name or full address"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 160
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f8",
+      "type": "section_break",
+      "label": {
+        "fr": "Vos bagages et passagers",
+        "en": "Luggage and passengers"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f9",
+      "type": "number",
+      "label": {
+        "fr": "Nombre de passagers",
+        "en": "Number of passengers"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "min": 1,
+        "max": 14
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f10",
+      "type": "number",
+      "label": {
+        "fr": "Nombre de bagages en soute",
+        "en": "Number of checked bags"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "min": 0,
+        "max": 20
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f11",
+      "type": "single_choice",
+      "label": {
+        "fr": "Avez-vous besoin d’un siège enfant ?",
+        "en": "Do you need a child seat?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "transfert-aeroport-f11-o1",
+          "label": {
+            "fr": "Non",
+            "en": "No"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f11-o2",
+          "label": {
+            "fr": "Oui, un siège bébé (0 à 1 an)",
+            "en": "Yes, one infant seat (0 to 1 year)"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f11-o3",
+          "label": {
+            "fr": "Oui, un rehausseur (2 à 6 ans)",
+            "en": "Yes, one booster seat (2 to 6 years)"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f11-o4",
+          "label": {
+            "fr": "Oui, plusieurs sièges enfant",
+            "en": "Yes, several child seats"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f12",
+      "type": "single_choice",
+      "label": {
+        "fr": "Type de véhicule souhaité",
+        "en": "Preferred vehicle type"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "transfert-aeroport-f12-o1",
+          "label": {
+            "fr": "Berline — jusqu’à 3 passagers",
+            "en": "Sedan — up to 3 passengers"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f12-o2",
+          "label": {
+            "fr": "Van — jusqu’à 7 passagers",
+            "en": "Van — up to 7 passengers"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f12-o3",
+          "label": {
+            "fr": "Minibus — jusqu’à 14 passagers",
+            "en": "Minibus — up to 14 passengers"
+          }
+        },
+        {
+          "id": "transfert-aeroport-f12-o4",
+          "label": {
+            "fr": "Véhicule accessible aux personnes à mobilité réduite",
+            "en": "Wheelchair-accessible vehicle"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f13",
+      "type": "section_break",
+      "label": {
+        "fr": "Vos coordonnées",
+        "en": "Your contact details"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f14",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 80
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f15",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail",
+        "en": "Email address"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "transfert-aeroport-f16",
+      "type": "phone",
+      "label": {
+        "fr": "Téléphone joignable le jour du transfert",
+        "en": "Phone number reachable on the day of transfer"
+      },
+      "description": {
+        "fr": "Numéro sur lequel le chauffeur pourra vous joindre.",
+        "en": "Number the driver can use to reach you."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "default_country": "MU"
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

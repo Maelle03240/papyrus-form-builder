@@ -1,0 +1,880 @@
+{
+  "id": "tpl-mooove-diagnostic-maturite-ia",
+  "slug": "diagnostic-maturite-ia",
+  "category": "Éducation & Quiz",
+  "icon": "Compass",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Diagnostic de maturité IA",
+    "en": "AI maturity assessment"
+  },
+  "description": {
+    "fr": "Huit questions notées pour situer votre organisation face à l’intelligence artificielle : stratégie, usages, données, compétences. Score sur 32 et rapport envoyé par e-mail.",
+    "en": "Eight scored questions to place your organisation on the AI curve: strategy, usage, data, skills. Score out of 32 and a report sent by email."
+  },
+  "template_description": {
+    "fr": "Auto-diagnostic noté sur 32 points : stratégie IA, usages, gouvernance des données, compétences et budget.",
+    "en": "Self-assessment scored out of 32: AI strategy, usage, data governance, skills and budget."
+  },
+  "scoring_enabled": true,
+  "show_score_to_respondent": true,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "diagnostic-maturite-ia-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre organisation",
+        "en": "Your organisation"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f2",
+      "type": "dropdown",
+      "label": {
+        "fr": "Effectif de votre organisation",
+        "en": "Size of your organisation"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une tranche",
+        "en": "Select a range"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "diagnostic-maturite-ia-f2-o1",
+          "label": {
+            "fr": "1 à 9 salariés",
+            "en": "1 to 9 employees"
+          }
+        },
+        {
+          "id": "diagnostic-maturite-ia-f2-o2",
+          "label": {
+            "fr": "10 à 49 salariés",
+            "en": "10 to 49 employees"
+          }
+        },
+        {
+          "id": "diagnostic-maturite-ia-f2-o3",
+          "label": {
+            "fr": "50 à 249 salariés",
+            "en": "50 to 249 employees"
+          }
+        },
+        {
+          "id": "diagnostic-maturite-ia-f2-o4",
+          "label": {
+            "fr": "250 à 999 salariés",
+            "en": "250 to 999 employees"
+          }
+        },
+        {
+          "id": "diagnostic-maturite-ia-f2-o5",
+          "label": {
+            "fr": "1 000 salariés et plus",
+            "en": "1,000 employees or more"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f3",
+      "type": "dropdown",
+      "label": {
+        "fr": "Secteur d’activité",
+        "en": "Sector of activity"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un secteur",
+        "en": "Select a sector"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "diagnostic-maturite-ia-f3-o1",
+          "label": {
+            "fr": "Services aux entreprises",
+            "en": "Business services"
+          }
+        },
+        {
+          "id": "diagnostic-maturite-ia-f3-o2",
+          "label": {
+            "fr": "Commerce et distribution",
+            "en": "Retail and distribution"
+          }
+        },
+        {
+          "id": "diagnostic-maturite-ia-f3-o3",
+          "label": {
+            "fr": "Industrie et production",
+            "en": "Industry and manufacturing"
+          }
+        },
+        {
+          "id": "diagnostic-maturite-ia-f3-o4",
+          "label": {
+            "fr": "Tourisme et hôtellerie",
+            "en": "Tourism and hospitality"
+          }
+        },
+        {
+          "id": "diagnostic-maturite-ia-f3-o5",
+          "label": {
+            "fr": "Banque, assurance et services financiers",
+            "en": "Banking, insurance and financial services"
+          }
+        },
+        {
+          "id": "diagnostic-maturite-ia-f3-o6",
+          "label": {
+            "fr": "Santé et action sociale",
+            "en": "Health and social care"
+          }
+        },
+        {
+          "id": "diagnostic-maturite-ia-f3-o7",
+          "label": {
+            "fr": "Éducation et formation",
+            "en": "Education and training"
+          }
+        },
+        {
+          "id": "diagnostic-maturite-ia-f3-o8",
+          "label": {
+            "fr": "Secteur public et associatif",
+            "en": "Public and non-profit sector"
+          }
+        },
+        {
+          "id": "diagnostic-maturite-ia-f3-o9",
+          "label": {
+            "fr": "Technologies et numérique",
+            "en": "Technology and digital"
+          }
+        },
+        {
+          "id": "diagnostic-maturite-ia-f3-o10",
+          "label": {
+            "fr": "Autre secteur",
+            "en": "Other sector"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f4",
+      "type": "single_choice",
+      "label": {
+        "fr": "Où en êtes-vous d’une stratégie d’intelligence artificielle ?",
+        "en": "Where do you stand on an artificial intelligence strategy?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "diagnostic-maturite-ia-f4-o1",
+          "label": {
+            "fr": "Aucune réflexion engagée à ce jour",
+            "en": "No discussion has started so far"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f4-o2",
+          "label": {
+            "fr": "Des échanges informels, rien de formalisé",
+            "en": "Informal conversations, nothing formalised"
+          },
+          "points": 1
+        },
+        {
+          "id": "diagnostic-maturite-ia-f4-o3",
+          "label": {
+            "fr": "Une feuille de route en cours de rédaction",
+            "en": "A roadmap is being drafted"
+          },
+          "points": 2
+        },
+        {
+          "id": "diagnostic-maturite-ia-f4-o4",
+          "label": {
+            "fr": "Une stratégie formalisée et partagée en interne",
+            "en": "A formalised strategy shared internally"
+          },
+          "points": 3
+        },
+        {
+          "id": "diagnostic-maturite-ia-f4-o5",
+          "label": {
+            "fr": "Une stratégie intégrée au plan d’entreprise, avec des objectifs chiffrés",
+            "en": "A strategy built into the business plan, with quantified targets"
+          },
+          "points": 4
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f5",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quel est le niveau d’implication de la direction ?",
+        "en": "How involved is the executive team?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "diagnostic-maturite-ia-f5-o1",
+          "label": {
+            "fr": "La direction n’est pas impliquée",
+            "en": "The executive team is not involved"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f5-o2",
+          "label": {
+            "fr": "La direction observe le sujet sans s’engager",
+            "en": "The executive team watches the subject without committing"
+          },
+          "points": 1
+        },
+        {
+          "id": "diagnostic-maturite-ia-f5-o3",
+          "label": {
+            "fr": "Un membre de la direction suit le sujet",
+            "en": "One executive follows the subject"
+          },
+          "points": 2
+        },
+        {
+          "id": "diagnostic-maturite-ia-f5-o4",
+          "label": {
+            "fr": "Un sponsor exécutif identifié pilote les projets",
+            "en": "An identified executive sponsor drives the projects"
+          },
+          "points": 3
+        },
+        {
+          "id": "diagnostic-maturite-ia-f5-o5",
+          "label": {
+            "fr": "Le comité de direction pilote l’IA et en rend compte régulièrement",
+            "en": "The executive committee steers AI and reports on it regularly"
+          },
+          "points": 4
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f6",
+      "type": "section_break",
+      "label": {
+        "fr": "Vos usages actuels",
+        "en": "Your current usage"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f7",
+      "type": "single_choice",
+      "label": {
+        "fr": "Comment vos équipes utilisent-elles aujourd’hui des outils d’IA ?",
+        "en": "How do your teams use AI tools today?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "diagnostic-maturite-ia-f7-o1",
+          "label": {
+            "fr": "Aucun outil d’IA n’est utilisé",
+            "en": "No AI tool is used"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f7-o2",
+          "label": {
+            "fr": "Quelques initiatives individuelles, hors de tout cadre",
+            "en": "A few individual initiatives, outside any framework"
+          },
+          "points": 1
+        },
+        {
+          "id": "diagnostic-maturite-ia-f7-o3",
+          "label": {
+            "fr": "Des outils utilisés régulièrement par une équipe",
+            "en": "Tools used regularly by one team"
+          },
+          "points": 2
+        },
+        {
+          "id": "diagnostic-maturite-ia-f7-o4",
+          "label": {
+            "fr": "Des outils déployés dans plusieurs services, avec des règles d’usage",
+            "en": "Tools rolled out across several departments, with usage rules"
+          },
+          "points": 3
+        },
+        {
+          "id": "diagnostic-maturite-ia-f7-o5",
+          "label": {
+            "fr": "L’IA est intégrée aux processus métier et aux applications internes",
+            "en": "AI is embedded in business processes and internal applications"
+          },
+          "points": 4
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f8",
+      "type": "single_choice",
+      "label": {
+        "fr": "Mesurez-vous les résultats obtenus grâce à l’IA ?",
+        "en": "Do you measure the results delivered by AI?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "diagnostic-maturite-ia-f8-o1",
+          "label": {
+            "fr": "Aucune mesure",
+            "en": "No measurement at all"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f8-o2",
+          "label": {
+            "fr": "Des retours qualitatifs uniquement",
+            "en": "Qualitative feedback only"
+          },
+          "points": 1
+        },
+        {
+          "id": "diagnostic-maturite-ia-f8-o3",
+          "label": {
+            "fr": "Quelques indicateurs suivis ponctuellement",
+            "en": "A few indicators tracked occasionally"
+          },
+          "points": 2
+        },
+        {
+          "id": "diagnostic-maturite-ia-f8-o4",
+          "label": {
+            "fr": "Des indicateurs suivis projet par projet",
+            "en": "Indicators tracked project by project"
+          },
+          "points": 3
+        },
+        {
+          "id": "diagnostic-maturite-ia-f8-o5",
+          "label": {
+            "fr": "Un retour sur investissement mesuré et présenté en comité de direction",
+            "en": "A measured return on investment presented to the executive committee"
+          },
+          "points": 4
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f9",
+      "type": "section_break",
+      "label": {
+        "fr": "Vos données et vos outils",
+        "en": "Your data and tools"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quel est l’état de vos données métier ?",
+        "en": "What is the state of your business data?"
+      },
+      "description": {
+        "fr": "Qualité, centralisation et facilité d’accès.",
+        "en": "Quality, centralisation and ease of access."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "diagnostic-maturite-ia-f10-o1",
+          "label": {
+            "fr": "Données dispersées et difficiles à retrouver",
+            "en": "Data scattered and hard to find"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f10-o2",
+          "label": {
+            "fr": "Données partiellement centralisées, qualité inégale",
+            "en": "Partly centralised data, uneven quality"
+          },
+          "points": 1
+        },
+        {
+          "id": "diagnostic-maturite-ia-f10-o3",
+          "label": {
+            "fr": "Données centralisées, qualité correcte sur les périmètres clés",
+            "en": "Centralised data, decent quality on key areas"
+          },
+          "points": 2
+        },
+        {
+          "id": "diagnostic-maturite-ia-f10-o4",
+          "label": {
+            "fr": "Données documentées, avec des responsables identifiés",
+            "en": "Documented data, with identified owners"
+          },
+          "points": 3
+        },
+        {
+          "id": "diagnostic-maturite-ia-f10-o5",
+          "label": {
+            "fr": "Données gouvernées, fiables et accessibles par entrepôt ou par API",
+            "en": "Governed, reliable data accessible through a warehouse or an API"
+          },
+          "points": 4
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f11",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quelles règles encadrent l’usage de l’IA et la protection des données ?",
+        "en": "What rules govern AI usage and data protection?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "diagnostic-maturite-ia-f11-o1",
+          "label": {
+            "fr": "Aucune règle : chacun fait comme il l’entend",
+            "en": "No rules: everyone does as they see fit"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f11-o2",
+          "label": {
+            "fr": "Des consignes orales, jamais écrites",
+            "en": "Verbal guidance, never written down"
+          },
+          "points": 1
+        },
+        {
+          "id": "diagnostic-maturite-ia-f11-o3",
+          "label": {
+            "fr": "Une charte d’usage diffusée aux équipes",
+            "en": "A usage charter circulated to the teams"
+          },
+          "points": 2
+        },
+        {
+          "id": "diagnostic-maturite-ia-f11-o4",
+          "label": {
+            "fr": "Une charte, une liste d’outils validés et un référent désigné",
+            "en": "A charter, a list of approved tools and a designated contact"
+          },
+          "points": 3
+        },
+        {
+          "id": "diagnostic-maturite-ia-f11-o5",
+          "label": {
+            "fr": "Une politique formalisée, avec analyses de risque et contrôles réguliers",
+            "en": "A formal policy, with risk assessments and regular checks"
+          },
+          "points": 4
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f12",
+      "type": "section_break",
+      "label": {
+        "fr": "Vos compétences",
+        "en": "Your skills"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f13",
+      "type": "single_choice",
+      "label": {
+        "fr": "Comment vos équipes sont-elles formées à l’IA ?",
+        "en": "How are your teams trained on AI?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "diagnostic-maturite-ia-f13-o1",
+          "label": {
+            "fr": "Aucune formation",
+            "en": "No training"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f13-o2",
+          "label": {
+            "fr": "Une sensibilisation ponctuelle",
+            "en": "A one-off awareness session"
+          },
+          "points": 1
+        },
+        {
+          "id": "diagnostic-maturite-ia-f13-o3",
+          "label": {
+            "fr": "Des formations pour les équipes les plus concernées",
+            "en": "Training for the most directly concerned teams"
+          },
+          "points": 2
+        },
+        {
+          "id": "diagnostic-maturite-ia-f13-o4",
+          "label": {
+            "fr": "Un plan de formation en cours de déploiement",
+            "en": "A training plan currently being rolled out"
+          },
+          "points": 3
+        },
+        {
+          "id": "diagnostic-maturite-ia-f13-o5",
+          "label": {
+            "fr": "Un parcours de formation continu, animé par des référents internes",
+            "en": "An ongoing training path led by internal champions"
+          },
+          "points": 4
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f14",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quel budget est consacré à l’intelligence artificielle ?",
+        "en": "What budget is devoted to artificial intelligence?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "diagnostic-maturite-ia-f14-o1",
+          "label": {
+            "fr": "Aucun budget",
+            "en": "No budget"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f14-o2",
+          "label": {
+            "fr": "Des dépenses ponctuelles imputées sur d’autres lignes",
+            "en": "Occasional spending charged to other budget lines"
+          },
+          "points": 1
+        },
+        {
+          "id": "diagnostic-maturite-ia-f14-o3",
+          "label": {
+            "fr": "Un budget d’expérimentation limité",
+            "en": "A limited experimentation budget"
+          },
+          "points": 2
+        },
+        {
+          "id": "diagnostic-maturite-ia-f14-o4",
+          "label": {
+            "fr": "Un budget annuel dédié",
+            "en": "A dedicated annual budget"
+          },
+          "points": 3
+        },
+        {
+          "id": "diagnostic-maturite-ia-f14-o5",
+          "label": {
+            "fr": "Un budget pluriannuel avec des ressources dédiées",
+            "en": "A multi-year budget with dedicated resources"
+          },
+          "points": 4
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f15",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Sur quels sujets souhaitez-vous être accompagné en priorité ?",
+        "en": "Where would you most like support?"
+      },
+      "description": {
+        "fr": "Trois réponses au maximum.",
+        "en": "Three answers at most."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "selection_min": 1,
+        "selection_max": 3
+      },
+      "options": [
+        {
+          "id": "diagnostic-maturite-ia-f15-o1",
+          "label": {
+            "fr": "Définir une stratégie et identifier des cas d’usage",
+            "en": "Defining a strategy and identifying use cases"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f15-o2",
+          "label": {
+            "fr": "Former les équipes",
+            "en": "Training the teams"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f15-o3",
+          "label": {
+            "fr": "Structurer et fiabiliser les données",
+            "en": "Structuring and improving data reliability"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f15-o4",
+          "label": {
+            "fr": "Mettre en place une gouvernance et un cadre de conformité",
+            "en": "Setting up governance and a compliance framework"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f15-o5",
+          "label": {
+            "fr": "Automatiser des processus métier",
+            "en": "Automating business processes"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f15-o6",
+          "label": {
+            "fr": "Choisir et déployer les bons outils",
+            "en": "Choosing and deploying the right tools"
+          },
+          "points": 0
+        },
+        {
+          "id": "diagnostic-maturite-ia-f15-o7",
+          "label": {
+            "fr": "Mesurer le retour sur investissement",
+            "en": "Measuring return on investment"
+          },
+          "points": 0
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "diagnostic-maturite-ia-f16",
+      "type": "email",
+      "label": {
+        "fr": "À quelle adresse envoyer votre rapport de maturité ?",
+        "en": "Where should we send your maturity report?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

@@ -1,0 +1,548 @@
+{
+  "id": "tpl-mooove-onboarding-collaborateur",
+  "slug": "onboarding-collaborateur",
+  "category": "RH & Recrutement",
+  "icon": "Rocket",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Onboarding nouveau collaborateur",
+    "en": "New hire onboarding"
+  },
+  "description": {
+    "fr": "Bienvenue. Ce formulaire réunit tout ce dont les RH et l’IT ont besoin pour que votre premier jour se passe bien.",
+    "en": "Welcome aboard. This form gathers everything HR and IT need so your first day runs smoothly."
+  },
+  "template_description": {
+    "fr": "Tout l’onboarding en quatre pages : état civil, pièces administratives, matériel et préférences personnelles.",
+    "en": "Onboarding in four pages: personal details, admin documents, equipment and personal preferences."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "onboarding-collaborateur-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Informations personnelles",
+        "en": "Personal information"
+      },
+      "description": {
+        "fr": "Ces données restent accessibles aux seules ressources humaines.",
+        "en": "This information is visible to the HR team only."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-fmedia",
+      "type": "video",
+      "label": {
+        "fr": "Bienvenue dans l’équipe",
+        "en": "Welcome to the team"
+      },
+      "description": {
+        "fr": "Message vidéo de la direction — remplacez par votre propre vidéo d’accueil.",
+        "en": "Video message from leadership — replace with your own welcome video."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "creator_mode_enabled": true,
+        "respondent_mode_enabled": false,
+        "show_title": true,
+        "alignment": "center"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom tels qu’ils figurent sur votre carte d’identité",
+        "en": "Full name exactly as it appears on your ID card"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Nom complet",
+        "en": "Full name"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 120
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-f3",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail personnelle",
+        "en": "Personal email address"
+      },
+      "description": {
+        "fr": "Utilisée jusqu’à la création de votre adresse professionnelle.",
+        "en": "Used until your work address is created."
+      },
+      "placeholder": {
+        "fr": "vous@exemple.mu",
+        "en": "you@example.mu"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-f4",
+      "type": "phone",
+      "label": {
+        "fr": "Téléphone personnel",
+        "en": "Personal phone number"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "5xxx xxxx",
+        "en": "5xxx xxxx"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "default_country": "MU"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-f5",
+      "type": "short_text",
+      "label": {
+        "fr": "Contact en cas d’urgence",
+        "en": "Emergency contact"
+      },
+      "description": {
+        "fr": "Nom, lien avec vous et numéro de téléphone.",
+        "en": "Name, relationship to you and phone number."
+      },
+      "placeholder": {
+        "fr": "Marie Louis, sœur, 5xxx xxxx",
+        "en": "Marie Louis, sister, 5xxx xxxx"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 150
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-f6",
+      "type": "section_break",
+      "label": {
+        "fr": "Administratif",
+        "en": "Administration"
+      },
+      "description": {
+        "fr": "Documents nécessaires à l’établissement de votre contrat et au versement du salaire.",
+        "en": "Documents needed to issue your contract and set up payroll."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-f7",
+      "type": "file",
+      "label": {
+        "fr": "Copie de votre carte d’identité nationale",
+        "en": "Copy of your national identity card"
+      },
+      "description": {
+        "fr": "Recto et verso, en un seul fichier. PDF ou image, 10 Mo maximum.",
+        "en": "Front and back in a single file. PDF or image, 10 MB maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "pdf",
+          "png",
+          "jpg",
+          "jpeg"
+        ],
+        "max_file_size_mb": 10
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-f8",
+      "type": "file",
+      "label": {
+        "fr": "Relevé d’identité bancaire",
+        "en": "Bank account details"
+      },
+      "description": {
+        "fr": "Document officiel de votre banque mentionnant votre IBAN. PDF ou image, 10 Mo maximum.",
+        "en": "An official bank document showing your account number. PDF or image, 10 MB maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "pdf",
+          "png",
+          "jpg",
+          "jpeg"
+        ],
+        "max_file_size_mb": 10
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-f9",
+      "type": "date",
+      "label": {
+        "fr": "Date de prise de poste convenue",
+        "en": "Agreed start date"
+      },
+      "description": {
+        "fr": "Celle inscrite sur votre contrat.",
+        "en": "The date written on your contract."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-f10",
+      "type": "section_break",
+      "label": {
+        "fr": "Équipement",
+        "en": "Equipment"
+      },
+      "description": {
+        "fr": "L’IT prépare votre poste avant votre arrivée.",
+        "en": "IT prepares your setup before you arrive."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-f11",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Matériel dont vous aurez besoin",
+        "en": "Equipment you will need"
+      },
+      "description": {
+        "fr": "Cochez tout ce qui s’applique, nous ajusterons avec votre manager.",
+        "en": "Tick everything that applies; we will confirm with your manager."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "has_other": true,
+        "other_label": "Autre besoin",
+        "selection_min": 1
+      },
+      "options": [
+        {
+          "id": "onboarding-collaborateur-f11-o1",
+          "label": {
+            "fr": "Ordinateur portable Windows",
+            "en": "Windows laptop"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f11-o2",
+          "label": {
+            "fr": "Ordinateur portable macOS",
+            "en": "macOS laptop"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f11-o3",
+          "label": {
+            "fr": "Écran externe",
+            "en": "External monitor"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f11-o4",
+          "label": {
+            "fr": "Casque audio",
+            "en": "Headset"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f11-o5",
+          "label": {
+            "fr": "Téléphone professionnel",
+            "en": "Work phone"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f11-o6",
+          "label": {
+            "fr": "Clavier et souris externes",
+            "en": "External keyboard and mouse"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f11-o7",
+          "label": {
+            "fr": "Tablette graphique",
+            "en": "Graphics tablet"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f11-o8",
+          "label": {
+            "fr": "Siège ou aménagement ergonomique",
+            "en": "Ergonomic chair or setup"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-f12",
+      "type": "section_break",
+      "label": {
+        "fr": "Préférences",
+        "en": "Preferences"
+      },
+      "description": {
+        "fr": "Pour préparer votre kit de bienvenue et les déjeuners d’équipe.",
+        "en": "So we can prepare your welcome kit and team lunches."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-f13",
+      "type": "dropdown",
+      "label": {
+        "fr": "Taille de t-shirt",
+        "en": "T-shirt size"
+      },
+      "description": {
+        "fr": "Coupe unisexe.",
+        "en": "Unisex fit."
+      },
+      "placeholder": {
+        "fr": "Choisissez une taille",
+        "en": "Pick a size"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "onboarding-collaborateur-f13-o1",
+          "label": {
+            "fr": "XS",
+            "en": "XS"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f13-o2",
+          "label": {
+            "fr": "S",
+            "en": "S"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f13-o3",
+          "label": {
+            "fr": "M",
+            "en": "M"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f13-o4",
+          "label": {
+            "fr": "L",
+            "en": "L"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f13-o5",
+          "label": {
+            "fr": "XL",
+            "en": "XL"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f13-o6",
+          "label": {
+            "fr": "XXL",
+            "en": "XXL"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f13-o7",
+          "label": {
+            "fr": "3XL",
+            "en": "3XL"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "onboarding-collaborateur-f14",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Régime alimentaire et allergies",
+        "en": "Dietary requirements and allergies"
+      },
+      "description": {
+        "fr": "Indispensable pour les déjeuners d’équipe et les événements.",
+        "en": "Essential for team lunches and company events."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "has_other": true,
+        "other_label": "Autre restriction ou allergie",
+        "selection_min": 1
+      },
+      "options": [
+        {
+          "id": "onboarding-collaborateur-f14-o1",
+          "label": {
+            "fr": "Aucune restriction",
+            "en": "No restrictions"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f14-o2",
+          "label": {
+            "fr": "Végétarien·ne",
+            "en": "Vegetarian"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f14-o3",
+          "label": {
+            "fr": "Végétalien·ne",
+            "en": "Vegan"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f14-o4",
+          "label": {
+            "fr": "Halal",
+            "en": "Halal"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f14-o5",
+          "label": {
+            "fr": "Sans porc",
+            "en": "No pork"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f14-o6",
+          "label": {
+            "fr": "Sans bœuf",
+            "en": "No beef"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f14-o7",
+          "label": {
+            "fr": "Sans gluten",
+            "en": "Gluten free"
+          }
+        },
+        {
+          "id": "onboarding-collaborateur-f14-o8",
+          "label": {
+            "fr": "Allergie aux fruits de mer",
+            "en": "Seafood allergy"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

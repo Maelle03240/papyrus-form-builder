@@ -1,0 +1,261 @@
+{
+  "id": "tpl-mooove-contact-general",
+  "slug": "contact-general",
+  "category": "Contact & Leads",
+  "icon": "Mail",
+  "display_mode": "scroll",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Formulaire de contact",
+    "en": "Contact form"
+  },
+  "description": {
+    "fr": "Une question, un projet, une demande particulière ? Écrivez-nous, nous répondons sous 24 heures ouvrées.",
+    "en": "A question, a project, a specific request? Send us a message — we reply within one business day."
+  },
+  "template_description": {
+    "fr": "Le contact classique : coordonnées, sujet, message et consentement de recontact, prêt à publier.",
+    "en": "The classic contact form: details, subject, message and an opt-in to be contacted back."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "contact-general-f1",
+      "type": "short_text",
+      "label": {
+        "fr": "Prénom",
+        "en": "First name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Anaïs",
+        "en": "Anaïs"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 60
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "contact-general-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom",
+        "en": "Last name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Ramdhun",
+        "en": "Ramdhun"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 60
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "contact-general-f3",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail",
+        "en": "Email address"
+      },
+      "description": {
+        "fr": "C’est à cette adresse que nous vous répondrons.",
+        "en": "This is where our reply will land."
+      },
+      "placeholder": {
+        "fr": "anais@exemple.mu",
+        "en": "anais@example.mu"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "contact-general-f4",
+      "type": "phone",
+      "label": {
+        "fr": "Téléphone",
+        "en": "Phone number"
+      },
+      "description": {
+        "fr": "Facultatif, utile si votre demande est urgente.",
+        "en": "Optional — useful if your request is urgent."
+      },
+      "placeholder": {
+        "fr": "5xxx xxxx",
+        "en": "5xxx xxxx"
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {
+        "default_country": "MU"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "contact-general-f5",
+      "type": "dropdown",
+      "label": {
+        "fr": "Sujet de votre demande",
+        "en": "What is your message about?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Choisissez un sujet",
+        "en": "Pick a subject"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "contact-general-f5-o1",
+          "label": {
+            "fr": "Demande d’information",
+            "en": "General enquiry"
+          }
+        },
+        {
+          "id": "contact-general-f5-o2",
+          "label": {
+            "fr": "Devis et tarifs",
+            "en": "Quote and pricing"
+          }
+        },
+        {
+          "id": "contact-general-f5-o3",
+          "label": {
+            "fr": "Support technique",
+            "en": "Technical support"
+          }
+        },
+        {
+          "id": "contact-general-f5-o4",
+          "label": {
+            "fr": "Partenariat",
+            "en": "Partnership"
+          }
+        },
+        {
+          "id": "contact-general-f5-o5",
+          "label": {
+            "fr": "Recrutement",
+            "en": "Recruitment"
+          }
+        },
+        {
+          "id": "contact-general-f5-o6",
+          "label": {
+            "fr": "Presse et médias",
+            "en": "Press and media"
+          }
+        },
+        {
+          "id": "contact-general-f5-o7",
+          "label": {
+            "fr": "Autre sujet",
+            "en": "Something else"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "contact-general-f6",
+      "type": "long_text",
+      "label": {
+        "fr": "Votre message",
+        "en": "Your message"
+      },
+      "description": {
+        "fr": "Plus votre demande est précise, plus notre réponse le sera.",
+        "en": "The more specific your request, the more useful our answer."
+      },
+      "placeholder": {
+        "fr": "Décrivez votre demande en quelques lignes.",
+        "en": "Tell us what you need in a few lines."
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1500
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "contact-general-f7",
+      "type": "single_choice",
+      "label": {
+        "fr": "Acceptez-vous d’être recontacté·e au sujet de cette demande ?",
+        "en": "Do you agree to be contacted about this request?"
+      },
+      "description": {
+        "fr": "Vos coordonnées ne servent qu’au traitement de votre demande.",
+        "en": "Your details are used only to handle your request."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "contact-general-f7-o1",
+          "label": {
+            "fr": "Oui, par e-mail ou par téléphone",
+            "en": "Yes, by email or phone"
+          }
+        },
+        {
+          "id": "contact-general-f7-o2",
+          "label": {
+            "fr": "Oui, par e-mail uniquement",
+            "en": "Yes, by email only"
+          }
+        },
+        {
+          "id": "contact-general-f7-o3",
+          "label": {
+            "fr": "Non, je préfère ne pas être recontacté·e",
+            "en": "No, I would rather not be contacted"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

@@ -1,0 +1,448 @@
+{
+  "id": "tpl-mooove-compte-rendu-entretien",
+  "slug": "compte-rendu-entretien",
+  "category": "RH & Recrutement",
+  "icon": "ClipboardList",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Compte rendu d’entretien",
+    "en": "Interview scorecard"
+  },
+  "description": {
+    "fr": "À remplir par l’intervieweur dans les deux heures suivant l’entretien, pendant que les impressions sont fraîches.",
+    "en": "To be completed by the interviewer within two hours of the interview, while impressions are still fresh."
+  },
+  "template_description": {
+    "fr": "Grille d’évaluation notée : compétences en matrice 1 à 5, points forts, réserves et recommandation d’embauche.",
+    "en": "Scored evaluation grid: 1-to-5 competency matrix, strengths, concerns and a hiring recommendation."
+  },
+  "scoring_enabled": true,
+  "show_score_to_respondent": true,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "compte-rendu-entretien-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Contexte de l’entretien",
+        "en": "Interview context"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "compte-rendu-entretien-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom du candidat ou de la candidate",
+        "en": "Candidate name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Nom complet",
+        "en": "Full name"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 100
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "compte-rendu-entretien-f3",
+      "type": "short_text",
+      "label": {
+        "fr": "Poste concerné",
+        "en": "Role interviewed for"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Chef·fe de projet digital",
+        "en": "Digital Project Manager"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 100
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "compte-rendu-entretien-f4",
+      "type": "date",
+      "label": {
+        "fr": "Date de l’entretien",
+        "en": "Interview date"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "compte-rendu-entretien-f5",
+      "type": "short_text",
+      "label": {
+        "fr": "Intervieweur ou intervieweuse",
+        "en": "Interviewer"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Votre nom",
+        "en": "Your name"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 100
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "compte-rendu-entretien-f6",
+      "type": "section_break",
+      "label": {
+        "fr": "Évaluation des compétences",
+        "en": "Competency assessment"
+      },
+      "description": {
+        "fr": "Notez chaque critère sur des faits observés pendant l’entretien, pas sur une impression générale.",
+        "en": "Rate each criterion on what you actually observed, not on an overall impression."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "compte-rendu-entretien-f7",
+      "type": "matrix",
+      "label": {
+        "fr": "Grille d’évaluation",
+        "en": "Evaluation grid"
+      },
+      "description": {
+        "fr": "Une note par ligne, de 1 (insuffisant) à 5 (exceptionnel).",
+        "en": "One rating per row, from 1 (insufficient) to 5 (outstanding)."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "matrix_mode": "single"
+      },
+      "options": [
+        {
+          "id": "compte-rendu-entretien-f7-o1",
+          "label": {
+            "fr": "1 — Insuffisant",
+            "en": "1 — Insufficient"
+          },
+          "points": 1
+        },
+        {
+          "id": "compte-rendu-entretien-f7-o2",
+          "label": {
+            "fr": "2 — En deçà des attentes",
+            "en": "2 — Below expectations"
+          },
+          "points": 2
+        },
+        {
+          "id": "compte-rendu-entretien-f7-o3",
+          "label": {
+            "fr": "3 — Conforme aux attentes",
+            "en": "3 — Meets expectations"
+          },
+          "points": 3
+        },
+        {
+          "id": "compte-rendu-entretien-f7-o4",
+          "label": {
+            "fr": "4 — Au-dessus des attentes",
+            "en": "4 — Above expectations"
+          },
+          "points": 4
+        },
+        {
+          "id": "compte-rendu-entretien-f7-o5",
+          "label": {
+            "fr": "5 — Exceptionnel",
+            "en": "5 — Outstanding"
+          },
+          "points": 5
+        }
+      ],
+      "rows": [
+        {
+          "id": "compte-rendu-entretien-f7-r1",
+          "label": {
+            "fr": "Compétence technique sur le poste",
+            "en": "Technical skill for the role"
+          }
+        },
+        {
+          "id": "compte-rendu-entretien-f7-r2",
+          "label": {
+            "fr": "Communication et clarté du propos",
+            "en": "Communication and clarity"
+          }
+        },
+        {
+          "id": "compte-rendu-entretien-f7-r3",
+          "label": {
+            "fr": "Autonomie et prise d’initiative",
+            "en": "Autonomy and initiative"
+          }
+        },
+        {
+          "id": "compte-rendu-entretien-f7-r4",
+          "label": {
+            "fr": "Adéquation avec la culture d’équipe",
+            "en": "Fit with the team culture"
+          }
+        },
+        {
+          "id": "compte-rendu-entretien-f7-r5",
+          "label": {
+            "fr": "Motivation pour le poste et l’entreprise",
+            "en": "Motivation for the role and the company"
+          }
+        }
+      ]
+    },
+    {
+      "id": "compte-rendu-entretien-f8",
+      "type": "long_text",
+      "label": {
+        "fr": "Points forts observés",
+        "en": "Observed strengths"
+      },
+      "description": {
+        "fr": "Appuyez-vous sur des exemples cités par la personne.",
+        "en": "Anchor this in the examples the candidate gave."
+      },
+      "placeholder": {
+        "fr": "A piloté une refonte de bout en bout avec un budget contraint…",
+        "en": "Ran an end-to-end redesign on a tight budget…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1200
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "compte-rendu-entretien-f9",
+      "type": "long_text",
+      "label": {
+        "fr": "Réserves et points de vigilance",
+        "en": "Concerns and watch-outs"
+      },
+      "description": {
+        "fr": "Ce qui devra être vérifié ou accompagné en cas d’embauche.",
+        "en": "What would need checking or support if we hire."
+      },
+      "placeholder": {
+        "fr": "Peu d’expérience en encadrement direct…",
+        "en": "Limited experience managing people directly…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1200
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "compte-rendu-entretien-f10",
+      "type": "section_break",
+      "label": {
+        "fr": "Synthèse et décision",
+        "en": "Summary and decision"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "compte-rendu-entretien-f11",
+      "type": "single_choice",
+      "label": {
+        "fr": "Votre recommandation",
+        "en": "Your recommendation"
+      },
+      "description": {
+        "fr": "Une seule réponse, sans nuance intermédiaire : la position doit être tenable en comité.",
+        "en": "One answer, no hedging — you should be able to defend it in the hiring committee."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards"
+      },
+      "options": [
+        {
+          "id": "compte-rendu-entretien-f11-o1",
+          "label": {
+            "fr": "Recruter sans réserve",
+            "en": "Hire without reservation"
+          },
+          "points": 5
+        },
+        {
+          "id": "compte-rendu-entretien-f11-o2",
+          "label": {
+            "fr": "Recruter, avec un accompagnement à prévoir",
+            "en": "Hire, with onboarding support planned"
+          },
+          "points": 4
+        },
+        {
+          "id": "compte-rendu-entretien-f11-o3",
+          "label": {
+            "fr": "Second entretien nécessaire",
+            "en": "A second interview is needed"
+          },
+          "points": 3
+        },
+        {
+          "id": "compte-rendu-entretien-f11-o4",
+          "label": {
+            "fr": "Garder en vivier pour un autre poste",
+            "en": "Keep in the pool for another role"
+          },
+          "points": 1
+        },
+        {
+          "id": "compte-rendu-entretien-f11-o5",
+          "label": {
+            "fr": "Ne pas donner suite",
+            "en": "Do not proceed"
+          },
+          "points": 0
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "compte-rendu-entretien-f12",
+      "type": "long_text",
+      "label": {
+        "fr": "Éléments à approfondir au prochain échange",
+        "en": "Points to dig into at the next stage"
+      },
+      "description": {
+        "fr": "Facultatif, très utile pour l’intervieweur suivant.",
+        "en": "Optional, but valuable for whoever interviews next."
+      },
+      "placeholder": {
+        "fr": "Vérifier la gestion de conflit client, demander un exemple chiffré…",
+        "en": "Probe client conflict handling, ask for a quantified example…"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "compte-rendu-entretien-f13",
+      "type": "file",
+      "label": {
+        "fr": "Notes, test technique ou étude de cas",
+        "en": "Notes, technical test or case study"
+      },
+      "description": {
+        "fr": "Facultatif. PDF, Word ou image, 10 Mo maximum.",
+        "en": "Optional. PDF, Word or image, 10 MB maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "pdf",
+          "doc",
+          "docx",
+          "png",
+          "jpg"
+        ],
+        "max_file_size_mb": 10
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

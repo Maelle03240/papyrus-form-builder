@@ -1,0 +1,625 @@
+{
+  "id": "tpl-mooove-besoins-formation",
+  "slug": "besoins-formation",
+  "category": "Éducation & Quiz",
+  "icon": "BookOpen",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Recueil des besoins en formation",
+    "en": "Training needs assessment"
+  },
+  "description": {
+    "fr": "Aidez-nous à bâtir le plan de formation de l’année : votre poste, votre auto-évaluation par compétence, vos priorités et vos disponibilités.",
+    "en": "Help us build this year’s training plan: your role, a self-assessment by skill, your priorities and your availability."
+  },
+  "template_description": {
+    "fr": "Recensement des besoins de formation par service : auto-évaluation des compétences, priorités et disponibilités.",
+    "en": "Department-level training needs survey: skills self-assessment, priorities and availability."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "besoins-formation-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre poste",
+        "en": "Your role"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "besoins-formation-f2",
+      "type": "dropdown",
+      "label": {
+        "fr": "Votre service",
+        "en": "Your department"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un service",
+        "en": "Select a department"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "besoins-formation-f2-o1",
+          "label": {
+            "fr": "Direction générale",
+            "en": "Executive management"
+          }
+        },
+        {
+          "id": "besoins-formation-f2-o2",
+          "label": {
+            "fr": "Ventes",
+            "en": "Sales"
+          }
+        },
+        {
+          "id": "besoins-formation-f2-o3",
+          "label": {
+            "fr": "Marketing et communication",
+            "en": "Marketing and communications"
+          }
+        },
+        {
+          "id": "besoins-formation-f2-o4",
+          "label": {
+            "fr": "Finance et comptabilité",
+            "en": "Finance and accounting"
+          }
+        },
+        {
+          "id": "besoins-formation-f2-o5",
+          "label": {
+            "fr": "Ressources humaines",
+            "en": "Human resources"
+          }
+        },
+        {
+          "id": "besoins-formation-f2-o6",
+          "label": {
+            "fr": "Opérations et production",
+            "en": "Operations and production"
+          }
+        },
+        {
+          "id": "besoins-formation-f2-o7",
+          "label": {
+            "fr": "Informatique",
+            "en": "IT"
+          }
+        },
+        {
+          "id": "besoins-formation-f2-o8",
+          "label": {
+            "fr": "Service client",
+            "en": "Customer service"
+          }
+        },
+        {
+          "id": "besoins-formation-f2-o9",
+          "label": {
+            "fr": "Logistique et achats",
+            "en": "Logistics and purchasing"
+          }
+        },
+        {
+          "id": "besoins-formation-f2-o10",
+          "label": {
+            "fr": "Qualité et conformité",
+            "en": "Quality and compliance"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "besoins-formation-f3",
+      "type": "short_text",
+      "label": {
+        "fr": "Intitulé de votre poste",
+        "en": "Your job title"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 100
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "besoins-formation-f4",
+      "type": "section_break",
+      "label": {
+        "fr": "Vos besoins",
+        "en": "Your needs"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "besoins-formation-f5",
+      "type": "matrix",
+      "label": {
+        "fr": "Comment situez-vous votre niveau sur chacune de ces compétences ?",
+        "en": "How would you rate your level on each of these skills?"
+      },
+      "description": {
+        "fr": "Soyez honnête : cette auto-évaluation n’est pas une évaluation de performance.",
+        "en": "Be honest: this self-assessment is not a performance review."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "matrix_mode": "single"
+      },
+      "options": [
+        {
+          "id": "besoins-formation-f5-o1",
+          "label": {
+            "fr": "Débutant",
+            "en": "Beginner"
+          }
+        },
+        {
+          "id": "besoins-formation-f5-o2",
+          "label": {
+            "fr": "En cours d’acquisition",
+            "en": "Developing"
+          }
+        },
+        {
+          "id": "besoins-formation-f5-o3",
+          "label": {
+            "fr": "Autonome",
+            "en": "Independent"
+          }
+        },
+        {
+          "id": "besoins-formation-f5-o4",
+          "label": {
+            "fr": "Je peux former les autres",
+            "en": "I can train others"
+          }
+        }
+      ],
+      "rows": [
+        {
+          "id": "besoins-formation-f5-r1",
+          "label": {
+            "fr": "Outils bureautiques (tableur, traitement de texte)",
+            "en": "Office tools (spreadsheets, word processing)"
+          }
+        },
+        {
+          "id": "besoins-formation-f5-r2",
+          "label": {
+            "fr": "Communication écrite professionnelle",
+            "en": "Professional written communication"
+          }
+        },
+        {
+          "id": "besoins-formation-f5-r3",
+          "label": {
+            "fr": "Gestion de projet et suivi des délais",
+            "en": "Project management and deadline tracking"
+          }
+        },
+        {
+          "id": "besoins-formation-f5-r4",
+          "label": {
+            "fr": "Analyse de données et reporting",
+            "en": "Data analysis and reporting"
+          }
+        },
+        {
+          "id": "besoins-formation-f5-r5",
+          "label": {
+            "fr": "Outils d’intelligence artificielle générative",
+            "en": "Generative artificial intelligence tools"
+          }
+        },
+        {
+          "id": "besoins-formation-f5-r6",
+          "label": {
+            "fr": "Relation client et négociation",
+            "en": "Customer relations and negotiation"
+          }
+        }
+      ]
+    },
+    {
+      "id": "besoins-formation-f6",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quelles sont vos trois priorités de formation pour l’année ?",
+        "en": "What are your three training priorities for the year?"
+      },
+      "description": {
+        "fr": "Trois réponses au maximum.",
+        "en": "Three answers at most."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "selection_min": 1,
+        "selection_max": 3,
+        "has_other": true,
+        "other_label": "Autre besoin"
+      },
+      "options": [
+        {
+          "id": "besoins-formation-f6-o1",
+          "label": {
+            "fr": "Tableur avancé et automatisation",
+            "en": "Advanced spreadsheets and automation"
+          }
+        },
+        {
+          "id": "besoins-formation-f6-o2",
+          "label": {
+            "fr": "Analyse de données et tableaux de bord",
+            "en": "Data analysis and dashboards"
+          }
+        },
+        {
+          "id": "besoins-formation-f6-o3",
+          "label": {
+            "fr": "Intelligence artificielle générative appliquée au métier",
+            "en": "Generative AI applied to your role"
+          }
+        },
+        {
+          "id": "besoins-formation-f6-o4",
+          "label": {
+            "fr": "Gestion de projet",
+            "en": "Project management"
+          }
+        },
+        {
+          "id": "besoins-formation-f6-o5",
+          "label": {
+            "fr": "Management et animation d’équipe",
+            "en": "Management and team leadership"
+          }
+        },
+        {
+          "id": "besoins-formation-f6-o6",
+          "label": {
+            "fr": "Communication et prise de parole",
+            "en": "Communication and public speaking"
+          }
+        },
+        {
+          "id": "besoins-formation-f6-o7",
+          "label": {
+            "fr": "Cybersécurité et protection des données",
+            "en": "Cybersecurity and data protection"
+          }
+        },
+        {
+          "id": "besoins-formation-f6-o8",
+          "label": {
+            "fr": "Relation client et négociation",
+            "en": "Customer relations and negotiation"
+          }
+        },
+        {
+          "id": "besoins-formation-f6-o9",
+          "label": {
+            "fr": "Anglais professionnel",
+            "en": "Business English"
+          }
+        },
+        {
+          "id": "besoins-formation-f6-o10",
+          "label": {
+            "fr": "Gestion du temps et des priorités",
+            "en": "Time and priority management"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "besoins-formation-f7",
+      "type": "section_break",
+      "label": {
+        "fr": "Vos préférences",
+        "en": "Your preferences"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "besoins-formation-f8",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quel format vous conviendrait le mieux ?",
+        "en": "Which format would suit you best?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "besoins-formation-f8-o1",
+          "label": {
+            "fr": "Présentiel",
+            "en": "In person"
+          }
+        },
+        {
+          "id": "besoins-formation-f8-o2",
+          "label": {
+            "fr": "Distanciel en direct",
+            "en": "Live online"
+          }
+        },
+        {
+          "id": "besoins-formation-f8-o3",
+          "label": {
+            "fr": "E-learning à votre rythme",
+            "en": "Self-paced e-learning"
+          }
+        },
+        {
+          "id": "besoins-formation-f8-o4",
+          "label": {
+            "fr": "Mentorat ou accompagnement individuel",
+            "en": "Mentoring or one-to-one coaching"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "besoins-formation-f9",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quelle durée vous semble réaliste ?",
+        "en": "What duration seems realistic to you?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "besoins-formation-f9-o1",
+          "label": {
+            "fr": "Moins d’une demi-journée",
+            "en": "Less than half a day"
+          }
+        },
+        {
+          "id": "besoins-formation-f9-o2",
+          "label": {
+            "fr": "Une journée",
+            "en": "One day"
+          }
+        },
+        {
+          "id": "besoins-formation-f9-o3",
+          "label": {
+            "fr": "Deux jours",
+            "en": "Two days"
+          }
+        },
+        {
+          "id": "besoins-formation-f9-o4",
+          "label": {
+            "fr": "Un parcours étalé sur plusieurs semaines",
+            "en": "A path spread over several weeks"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "besoins-formation-f10",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quelles demi-journées êtes-vous généralement disponible ?",
+        "en": "Which half-days are you usually available?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "besoins-formation-f10-o1",
+          "label": {
+            "fr": "Lundi matin",
+            "en": "Monday morning"
+          }
+        },
+        {
+          "id": "besoins-formation-f10-o2",
+          "label": {
+            "fr": "Lundi après-midi",
+            "en": "Monday afternoon"
+          }
+        },
+        {
+          "id": "besoins-formation-f10-o3",
+          "label": {
+            "fr": "Mardi matin",
+            "en": "Tuesday morning"
+          }
+        },
+        {
+          "id": "besoins-formation-f10-o4",
+          "label": {
+            "fr": "Mardi après-midi",
+            "en": "Tuesday afternoon"
+          }
+        },
+        {
+          "id": "besoins-formation-f10-o5",
+          "label": {
+            "fr": "Mercredi matin",
+            "en": "Wednesday morning"
+          }
+        },
+        {
+          "id": "besoins-formation-f10-o6",
+          "label": {
+            "fr": "Mercredi après-midi",
+            "en": "Wednesday afternoon"
+          }
+        },
+        {
+          "id": "besoins-formation-f10-o7",
+          "label": {
+            "fr": "Jeudi matin",
+            "en": "Thursday morning"
+          }
+        },
+        {
+          "id": "besoins-formation-f10-o8",
+          "label": {
+            "fr": "Jeudi après-midi",
+            "en": "Thursday afternoon"
+          }
+        },
+        {
+          "id": "besoins-formation-f10-o9",
+          "label": {
+            "fr": "Vendredi matin",
+            "en": "Friday morning"
+          }
+        },
+        {
+          "id": "besoins-formation-f10-o10",
+          "label": {
+            "fr": "Vendredi après-midi",
+            "en": "Friday afternoon"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "besoins-formation-f11",
+      "type": "long_text",
+      "label": {
+        "fr": "Autre chose à signaler au service formation ?",
+        "en": "Anything else the training team should know?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

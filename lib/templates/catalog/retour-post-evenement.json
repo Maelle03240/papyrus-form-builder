@@ -1,0 +1,417 @@
+{
+  "id": "tpl-mooove-retour-post-evenement",
+  "slug": "retour-post-evenement",
+  "category": "Événements",
+  "icon": "MessageSquare",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Retour post-événement",
+    "en": "Post-event feedback"
+  },
+  "description": {
+    "fr": "Mesurez la satisfaction de vos participants et préparez la prochaine édition sur des bases solides.",
+    "en": "Measure attendee satisfaction and prepare the next edition on solid ground."
+  },
+  "template_description": {
+    "fr": "Note globale, grille d’évaluation détaillée, NPS et sujets attendus pour la prochaine édition.",
+    "en": "Overall rating, a detailed evaluation grid, NPS and the topics wanted next time."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "retour-post-evenement-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre expérience",
+        "en": "Your experience"
+      },
+      "description": {
+        "fr": "Trois minutes de votre temps, et la prochaine édition sera meilleure.",
+        "en": "Three minutes of your time, and the next edition will be better."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "retour-post-evenement-f2",
+      "type": "rating",
+      "label": {
+        "fr": "Quelle note globale donnez-vous à cet événement ?",
+        "en": "What overall rating would you give this event?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 5
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "retour-post-evenement-f3",
+      "type": "matrix",
+      "label": {
+        "fr": "Comment évaluez-vous chacun de ces aspects ?",
+        "en": "How would you rate each of these aspects?"
+      },
+      "description": {
+        "fr": "Une réponse par ligne.",
+        "en": "One answer per row."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "matrix_mode": "single"
+      },
+      "options": [
+        {
+          "id": "retour-post-evenement-f3-o1",
+          "label": {
+            "fr": "Très faible",
+            "en": "Very poor"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f3-o2",
+          "label": {
+            "fr": "Faible",
+            "en": "Poor"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f3-o3",
+          "label": {
+            "fr": "Correct",
+            "en": "Fair"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f3-o4",
+          "label": {
+            "fr": "Bon",
+            "en": "Good"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f3-o5",
+          "label": {
+            "fr": "Excellent",
+            "en": "Excellent"
+          }
+        }
+      ],
+      "rows": [
+        {
+          "id": "retour-post-evenement-f3-r1",
+          "label": {
+            "fr": "Organisation générale",
+            "en": "Overall organisation"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f3-r2",
+          "label": {
+            "fr": "Qualité des intervenants",
+            "en": "Quality of the speakers"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f3-r3",
+          "label": {
+            "fr": "Pertinence du contenu",
+            "en": "Relevance of the content"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f3-r4",
+          "label": {
+            "fr": "Lieu et confort des salles",
+            "en": "Venue and comfort of the rooms"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f3-r5",
+          "label": {
+            "fr": "Restauration et pauses",
+            "en": "Catering and breaks"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f3-r6",
+          "label": {
+            "fr": "Occasions de networking",
+            "en": "Networking opportunities"
+          }
+        }
+      ]
+    },
+    {
+      "id": "retour-post-evenement-f4",
+      "type": "section_break",
+      "label": {
+        "fr": "Le contenu",
+        "en": "The content"
+      },
+      "description": {
+        "fr": "Vos remarques sont transmises telles quelles aux intervenants concernés.",
+        "en": "Your comments are passed on as they are to the speakers concerned."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "retour-post-evenement-f5",
+      "type": "long_text",
+      "label": {
+        "fr": "Quel a été votre meilleur moment ?",
+        "en": "What was your best moment?"
+      },
+      "description": {
+        "fr": "Une session, une rencontre, une idée que vous ramenez au bureau.",
+        "en": "A session, a conversation, an idea you are taking back to the office."
+      },
+      "placeholder": {
+        "fr": "Ce qui m’a le plus marqué…",
+        "en": "What struck me most…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "retour-post-evenement-f6",
+      "type": "long_text",
+      "label": {
+        "fr": "Que faudrait-il changer la prochaine fois ?",
+        "en": "What should we change next time?"
+      },
+      "description": {
+        "fr": "Soyez franc : c’est la question la plus utile du formulaire.",
+        "en": "Be candid: this is the most useful question in the form."
+      },
+      "placeholder": {
+        "fr": "À votre place, je…",
+        "en": "If I were you, I would…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "retour-post-evenement-f7",
+      "type": "section_break",
+      "label": {
+        "fr": "La suite",
+        "en": "What comes next"
+      },
+      "description": {
+        "fr": "Aidez-nous à construire la prochaine édition autour de vos attentes.",
+        "en": "Help us build the next edition around what you expect."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "retour-post-evenement-f8",
+      "type": "nps",
+      "label": {
+        "fr": "Recommanderiez-vous cet événement à un collègue ?",
+        "en": "Would you recommend this event to a colleague?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Pas du tout",
+        "nps_right_label": "Sans hésiter"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "retour-post-evenement-f9",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quels sujets aimeriez-vous voir traités la prochaine fois ?",
+        "en": "Which topics would you like covered next time?"
+      },
+      "description": {
+        "fr": "Plusieurs réponses possibles.",
+        "en": "Select as many as you like."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "retour-post-evenement-f9-o1",
+          "label": {
+            "fr": "Intelligence artificielle appliquée au métier",
+            "en": "Applied artificial intelligence"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f9-o2",
+          "label": {
+            "fr": "Automatisation et productivité",
+            "en": "Automation and productivity"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f9-o3",
+          "label": {
+            "fr": "Expérience client",
+            "en": "Customer experience"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f9-o4",
+          "label": {
+            "fr": "Données et tableaux de bord",
+            "en": "Data and dashboards"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f9-o5",
+          "label": {
+            "fr": "Management et culture d’équipe",
+            "en": "Management and team culture"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f9-o6",
+          "label": {
+            "fr": "Marketing digital",
+            "en": "Digital marketing"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f9-o7",
+          "label": {
+            "fr": "Protection des données et conformité",
+            "en": "Data protection and compliance"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f9-o8",
+          "label": {
+            "fr": "Études de cas locales",
+            "en": "Local case studies"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "retour-post-evenement-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "Souhaitez-vous être informé·e de la prochaine édition ?",
+        "en": "Would you like to hear about the next edition?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "retour-post-evenement-f10-o1",
+          "label": {
+            "fr": "Oui, et je compte bien y être",
+            "en": "Yes, and I plan to be there"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f10-o2",
+          "label": {
+            "fr": "Oui, prévenez-moi simplement de la date",
+            "en": "Yes, just let me know the date"
+          }
+        },
+        {
+          "id": "retour-post-evenement-f10-o3",
+          "label": {
+            "fr": "Non merci",
+            "en": "No thank you"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

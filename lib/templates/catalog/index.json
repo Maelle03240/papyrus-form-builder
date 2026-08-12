@@ -1,0 +1,1175 @@
+[
+  {
+    "id": "tpl-mooove-contact-general",
+    "slug": "contact-general",
+    "category": "Contact & Leads",
+    "icon": "Mail",
+    "display_mode": "scroll",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Formulaire de contact",
+      "en": "Contact form"
+    },
+    "template_description": {
+      "fr": "Le contact classique : coordonnées, sujet, message et consentement de recontact, prêt à publier.",
+      "en": "The classic contact form: details, subject, message and an opt-in to be contacted back."
+    },
+    "scoring_enabled": false,
+    "field_count": 7,
+    "page_count": 0,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-demande-devis",
+    "slug": "demande-devis",
+    "category": "Contact & Leads",
+    "icon": "FileText",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Demande de devis",
+      "en": "Quote request"
+    },
+    "template_description": {
+      "fr": "Collecte tout ce qu’il faut pour chiffrer : besoin, budget, échéance et brief en pièce jointe.",
+      "en": "Captures everything needed to price a job: scope, budget, deadline and an attached brief."
+    },
+    "scoring_enabled": false,
+    "field_count": 10,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-qualification-lead-b2b",
+    "slug": "qualification-lead-b2b",
+    "category": "Contact & Leads",
+    "icon": "Target",
+    "display_mode": "sections",
+    "feasibility": "degraded",
+    "title": {
+      "fr": "Qualification de lead B2B",
+      "en": "B2B lead qualification"
+    },
+    "template_description": {
+      "fr": "Qualification BANT en trois pages : taille, rôle, budget, échéance et solution en place, avec relances conditionnelles.",
+      "en": "Three-page BANT qualification: size, role, budget, timeline and current solution, with conditional follow-ups."
+    },
+    "scoring_enabled": false,
+    "field_count": 11,
+    "page_count": 3,
+    "rule_count": 2,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-inscription-newsletter",
+    "slug": "inscription-newsletter",
+    "category": "Contact & Leads",
+    "icon": "Send",
+    "display_mode": "scroll",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Inscription à la newsletter",
+      "en": "Newsletter signup"
+    },
+    "template_description": {
+      "fr": "Inscription courte avec centres d’intérêt en cartes, fréquence au choix et consentement RGPD explicite.",
+      "en": "Short signup with interests as cards, a frequency choice and an explicit GDPR consent."
+    },
+    "scoring_enabled": false,
+    "field_count": 6,
+    "page_count": 0,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-liste-attente-produit",
+    "slug": "liste-attente-produit",
+    "category": "Contact & Leads",
+    "icon": "Hourglass",
+    "display_mode": "typeform",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Liste d’attente produit",
+      "en": "Product waitlist"
+    },
+    "template_description": {
+      "fr": "Une question par écran pour capter les premiers inscrits et mesurer l’urgence réelle du besoin.",
+      "en": "One question per screen to capture early signups and measure how urgent the need really is."
+    },
+    "scoring_enabled": false,
+    "field_count": 8,
+    "page_count": 0,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": true,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-candidature-spontanee",
+    "slug": "candidature-spontanee",
+    "category": "RH & Recrutement",
+    "icon": "UserPlus",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Candidature spontanée",
+      "en": "Open application"
+    },
+    "template_description": {
+      "fr": "Candidature libre en trois étapes : identité, parcours avec CV et LinkedIn, motivation et prétentions.",
+      "en": "Three-step open application: identity, background with CV and LinkedIn, motivation and salary expectation."
+    },
+    "scoring_enabled": false,
+    "field_count": 11,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-candidature-poste",
+    "slug": "candidature-poste",
+    "category": "RH & Recrutement",
+    "icon": "Briefcase",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Candidature à un poste",
+      "en": "Job application"
+    },
+    "template_description": {
+      "fr": "Candidature complète avec CV, lettre, compétences et relances conditionnelles sur le préavis et le permis de travail.",
+      "en": "Full application with CV, cover letter, skills and conditional follow-ups on notice period and work permit."
+    },
+    "scoring_enabled": false,
+    "field_count": 10,
+    "page_count": 4,
+    "rule_count": 2,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-prequalification-candidat",
+    "slug": "prequalification-candidat",
+    "category": "RH & Recrutement",
+    "icon": "ClipboardCheck",
+    "display_mode": "typeform",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Préqualification candidat",
+      "en": "Candidate screening"
+    },
+    "template_description": {
+      "fr": "Filtre de préqualification scoré : droit de travail, expérience, langues, outils, disponibilité et salaire.",
+      "en": "Scored screening filter: right to work, experience, languages, tools, availability and salary."
+    },
+    "scoring_enabled": true,
+    "field_count": 8,
+    "page_count": 0,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-compte-rendu-entretien",
+    "slug": "compte-rendu-entretien",
+    "category": "RH & Recrutement",
+    "icon": "ClipboardList",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Compte rendu d’entretien",
+      "en": "Interview scorecard"
+    },
+    "template_description": {
+      "fr": "Grille d’évaluation notée : compétences en matrice 1 à 5, points forts, réserves et recommandation d’embauche.",
+      "en": "Scored evaluation grid: 1-to-5 competency matrix, strengths, concerns and a hiring recommendation."
+    },
+    "scoring_enabled": true,
+    "field_count": 10,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": true,
+    "has_media": false,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-onboarding-collaborateur",
+    "slug": "onboarding-collaborateur",
+    "category": "RH & Recrutement",
+    "icon": "Rocket",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Onboarding nouveau collaborateur",
+      "en": "New hire onboarding"
+    },
+    "template_description": {
+      "fr": "Tout l’onboarding en quatre pages : état civil, pièces administratives, matériel et préférences personnelles.",
+      "en": "Onboarding in four pages: personal details, admin documents, equipment and personal preferences."
+    },
+    "scoring_enabled": false,
+    "field_count": 11,
+    "page_count": 4,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": true,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-entretien-depart",
+    "slug": "entretien-depart",
+    "category": "RH & Recrutement",
+    "icon": "DoorOpen",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Entretien de départ",
+      "en": "Exit interview"
+    },
+    "template_description": {
+      "fr": "Recueillez un retour structuré avant le dernier jour : motifs du départ, vécu, pistes d’amélioration.",
+      "en": "Collect structured feedback before the last day: reasons for leaving, experience, areas to improve."
+    },
+    "scoring_enabled": false,
+    "field_count": 10,
+    "page_count": 3,
+    "rule_count": 1,
+    "has_matrix": true,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-engagement-collaborateurs",
+    "slug": "engagement-collaborateurs",
+    "category": "Vie interne",
+    "icon": "HeartHandshake",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Enquête d’engagement collaborateurs",
+      "en": "Employee engagement survey"
+    },
+    "template_description": {
+      "fr": "Mesurez l’engagement de vos équipes de façon anonyme : ressenti, eNPS et priorités d’amélioration.",
+      "en": "Measure team engagement anonymously: how people feel, eNPS and improvement priorities."
+    },
+    "scoring_enabled": false,
+    "field_count": 8,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": true,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-pulse-hebdomadaire",
+    "slug": "pulse-hebdomadaire",
+    "category": "Vie interne",
+    "icon": "Activity",
+    "display_mode": "typeform",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Pulse hebdomadaire",
+      "en": "Weekly team pulse"
+    },
+    "template_description": {
+      "fr": "Six questions pour prendre le pouls de l’équipe chaque semaine : moral, charge, blocages.",
+      "en": "Six questions to take the team’s pulse each week: mood, workload, blockers."
+    },
+    "scoring_enabled": false,
+    "field_count": 7,
+    "page_count": 0,
+    "rule_count": 1,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-demande-conge",
+    "slug": "demande-conge",
+    "category": "Vie interne",
+    "icon": "CalendarOff",
+    "display_mode": "sections",
+    "feasibility": "degraded",
+    "title": {
+      "fr": "Demande de congé",
+      "en": "Leave request"
+    },
+    "template_description": {
+      "fr": "Centralisez les demandes de congé : type, période, nombre de jours et passation vers un collègue.",
+      "en": "Centralise leave requests: type, dates, number of days and handover to a colleague."
+    },
+    "scoring_enabled": false,
+    "field_count": 11,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-note-de-frais",
+    "slug": "note-de-frais",
+    "category": "Vie interne",
+    "icon": "Receipt",
+    "display_mode": "sections",
+    "feasibility": "degraded",
+    "title": {
+      "fr": "Note de frais",
+      "en": "Expense claim"
+    },
+    "template_description": {
+      "fr": "Collectez les notes de frais avec justificatif : catégorie, montant en roupies, code projet et pièce jointe.",
+      "en": "Collect expense claims with proof: category, amount in rupees, project code and attached receipt."
+    },
+    "scoring_enabled": false,
+    "field_count": 11,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-auto-evaluation-annuelle",
+    "slug": "auto-evaluation-annuelle",
+    "category": "Vie interne",
+    "icon": "TrendingUp",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Auto-évaluation annuelle",
+      "en": "Annual self-assessment"
+    },
+    "template_description": {
+      "fr": "Préparez l’entretien annuel : réussites, auto-évaluation des compétences, besoins de formation et objectifs.",
+      "en": "Prepare the annual review: achievements, competency self-rating, training needs and goals."
+    },
+    "scoring_enabled": false,
+    "field_count": 10,
+    "page_count": 3,
+    "rule_count": 1,
+    "has_matrix": true,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-nps",
+    "slug": "nps",
+    "category": "Satisfaction client",
+    "icon": "Smile",
+    "display_mode": "typeform",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Sondage NPS",
+      "en": "NPS survey"
+    },
+    "template_description": {
+      "fr": "Le Net Promoter Score dans sa forme classique, avec relance ciblée sur les notes faibles.",
+      "en": "The classic Net Promoter Score, with a targeted follow-up for low scores."
+    },
+    "scoring_enabled": false,
+    "field_count": 6,
+    "page_count": 0,
+    "rule_count": 1,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-csat-apres-service",
+    "slug": "csat-apres-service",
+    "category": "Satisfaction client",
+    "icon": "Star",
+    "display_mode": "scroll",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Satisfaction après service",
+      "en": "Post-service satisfaction"
+    },
+    "template_description": {
+      "fr": "Mesurez la satisfaction juste après une intervention : note globale, ressenti et pistes d’amélioration.",
+      "en": "Measure satisfaction right after a service interaction: overall score, highlights and improvements."
+    },
+    "scoring_enabled": false,
+    "field_count": 7,
+    "page_count": 0,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-satisfaction-detaillee",
+    "slug": "satisfaction-detaillee",
+    "category": "Satisfaction client",
+    "icon": "BarChart3",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Enquête de satisfaction détaillée",
+      "en": "Detailed satisfaction survey"
+    },
+    "template_description": {
+      "fr": "Évaluation complète de votre service : profil client, grille de satisfaction en sept critères, NPS et avis.",
+      "en": "A full service review: customer profile, seven-criteria satisfaction grid, NPS and open feedback."
+    },
+    "scoring_enabled": false,
+    "field_count": 9,
+    "page_count": 3,
+    "rule_count": 1,
+    "has_matrix": true,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-reclamation-client",
+    "slug": "reclamation-client",
+    "category": "Satisfaction client",
+    "icon": "AlertCircle",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Réclamation client",
+      "en": "Customer complaint"
+    },
+    "template_description": {
+      "fr": "Traitez les réclamations sans allers-retours : contexte, pièces jointes, résolution attendue et urgence.",
+      "en": "Handle complaints without back-and-forth: context, attachments, expected resolution and urgency."
+    },
+    "scoring_enabled": false,
+    "field_count": 11,
+    "page_count": 3,
+    "rule_count": 2,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-demande-temoignage",
+    "slug": "demande-temoignage",
+    "category": "Satisfaction client",
+    "icon": "Quote",
+    "display_mode": "typeform",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Demande de témoignage client",
+      "en": "Customer testimonial request"
+    },
+    "template_description": {
+      "fr": "Transformez un client satisfait en preuve sociale : citation, résultat concret et autorisation de publication.",
+      "en": "Turn a happy customer into social proof: a quote, a concrete result and permission to publish."
+    },
+    "scoring_enabled": false,
+    "field_count": 9,
+    "page_count": 0,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": true,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-product-market-fit",
+    "slug": "product-market-fit",
+    "category": "Produit & Recherche",
+    "icon": "Gauge",
+    "display_mode": "typeform",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Enquête Product-Market Fit",
+      "en": "Product-market fit survey"
+    },
+    "template_description": {
+      "fr": "Au-delà de 40 % d’utilisateurs « très déçus », vous tenez votre marché. Six questions pour le vérifier.",
+      "en": "Above 40% of users “very disappointed”, you have product-market fit. Six questions to find out."
+    },
+    "scoring_enabled": false,
+    "field_count": 7,
+    "page_count": 0,
+    "rule_count": 1,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-demande-fonctionnalite",
+    "slug": "demande-fonctionnalite",
+    "category": "Produit & Recherche",
+    "icon": "Lightbulb",
+    "display_mode": "scroll",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Demande de fonctionnalité",
+      "en": "Feature request"
+    },
+    "template_description": {
+      "fr": "Le besoin réel, la solution de contournement actuelle et l’urgence : de quoi trancher sans réunion.",
+      "en": "The real need, the current workaround and the urgency: enough to decide without a meeting."
+    },
+    "scoring_enabled": false,
+    "field_count": 6,
+    "page_count": 0,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": true,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-rapport-bug",
+    "slug": "rapport-bug",
+    "category": "Produit & Recherche",
+    "icon": "Bug",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Rapport de bug",
+      "en": "Bug report"
+    },
+    "template_description": {
+      "fr": "Le formulaire qui évite les allers-retours : gravité, étapes de reproduction, capture et environnement.",
+      "en": "The form that avoids back-and-forth: severity, reproduction steps, screenshot and environment."
+    },
+    "scoring_enabled": false,
+    "field_count": 9,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-recrutement-participants-recherche",
+    "slug": "recrutement-participants-recherche",
+    "category": "Produit & Recherche",
+    "icon": "Users",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Recrutement de participants à une étude",
+      "en": "User research participant screener"
+    },
+    "template_description": {
+      "fr": "Profil, usage réel et créneaux : sélectionnez les bons participants avant de programmer vos entretiens.",
+      "en": "Profile, real usage and time slots: pick the right participants before scheduling interviews."
+    },
+    "scoring_enabled": false,
+    "field_count": 8,
+    "page_count": 3,
+    "rule_count": 2,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-enquete-annulation",
+    "slug": "enquete-annulation",
+    "category": "Produit & Recherche",
+    "icon": "LogOut",
+    "display_mode": "typeform",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Enquête d’annulation",
+      "en": "Cancellation and churn survey"
+    },
+    "template_description": {
+      "fr": "Six questions posées au bon moment pour transformer une résiliation en information exploitable.",
+      "en": "Six well-timed questions that turn a cancellation into information you can act on."
+    },
+    "scoring_enabled": false,
+    "field_count": 8,
+    "page_count": 0,
+    "rule_count": 2,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-feedback-produit",
+    "slug": "feedback-produit",
+    "category": "Produit & Recherche",
+    "icon": "MessageCircle",
+    "display_mode": "typeform",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Feedback produit",
+      "en": "Product feedback"
+    },
+    "template_description": {
+      "fr": "Court et ciblé après une mise à jour : ce qui plaît, ce qui manque, ce qui agace.",
+      "en": "Short and targeted after a release: what works, what is missing, what annoys."
+    },
+    "scoring_enabled": false,
+    "field_count": 9,
+    "page_count": 0,
+    "rule_count": 1,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-inscription-evenement",
+    "slug": "inscription-evenement",
+    "category": "Événements",
+    "icon": "Calendar",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Inscription à un événement",
+      "en": "Event registration"
+    },
+    "template_description": {
+      "fr": "Coordonnées, programme personnalisé, régime alimentaire et accessibilité : tout ce qu’il faut le jour J.",
+      "en": "Contact details, chosen sessions, dietary needs and accessibility: everything you need on the day."
+    },
+    "scoring_enabled": false,
+    "field_count": 12,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": true,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-rsvp",
+    "slug": "rsvp",
+    "category": "Événements",
+    "icon": "PartyPopper",
+    "display_mode": "typeform",
+    "feasibility": "ready",
+    "title": {
+      "fr": "RSVP",
+      "en": "RSVP"
+    },
+    "template_description": {
+      "fr": "Réponse en une question, puis seulement les détails utiles à ceux qui viennent.",
+      "en": "One question to answer, then only the details that matter for those attending."
+    },
+    "scoring_enabled": false,
+    "field_count": 6,
+    "page_count": 0,
+    "rule_count": 3,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-retour-post-evenement",
+    "slug": "retour-post-evenement",
+    "category": "Événements",
+    "icon": "MessageSquare",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Retour post-événement",
+      "en": "Post-event feedback"
+    },
+    "template_description": {
+      "fr": "Note globale, grille d’évaluation détaillée, NPS et sujets attendus pour la prochaine édition.",
+      "en": "Overall rating, a detailed evaluation grid, NPS and the topics wanted next time."
+    },
+    "scoring_enabled": false,
+    "field_count": 7,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": true,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-appel-intervenants",
+    "slug": "appel-intervenants",
+    "category": "Événements",
+    "icon": "Mic",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Appel à intervenants",
+      "en": "Call for speakers"
+    },
+    "template_description": {
+      "fr": "Biographie, résumé, format et supports : un dossier complet par intervenant, prêt à évaluer.",
+      "en": "Bio, abstract, format and materials: one complete, review-ready file per speaker."
+    },
+    "scoring_enabled": false,
+    "field_count": 12,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": true,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-inscription-webinaire",
+    "slug": "inscription-webinaire",
+    "category": "Événements",
+    "icon": "Video",
+    "display_mode": "scroll",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Inscription au webinaire",
+      "en": "Webinar registration"
+    },
+    "template_description": {
+      "fr": "Collectez les inscriptions à votre webinaire et qualifiez les participants en une page.",
+      "en": "Collect webinar sign-ups and qualify attendees on a single page."
+    },
+    "scoring_enabled": false,
+    "field_count": 9,
+    "page_count": 0,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": true,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-brief-creatif",
+    "slug": "brief-creatif",
+    "category": "Marketing & Agence",
+    "icon": "Palette",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Brief créatif",
+      "en": "Creative brief"
+    },
+    "template_description": {
+      "fr": "Le brief structuré qui évite trois allers-retours : objectifs, cible, ton, livrables, budget.",
+      "en": "The structured brief that saves three rounds of emails: goals, audience, tone, deliverables, budget."
+    },
+    "scoring_enabled": false,
+    "field_count": 12,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-brief-site-web",
+    "slug": "brief-site-web",
+    "category": "Marketing & Agence",
+    "icon": "Globe",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Brief site web",
+      "en": "Website project brief"
+    },
+    "template_description": {
+      "fr": "Cadrez création ou refonte de site : objectifs, fonctionnalités, contenus, budget, planning.",
+      "en": "Scope a new site or a redesign: goals, features, content, budget and timeline."
+    },
+    "scoring_enabled": false,
+    "field_count": 13,
+    "page_count": 4,
+    "rule_count": 2,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-questionnaire-marque",
+    "slug": "questionnaire-marque",
+    "category": "Marketing & Agence",
+    "icon": "Sparkles",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Questionnaire de marque",
+      "en": "Brand discovery questionnaire"
+    },
+    "template_description": {
+      "fr": "L’atelier de marque en questionnaire : histoire, positionnement, personnalité, univers visuel.",
+      "en": "The brand workshop as a questionnaire: story, positioning, personality, visual world."
+    },
+    "scoring_enabled": false,
+    "field_count": 10,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-candidature-ambassadeur",
+    "slug": "candidature-ambassadeur",
+    "category": "Marketing & Agence",
+    "icon": "Megaphone",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Candidature ambassadeur",
+      "en": "Ambassador application"
+    },
+    "template_description": {
+      "fr": "Recrutez créateurs et ambassadeurs : audience, engagement, media kit et tarifs en un formulaire.",
+      "en": "Recruit creators and ambassadors: audience, engagement, media kit and rates in one form."
+    },
+    "scoring_enabled": false,
+    "field_count": 12,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-etude-perception-marque",
+    "slug": "etude-perception-marque",
+    "category": "Marketing & Agence",
+    "icon": "PieChart",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Étude de perception de marque",
+      "en": "Brand perception study"
+    },
+    "template_description": {
+      "fr": "Mesurez notoriété, image et considération : notoriété assistée, matrice d’image et NPS.",
+      "en": "Measure awareness, image and consideration: aided awareness, image matrix and NPS."
+    },
+    "scoring_enabled": false,
+    "field_count": 7,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": true,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-voyage-sur-mesure",
+    "slug": "voyage-sur-mesure",
+    "category": "Réservations & Voyage",
+    "icon": "Plane",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Demande de voyage sur mesure",
+      "en": "Custom trip enquiry"
+    },
+    "template_description": {
+      "fr": "Qualifiez une demande de voyage sur mesure : dates, voyageurs, budget, envies et contact.",
+      "en": "Qualify a bespoke travel enquiry: dates, travellers, budget, wishes and contact details."
+    },
+    "scoring_enabled": false,
+    "field_count": 16,
+    "page_count": 4,
+    "rule_count": 2,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-prise-rendez-vous",
+    "slug": "prise-rendez-vous",
+    "category": "Réservations & Voyage",
+    "icon": "CalendarClock",
+    "display_mode": "sections",
+    "feasibility": "degraded",
+    "title": {
+      "fr": "Demande de rendez-vous",
+      "en": "Appointment request"
+    },
+    "template_description": {
+      "fr": "Demande de rendez-vous en deux pages : coordonnées, prestation, date et créneau souhaités.",
+      "en": "A two-page appointment request: contact details, service, preferred date and slot."
+    },
+    "scoring_enabled": false,
+    "field_count": 9,
+    "page_count": 2,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-bon-de-commande",
+    "slug": "bon-de-commande",
+    "category": "Réservations & Voyage",
+    "icon": "ShoppingCart",
+    "display_mode": "sections",
+    "feasibility": "blocked",
+    "title": {
+      "fr": "Bon de commande",
+      "en": "Order form"
+    },
+    "template_description": {
+      "fr": "Prise de commande produit avec livraison : coordonnées, articles, quantité, adresse et instructions.",
+      "en": "Product order intake with delivery: contact details, items, quantity, address and instructions."
+    },
+    "scoring_enabled": false,
+    "field_count": 14,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-reservation-restaurant",
+    "slug": "reservation-restaurant",
+    "category": "Réservations & Voyage",
+    "icon": "UtensilsCrossed",
+    "display_mode": "scroll",
+    "feasibility": "degraded",
+    "title": {
+      "fr": "Réservation de table",
+      "en": "Table reservation"
+    },
+    "template_description": {
+      "fr": "Demande de table en une page : date, service, créneau, couverts, allergies et occasion.",
+      "en": "One-page table request: date, service, slot, covers, allergies and occasion."
+    },
+    "scoring_enabled": false,
+    "field_count": 10,
+    "page_count": 0,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-transfert-aeroport",
+    "slug": "transfert-aeroport",
+    "category": "Réservations & Voyage",
+    "icon": "Car",
+    "display_mode": "sections",
+    "feasibility": "degraded",
+    "title": {
+      "fr": "Demande de transfert aéroport",
+      "en": "Airport transfer request"
+    },
+    "template_description": {
+      "fr": "Réservation de navette aéroport : trajet, vol, bagages, véhicule et coordonnées en trois étapes.",
+      "en": "Airport shuttle booking: route, flight, luggage, vehicle and contact details in three steps."
+    },
+    "scoring_enabled": false,
+    "field_count": 13,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-inscription-formation",
+    "slug": "inscription-formation",
+    "category": "Éducation & Quiz",
+    "icon": "GraduationCap",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Inscription à une formation",
+      "en": "Course registration"
+    },
+    "template_description": {
+      "fr": "Inscription complète à une session de formation : participant, session, niveau, financement et conditions.",
+      "en": "Complete registration for a training session: participant, session, level, funding and terms."
+    },
+    "scoring_enabled": false,
+    "field_count": 13,
+    "page_count": 3,
+    "rule_count": 2,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-evaluation-formation",
+    "slug": "evaluation-formation",
+    "category": "Éducation & Quiz",
+    "icon": "Award",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Évaluation de formation",
+      "en": "Training evaluation"
+    },
+    "template_description": {
+      "fr": "Évaluation à chaud (Kirkpatrick niveau 1) : matrice de satisfaction, progression avant/après et recommandation.",
+      "en": "Immediate reaction survey (Kirkpatrick level 1): satisfaction matrix, before/after progress and recommendation."
+    },
+    "scoring_enabled": false,
+    "field_count": 9,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": true,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-quiz-connaissances",
+    "slug": "quiz-connaissances",
+    "category": "Éducation & Quiz",
+    "icon": "Brain",
+    "display_mode": "typeform",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Quiz de connaissances — protection des données personnelles",
+      "en": "Knowledge quiz — personal data protection"
+    },
+    "template_description": {
+      "fr": "Quiz noté de 10 questions sur le RGPD, prêt à publier ou à réécrire pour votre propre sujet.",
+      "en": "Scored 10-question GDPR quiz, ready to publish or rewrite for your own subject."
+    },
+    "scoring_enabled": true,
+    "field_count": 13,
+    "page_count": 0,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": true,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-diagnostic-maturite-ia",
+    "slug": "diagnostic-maturite-ia",
+    "category": "Éducation & Quiz",
+    "icon": "Compass",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Diagnostic de maturité IA",
+      "en": "AI maturity assessment"
+    },
+    "template_description": {
+      "fr": "Auto-diagnostic noté sur 32 points : stratégie IA, usages, gouvernance des données, compétences et budget.",
+      "en": "Self-assessment scored out of 32: AI strategy, usage, data governance, skills and budget."
+    },
+    "scoring_enabled": true,
+    "field_count": 12,
+    "page_count": 4,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-besoins-formation",
+    "slug": "besoins-formation",
+    "category": "Éducation & Quiz",
+    "icon": "BookOpen",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Recueil des besoins en formation",
+      "en": "Training needs assessment"
+    },
+    "template_description": {
+      "fr": "Recensement des besoins de formation par service : auto-évaluation des compétences, priorités et disponibilités.",
+      "en": "Department-level training needs survey: skills self-assessment, priorities and availability."
+    },
+    "scoring_enabled": false,
+    "field_count": 8,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": true,
+    "has_media": false,
+    "has_file": false
+  },
+  {
+    "id": "tpl-mooove-ticket-support-it",
+    "slug": "ticket-support-it",
+    "category": "Opérations & Conformité",
+    "icon": "LifeBuoy",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Ticket de support informatique",
+      "en": "IT support ticket"
+    },
+    "template_description": {
+      "fr": "Ouverture de ticket IT avec catégorie, urgence, capture d’écran et questions techniques conditionnelles.",
+      "en": "IT ticket intake with category, urgency, screenshot and conditional technical questions."
+    },
+    "scoring_enabled": false,
+    "field_count": 12,
+    "page_count": 3,
+    "rule_count": 2,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-rapport-incident",
+    "slug": "rapport-incident",
+    "category": "Opérations & Conformité",
+    "icon": "ShieldAlert",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Rapport d’incident",
+      "en": "Incident report"
+    },
+    "template_description": {
+      "fr": "Déclaration d’incident : nature, circonstances, blessures, témoins, photos et suites données.",
+      "en": "Incident declaration: nature, circumstances, injuries, witnesses, photos and follow-up."
+    },
+    "scoring_enabled": false,
+    "field_count": 12,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-checklist-inspection",
+    "slug": "checklist-inspection",
+    "category": "Opérations & Conformité",
+    "icon": "SearchCheck",
+    "display_mode": "sections",
+    "feasibility": "ready",
+    "title": {
+      "fr": "Checklist d’inspection de site",
+      "en": "Site inspection checklist"
+    },
+    "template_description": {
+      "fr": "Tournée d’inspection : 10 points de contrôle en matrice, non-conformités, photos, action corrective et verdict.",
+      "en": "Inspection walkthrough: 10 matrix control points, non-conformities, photos, corrective action and verdict."
+    },
+    "scoring_enabled": false,
+    "field_count": 9,
+    "page_count": 3,
+    "rule_count": 2,
+    "has_matrix": true,
+    "has_media": false,
+    "has_file": true
+  },
+  {
+    "id": "tpl-mooove-consentement-rgpd-image",
+    "slug": "consentement-rgpd-image",
+    "category": "Opérations & Conformité",
+    "icon": "FileSignature",
+    "display_mode": "sections",
+    "feasibility": "degraded",
+    "title": {
+      "fr": "Consentement RGPD et droit à l’image",
+      "en": "GDPR and image rights consent"
+    },
+    "template_description": {
+      "fr": "Consentements séparés données, photo, vidéo, réseaux sociaux et print, avec texte d’information complet.",
+      "en": "Separate consents for data, photo, video, social media and print, with a full information notice."
+    },
+    "scoring_enabled": false,
+    "field_count": 11,
+    "page_count": 3,
+    "rule_count": 0,
+    "has_matrix": false,
+    "has_media": false,
+    "has_file": false
+  }
+]

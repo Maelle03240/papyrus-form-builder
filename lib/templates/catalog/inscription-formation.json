@@ -1,0 +1,563 @@
+{
+  "id": "tpl-mooove-inscription-formation",
+  "slug": "inscription-formation",
+  "category": "Éducation & Quiz",
+  "icon": "GraduationCap",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Inscription à une formation",
+    "en": "Course registration"
+  },
+  "description": {
+    "fr": "Réservez votre place en trois étapes : le participant, la formation choisie, puis le financement et les aspects logistiques.",
+    "en": "Book your place in three steps: participant details, the course you have chosen, then funding and logistics."
+  },
+  "template_description": {
+    "fr": "Inscription complète à une session de formation : participant, session, niveau, financement et conditions.",
+    "en": "Complete registration for a training session: participant, session, level, funding and terms."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "inscription-formation-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Le participant",
+        "en": "The participant"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 80
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f3",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail",
+        "en": "Email address"
+      },
+      "description": {
+        "fr": "La convocation et les accès seront envoyés à cette adresse.",
+        "en": "The confirmation and access details will be sent to this address."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f4",
+      "type": "phone",
+      "label": {
+        "fr": "Téléphone",
+        "en": "Phone number"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "default_country": "MU"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f5",
+      "type": "short_text",
+      "label": {
+        "fr": "Entreprise ou organisation",
+        "en": "Company or organisation"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {
+        "max": 100
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f6",
+      "type": "short_text",
+      "label": {
+        "fr": "Fonction occupée",
+        "en": "Job title"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {
+        "max": 100
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f7",
+      "type": "section_break",
+      "label": {
+        "fr": "La formation",
+        "en": "The course"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f8",
+      "type": "dropdown",
+      "label": {
+        "fr": "Formation choisie",
+        "en": "Chosen course"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une formation",
+        "en": "Select a course"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "inscription-formation-f8-o1",
+          "label": {
+            "fr": "Tableur avancé — tableaux croisés et automatisation",
+            "en": "Advanced spreadsheets — pivot tables and automation"
+          }
+        },
+        {
+          "id": "inscription-formation-f8-o2",
+          "label": {
+            "fr": "Gestion de projet agile — les fondamentaux de Scrum",
+            "en": "Agile project management — Scrum fundamentals"
+          }
+        },
+        {
+          "id": "inscription-formation-f8-o3",
+          "label": {
+            "fr": "Communication professionnelle et prise de parole",
+            "en": "Professional communication and public speaking"
+          }
+        },
+        {
+          "id": "inscription-formation-f8-o4",
+          "label": {
+            "fr": "Cybersécurité : les bons réflexes au quotidien",
+            "en": "Cybersecurity: everyday good practice"
+          }
+        },
+        {
+          "id": "inscription-formation-f8-o5",
+          "label": {
+            "fr": "Intelligence artificielle générative pour les métiers",
+            "en": "Generative AI for business teams"
+          }
+        },
+        {
+          "id": "inscription-formation-f8-o6",
+          "label": {
+            "fr": "Management d’équipe : les fondamentaux",
+            "en": "Team management: the fundamentals"
+          }
+        },
+        {
+          "id": "inscription-formation-f8-o7",
+          "label": {
+            "fr": "Lecture et analyse des états financiers",
+            "en": "Reading and analysing financial statements"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f9",
+      "type": "dropdown",
+      "label": {
+        "fr": "Session souhaitée",
+        "en": "Preferred session"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une session",
+        "en": "Select a session"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "inscription-formation-f9-o1",
+          "label": {
+            "fr": "14 et 15 septembre 2026 — Ébène",
+            "en": "14 and 15 September 2026 — Ébène"
+          }
+        },
+        {
+          "id": "inscription-formation-f9-o2",
+          "label": {
+            "fr": "5 et 6 octobre 2026 — Port-Louis",
+            "en": "5 and 6 October 2026 — Port-Louis"
+          }
+        },
+        {
+          "id": "inscription-formation-f9-o3",
+          "label": {
+            "fr": "9 et 10 novembre 2026 — à distance",
+            "en": "9 and 10 November 2026 — online"
+          }
+        },
+        {
+          "id": "inscription-formation-f9-o4",
+          "label": {
+            "fr": "7 et 8 décembre 2026 — Ébène",
+            "en": "7 and 8 December 2026 — Ébène"
+          }
+        },
+        {
+          "id": "inscription-formation-f9-o5",
+          "label": {
+            "fr": "Aucune de ces dates — me proposer une autre session",
+            "en": "None of these dates — suggest another session"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "Votre niveau actuel sur le sujet",
+        "en": "Your current level on the subject"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 3
+      },
+      "options": [
+        {
+          "id": "inscription-formation-f10-o1",
+          "label": {
+            "fr": "Débutant",
+            "en": "Beginner"
+          }
+        },
+        {
+          "id": "inscription-formation-f10-o2",
+          "label": {
+            "fr": "Intermédiaire",
+            "en": "Intermediate"
+          }
+        },
+        {
+          "id": "inscription-formation-f10-o3",
+          "label": {
+            "fr": "Avancé",
+            "en": "Advanced"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f11",
+      "type": "long_text",
+      "label": {
+        "fr": "Quels objectifs souhaitez-vous atteindre grâce à cette formation ?",
+        "en": "What do you want to achieve through this course?"
+      },
+      "description": {
+        "fr": "Le formateur adapte les exercices aux attentes du groupe.",
+        "en": "The trainer adapts the exercises to the group’s expectations."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f12",
+      "type": "section_break",
+      "label": {
+        "fr": "Financement et logistique",
+        "en": "Funding and logistics"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f13",
+      "type": "single_choice",
+      "label": {
+        "fr": "Qui règle cette formation ?",
+        "en": "Who is paying for this course?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "inscription-formation-f13-o1",
+          "label": {
+            "fr": "Mon employeur",
+            "en": "My employer"
+          }
+        },
+        {
+          "id": "inscription-formation-f13-o2",
+          "label": {
+            "fr": "Moi-même, à titre personnel",
+            "en": "Myself, personally"
+          }
+        },
+        {
+          "id": "inscription-formation-f13-o3",
+          "label": {
+            "fr": "Un organisme financeur",
+            "en": "A funding body"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f14",
+      "type": "long_text",
+      "label": {
+        "fr": "Coordonnées de facturation",
+        "en": "Invoicing details"
+      },
+      "description": {
+        "fr": "Raison sociale, adresse, numéro de TVA, référence de commande et adresse e-mail du service comptable.",
+        "en": "Legal name, address, VAT number, purchase order reference and the accounts department’s email address."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f15",
+      "type": "long_text",
+      "label": {
+        "fr": "Besoins particuliers d’accessibilité ou contraintes alimentaires",
+        "en": "Accessibility needs or dietary requirements"
+      },
+      "description": {
+        "fr": "Facultatif. Ces informations restent confidentielles et servent uniquement à organiser l’accueil.",
+        "en": "Optional. This information stays confidential and is used only to organise your welcome."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 400
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-formation-f16",
+      "type": "single_choice",
+      "label": {
+        "fr": "Conditions générales d’inscription",
+        "en": "Registration terms and conditions"
+      },
+      "description": {
+        "fr": "Toute annulation à moins de sept jours de la session reste due.",
+        "en": "Cancellations made less than seven days before the session remain payable."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "inscription-formation-f16-o1",
+          "label": {
+            "fr": "J’accepte les conditions générales et la politique d’annulation",
+            "en": "I accept the terms and conditions and the cancellation policy"
+          }
+        },
+        {
+          "id": "inscription-formation-f16-o2",
+          "label": {
+            "fr": "Je souhaite être recontacté avant de confirmer",
+            "en": "I would like to be contacted before confirming"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "inscription-formation-rule1",
+      "conditions": [
+        {
+          "source_field_id": "inscription-formation-f13",
+          "operator": "equals",
+          "value": "inscription-formation-f13-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "inscription-formation-f14",
+      "rule_order": 0
+    },
+    {
+      "id": "inscription-formation-rule2",
+      "conditions": [
+        {
+          "source_field_id": "inscription-formation-f13",
+          "operator": "equals",
+          "value": "inscription-formation-f13-o3"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "inscription-formation-f14",
+      "rule_order": 1
+    }
+  ]
+}

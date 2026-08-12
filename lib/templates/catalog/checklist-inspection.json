@@ -1,0 +1,517 @@
+{
+  "id": "tpl-mooove-checklist-inspection",
+  "slug": "checklist-inspection",
+  "category": "Opérations & Conformité",
+  "icon": "SearchCheck",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Checklist d’inspection de site",
+    "en": "Site inspection checklist"
+  },
+  "description": {
+    "fr": "Dix points de contrôle à passer en revue lors de votre tournée, puis les observations, les photos et le verdict global de l’inspection.",
+    "en": "Ten control points to review during your walkthrough, then observations, photos and the overall inspection verdict."
+  },
+  "template_description": {
+    "fr": "Tournée d’inspection : 10 points de contrôle en matrice, non-conformités, photos, action corrective et verdict.",
+    "en": "Inspection walkthrough: 10 matrix control points, non-conformities, photos, corrective action and verdict."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "checklist-inspection-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Contexte de l’inspection",
+        "en": "Inspection context"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "checklist-inspection-f2",
+      "type": "dropdown",
+      "label": {
+        "fr": "Site inspecté",
+        "en": "Site inspected"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un site",
+        "en": "Select a site"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "checklist-inspection-f2-o1",
+          "label": {
+            "fr": "Siège — Ébène",
+            "en": "Head office — Ébène"
+          }
+        },
+        {
+          "id": "checklist-inspection-f2-o2",
+          "label": {
+            "fr": "Entrepôt — Riche Terre",
+            "en": "Warehouse — Riche Terre"
+          }
+        },
+        {
+          "id": "checklist-inspection-f2-o3",
+          "label": {
+            "fr": "Atelier — Coromandel",
+            "en": "Workshop — Coromandel"
+          }
+        },
+        {
+          "id": "checklist-inspection-f2-o4",
+          "label": {
+            "fr": "Agence — Port-Louis",
+            "en": "Branch — Port-Louis"
+          }
+        },
+        {
+          "id": "checklist-inspection-f2-o5",
+          "label": {
+            "fr": "Agence — Grand Baie",
+            "en": "Branch — Grand Baie"
+          }
+        },
+        {
+          "id": "checklist-inspection-f2-o6",
+          "label": {
+            "fr": "Site de production — Phoenix",
+            "en": "Production site — Phoenix"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "checklist-inspection-f3",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom de l’inspecteur",
+        "en": "Inspector’s name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 80
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "checklist-inspection-f4",
+      "type": "date",
+      "label": {
+        "fr": "Date de l’inspection",
+        "en": "Inspection date"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "checklist-inspection-f5",
+      "type": "section_break",
+      "label": {
+        "fr": "Points de contrôle",
+        "en": "Control points"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "checklist-inspection-f6",
+      "type": "matrix",
+      "label": {
+        "fr": "Évaluez chaque point de contrôle",
+        "en": "Assess each control point"
+      },
+      "description": {
+        "fr": "Une seule réponse par ligne. Détaillez toute non-conformité à l’étape suivante.",
+        "en": "One answer per row. Detail any non-conformity in the next step."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "matrix_mode": "single"
+      },
+      "options": [
+        {
+          "id": "checklist-inspection-f6-o1",
+          "label": {
+            "fr": "Conforme",
+            "en": "Compliant"
+          }
+        },
+        {
+          "id": "checklist-inspection-f6-o2",
+          "label": {
+            "fr": "Non conforme",
+            "en": "Non-compliant"
+          }
+        },
+        {
+          "id": "checklist-inspection-f6-o3",
+          "label": {
+            "fr": "À surveiller",
+            "en": "To monitor"
+          }
+        },
+        {
+          "id": "checklist-inspection-f6-o4",
+          "label": {
+            "fr": "Non applicable",
+            "en": "Not applicable"
+          }
+        }
+      ],
+      "rows": [
+        {
+          "id": "checklist-inspection-f6-r1",
+          "label": {
+            "fr": "Propreté et rangement des locaux",
+            "en": "Cleanliness and tidiness of the premises"
+          }
+        },
+        {
+          "id": "checklist-inspection-f6-r2",
+          "label": {
+            "fr": "Signalisation de sécurité visible et lisible",
+            "en": "Safety signage visible and legible"
+          }
+        },
+        {
+          "id": "checklist-inspection-f6-r3",
+          "label": {
+            "fr": "Extincteurs accessibles et contrôlés",
+            "en": "Fire extinguishers accessible and checked"
+          }
+        },
+        {
+          "id": "checklist-inspection-f6-r4",
+          "label": {
+            "fr": "Issues de secours dégagées",
+            "en": "Emergency exits kept clear"
+          }
+        },
+        {
+          "id": "checklist-inspection-f6-r5",
+          "label": {
+            "fr": "Équipements de protection individuelle disponibles",
+            "en": "Personal protective equipment available"
+          }
+        },
+        {
+          "id": "checklist-inspection-f6-r6",
+          "label": {
+            "fr": "Éclairage suffisant, y compris de secours",
+            "en": "Adequate lighting, including emergency lighting"
+          }
+        },
+        {
+          "id": "checklist-inspection-f6-r7",
+          "label": {
+            "fr": "État des sols et absence de risque de chute",
+            "en": "Floor condition and absence of slip or trip hazards"
+          }
+        },
+        {
+          "id": "checklist-inspection-f6-r8",
+          "label": {
+            "fr": "Stockage conforme des produits dangereux",
+            "en": "Compliant storage of hazardous products"
+          }
+        },
+        {
+          "id": "checklist-inspection-f6-r9",
+          "label": {
+            "fr": "Trousse de premiers secours complète",
+            "en": "First-aid kit complete"
+          }
+        },
+        {
+          "id": "checklist-inspection-f6-r10",
+          "label": {
+            "fr": "Affichage obligatoire à jour",
+            "en": "Mandatory notices up to date"
+          }
+        }
+      ]
+    },
+    {
+      "id": "checklist-inspection-f7",
+      "type": "section_break",
+      "label": {
+        "fr": "Observations",
+        "en": "Observations"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "checklist-inspection-f8",
+      "type": "long_text",
+      "label": {
+        "fr": "Détail des non-conformités constatées",
+        "en": "Details of the non-conformities observed"
+      },
+      "description": {
+        "fr": "Reprenez chaque point signalé « non conforme » ou « à surveiller » et précisez le constat.",
+        "en": "Go through each point marked “non-compliant” or “to monitor” and describe what you found."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 1500
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "checklist-inspection-f9",
+      "type": "file",
+      "label": {
+        "fr": "Photographies prises pendant l’inspection",
+        "en": "Photographs taken during the inspection"
+      },
+      "description": {
+        "fr": "PNG ou JPG, 25 Mo maximum par fichier.",
+        "en": "PNG or JPG, 25 MB maximum per file."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "png",
+          "jpg"
+        ],
+        "max_file_size_mb": 25
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "checklist-inspection-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "Une action corrective est-elle nécessaire ?",
+        "en": "Is corrective action required?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "checklist-inspection-f10-o1",
+          "label": {
+            "fr": "Oui, action corrective immédiate",
+            "en": "Yes, immediate corrective action"
+          }
+        },
+        {
+          "id": "checklist-inspection-f10-o2",
+          "label": {
+            "fr": "Oui, action à planifier",
+            "en": "Yes, action to be scheduled"
+          }
+        },
+        {
+          "id": "checklist-inspection-f10-o3",
+          "label": {
+            "fr": "Non, aucune action nécessaire",
+            "en": "No, no action needed"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "checklist-inspection-f11",
+      "type": "date",
+      "label": {
+        "fr": "Échéance de mise en conformité",
+        "en": "Deadline for correction"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "checklist-inspection-f12",
+      "type": "single_choice",
+      "label": {
+        "fr": "Verdict global de l’inspection",
+        "en": "Overall inspection verdict"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons",
+        "options_columns": 3
+      },
+      "options": [
+        {
+          "id": "checklist-inspection-f12-o1",
+          "label": {
+            "fr": "Conforme",
+            "en": "Compliant"
+          }
+        },
+        {
+          "id": "checklist-inspection-f12-o2",
+          "label": {
+            "fr": "Conforme avec réserves",
+            "en": "Compliant with reservations"
+          }
+        },
+        {
+          "id": "checklist-inspection-f12-o3",
+          "label": {
+            "fr": "Non conforme",
+            "en": "Non-compliant"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "checklist-inspection-rule1",
+      "conditions": [
+        {
+          "source_field_id": "checklist-inspection-f10",
+          "operator": "equals",
+          "value": "checklist-inspection-f10-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "checklist-inspection-f11",
+      "rule_order": 0
+    },
+    {
+      "id": "checklist-inspection-rule2",
+      "conditions": [
+        {
+          "source_field_id": "checklist-inspection-f10",
+          "operator": "equals",
+          "value": "checklist-inspection-f10-o2"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "checklist-inspection-f11",
+      "rule_order": 1
+    }
+  ]
+}

@@ -1,0 +1,715 @@
+{
+  "id": "tpl-mooove-voyage-sur-mesure",
+  "slug": "voyage-sur-mesure",
+  "category": "Réservations & Voyage",
+  "icon": "Plane",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Demande de voyage sur mesure",
+    "en": "Custom trip enquiry"
+  },
+  "description": {
+    "fr": "Racontez-nous le voyage que vous avez en tête. Un conseiller construit une proposition personnalisée et vous rappelle sous 48 heures ouvrées.",
+    "en": "Tell us about the trip you have in mind. An advisor builds a tailored proposal and calls you back within two working days."
+  },
+  "template_description": {
+    "fr": "Qualifiez une demande de voyage sur mesure : dates, voyageurs, budget, envies et contact.",
+    "en": "Qualify a bespoke travel enquiry: dates, travellers, budget, wishes and contact details."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "voyage-sur-mesure-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre voyage",
+        "en": "Your trip"
+      },
+      "description": {
+        "fr": "Où et quand ?",
+        "en": "Where and when?"
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Quelle destination, ou quelles destinations ?",
+        "en": "Which destination, or destinations?"
+      },
+      "description": {
+        "fr": "Même une idée vague suffit : « quelque part en Asie du Sud-Est ».",
+        "en": "A vague idea is fine: “somewhere in South-East Asia”."
+      },
+      "placeholder": {
+        "fr": "Maurice et La Réunion",
+        "en": "Mauritius and Réunion"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f3",
+      "type": "date",
+      "label": {
+        "fr": "Date de départ souhaitée",
+        "en": "Preferred departure date"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f4",
+      "type": "date",
+      "label": {
+        "fr": "Date de retour souhaitée",
+        "en": "Preferred return date"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f5",
+      "type": "single_choice",
+      "label": {
+        "fr": "Vos dates sont-elles flexibles ?",
+        "en": "Are your dates flexible?"
+      },
+      "description": {
+        "fr": "La flexibilité fait souvent baisser le prix des vols de façon significative.",
+        "en": "Flexibility often brings flight prices down significantly."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "voyage-sur-mesure-f5-o1",
+          "label": {
+            "fr": "Dates fixes",
+            "en": "Fixed dates"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f5-o2",
+          "label": {
+            "fr": "Flexibles de quelques jours",
+            "en": "Flexible by a few days"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f5-o3",
+          "label": {
+            "fr": "Flexibles de plusieurs semaines",
+            "en": "Flexible by several weeks"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f6",
+      "type": "section_break",
+      "label": {
+        "fr": "Vos voyageurs",
+        "en": "Your travellers"
+      },
+      "description": {
+        "fr": "Qui part, et avec quel budget ?",
+        "en": "Who is travelling, and on what budget?"
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f7",
+      "type": "number",
+      "label": {
+        "fr": "Nombre d’adultes",
+        "en": "Number of adults"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "2",
+        "en": "2"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "min": 1,
+        "max": 30,
+        "response_type": "integer",
+        "unit": "none"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f8",
+      "type": "number",
+      "label": {
+        "fr": "Nombre d’enfants",
+        "en": "Number of children"
+      },
+      "description": {
+        "fr": "Moins de 18 ans au moment du départ.",
+        "en": "Under 18 at the time of departure."
+      },
+      "placeholder": {
+        "fr": "0",
+        "en": "0"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "min": 0,
+        "max": 15,
+        "response_type": "integer",
+        "unit": "none"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f9",
+      "type": "short_text",
+      "label": {
+        "fr": "Âge des enfants au départ",
+        "en": "Children’s ages at departure"
+      },
+      "description": {
+        "fr": "Séparez par des virgules : les tarifs hôteliers en dépendent.",
+        "en": "Separate with commas: hotel rates depend on it."
+      },
+      "placeholder": {
+        "fr": "4, 9, 12",
+        "en": "4, 9, 12"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "Budget par personne, vols compris",
+        "en": "Budget per person, flights included"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "voyage-sur-mesure-f10-o1",
+          "label": {
+            "fr": "Moins de 40 000 MUR",
+            "en": "Under MUR 40,000"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f10-o2",
+          "label": {
+            "fr": "40 000 – 80 000 MUR",
+            "en": "MUR 40,000 – 80,000"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f10-o3",
+          "label": {
+            "fr": "80 000 – 150 000 MUR",
+            "en": "MUR 80,000 – 150,000"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f10-o4",
+          "label": {
+            "fr": "150 000 – 300 000 MUR",
+            "en": "MUR 150,000 – 300,000"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f10-o5",
+          "label": {
+            "fr": "Plus de 300 000 MUR",
+            "en": "Over MUR 300,000"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f10-o6",
+          "label": {
+            "fr": "Sans limite précise",
+            "en": "No firm limit"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f11",
+      "type": "section_break",
+      "label": {
+        "fr": "Vos envies",
+        "en": "Your wishes"
+      },
+      "description": {
+        "fr": "Le voyage dont vous rêvez, dans les grandes lignes.",
+        "en": "The trip you are dreaming of, in broad strokes."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f12",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quel style d’hébergement vous convient ?",
+        "en": "Which accommodation style suits you?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "voyage-sur-mesure-f12-o1",
+          "label": {
+            "fr": "Hôtel de charme",
+            "en": "Boutique hotel"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f12-o2",
+          "label": {
+            "fr": "Resort tout compris",
+            "en": "All-inclusive resort"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f12-o3",
+          "label": {
+            "fr": "Villa privée",
+            "en": "Private villa"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f12-o4",
+          "label": {
+            "fr": "Maison d’hôtes chez l’habitant",
+            "en": "Guest house with locals"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f12-o5",
+          "label": {
+            "fr": "Lodge nature ou écolodge",
+            "en": "Nature lodge or eco-lodge"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f12-o6",
+          "label": {
+            "fr": "Appartement en location",
+            "en": "Rented apartment"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f13",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quelles expériences ne voulez-vous manquer sous aucun prétexte ?",
+        "en": "Which experiences must not be missed?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "has_other": true,
+        "other_label": "Autre envie"
+      },
+      "options": [
+        {
+          "id": "voyage-sur-mesure-f13-o1",
+          "label": {
+            "fr": "Plages et farniente",
+            "en": "Beaches and doing nothing"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f13-o2",
+          "label": {
+            "fr": "Randonnée et nature",
+            "en": "Hiking and nature"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f13-o3",
+          "label": {
+            "fr": "Plongée et sports nautiques",
+            "en": "Diving and water sports"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f13-o4",
+          "label": {
+            "fr": "Gastronomie et marchés",
+            "en": "Food and markets"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f13-o5",
+          "label": {
+            "fr": "Culture, patrimoine et musées",
+            "en": "Culture, heritage and museums"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f13-o6",
+          "label": {
+            "fr": "Bien-être et spa",
+            "en": "Wellness and spa"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f13-o7",
+          "label": {
+            "fr": "Observation de la faune",
+            "en": "Wildlife watching"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f13-o8",
+          "label": {
+            "fr": "Vie nocturne",
+            "en": "Nightlife"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f14",
+      "type": "single_choice",
+      "label": {
+        "fr": "Ce voyage marque-t-il une occasion particulière ?",
+        "en": "Does this trip mark a special occasion?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "voyage-sur-mesure-f14-o1",
+          "label": {
+            "fr": "Non, pas d’occasion particulière",
+            "en": "No, no special occasion"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f14-o2",
+          "label": {
+            "fr": "Voyage de noces",
+            "en": "Honeymoon"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f14-o3",
+          "label": {
+            "fr": "Anniversaire",
+            "en": "Birthday"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f14-o4",
+          "label": {
+            "fr": "Anniversaire de mariage",
+            "en": "Wedding anniversary"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f14-o5",
+          "label": {
+            "fr": "Voyage en famille élargie",
+            "en": "Extended family trip"
+          }
+        },
+        {
+          "id": "voyage-sur-mesure-f14-o6",
+          "label": {
+            "fr": "Autre occasion",
+            "en": "Another occasion"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f15",
+      "type": "short_text",
+      "label": {
+        "fr": "Précisez l’occasion : nous aimerions la marquer comme il se doit",
+        "en": "Tell us more about the occasion: we would like to mark it properly"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Nos 20 ans de mariage, le 14 du mois",
+        "en": "Our 20th wedding anniversary, on the 14th"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f16",
+      "type": "long_text",
+      "label": {
+        "fr": "Allergies, régimes alimentaires ou contraintes médicales",
+        "en": "Allergies, dietary requirements or medical constraints"
+      },
+      "description": {
+        "fr": "Mobilité réduite, traitement en cours, allergies alimentaires : tout ce que les prestataires doivent savoir.",
+        "en": "Reduced mobility, ongoing treatment, food allergies: anything providers need to know."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f17",
+      "type": "section_break",
+      "label": {
+        "fr": "Vous contacter",
+        "en": "Contacting you"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f18",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f19",
+      "type": "email",
+      "label": {
+        "fr": "Email",
+        "en": "Email"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "vous@exemple.com",
+        "en": "you@example.com"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "voyage-sur-mesure-f20",
+      "type": "phone",
+      "label": {
+        "fr": "Téléphone",
+        "en": "Phone"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "default_country": "MU"
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "voyage-sur-mesure-rule1",
+      "conditions": [
+        {
+          "source_field_id": "voyage-sur-mesure-f8",
+          "operator": "greater_than",
+          "value": "0"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "voyage-sur-mesure-f9",
+      "rule_order": 0
+    },
+    {
+      "id": "voyage-sur-mesure-rule2",
+      "conditions": [
+        {
+          "source_field_id": "voyage-sur-mesure-f14",
+          "operator": "not_equals",
+          "value": "voyage-sur-mesure-f14-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "voyage-sur-mesure-f15",
+      "rule_order": 1
+    }
+  ]
+}

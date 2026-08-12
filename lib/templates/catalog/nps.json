@@ -1,0 +1,202 @@
+{
+  "id": "tpl-mooove-nps",
+  "slug": "nps",
+  "category": "Satisfaction client",
+  "icon": "Smile",
+  "display_mode": "typeform",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Sondage NPS",
+    "en": "NPS survey"
+  },
+  "description": {
+    "fr": "Une question de fond, deux questions de suivi. Trente secondes.",
+    "en": "One core question, two follow-ups. Thirty seconds."
+  },
+  "template_description": {
+    "fr": "Le Net Promoter Score dans sa forme classique, avec relance ciblée sur les notes faibles.",
+    "en": "The classic Net Promoter Score, with a targeted follow-up for low scores."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "nps-f1",
+      "type": "statement",
+      "label": {
+        "fr": "Votre avis en trente secondes",
+        "en": "Your view in thirty seconds"
+      },
+      "description": {
+        "fr": "Trois questions courtes, aucune obligation de laisser vos coordonnées. Chaque réponse est lue par l’équipe.",
+        "en": "Three short questions, no obligation to leave your details. Every answer is read by the team."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "show_title": true,
+        "alignment": "center"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "nps-f2",
+      "type": "nps",
+      "label": {
+        "fr": "Quelle est la probabilité que vous nous recommandiez à un proche ou à un collègue ?",
+        "en": "How likely are you to recommend us to a friend or colleague?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Pas du tout probable",
+        "nps_right_label": "Extrêmement probable"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "nps-f3",
+      "type": "long_text",
+      "label": {
+        "fr": "Qu’est-ce qui explique cette note ?",
+        "en": "What explains that score?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "La raison principale, en une ou deux phrases.",
+        "en": "The main reason, in a sentence or two."
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 700
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "nps-f4",
+      "type": "long_text",
+      "label": {
+        "fr": "Que faudrait-il pour que vous nous donniez un point de plus ?",
+        "en": "What would it take for us to earn one more point?"
+      },
+      "description": {
+        "fr": "Une seule amélioration, la plus utile pour vous.",
+        "en": "One single improvement — the one that matters most to you."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 700
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "nps-f5",
+      "type": "single_choice",
+      "label": {
+        "fr": "Souhaitez-vous que nous revenions vers vous à ce sujet ?",
+        "en": "Would you like us to get back to you about this?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "nps-f5-o1",
+          "label": {
+            "fr": "Oui, contactez-moi",
+            "en": "Yes, get in touch"
+          }
+        },
+        {
+          "id": "nps-f5-o2",
+          "label": {
+            "fr": "Non, merci",
+            "en": "No, thanks"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "nps-f6",
+      "type": "email",
+      "label": {
+        "fr": "Votre adresse e-mail",
+        "en": "Your email address"
+      },
+      "description": {
+        "fr": "Facultatif. Utilisée uniquement pour répondre à votre retour.",
+        "en": "Optional. Used only to respond to your feedback."
+      },
+      "placeholder": {
+        "fr": "prenom@exemple.mu",
+        "en": "first@example.mu"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "nps-rule1",
+      "conditions": [
+        {
+          "source_field_id": "nps-f2",
+          "operator": "less_than",
+          "value": "9"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "nps-f4",
+      "rule_order": 0
+    }
+  ]
+}

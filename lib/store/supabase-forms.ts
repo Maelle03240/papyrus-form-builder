@@ -1,6 +1,14 @@
 'use client';
 
-import type { Field, Form, MultilingualText, LogicRule } from '@/types';
+import type {
+  Field,
+  Form,
+  FormSettings,
+  FormTheme,
+  LogicRule,
+  MultilingualText,
+  NotificationSettings
+} from '@/types';
 import { createClient } from '@/lib/supabase/client';
 import { uniqueSlug } from '@/lib/utils';
 
@@ -860,6 +868,65 @@ export async function deleteTeamMember(teamId: string, userId: string): Promise<
 }
 
 /**
+ * Remappage des identifiants de champs cachés dans les objets JSON.
+ *
+ * `importForm` renumérote les champs, mais trois objets embarquent eux aussi des
+ * `field_id` et étaient recopiés tels quels : ils pointaient donc vers les champs
+ * du formulaire d'origine. Silencieux, et d'autant plus vicieux que rien
+ * n'échoue — le formulaire importé fonctionne, mais son anti-doublon surveille
+ * un champ qui appartient à un autre formulaire.
+ */
+type IdMap = Record<string, string>;
+
+const mapId = (id: string | undefined, m: IdMap) => (id ? (m[id] ?? id) : id);
+
+function remapSettings(settings: FormSettings, m: IdMap): FormSettings {
+  return { ...settings, duplicate_field_id: mapId(settings.duplicate_field_id, m) };
+}
+
+function remapNotifications(n: NotificationSettings, m: IdMap): NotificationSettings {
+  if (!n.respondent) return n;
+  return {
+    ...n,
+    respondent: { ...n.respondent, to_field_id: mapId(n.respondent.to_field_id, m) ?? '' }
+  };
+}
+
+function remapTheme(theme: FormTheme, m: IdMap): FormTheme {
+  const dashboard = theme.dashboard_config;
+  if (!dashboard) return theme;
+
+  return {
+    ...theme,
+    dashboard_config: {
+      ...dashboard,
+      chart_order: dashboard.chart_order?.map((id) => mapId(id, m) as string),
+      deleted_charts: dashboard.deleted_charts?.map((id) => mapId(id, m) as string),
+      chart_layout: dashboard.chart_layout?.map((item) => ({
+        ...item,
+        field_id: mapId(item.field_id, m) as string
+      })),
+      chart_titles: dashboard.chart_titles
+        ? Object.fromEntries(
+            Object.entries(dashboard.chart_titles).map(([key, value]) => [
+              mapId(key, m) as string,
+              value
+            ])
+          )
+        : undefined
+    }
+  };
+}
+
+const DEFAULT_IMPORT_THEME: FormTheme = {
+  bg: '#EFF9FE',
+  accent: '#052139',
+  font: 'Aktiv Grotesk',
+  banner_url: null,
+  dark_mode: false
+};
+
+/**
  * Importe un formulaire JSON dans Supabase en remappant tous les identifiants
  */
 export async function importForm(
@@ -900,7 +967,18 @@ export async function importForm(
         label: normalizeMultilingual(row.label)
       };
     }) : undefined;
-    
+
+    // Les sous-questions étaient propagées par spread, identifiants compris. Les
+    // colonnes de réponse suivent le format `[field_id]__[option]__[subfield_id]`
+    // (lib/submission-columns.ts) : deux formulaires partageant un identifiant de
+    // sous-question produiraient des colonnes qui se marchent dessus.
+    const mappedSubfields = field.subfields?.map((sf) => ({
+      ...sf,
+      id: uuid(),
+      options: (sf.options ?? []).map((o) => ({ ...o, id: uuid() })),
+      rows: sf.rows?.map((r) => ({ ...r, id: uuid() }))
+    }));
+
     return {
       ...field,
       id: newFieldId,
@@ -912,6 +990,7 @@ export async function importForm(
       validation: field.validation || {},
       options: mappedOptions,
       rows: mappedRows,
+      ...(mappedSubfields ? { subfields: mappedSubfields } : {}),
       field_order: index
     };
   });
@@ -952,23 +1031,29 @@ export async function importForm(
     title: formJson.title || 'Formulaire importé',
     slug: uniqueSlug(formJson.title || 'Formulaire importé'),
     description: formJson.description || '',
-    display_mode: formJson.display_mode || 'scroll',
+    // Les modèles du catalogue sont paginés par `section_break` : 'sections' est
+    // le mode qui les rend correctement, 'scroll' aplatissait toutes les pages.
+    display_mode: formJson.display_mode || 'sections',
     status: 'draft' as const,
     is_template: false,
+    // Volontairement `null` en dur, jamais `formJson.template_origin_id`.
+    // La colonne est un `uuid references papyrus.forms(id)` ; l'identifiant d'un
+    // modèle de catalogue est la chaîne `tpl-mooove-…`, qui n'est ni un uuid ni
+    // une ligne en base. Y écrire l'origine faisait échouer tout clonage de
+    // modèle global sur `22P02 invalid input syntax for type uuid`.
+    // L'origine est conservée dans `settings.template_origin_slug`.
     template_origin_id: null,
-    theme: formJson.theme || {
-      bg: '#EFF9FE',
-      accent: '#052139',
-      font: 'Aktiv Grotesk',
-      banner_url: null,
-      dark_mode: false
-    },
+    theme: remapTheme(formJson.theme ?? DEFAULT_IMPORT_THEME, fieldIdMap),
     access_type: formJson.access_type || 'public',
     access_password: formJson.access_password || null,
     languages: formJson.languages || ['fr'],
     default_language: formJson.default_language || 'fr',
+    save_and_resume: formJson.save_and_resume ?? true,
+    unique_email: formJson.unique_email ?? false,
     scoring_enabled: typeof formJson.scoring_enabled === 'boolean' ? formJson.scoring_enabled : false,
     show_score_to_respondent: typeof formJson.show_score_to_respondent === 'boolean' ? formJson.show_score_to_respondent : false,
+    settings: remapSettings(formJson.settings ?? {}, fieldIdMap),
+    notification_settings: remapNotifications(formJson.notification_settings ?? {}, fieldIdMap),
     published_at: null,
     closes_at: null,
     created_at: now,

@@ -1,0 +1,682 @@
+{
+  "id": "tpl-mooove-quiz-connaissances",
+  "slug": "quiz-connaissances",
+  "category": "Éducation & Quiz",
+  "icon": "Brain",
+  "display_mode": "typeform",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Quiz de connaissances — protection des données personnelles",
+    "en": "Knowledge quiz — personal data protection"
+  },
+  "description": {
+    "fr": "Dix questions pour vérifier vos bases en protection des données personnelles. Une seule bonne réponse par question, quatre points par bonne réponse, score affiché à la fin.",
+    "en": "Ten questions to check your grounding in personal data protection. One correct answer per question, four points each, score shown at the end."
+  },
+  "template_description": {
+    "fr": "Quiz noté de 10 questions sur le RGPD, prêt à publier ou à réécrire pour votre propre sujet.",
+    "en": "Scored 10-question GDPR quiz, ready to publish or rewrite for your own subject."
+  },
+  "scoring_enabled": true,
+  "show_score_to_respondent": true,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "quiz-connaissances-f1",
+      "type": "statement",
+      "label": {
+        "fr": "Testez vos bases en protection des données",
+        "en": "Test your data protection basics"
+      },
+      "description": {
+        "fr": "Dix questions à choix unique, une seule bonne réponse à chaque fois. Chaque bonne réponse vaut 4 points, soit 40 points au total. L’ordre des réponses change à chaque participation et votre score s’affiche dès la validation. Comptez environ cinq minutes.",
+        "en": "Ten single-answer questions, one correct answer each time. Every correct answer is worth 4 points, for a total of 40. The answer order changes on each attempt and your score appears as soon as you submit. Allow about five minutes."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "quiz-connaissances-fmedia",
+      "type": "image",
+      "label": {
+        "fr": "Prêt·e à tester vos connaissances ?",
+        "en": "Ready to test your knowledge?"
+      },
+      "description": {
+        "fr": "Illustration d’accueil du quiz — remplacez par votre visuel de marque.",
+        "en": "Quiz welcome illustration — replace with your own brand visual."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "creator_mode_enabled": true,
+        "respondent_mode_enabled": false,
+        "show_title": true,
+        "alignment": "center"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "quiz-connaissances-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Votre nom et prénom",
+        "en": "Your full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 80
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "quiz-connaissances-f3",
+      "type": "single_choice",
+      "label": {
+        "fr": "Que signifie l’acronyme RGPD ?",
+        "en": "What does the acronym GDPR stand for?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 1,
+        "randomize_options": true
+      },
+      "options": [
+        {
+          "id": "quiz-connaissances-f3-o1",
+          "label": {
+            "fr": "Référentiel général de la protection des données",
+            "en": "General Directory for the Protection of Data"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f3-o2",
+          "label": {
+            "fr": "Règlement général sur la protection des données",
+            "en": "General Data Protection Regulation"
+          },
+          "points": 4
+        },
+        {
+          "id": "quiz-connaissances-f3-o3",
+          "label": {
+            "fr": "Règlement gouvernemental de protection documentaire",
+            "en": "Governmental Document Protection Rule"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f3-o4",
+          "label": {
+            "fr": "Régime général de préservation des données",
+            "en": "General Data Preservation Directive"
+          },
+          "points": 0
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "quiz-connaissances-f4",
+      "type": "single_choice",
+      "label": {
+        "fr": "Qu’est-ce qu’une donnée à caractère personnel ?",
+        "en": "What is personal data?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 1,
+        "randomize_options": true
+      },
+      "options": [
+        {
+          "id": "quiz-connaissances-f4-o1",
+          "label": {
+            "fr": "Uniquement le nom, le prénom et l’adresse d’une personne",
+            "en": "Only a person’s first name, surname and address"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f4-o2",
+          "label": {
+            "fr": "Toute donnée détenue par le service des ressources humaines",
+            "en": "Any data held by the human resources department"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f4-o3",
+          "label": {
+            "fr": "Toute information relative à une entreprise ou à une personne",
+            "en": "Any information relating to a company or to a person"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f4-o4",
+          "label": {
+            "fr": "Toute information se rapportant à une personne physique identifiée ou identifiable",
+            "en": "Any information relating to an identified or identifiable natural person"
+          },
+          "points": 4
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "quiz-connaissances-f5",
+      "type": "single_choice",
+      "label": {
+        "fr": "Dans quel délai faut-il répondre à une personne qui exerce son droit d’accès ?",
+        "en": "Within what time must you answer a person exercising their right of access?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 1,
+        "randomize_options": true
+      },
+      "options": [
+        {
+          "id": "quiz-connaissances-f5-o1",
+          "label": {
+            "fr": "Un mois, prolongeable de deux mois si la demande est complexe",
+            "en": "One month, extendable by two months if the request is complex"
+          },
+          "points": 4
+        },
+        {
+          "id": "quiz-connaissances-f5-o2",
+          "label": {
+            "fr": "Quinze jours calendaires, sans prolongation possible",
+            "en": "Fifteen calendar days, with no possible extension"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f5-o3",
+          "label": {
+            "fr": "Six mois à compter de la réception de la demande",
+            "en": "Six months from receipt of the request"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f5-o4",
+          "label": {
+            "fr": "Aucun délai n’est fixé par le règlement",
+            "en": "The regulation sets no deadline"
+          },
+          "points": 0
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "quiz-connaissances-f6",
+      "type": "single_choice",
+      "label": {
+        "fr": "Sous quel délai une violation de données doit-elle être notifiée à l’autorité de contrôle ?",
+        "en": "Within what time must a data breach be notified to the supervisory authority?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 1,
+        "randomize_options": true
+      },
+      "options": [
+        {
+          "id": "quiz-connaissances-f6-o1",
+          "label": {
+            "fr": "Dès la clôture de l’enquête interne",
+            "en": "As soon as the internal investigation is closed"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f6-o2",
+          "label": {
+            "fr": "Dans les trente jours suivant la découverte",
+            "en": "Within thirty days of discovery"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f6-o3",
+          "label": {
+            "fr": "Dans les 72 heures après en avoir pris connaissance",
+            "en": "Within 72 hours of becoming aware of it"
+          },
+          "points": 4
+        },
+        {
+          "id": "quiz-connaissances-f6-o4",
+          "label": {
+            "fr": "Seulement si des données bancaires sont concernées",
+            "en": "Only if banking data is involved"
+          },
+          "points": 0
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "quiz-connaissances-f7",
+      "type": "single_choice",
+      "label": {
+        "fr": "Sur quelle base légale envoyer une newsletter commerciale à des prospects ?",
+        "en": "On what legal basis can you send a commercial newsletter to prospects?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 1,
+        "randomize_options": true
+      },
+      "options": [
+        {
+          "id": "quiz-connaissances-f7-o1",
+          "label": {
+            "fr": "L’intérêt légitime de l’entreprise, en toutes circonstances",
+            "en": "The company’s legitimate interest, in all circumstances"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f7-o2",
+          "label": {
+            "fr": "Le consentement libre, spécifique, éclairé et univoque",
+            "en": "Freely given, specific, informed and unambiguous consent"
+          },
+          "points": 4
+        },
+        {
+          "id": "quiz-connaissances-f7-o3",
+          "label": {
+            "fr": "L’exécution d’un contrat conclu avec le prospect",
+            "en": "The performance of a contract signed with the prospect"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f7-o4",
+          "label": {
+            "fr": "Une obligation légale d’information commerciale",
+            "en": "A legal obligation to provide commercial information"
+          },
+          "points": 0
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "quiz-connaissances-f8",
+      "type": "single_choice",
+      "label": {
+        "fr": "Que doit contenir le registre des activités de traitement ?",
+        "en": "What must the record of processing activities contain?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 1,
+        "randomize_options": true
+      },
+      "options": [
+        {
+          "id": "quiz-connaissances-f8-o1",
+          "label": {
+            "fr": "La liste nominative de toutes les personnes concernées",
+            "en": "A named list of every data subject concerned"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f8-o2",
+          "label": {
+            "fr": "Le budget informatique consacré à la sécurité",
+            "en": "The IT budget devoted to security"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f8-o3",
+          "label": {
+            "fr": "Uniquement les traitements confiés à des prestataires externes",
+            "en": "Only the processing entrusted to external providers"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f8-o4",
+          "label": {
+            "fr": "Les finalités, les catégories de données et de destinataires et les durées de conservation",
+            "en": "The purposes, the categories of data and recipients and the retention periods"
+          },
+          "points": 4
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "quiz-connaissances-f9",
+      "type": "single_choice",
+      "label": {
+        "fr": "Dans quel cas la désignation d’un délégué à la protection des données est-elle obligatoire ?",
+        "en": "When is appointing a data protection officer mandatory?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 1,
+        "randomize_options": true
+      },
+      "options": [
+        {
+          "id": "quiz-connaissances-f9-o1",
+          "label": {
+            "fr": "Pour un organisme public, ou en cas de suivi systématique à grande échelle ou de traitement à grande échelle de données sensibles",
+            "en": "For a public body, or for large-scale systematic monitoring or large-scale processing of sensitive data"
+          },
+          "points": 4
+        },
+        {
+          "id": "quiz-connaissances-f9-o2",
+          "label": {
+            "fr": "Dès que l’organisation compte plus de dix salariés",
+            "en": "As soon as the organisation has more than ten employees"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f9-o3",
+          "label": {
+            "fr": "Uniquement pour les entreprises du secteur bancaire",
+            "en": "Only for companies in the banking sector"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f9-o4",
+          "label": {
+            "fr": "Seulement en cas de transfert de données hors de l’Union européenne",
+            "en": "Only when data is transferred outside the European Union"
+          },
+          "points": 0
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "quiz-connaissances-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quand une analyse d’impact relative à la protection des données est-elle requise ?",
+        "en": "When is a data protection impact assessment required?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 1,
+        "randomize_options": true
+      },
+      "options": [
+        {
+          "id": "quiz-connaissances-f10-o1",
+          "label": {
+            "fr": "Avant la création de n’importe quel fichier, quel qu’il soit",
+            "en": "Before creating any file whatsoever"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f10-o2",
+          "label": {
+            "fr": "Après la mise en production, pour vérifier la conformité",
+            "en": "After go-live, to verify compliance"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f10-o3",
+          "label": {
+            "fr": "Lorsque le traitement est susceptible d’engendrer un risque élevé pour les droits et libertés des personnes",
+            "en": "When the processing is likely to result in a high risk to people’s rights and freedoms"
+          },
+          "points": 4
+        },
+        {
+          "id": "quiz-connaissances-f10-o4",
+          "label": {
+            "fr": "Uniquement sur demande écrite de l’autorité de contrôle",
+            "en": "Only at the written request of the supervisory authority"
+          },
+          "points": 0
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "quiz-connaissances-f11",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quel principe impose de ne collecter que les données strictement nécessaires ?",
+        "en": "Which principle requires collecting only strictly necessary data?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 1,
+        "randomize_options": true
+      },
+      "options": [
+        {
+          "id": "quiz-connaissances-f11-o1",
+          "label": {
+            "fr": "Le principe d’exactitude",
+            "en": "The accuracy principle"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f11-o2",
+          "label": {
+            "fr": "Le principe de minimisation des données",
+            "en": "The data minimisation principle"
+          },
+          "points": 4
+        },
+        {
+          "id": "quiz-connaissances-f11-o3",
+          "label": {
+            "fr": "Le principe de limitation de la conservation",
+            "en": "The storage limitation principle"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f11-o4",
+          "label": {
+            "fr": "Le principe d’intégrité et de confidentialité",
+            "en": "The integrity and confidentiality principle"
+          },
+          "points": 0
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "quiz-connaissances-f12",
+      "type": "single_choice",
+      "label": {
+        "fr": "Un prestataire qui héberge vos données clients pour votre compte est…",
+        "en": "A provider hosting your customer data on your behalf is…"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 1,
+        "randomize_options": true
+      },
+      "options": [
+        {
+          "id": "quiz-connaissances-f12-o1",
+          "label": {
+            "fr": "Un responsable de traitement indépendant",
+            "en": "An independent data controller"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f12-o2",
+          "label": {
+            "fr": "Un destinataire occasionnel, sans obligation particulière",
+            "en": "An occasional recipient with no specific obligations"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f12-o3",
+          "label": {
+            "fr": "Un tiers autorisé, hors du champ du règlement",
+            "en": "An authorised third party, outside the scope of the regulation"
+          },
+          "points": 0
+        },
+        {
+          "id": "quiz-connaissances-f12-o4",
+          "label": {
+            "fr": "Un sous-traitant, à encadrer par un contrat prévu à l’article 28",
+            "en": "A processor, to be governed by a contract under Article 28"
+          },
+          "points": 4
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

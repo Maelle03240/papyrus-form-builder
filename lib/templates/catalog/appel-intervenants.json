@@ -1,0 +1,473 @@
+{
+  "id": "tpl-mooove-appel-intervenants",
+  "slug": "appel-intervenants",
+  "category": "Événements",
+  "icon": "Mic",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Appel à intervenants",
+    "en": "Call for speakers"
+  },
+  "description": {
+    "fr": "Recevez les propositions d’intervention avec tout ce qu’il faut pour arbitrer le programme.",
+    "en": "Receive talk proposals with everything the committee needs to build the programme."
+  },
+  "template_description": {
+    "fr": "Biographie, résumé, format et supports : un dossier complet par intervenant, prêt à évaluer.",
+    "en": "Bio, abstract, format and materials: one complete, review-ready file per speaker."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "appel-intervenants-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Vous",
+        "en": "About you"
+      },
+      "description": {
+        "fr": "Les propositions sont examinées par le comité de programme sous quinze jours.",
+        "en": "Proposals are reviewed by the programme committee within fifteen days."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Prénom et nom",
+        "en": "First and last name"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f3",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail",
+        "en": "Email address"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "prenom@entreprise.mu",
+        "en": "name@company.com"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f4",
+      "type": "short_text",
+      "label": {
+        "fr": "Fonction et organisation",
+        "en": "Job title and organisation"
+      },
+      "description": {
+        "fr": "Tel que vous souhaitez le voir apparaître au programme.",
+        "en": "Exactly as you want it to appear in the programme."
+      },
+      "placeholder": {
+        "fr": "Directrice produit, Mooove",
+        "en": "Head of Product, Mooove"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f5",
+      "type": "long_text",
+      "label": {
+        "fr": "Votre biographie",
+        "en": "Your biography"
+      },
+      "description": {
+        "fr": "À la troisième personne, 600 caractères maximum. Elle sera publiée telle quelle.",
+        "en": "In the third person, 600 characters maximum. It will be published as written."
+      },
+      "placeholder": {
+        "fr": "Après dix ans passés à…",
+        "en": "After ten years spent…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f6",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre proposition",
+        "en": "Your proposal"
+      },
+      "description": {
+        "fr": "Une proposition par soumission. Vous pouvez remplir le formulaire plusieurs fois.",
+        "en": "One proposal per submission. Feel free to submit the form more than once."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f7",
+      "type": "short_text",
+      "label": {
+        "fr": "Titre de votre intervention",
+        "en": "Title of your talk"
+      },
+      "description": {
+        "fr": "Un titre clair vaut mieux qu’un titre malin.",
+        "en": "A clear title beats a clever one."
+      },
+      "placeholder": {
+        "fr": "Ce que trois ans de données clients nous ont appris",
+        "en": "What three years of customer data taught us"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f8",
+      "type": "long_text",
+      "label": {
+        "fr": "Résumé de l’intervention",
+        "en": "Talk abstract"
+      },
+      "description": {
+        "fr": "1 500 caractères maximum. Précisez le déroulé, les points clés et ce que le public en retirera.",
+        "en": "1,500 characters maximum. Outline the flow, the key points and what the audience will take away."
+      },
+      "placeholder": {
+        "fr": "En trois temps, cette intervention montre…",
+        "en": "In three parts, this talk shows…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1500
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f9",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quel format proposez-vous ?",
+        "en": "Which format are you proposing?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards"
+      },
+      "options": [
+        {
+          "id": "appel-intervenants-f9-o1",
+          "label": {
+            "fr": "Keynote de 30 minutes",
+            "en": "30-minute keynote"
+          }
+        },
+        {
+          "id": "appel-intervenants-f9-o2",
+          "label": {
+            "fr": "Atelier pratique de 60 minutes",
+            "en": "60-minute hands-on workshop"
+          }
+        },
+        {
+          "id": "appel-intervenants-f9-o3",
+          "label": {
+            "fr": "Table ronde",
+            "en": "Panel discussion"
+          }
+        },
+        {
+          "id": "appel-intervenants-f9-o4",
+          "label": {
+            "fr": "Lightning talk de 10 minutes",
+            "en": "10-minute lightning talk"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f10",
+      "type": "dropdown",
+      "label": {
+        "fr": "Dans quelle thématique s’inscrit votre intervention ?",
+        "en": "Which track does your talk belong to?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Choisissez une thématique",
+        "en": "Select a track"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "appel-intervenants-f10-o1",
+          "label": {
+            "fr": "Produit et innovation",
+            "en": "Product and innovation"
+          }
+        },
+        {
+          "id": "appel-intervenants-f10-o2",
+          "label": {
+            "fr": "Données et intelligence artificielle",
+            "en": "Data and artificial intelligence"
+          }
+        },
+        {
+          "id": "appel-intervenants-f10-o3",
+          "label": {
+            "fr": "Expérience client",
+            "en": "Customer experience"
+          }
+        },
+        {
+          "id": "appel-intervenants-f10-o4",
+          "label": {
+            "fr": "Marketing et croissance",
+            "en": "Marketing and growth"
+          }
+        },
+        {
+          "id": "appel-intervenants-f10-o5",
+          "label": {
+            "fr": "Technique et ingénierie",
+            "en": "Technology and engineering"
+          }
+        },
+        {
+          "id": "appel-intervenants-f10-o6",
+          "label": {
+            "fr": "Management et culture d’équipe",
+            "en": "Management and team culture"
+          }
+        },
+        {
+          "id": "appel-intervenants-f10-o7",
+          "label": {
+            "fr": "Entrepreneuriat à Maurice et dans l’océan Indien",
+            "en": "Entrepreneurship in Mauritius and the Indian Ocean"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f11",
+      "type": "single_choice",
+      "label": {
+        "fr": "À quel niveau d’expérience s’adresse votre intervention ?",
+        "en": "What audience experience level is your talk aimed at?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "appel-intervenants-f11-o1",
+          "label": {
+            "fr": "Débutant : aucune connaissance préalable",
+            "en": "Beginner: no prior knowledge needed"
+          }
+        },
+        {
+          "id": "appel-intervenants-f11-o2",
+          "label": {
+            "fr": "Intermédiaire : pratique régulière du sujet",
+            "en": "Intermediate: regular practice of the topic"
+          }
+        },
+        {
+          "id": "appel-intervenants-f11-o3",
+          "label": {
+            "fr": "Avancé : spécialistes du domaine",
+            "en": "Advanced: specialists in the field"
+          }
+        },
+        {
+          "id": "appel-intervenants-f11-o4",
+          "label": {
+            "fr": "Tous niveaux",
+            "en": "All levels"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f12",
+      "type": "section_break",
+      "label": {
+        "fr": "Éléments complémentaires",
+        "en": "Supporting material"
+      },
+      "description": {
+        "fr": "Facultatif, mais ces éléments pèsent réellement dans la sélection.",
+        "en": "Optional, but these genuinely weigh in the selection."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f13",
+      "type": "url",
+      "label": {
+        "fr": "Lien vers une intervention précédente",
+        "en": "Link to a previous talk"
+      },
+      "description": {
+        "fr": "Une vidéo, un enregistrement de conférence ou un podcast.",
+        "en": "A video, a conference recording or a podcast."
+      },
+      "placeholder": {
+        "fr": "https://…",
+        "en": "https://…"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f14",
+      "type": "image",
+      "label": {
+        "fr": "Votre photo d’intervenant",
+        "en": "Your speaker photo"
+      },
+      "description": {
+        "fr": "Portrait haute résolution, format carré de préférence. 25 Mo maximum.",
+        "en": "High-resolution headshot, ideally square. 25 MB maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "creator_mode_enabled": false,
+        "respondent_mode_enabled": true,
+        "max_file_size_mb": 25
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "appel-intervenants-f15",
+      "type": "file",
+      "label": {
+        "fr": "Support ou plan détaillé de l’intervention",
+        "en": "Slides or detailed outline"
+      },
+      "description": {
+        "fr": "Formats acceptés : PDF ou PPTX, 20 Mo maximum. Une version de travail suffit.",
+        "en": "Accepted formats: PDF or PPTX, 20 MB maximum. A work in progress is fine."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "pdf",
+          "pptx"
+        ],
+        "max_file_size_mb": 20
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

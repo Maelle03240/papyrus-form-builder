@@ -1,0 +1,433 @@
+{
+  "id": "tpl-mooove-candidature-spontanee",
+  "slug": "candidature-spontanee",
+  "category": "RH & Recrutement",
+  "icon": "UserPlus",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Candidature spontanée",
+    "en": "Open application"
+  },
+  "description": {
+    "fr": "Aucun poste ouvert ne vous correspond ? Présentez-vous : nous conservons les bonnes candidatures douze mois.",
+    "en": "No open role fits you? Introduce yourself — we keep strong applications on file for twelve months."
+  },
+  "template_description": {
+    "fr": "Candidature libre en trois étapes : identité, parcours avec CV et LinkedIn, motivation et prétentions.",
+    "en": "Three-step open application: identity, background with CV and LinkedIn, motivation and salary expectation."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "candidature-spontanee-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Identité",
+        "en": "About you"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-spontanee-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Prénom",
+        "en": "First name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Yannick",
+        "en": "Yannick"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 60
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-spontanee-f3",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom",
+        "en": "Last name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sooprayen",
+        "en": "Sooprayen"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 60
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-spontanee-f4",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail",
+        "en": "Email address"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "yannick@exemple.mu",
+        "en": "yannick@example.mu"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-spontanee-f5",
+      "type": "phone",
+      "label": {
+        "fr": "Téléphone",
+        "en": "Phone number"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "5xxx xxxx",
+        "en": "5xxx xxxx"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "default_country": "MU"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-spontanee-f6",
+      "type": "section_break",
+      "label": {
+        "fr": "Parcours",
+        "en": "Background"
+      },
+      "description": {
+        "fr": "Le CV suffit, les liens sont un plus.",
+        "en": "The CV is enough; links are a bonus."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-spontanee-f7",
+      "type": "file",
+      "label": {
+        "fr": "Votre CV",
+        "en": "Your CV"
+      },
+      "description": {
+        "fr": "PDF ou Word, 10 Mo maximum.",
+        "en": "PDF or Word, 10 MB maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "pdf",
+          "doc",
+          "docx"
+        ],
+        "max_file_size_mb": 10
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-spontanee-f8",
+      "type": "url",
+      "label": {
+        "fr": "Profil LinkedIn ou portfolio",
+        "en": "LinkedIn profile or portfolio"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "https://www.linkedin.com/in/…",
+        "en": "https://www.linkedin.com/in/…"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-spontanee-f9",
+      "type": "dropdown",
+      "label": {
+        "fr": "Domaine dans lequel vous souhaitez travailler",
+        "en": "Field you would like to work in"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Choisissez un domaine",
+        "en": "Pick a field"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "candidature-spontanee-f9-o1",
+          "label": {
+            "fr": "Design et création",
+            "en": "Design and creative"
+          }
+        },
+        {
+          "id": "candidature-spontanee-f9-o2",
+          "label": {
+            "fr": "Développement web",
+            "en": "Web development"
+          }
+        },
+        {
+          "id": "candidature-spontanee-f9-o3",
+          "label": {
+            "fr": "Marketing et contenu",
+            "en": "Marketing and content"
+          }
+        },
+        {
+          "id": "candidature-spontanee-f9-o4",
+          "label": {
+            "fr": "Gestion de projet",
+            "en": "Project management"
+          }
+        },
+        {
+          "id": "candidature-spontanee-f9-o5",
+          "label": {
+            "fr": "Commercial et relation client",
+            "en": "Sales and client relations"
+          }
+        },
+        {
+          "id": "candidature-spontanee-f9-o6",
+          "label": {
+            "fr": "Administration et finance",
+            "en": "Administration and finance"
+          }
+        },
+        {
+          "id": "candidature-spontanee-f9-o7",
+          "label": {
+            "fr": "Production audiovisuelle",
+            "en": "Audiovisual production"
+          }
+        },
+        {
+          "id": "candidature-spontanee-f9-o8",
+          "label": {
+            "fr": "Autre domaine",
+            "en": "Another field"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "candidature-spontanee-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "Années d’expérience dans ce domaine",
+        "en": "Years of experience in that field"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "candidature-spontanee-f10-o1",
+          "label": {
+            "fr": "Moins de 1 an",
+            "en": "Less than 1 year"
+          }
+        },
+        {
+          "id": "candidature-spontanee-f10-o2",
+          "label": {
+            "fr": "1 à 3 ans",
+            "en": "1 to 3 years"
+          }
+        },
+        {
+          "id": "candidature-spontanee-f10-o3",
+          "label": {
+            "fr": "3 à 7 ans",
+            "en": "3 to 7 years"
+          }
+        },
+        {
+          "id": "candidature-spontanee-f10-o4",
+          "label": {
+            "fr": "Plus de 7 ans",
+            "en": "More than 7 years"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "candidature-spontanee-f11",
+      "type": "section_break",
+      "label": {
+        "fr": "Motivation",
+        "en": "Motivation"
+      },
+      "description": {
+        "fr": "La partie que nous lisons en premier.",
+        "en": "The part we read first."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-spontanee-f12",
+      "type": "long_text",
+      "label": {
+        "fr": "Pourquoi souhaitez-vous nous rejoindre ?",
+        "en": "Why do you want to join us?"
+      },
+      "description": {
+        "fr": "Dites-nous ce que vous voulez apporter et ce que vous cherchez à apprendre.",
+        "en": "Tell us what you would bring and what you want to learn."
+      },
+      "placeholder": {
+        "fr": "Ce qui m’attire chez vous, c’est…",
+        "en": "What draws me to your team is…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1500
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-spontanee-f13",
+      "type": "date",
+      "label": {
+        "fr": "Date de disponibilité",
+        "en": "Available from"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-spontanee-f14",
+      "type": "short_text",
+      "label": {
+        "fr": "Prétentions salariales mensuelles brutes",
+        "en": "Expected gross monthly salary"
+      },
+      "description": {
+        "fr": "En roupies mauriciennes, un montant net d’ambiguïté nous fait gagner du temps.",
+        "en": "In Mauritian rupees — a clear figure saves everyone time."
+      },
+      "placeholder": {
+        "fr": "45000",
+        "en": "45000"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "response_type": "integer",
+        "unit": "mur",
+        "min": 0
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

@@ -1,0 +1,466 @@
+{
+  "id": "tpl-mooove-demande-devis",
+  "slug": "demande-devis",
+  "category": "Contact & Leads",
+  "icon": "FileText",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Demande de devis",
+    "en": "Quote request"
+  },
+  "description": {
+    "fr": "Trois étapes, deux minutes : nous revenons vers vous avec une proposition chiffrée sous 48 heures.",
+    "en": "Three steps, two minutes: we come back with a costed proposal within 48 hours."
+  },
+  "template_description": {
+    "fr": "Collecte tout ce qu’il faut pour chiffrer : besoin, budget, échéance et brief en pièce jointe.",
+    "en": "Captures everything needed to price a job: scope, budget, deadline and an attached brief."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "demande-devis-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Vos coordonnées",
+        "en": "Your details"
+      },
+      "description": {
+        "fr": "Pour vous adresser la proposition et en discuter si besoin.",
+        "en": "So we can send you the proposal and discuss it if needed."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-devis-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Jean-Marc Appadoo",
+        "en": "Jean-Marc Appadoo"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 80
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-devis-f3",
+      "type": "short_text",
+      "label": {
+        "fr": "Société",
+        "en": "Company"
+      },
+      "description": {
+        "fr": "Laissez vide si vous êtes un particulier.",
+        "en": "Leave blank if you are an individual."
+      },
+      "placeholder": {
+        "fr": "Nom de votre entreprise",
+        "en": "Your company name"
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {
+        "max": 100
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-devis-f4",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail",
+        "en": "Email address"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "jm@exemple.mu",
+        "en": "jm@example.mu"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-devis-f5",
+      "type": "phone",
+      "label": {
+        "fr": "Téléphone",
+        "en": "Phone number"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "5xxx xxxx",
+        "en": "5xxx xxxx"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "default_country": "MU"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-devis-f6",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre besoin",
+        "en": "What you need"
+      },
+      "description": {
+        "fr": "Décrivez le projet aussi précisément que possible.",
+        "en": "Describe the project as precisely as you can."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-devis-f7",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Prestations souhaitées",
+        "en": "Services you are looking for"
+      },
+      "description": {
+        "fr": "Plusieurs réponses possibles.",
+        "en": "Select all that apply."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "has_other": true,
+        "other_label": "Autre prestation",
+        "selection_min": 1
+      },
+      "options": [
+        {
+          "id": "demande-devis-f7-o1",
+          "label": {
+            "fr": "Identité visuelle et charte graphique",
+            "en": "Brand identity and guidelines"
+          }
+        },
+        {
+          "id": "demande-devis-f7-o2",
+          "label": {
+            "fr": "Site web vitrine",
+            "en": "Marketing website"
+          }
+        },
+        {
+          "id": "demande-devis-f7-o3",
+          "label": {
+            "fr": "Boutique en ligne",
+            "en": "Online store"
+          }
+        },
+        {
+          "id": "demande-devis-f7-o4",
+          "label": {
+            "fr": "Application métier sur mesure",
+            "en": "Custom business application"
+          }
+        },
+        {
+          "id": "demande-devis-f7-o5",
+          "label": {
+            "fr": "Production photo et vidéo",
+            "en": "Photo and video production"
+          }
+        },
+        {
+          "id": "demande-devis-f7-o6",
+          "label": {
+            "fr": "Community management",
+            "en": "Social media management"
+          }
+        },
+        {
+          "id": "demande-devis-f7-o7",
+          "label": {
+            "fr": "Campagne publicitaire",
+            "en": "Paid advertising campaign"
+          }
+        },
+        {
+          "id": "demande-devis-f7-o8",
+          "label": {
+            "fr": "Maintenance et hébergement",
+            "en": "Maintenance and hosting"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "demande-devis-f8",
+      "type": "long_text",
+      "label": {
+        "fr": "Décrivez votre projet",
+        "en": "Describe your project"
+      },
+      "description": {
+        "fr": "Objectifs, cible, existant, contraintes : tout ce qui nous aide à chiffrer juste.",
+        "en": "Goals, audience, what already exists, constraints — anything that helps us price it right."
+      },
+      "placeholder": {
+        "fr": "Nous lançons une nouvelle gamme et souhaitons refondre notre site…",
+        "en": "We are launching a new range and want to rebuild our website…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 2000
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-devis-f9",
+      "type": "file",
+      "label": {
+        "fr": "Brief ou cahier des charges",
+        "en": "Brief or specification document"
+      },
+      "description": {
+        "fr": "Facultatif. PDF, Word, PowerPoint ou archive ZIP, 15 Mo maximum.",
+        "en": "Optional. PDF, Word, PowerPoint or ZIP archive, 15 MB maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "pdf",
+          "doc",
+          "docx",
+          "ppt",
+          "pptx",
+          "zip"
+        ],
+        "max_file_size_mb": 15
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-devis-f10",
+      "type": "section_break",
+      "label": {
+        "fr": "Budget et délais",
+        "en": "Budget and timing"
+      },
+      "description": {
+        "fr": "Un ordre de grandeur suffit : il nous évite de vous proposer hors cible.",
+        "en": "A ballpark is enough — it keeps our proposal in the right range."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-devis-f11",
+      "type": "single_choice",
+      "label": {
+        "fr": "Budget envisagé",
+        "en": "Budget range"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "demande-devis-f11-o1",
+          "label": {
+            "fr": "Moins de 50 000 MUR",
+            "en": "Under MUR 50,000"
+          }
+        },
+        {
+          "id": "demande-devis-f11-o2",
+          "label": {
+            "fr": "50 000 à 150 000 MUR",
+            "en": "MUR 50,000 to 150,000"
+          }
+        },
+        {
+          "id": "demande-devis-f11-o3",
+          "label": {
+            "fr": "150 000 à 400 000 MUR",
+            "en": "MUR 150,000 to 400,000"
+          }
+        },
+        {
+          "id": "demande-devis-f11-o4",
+          "label": {
+            "fr": "Plus de 400 000 MUR",
+            "en": "Over MUR 400,000"
+          }
+        },
+        {
+          "id": "demande-devis-f11-o5",
+          "label": {
+            "fr": "Je ne sais pas encore",
+            "en": "Not sure yet"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "demande-devis-f12",
+      "type": "date",
+      "label": {
+        "fr": "Date de livraison souhaitée",
+        "en": "Target delivery date"
+      },
+      "description": {
+        "fr": "Indiquez une date même approximative.",
+        "en": "An approximate date is fine."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-devis-f13",
+      "type": "dropdown",
+      "label": {
+        "fr": "Comment nous avez-vous connus ?",
+        "en": "How did you hear about us?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Choisissez une réponse",
+        "en": "Pick an answer"
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "demande-devis-f13-o1",
+          "label": {
+            "fr": "Recommandation d’un client",
+            "en": "Referral from a client"
+          }
+        },
+        {
+          "id": "demande-devis-f13-o2",
+          "label": {
+            "fr": "Recherche Google",
+            "en": "Google search"
+          }
+        },
+        {
+          "id": "demande-devis-f13-o3",
+          "label": {
+            "fr": "Réseaux sociaux",
+            "en": "Social media"
+          }
+        },
+        {
+          "id": "demande-devis-f13-o4",
+          "label": {
+            "fr": "Événement ou salon",
+            "en": "Event or trade show"
+          }
+        },
+        {
+          "id": "demande-devis-f13-o5",
+          "label": {
+            "fr": "Presse ou article",
+            "en": "Press or article"
+          }
+        },
+        {
+          "id": "demande-devis-f13-o6",
+          "label": {
+            "fr": "Autre",
+            "en": "Other"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

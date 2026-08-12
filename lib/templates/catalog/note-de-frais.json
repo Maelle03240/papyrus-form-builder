@@ -1,0 +1,491 @@
+{
+  "id": "tpl-mooove-note-de-frais",
+  "slug": "note-de-frais",
+  "category": "Vie interne",
+  "icon": "Receipt",
+  "display_mode": "sections",
+  "feasibility": "degraded",
+  "feasibility_note": {
+    "fr": "Papyrus n’a ni groupe répétable ni champ calculé : une soumission correspond à une seule ligne de dépense et le total est saisi à la main — un champ `repeater` et un champ formule lèveraient la limite.",
+    "en": "Papyrus has no repeating group and no calculated field, so one submission equals one expense line and the total is typed manually — a `repeater` field and a formula field would remove the limit."
+  },
+  "title": {
+    "fr": "Note de frais",
+    "en": "Expense claim"
+  },
+  "description": {
+    "fr": "Une dépense par formulaire. Les demandes reçues avant le 25 du mois sont remboursées avec la paie du mois suivant.",
+    "en": "One expense per form. Claims received before the 25th are reimbursed with the following month’s payroll."
+  },
+  "template_description": {
+    "fr": "Collectez les notes de frais avec justificatif : catégorie, montant en roupies, code projet et pièce jointe.",
+    "en": "Collect expense claims with proof: category, amount in rupees, project code and attached receipt."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "note-de-frais-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Identification",
+        "en": "Your details"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "note-de-frais-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Priya Ramdhun",
+        "en": "Priya Ramdhun"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 120
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "note-de-frais-f3",
+      "type": "dropdown",
+      "label": {
+        "fr": "Département",
+        "en": "Department"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un département",
+        "en": "Select a department"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "note-de-frais-f3-o1",
+          "label": {
+            "fr": "Direction",
+            "en": "Management"
+          }
+        },
+        {
+          "id": "note-de-frais-f3-o2",
+          "label": {
+            "fr": "Ventes",
+            "en": "Sales"
+          }
+        },
+        {
+          "id": "note-de-frais-f3-o3",
+          "label": {
+            "fr": "Marketing",
+            "en": "Marketing"
+          }
+        },
+        {
+          "id": "note-de-frais-f3-o4",
+          "label": {
+            "fr": "Technique",
+            "en": "Engineering"
+          }
+        },
+        {
+          "id": "note-de-frais-f3-o5",
+          "label": {
+            "fr": "Opérations",
+            "en": "Operations"
+          }
+        },
+        {
+          "id": "note-de-frais-f3-o6",
+          "label": {
+            "fr": "Finance et administration",
+            "en": "Finance and administration"
+          }
+        },
+        {
+          "id": "note-de-frais-f3-o7",
+          "label": {
+            "fr": "Service client",
+            "en": "Customer service"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "note-de-frais-f4",
+      "type": "email",
+      "label": {
+        "fr": "Votre e-mail professionnel",
+        "en": "Your work email"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "prenom.nom@entreprise.mu",
+        "en": "first.last@company.mu"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "note-de-frais-f5",
+      "type": "section_break",
+      "label": {
+        "fr": "Dépenses",
+        "en": "Expense"
+      },
+      "description": {
+        "fr": "Un formulaire par dépense. Pour trois dépenses, envoyez trois formulaires.",
+        "en": "One form per expense. For three expenses, send three forms."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "note-de-frais-f6",
+      "type": "dropdown",
+      "label": {
+        "fr": "Catégorie de dépense",
+        "en": "Expense category"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une catégorie",
+        "en": "Select a category"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "note-de-frais-f6-o1",
+          "label": {
+            "fr": "Transport et déplacements",
+            "en": "Travel and transport"
+          }
+        },
+        {
+          "id": "note-de-frais-f6-o2",
+          "label": {
+            "fr": "Carburant",
+            "en": "Fuel"
+          }
+        },
+        {
+          "id": "note-de-frais-f6-o3",
+          "label": {
+            "fr": "Hébergement",
+            "en": "Accommodation"
+          }
+        },
+        {
+          "id": "note-de-frais-f6-o4",
+          "label": {
+            "fr": "Repas d’affaires",
+            "en": "Business meals"
+          }
+        },
+        {
+          "id": "note-de-frais-f6-o5",
+          "label": {
+            "fr": "Fournitures de bureau",
+            "en": "Office supplies"
+          }
+        },
+        {
+          "id": "note-de-frais-f6-o6",
+          "label": {
+            "fr": "Téléphonie et internet",
+            "en": "Phone and internet"
+          }
+        },
+        {
+          "id": "note-de-frais-f6-o7",
+          "label": {
+            "fr": "Frais de représentation",
+            "en": "Client entertainment"
+          }
+        },
+        {
+          "id": "note-de-frais-f6-o8",
+          "label": {
+            "fr": "Formation et documentation",
+            "en": "Training and reference material"
+          }
+        },
+        {
+          "id": "note-de-frais-f6-o9",
+          "label": {
+            "fr": "Autre dépense professionnelle",
+            "en": "Other business expense"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "note-de-frais-f7",
+      "type": "date",
+      "label": {
+        "fr": "Date de la dépense",
+        "en": "Date of the expense"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "note-de-frais-f8",
+      "type": "number",
+      "label": {
+        "fr": "Montant de la dépense",
+        "en": "Expense amount"
+      },
+      "description": {
+        "fr": "Montant TTC figurant sur le justificatif.",
+        "en": "Amount including tax, as shown on the receipt."
+      },
+      "placeholder": {
+        "fr": "1250",
+        "en": "1250"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "response_type": "decimal",
+        "min": 0,
+        "unit": "mur"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "note-de-frais-f9",
+      "type": "long_text",
+      "label": {
+        "fr": "Motif professionnel de la dépense",
+        "en": "Business purpose of the expense"
+      },
+      "description": {
+        "fr": "Qui, quoi, pourquoi. « Déjeuner » ne suffit pas.",
+        "en": "Who, what, why. “Lunch” is not enough."
+      },
+      "placeholder": {
+        "fr": "Déjeuner de travail avec le client Ocean Freight, préparation du renouvellement de contrat.",
+        "en": "Working lunch with client Ocean Freight, preparing the contract renewal."
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "note-de-frais-f10",
+      "type": "short_text",
+      "label": {
+        "fr": "Code projet ou client",
+        "en": "Project or client code"
+      },
+      "description": {
+        "fr": "Laissez vide si la dépense ne se rattache à aucun projet.",
+        "en": "Leave blank if the expense is not tied to a project."
+      },
+      "placeholder": {
+        "fr": "PRJ-2026-014",
+        "en": "PRJ-2026-014"
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {
+        "max": 60
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "note-de-frais-f11",
+      "type": "dropdown",
+      "label": {
+        "fr": "Mode de paiement utilisé",
+        "en": "Payment method used"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un mode",
+        "en": "Select a method"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "note-de-frais-f11-o1",
+          "label": {
+            "fr": "Carte bancaire personnelle",
+            "en": "Personal bank card"
+          }
+        },
+        {
+          "id": "note-de-frais-f11-o2",
+          "label": {
+            "fr": "Espèces",
+            "en": "Cash"
+          }
+        },
+        {
+          "id": "note-de-frais-f11-o3",
+          "label": {
+            "fr": "Carte société",
+            "en": "Company card"
+          }
+        },
+        {
+          "id": "note-de-frais-f11-o4",
+          "label": {
+            "fr": "Virement depuis mon compte",
+            "en": "Transfer from my own account"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "note-de-frais-f12",
+      "type": "section_break",
+      "label": {
+        "fr": "Justificatifs",
+        "en": "Supporting documents"
+      },
+      "description": {
+        "fr": "Sans justificatif lisible, la demande ne peut pas être traitée.",
+        "en": "Without a legible receipt, the claim cannot be processed."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "note-de-frais-f13",
+      "type": "file",
+      "label": {
+        "fr": "Justificatif de la dépense",
+        "en": "Receipt for the expense"
+      },
+      "description": {
+        "fr": "Photo nette ou PDF de la facture. 10 Mo maximum.",
+        "en": "Sharp photo or PDF of the invoice. 10 MB maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "jpg",
+          "jpeg",
+          "png",
+          "pdf"
+        ],
+        "max_file_size_mb": 10
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "note-de-frais-f14",
+      "type": "number",
+      "label": {
+        "fr": "Total réclamé pour cette note",
+        "en": "Total claimed on this form"
+      },
+      "description": {
+        "fr": "À reporter à la main : ce champ n’est pas calculé automatiquement.",
+        "en": "Type it in yourself — this field is not calculated automatically."
+      },
+      "placeholder": {
+        "fr": "1250",
+        "en": "1250"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "response_type": "decimal",
+        "min": 0,
+        "unit": "mur"
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

@@ -1,0 +1,494 @@
+{
+  "id": "tpl-mooove-reclamation-client",
+  "slug": "reclamation-client",
+  "category": "Satisfaction client",
+  "icon": "AlertCircle",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Réclamation client",
+    "en": "Customer complaint"
+  },
+  "description": {
+    "fr": "Nous accusons réception sous 24 heures ouvrées et vous répondons sur le fond sous cinq jours ouvrés.",
+    "en": "We acknowledge your message within 24 working hours and give you a substantive answer within five working days."
+  },
+  "template_description": {
+    "fr": "Traitez les réclamations sans allers-retours : contexte, pièces jointes, résolution attendue et urgence.",
+    "en": "Handle complaints without back-and-forth: context, attachments, expected resolution and urgency."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "reclamation-client-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Vos coordonnées",
+        "en": "Your contact details"
+      },
+      "description": {
+        "fr": "Elles servent uniquement au traitement de votre dossier.",
+        "en": "Used only to process your case."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reclamation-client-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Priya Ramdhun",
+        "en": "Priya Ramdhun"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 120
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reclamation-client-f3",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail",
+        "en": "Email address"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "prenom@exemple.mu",
+        "en": "first@example.mu"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reclamation-client-f4",
+      "type": "phone",
+      "label": {
+        "fr": "Téléphone",
+        "en": "Phone number"
+      },
+      "description": {
+        "fr": "Pour les dossiers urgents, un appel est souvent plus rapide.",
+        "en": "For urgent cases, a call is often quicker."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {
+        "default_country": "MU"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reclamation-client-f5",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre réclamation",
+        "en": "Your complaint"
+      },
+      "description": {
+        "fr": "Plus votre description est précise, plus notre réponse sera rapide.",
+        "en": "The more precise your description, the faster our answer."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reclamation-client-f6",
+      "type": "dropdown",
+      "label": {
+        "fr": "Sur quoi porte votre réclamation ?",
+        "en": "What is your complaint about?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un motif",
+        "en": "Select a reason"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "reclamation-client-f6-o1",
+          "label": {
+            "fr": "Une commande ou une livraison",
+            "en": "An order or a delivery"
+          }
+        },
+        {
+          "id": "reclamation-client-f6-o2",
+          "label": {
+            "fr": "La qualité d’un produit",
+            "en": "Product quality"
+          }
+        },
+        {
+          "id": "reclamation-client-f6-o3",
+          "label": {
+            "fr": "Une erreur de facturation",
+            "en": "A billing error"
+          }
+        },
+        {
+          "id": "reclamation-client-f6-o4",
+          "label": {
+            "fr": "L’attitude ou la réponse d’un collaborateur",
+            "en": "A staff member’s attitude or response"
+          }
+        },
+        {
+          "id": "reclamation-client-f6-o5",
+          "label": {
+            "fr": "Un délai non respecté",
+            "en": "A missed deadline"
+          }
+        },
+        {
+          "id": "reclamation-client-f6-o6",
+          "label": {
+            "fr": "Une prestation non conforme à ce qui était annoncé",
+            "en": "A service that did not match what was promised"
+          }
+        },
+        {
+          "id": "reclamation-client-f6-o7",
+          "label": {
+            "fr": "Un autre motif",
+            "en": "Another reason"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "reclamation-client-f7",
+      "type": "short_text",
+      "label": {
+        "fr": "Numéro de commande",
+        "en": "Order number"
+      },
+      "description": {
+        "fr": "Il figure sur votre confirmation d’achat et sur le bon de livraison.",
+        "en": "It appears on your purchase confirmation and on the delivery note."
+      },
+      "placeholder": {
+        "fr": "CMD-2026-08145",
+        "en": "ORD-2026-08145"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 60
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reclamation-client-f8",
+      "type": "date",
+      "label": {
+        "fr": "Date de l’incident",
+        "en": "Date of the incident"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reclamation-client-f9",
+      "type": "long_text",
+      "label": {
+        "fr": "Décrivez ce qui s’est passé",
+        "en": "Describe what happened"
+      },
+      "description": {
+        "fr": "Les faits, dans l’ordre : ce qui était prévu, ce qui s’est produit, qui vous avez déjà contacté.",
+        "en": "The facts, in order: what was expected, what happened, who you have already contacted."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 2000
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reclamation-client-f10",
+      "type": "file",
+      "label": {
+        "fr": "Pièces justificatives",
+        "en": "Supporting evidence"
+      },
+      "description": {
+        "fr": "Photos, facture, échanges d’e-mails. 15 Mo maximum par fichier.",
+        "en": "Photos, invoice, email exchanges. 15 MB maximum per file."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "jpg",
+          "jpeg",
+          "png",
+          "pdf"
+        ],
+        "max_file_size_mb": 15
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reclamation-client-f11",
+      "type": "section_break",
+      "label": {
+        "fr": "Ce que vous attendez",
+        "en": "What you expect from us"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reclamation-client-f12",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quelle résolution souhaitez-vous ?",
+        "en": "What resolution are you looking for?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "reclamation-client-f12-o1",
+          "label": {
+            "fr": "Un remboursement",
+            "en": "A refund"
+          }
+        },
+        {
+          "id": "reclamation-client-f12-o2",
+          "label": {
+            "fr": "Un remplacement ou une reprise",
+            "en": "A replacement or redo"
+          }
+        },
+        {
+          "id": "reclamation-client-f12-o3",
+          "label": {
+            "fr": "Un avoir sur un prochain achat",
+            "en": "A credit on a future purchase"
+          }
+        },
+        {
+          "id": "reclamation-client-f12-o4",
+          "label": {
+            "fr": "Une explication et des excuses",
+            "en": "An explanation and an apology"
+          }
+        },
+        {
+          "id": "reclamation-client-f12-o5",
+          "label": {
+            "fr": "Une correction de ma facture",
+            "en": "A correction to my invoice"
+          }
+        },
+        {
+          "id": "reclamation-client-f12-o6",
+          "label": {
+            "fr": "Simplement signaler le problème",
+            "en": "Simply to report the problem"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "reclamation-client-f13",
+      "type": "number",
+      "label": {
+        "fr": "Montant contesté",
+        "en": "Amount in dispute"
+      },
+      "description": {
+        "fr": "Le montant que vous estimez devoir être remboursé.",
+        "en": "The amount you believe should be refunded."
+      },
+      "placeholder": {
+        "fr": "3500",
+        "en": "3500"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "response_type": "decimal",
+        "min": 0,
+        "unit": "mur"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reclamation-client-f14",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quel est le degré d’urgence ?",
+        "en": "How urgent is this?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 3
+      },
+      "options": [
+        {
+          "id": "reclamation-client-f14-o1",
+          "label": {
+            "fr": "Faible — je peux attendre",
+            "en": "Low — I can wait"
+          }
+        },
+        {
+          "id": "reclamation-client-f14-o2",
+          "label": {
+            "fr": "Moyen — sous quelques jours",
+            "en": "Medium — within a few days"
+          }
+        },
+        {
+          "id": "reclamation-client-f14-o3",
+          "label": {
+            "fr": "Élevé — mon activité est bloquée",
+            "en": "High — my business is blocked"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "reclamation-client-rule1",
+      "conditions": [
+        {
+          "source_field_id": "reclamation-client-f6",
+          "operator": "equals",
+          "value": "reclamation-client-f6-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "reclamation-client-f7",
+      "rule_order": 0
+    },
+    {
+      "id": "reclamation-client-rule2",
+      "conditions": [
+        {
+          "source_field_id": "reclamation-client-f12",
+          "operator": "equals",
+          "value": "reclamation-client-f12-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "reclamation-client-f13",
+      "rule_order": 1
+    }
+  ]
+}

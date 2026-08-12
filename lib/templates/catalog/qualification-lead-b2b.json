@@ -1,0 +1,517 @@
+{
+  "id": "tpl-mooove-qualification-lead-b2b",
+  "slug": "qualification-lead-b2b",
+  "category": "Contact & Leads",
+  "icon": "Target",
+  "display_mode": "sections",
+  "feasibility": "degraded",
+  "feasibility_note": {
+    "fr": "Aucun champ caché ni préremplissage par URL n’existe aujourd’hui : la source UTM et la campagne ne peuvent pas être captées silencieusement, il faut soit les demander au répondant, soit ajouter le type de champ « hidden ».",
+    "en": "There is no hidden field or URL prefill type yet, so UTM source and campaign cannot be captured silently — either ask the respondent, or build the missing hidden field type."
+  },
+  "title": {
+    "fr": "Qualification de lead B2B",
+    "en": "B2B lead qualification"
+  },
+  "description": {
+    "fr": "Quelques questions pour orienter votre demande vers le bon interlocuteur et préparer un échange utile.",
+    "en": "A few questions so we route your request to the right person and make the first call useful."
+  },
+  "template_description": {
+    "fr": "Qualification BANT en trois pages : taille, rôle, budget, échéance et solution en place, avec relances conditionnelles.",
+    "en": "Three-page BANT qualification: size, role, budget, timeline and current solution, with conditional follow-ups."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "qualification-lead-b2b-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre entreprise",
+        "en": "Your company"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "qualification-lead-b2b-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Raison sociale",
+        "en": "Company name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Ocean Trading Ltd",
+        "en": "Ocean Trading Ltd"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 120
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "qualification-lead-b2b-f3",
+      "type": "url",
+      "label": {
+        "fr": "Site web",
+        "en": "Website"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "https://exemple.mu",
+        "en": "https://example.mu"
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "qualification-lead-b2b-f4",
+      "type": "single_choice",
+      "label": {
+        "fr": "Effectif de l’entreprise",
+        "en": "Company headcount"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "qualification-lead-b2b-f4-o1",
+          "label": {
+            "fr": "1 à 10 personnes",
+            "en": "1 to 10 people"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f4-o2",
+          "label": {
+            "fr": "11 à 50 personnes",
+            "en": "11 to 50 people"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f4-o3",
+          "label": {
+            "fr": "51 à 200 personnes",
+            "en": "51 to 200 people"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f4-o4",
+          "label": {
+            "fr": "Plus de 200 personnes",
+            "en": "More than 200 people"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "qualification-lead-b2b-f5",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre rôle et votre besoin",
+        "en": "Your role and your need"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "qualification-lead-b2b-f6",
+      "type": "short_text",
+      "label": {
+        "fr": "Votre fonction",
+        "en": "Your job title"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Directrice des opérations",
+        "en": "Head of Operations"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 100
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "qualification-lead-b2b-f7",
+      "type": "email",
+      "label": {
+        "fr": "E-mail professionnel",
+        "en": "Work email"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "prenom.nom@societe.mu",
+        "en": "first.last@company.mu"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "qualification-lead-b2b-f8",
+      "type": "single_choice",
+      "label": {
+        "fr": "Votre rôle dans la décision",
+        "en": "Your role in the decision"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "qualification-lead-b2b-f8-o1",
+          "label": {
+            "fr": "Je décide seul·e",
+            "en": "I make the decision"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f8-o2",
+          "label": {
+            "fr": "Je décide avec un comité",
+            "en": "I decide with a committee"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f8-o3",
+          "label": {
+            "fr": "Je recommande, un tiers décide",
+            "en": "I recommend, someone else decides"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f8-o4",
+          "label": {
+            "fr": "Je me renseigne pour mon équipe",
+            "en": "I am gathering information for my team"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "qualification-lead-b2b-f9",
+      "type": "section_break",
+      "label": {
+        "fr": "Budget, échéance et existant",
+        "en": "Budget, timing and current setup"
+      },
+      "description": {
+        "fr": "Ces trois réponses déterminent la suite que nous pouvons donner.",
+        "en": "These three answers decide what we can propose next."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "qualification-lead-b2b-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "Budget annuel envisagé pour ce projet",
+        "en": "Annual budget considered for this project"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "qualification-lead-b2b-f10-o1",
+          "label": {
+            "fr": "Moins de 100 000 MUR",
+            "en": "Under MUR 100,000"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f10-o2",
+          "label": {
+            "fr": "100 000 à 500 000 MUR",
+            "en": "MUR 100,000 to 500,000"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f10-o3",
+          "label": {
+            "fr": "500 000 à 1 000 000 MUR",
+            "en": "MUR 500,000 to 1,000,000"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f10-o4",
+          "label": {
+            "fr": "Plus de 1 000 000 MUR",
+            "en": "Over MUR 1,000,000"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "qualification-lead-b2b-f11",
+      "type": "long_text",
+      "label": {
+        "fr": "Sur quels critères se jouera l’arbitrage ?",
+        "en": "What criteria will the decision come down to?"
+      },
+      "description": {
+        "fr": "Un budget de cette taille passe rarement en une seule signature : dites-nous qui valide et sur quoi.",
+        "en": "A budget this size rarely clears in one signature — tell us who approves it and on what grounds."
+      },
+      "placeholder": {
+        "fr": "Retour sur investissement à 18 mois, conformité, capacité d’intégration…",
+        "en": "18-month ROI, compliance, integration capability…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1000
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "qualification-lead-b2b-f12",
+      "type": "single_choice",
+      "label": {
+        "fr": "Échéance de mise en œuvre",
+        "en": "Implementation timeline"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "qualification-lead-b2b-f12-o1",
+          "label": {
+            "fr": "Ce mois-ci",
+            "en": "This month"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f12-o2",
+          "label": {
+            "fr": "Dans le trimestre",
+            "en": "Within the quarter"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f12-o3",
+          "label": {
+            "fr": "Dans les six mois",
+            "en": "Within six months"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f12-o4",
+          "label": {
+            "fr": "Pas de date arrêtée",
+            "en": "No fixed date"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "qualification-lead-b2b-f13",
+      "type": "single_choice",
+      "label": {
+        "fr": "Comment gérez-vous ce besoin aujourd’hui ?",
+        "en": "How do you handle this need today?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "qualification-lead-b2b-f13-o1",
+          "label": {
+            "fr": "En interne, avec nos propres outils",
+            "en": "Internally, with our own tools"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f13-o2",
+          "label": {
+            "fr": "Avec une solution du marché",
+            "en": "With an off-the-shelf solution"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f13-o3",
+          "label": {
+            "fr": "Avec un prestataire externe",
+            "en": "Through an external provider"
+          }
+        },
+        {
+          "id": "qualification-lead-b2b-f13-o4",
+          "label": {
+            "fr": "Le besoin n’est pas encore couvert",
+            "en": "The need is not covered yet"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "qualification-lead-b2b-f14",
+      "type": "short_text",
+      "label": {
+        "fr": "Quelle solution utilisez-vous, et que lui reprochez-vous ?",
+        "en": "Which solution do you use, and what is missing from it?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Nom de l’outil et principale limite rencontrée",
+        "en": "Tool name and the main limitation you hit"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 180
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "qualification-lead-b2b-rule1",
+      "conditions": [
+        {
+          "source_field_id": "qualification-lead-b2b-f10",
+          "operator": "equals",
+          "value": "qualification-lead-b2b-f10-o4"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "qualification-lead-b2b-f11",
+      "rule_order": 0
+    },
+    {
+      "id": "qualification-lead-b2b-rule2",
+      "conditions": [
+        {
+          "source_field_id": "qualification-lead-b2b-f13",
+          "operator": "equals",
+          "value": "qualification-lead-b2b-f13-o2"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "qualification-lead-b2b-f14",
+      "rule_order": 1
+    }
+  ]
+}

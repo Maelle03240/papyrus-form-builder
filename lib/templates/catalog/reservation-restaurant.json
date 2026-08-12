@@ -1,0 +1,420 @@
+{
+  "id": "tpl-mooove-reservation-restaurant",
+  "slug": "reservation-restaurant",
+  "category": "Réservations & Voyage",
+  "icon": "UtensilsCrossed",
+  "display_mode": "scroll",
+  "feasibility": "degraded",
+  "feasibility_note": {
+    "fr": "Comme pour la prise de rendez-vous, le créneau est une liste déroulante figée : Papyrus n’a pas de champ heure ni de vérification en temps réel des tables disponibles, la demande doit donc être confirmée manuellement.",
+    "en": "As with the appointment template, the time slot is a static dropdown: Papyrus has no time field and no live table-availability check, so every request has to be confirmed manually."
+  },
+  "title": {
+    "fr": "Réservation de table",
+    "en": "Table reservation"
+  },
+  "description": {
+    "fr": "Envoyez votre demande de table. Elle n’est confirmée qu’après notre réponse, généralement dans l’heure pendant les horaires de service.",
+    "en": "Send us your table request. It is only confirmed once we reply, usually within the hour during service."
+  },
+  "template_description": {
+    "fr": "Demande de table en une page : date, service, créneau, couverts, allergies et occasion.",
+    "en": "One-page table request: date, service, slot, covers, allergies and occasion."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "reservation-restaurant-f1",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom de la réservation",
+        "en": "Name for the reservation"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "M. Appadoo",
+        "en": "Mr Appadoo"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reservation-restaurant-f2",
+      "type": "phone",
+      "label": {
+        "fr": "Téléphone",
+        "en": "Phone"
+      },
+      "description": {
+        "fr": "Nous vous appelons en cas d’imprévu de dernière minute.",
+        "en": "We call you if anything changes at the last minute."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "default_country": "MU"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reservation-restaurant-f3",
+      "type": "email",
+      "label": {
+        "fr": "Email",
+        "en": "Email"
+      },
+      "description": {
+        "fr": "La confirmation de réservation vous est envoyée à cette adresse.",
+        "en": "Your booking confirmation is sent to this address."
+      },
+      "placeholder": {
+        "fr": "vous@exemple.com",
+        "en": "you@example.com"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reservation-restaurant-f4",
+      "type": "date",
+      "label": {
+        "fr": "Date souhaitée",
+        "en": "Preferred date"
+      },
+      "description": {
+        "fr": "Nous sommes fermés le lundi.",
+        "en": "We are closed on Mondays."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reservation-restaurant-f5",
+      "type": "single_choice",
+      "label": {
+        "fr": "Service",
+        "en": "Service"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "reservation-restaurant-f5-o1",
+          "label": {
+            "fr": "Déjeuner",
+            "en": "Lunch"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f5-o2",
+          "label": {
+            "fr": "Dîner",
+            "en": "Dinner"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "reservation-restaurant-f6",
+      "type": "dropdown",
+      "label": {
+        "fr": "Heure d’arrivée souhaitée",
+        "en": "Preferred arrival time"
+      },
+      "description": {
+        "fr": "Créneaux indicatifs : la table est tenue quinze minutes après l’heure retenue.",
+        "en": "Indicative slots: the table is held for fifteen minutes after the agreed time."
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un créneau",
+        "en": "Select a slot"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "reservation-restaurant-f6-o1",
+          "label": {
+            "fr": "11:30",
+            "en": "11:30"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f6-o2",
+          "label": {
+            "fr": "12:00",
+            "en": "12:00"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f6-o3",
+          "label": {
+            "fr": "12:30",
+            "en": "12:30"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f6-o4",
+          "label": {
+            "fr": "13:00",
+            "en": "13:00"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f6-o5",
+          "label": {
+            "fr": "13:30",
+            "en": "13:30"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f6-o6",
+          "label": {
+            "fr": "14:00",
+            "en": "14:00"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f6-o7",
+          "label": {
+            "fr": "18:30",
+            "en": "18:30"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f6-o8",
+          "label": {
+            "fr": "19:00",
+            "en": "19:00"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f6-o9",
+          "label": {
+            "fr": "19:30",
+            "en": "19:30"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f6-o10",
+          "label": {
+            "fr": "20:00",
+            "en": "20:00"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f6-o11",
+          "label": {
+            "fr": "20:30",
+            "en": "20:30"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f6-o12",
+          "label": {
+            "fr": "21:00",
+            "en": "21:00"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "reservation-restaurant-f7",
+      "type": "number",
+      "label": {
+        "fr": "Nombre de couverts",
+        "en": "Number of guests"
+      },
+      "description": {
+        "fr": "Au-delà de 20 personnes, contactez-nous directement pour une privatisation.",
+        "en": "For more than 20 guests, contact us directly about a private booking."
+      },
+      "placeholder": {
+        "fr": "2",
+        "en": "2"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "min": 1,
+        "max": 20,
+        "response_type": "integer",
+        "unit": "none"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reservation-restaurant-f8",
+      "type": "single_choice",
+      "label": {
+        "fr": "Préférence de table",
+        "en": "Seating preference"
+      },
+      "description": {
+        "fr": "Nous faisons au mieux, sans garantie.",
+        "en": "We do our best, without any guarantee."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "reservation-restaurant-f8-o1",
+          "label": {
+            "fr": "En salle",
+            "en": "Indoors"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f8-o2",
+          "label": {
+            "fr": "En terrasse",
+            "en": "On the terrace"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f8-o3",
+          "label": {
+            "fr": "Peu importe",
+            "en": "No preference"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "reservation-restaurant-f9",
+      "type": "long_text",
+      "label": {
+        "fr": "Allergies et régimes particuliers",
+        "en": "Allergies and dietary requirements"
+      },
+      "description": {
+        "fr": "Précisez le convive concerné : le chef adapte les plats à l’avance.",
+        "en": "Say which guest is concerned: the chef adapts the dishes in advance."
+      },
+      "placeholder": {
+        "fr": "Une personne sans gluten, une allergie aux fruits de mer.",
+        "en": "One gluten-free guest, one shellfish allergy."
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 400
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "reservation-restaurant-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "Fêtez-vous une occasion particulière ?",
+        "en": "Are you celebrating a special occasion?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "reservation-restaurant-f10-o1",
+          "label": {
+            "fr": "Non, un repas ordinaire",
+            "en": "No, just a meal"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f10-o2",
+          "label": {
+            "fr": "Anniversaire",
+            "en": "Birthday"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f10-o3",
+          "label": {
+            "fr": "Dîner en amoureux",
+            "en": "Romantic dinner"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f10-o4",
+          "label": {
+            "fr": "Repas d’affaires",
+            "en": "Business meal"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f10-o5",
+          "label": {
+            "fr": "Repas de famille",
+            "en": "Family gathering"
+          }
+        },
+        {
+          "id": "reservation-restaurant-f10-o6",
+          "label": {
+            "fr": "Autre célébration",
+            "en": "Another celebration"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

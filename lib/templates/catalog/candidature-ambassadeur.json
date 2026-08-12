@@ -1,0 +1,512 @@
+{
+  "id": "tpl-mooove-candidature-ambassadeur",
+  "slug": "candidature-ambassadeur",
+  "category": "Marketing & Agence",
+  "icon": "Megaphone",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Candidature ambassadeur",
+    "en": "Ambassador application"
+  },
+  "description": {
+    "fr": "Vous créez du contenu et notre marque vous parle ? Présentez-vous, votre audience et ce que vous proposez. Nous répondons à chaque candidature sous deux semaines.",
+    "en": "You create content and our brand resonates with you? Introduce yourself, your audience and what you have in mind. We reply to every application within two weeks."
+  },
+  "template_description": {
+    "fr": "Recrutez créateurs et ambassadeurs : audience, engagement, media kit et tarifs en un formulaire.",
+    "en": "Recruit creators and ambassadors: audience, engagement, media kit and rates in one form."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "candidature-ambassadeur-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Vous",
+        "en": "About you"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f3",
+      "type": "email",
+      "label": {
+        "fr": "Email",
+        "en": "Email"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "vous@exemple.com",
+        "en": "you@example.com"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f4",
+      "type": "dropdown",
+      "label": {
+        "fr": "Pays de résidence",
+        "en": "Country of residence"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un pays",
+        "en": "Select a country"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "candidature-ambassadeur-f4-o1",
+          "label": {
+            "fr": "Maurice",
+            "en": "Mauritius"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f4-o2",
+          "label": {
+            "fr": "La Réunion",
+            "en": "Réunion"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f4-o3",
+          "label": {
+            "fr": "Madagascar",
+            "en": "Madagascar"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f4-o4",
+          "label": {
+            "fr": "Seychelles",
+            "en": "Seychelles"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f4-o5",
+          "label": {
+            "fr": "Afrique du Sud",
+            "en": "South Africa"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f4-o6",
+          "label": {
+            "fr": "France",
+            "en": "France"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f4-o7",
+          "label": {
+            "fr": "Royaume-Uni",
+            "en": "United Kingdom"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f4-o8",
+          "label": {
+            "fr": "Inde",
+            "en": "India"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f4-o9",
+          "label": {
+            "fr": "Autre pays",
+            "en": "Another country"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f5",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre audience",
+        "en": "Your audience"
+      },
+      "description": {
+        "fr": "Des chiffres honnêtes valent mieux que des chiffres flatteurs.",
+        "en": "Honest numbers beat flattering ones."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f6",
+      "type": "single_choice",
+      "label": {
+        "fr": "Sur quelle plateforme êtes-vous le plus actif ?",
+        "en": "Which platform are you most active on?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "candidature-ambassadeur-f6-o1",
+          "label": {
+            "fr": "Instagram",
+            "en": "Instagram"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f6-o2",
+          "label": {
+            "fr": "TikTok",
+            "en": "TikTok"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f6-o3",
+          "label": {
+            "fr": "YouTube",
+            "en": "YouTube"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f6-o4",
+          "label": {
+            "fr": "Facebook",
+            "en": "Facebook"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f6-o5",
+          "label": {
+            "fr": "LinkedIn",
+            "en": "LinkedIn"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f6-o6",
+          "label": {
+            "fr": "Blog ou podcast",
+            "en": "Blog or podcast"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f7",
+      "type": "url",
+      "label": {
+        "fr": "Lien vers votre profil principal",
+        "en": "Link to your main profile"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "https://instagram.com/votre-compte",
+        "en": "https://instagram.com/your-handle"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f8",
+      "type": "dropdown",
+      "label": {
+        "fr": "Nombre d’abonnés sur ce profil",
+        "en": "Follower count on that profile"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une tranche",
+        "en": "Select a bracket"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "candidature-ambassadeur-f8-o1",
+          "label": {
+            "fr": "Moins de 2 000",
+            "en": "Under 2,000"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f8-o2",
+          "label": {
+            "fr": "2 000 – 10 000",
+            "en": "2,000 – 10,000"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f8-o3",
+          "label": {
+            "fr": "10 000 – 50 000",
+            "en": "10,000 – 50,000"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f8-o4",
+          "label": {
+            "fr": "50 000 – 200 000",
+            "en": "50,000 – 200,000"
+          }
+        },
+        {
+          "id": "candidature-ambassadeur-f8-o5",
+          "label": {
+            "fr": "Plus de 200 000",
+            "en": "Over 200,000"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f9",
+      "type": "number",
+      "label": {
+        "fr": "Taux d’engagement moyen",
+        "en": "Average engagement rate"
+      },
+      "description": {
+        "fr": "Tel qu’indiqué dans vos statistiques, sur les 30 derniers jours.",
+        "en": "As shown in your analytics, over the last 30 days."
+      },
+      "placeholder": {
+        "fr": "4.2",
+        "en": "4.2"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 100,
+        "response_type": "decimal",
+        "unit": "percent"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f10",
+      "type": "long_text",
+      "label": {
+        "fr": "Décrivez votre communauté",
+        "en": "Describe your community"
+      },
+      "description": {
+        "fr": "Âge, pays, centres d’intérêt, et ce qui la fait réagir.",
+        "en": "Age, countries, interests, and what makes them react."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f11",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre proposition",
+        "en": "Your proposal"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f12",
+      "type": "long_text",
+      "label": {
+        "fr": "Pourquoi souhaitez-vous représenter notre marque ?",
+        "en": "Why do you want to represent our brand?"
+      },
+      "description": {
+        "fr": "Ce que vous aimez chez nous, et ce que vous imagineriez créer.",
+        "en": "What you like about us, and what you would imagine creating."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1200
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f13",
+      "type": "url",
+      "label": {
+        "fr": "Lien vers votre meilleur contenu",
+        "en": "Link to your best piece of content"
+      },
+      "description": {
+        "fr": "Celui dont vous êtes le plus fier, pas forcément le plus vu.",
+        "en": "The one you are proudest of, not necessarily the most viewed."
+      },
+      "placeholder": {
+        "fr": "https://",
+        "en": "https://"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f14",
+      "type": "file",
+      "label": {
+        "fr": "Votre media kit",
+        "en": "Your media kit"
+      },
+      "description": {
+        "fr": "Facultatif, mais cela accélère nettement l’examen de votre dossier.",
+        "en": "Optional, but it speeds up the review of your application considerably."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "pdf",
+          "png",
+          "jpg"
+        ],
+        "max_file_size_mb": 15
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-ambassadeur-f15",
+      "type": "number",
+      "label": {
+        "fr": "Votre tarif indicatif pour une publication sponsorisée",
+        "en": "Your indicative rate for one sponsored post"
+      },
+      "description": {
+        "fr": "Laissez vide si vous préférez en discuter ou travailler en échange de produits.",
+        "en": "Leave empty if you would rather discuss it or work in exchange for products."
+      },
+      "placeholder": {
+        "fr": "15000",
+        "en": "15000"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "response_type": "integer",
+        "unit": "mur"
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

@@ -1,0 +1,420 @@
+{
+  "id": "tpl-mooove-consentement-rgpd-image",
+  "slug": "consentement-rgpd-image",
+  "category": "Opérations & Conformité",
+  "icon": "FileSignature",
+  "display_mode": "sections",
+  "feasibility": "degraded",
+  "feasibility_note": {
+    "fr": "Papyrus n’a pas de champ « signature » : le consentement est recueilli par une saisie du nom et des cases Oui/Non, et non par une signature manuscrite. Pour un consentement juridiquement solide, un type `signature` (tracé sur canevas, horodatage et adresse IP enregistrés avec la réponse) reste à développer.",
+    "en": "Papyrus has no signature field, so consent is captured through a typed name and Yes/No choices rather than a drawn signature. For legally robust consent, a `signature` type (canvas capture, timestamp and IP stored with the submission) still needs to be built."
+  },
+  "title": {
+    "fr": "Consentement RGPD et droit à l’image",
+    "en": "GDPR and image rights consent"
+  },
+  "description": {
+    "fr": "Recueil du consentement au traitement de vos données personnelles et à l’utilisation de votre image. Chaque usage fait l’objet d’une autorisation distincte, révocable à tout moment.",
+    "en": "Consent collection for the processing of your personal data and the use of your image. Each use is authorised separately and can be withdrawn at any time."
+  },
+  "template_description": {
+    "fr": "Consentements séparés données, photo, vidéo, réseaux sociaux et print, avec texte d’information complet.",
+    "en": "Separate consents for data, photo, video, social media and print, with a full information notice."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "consentement-rgpd-image-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Vous identifier",
+        "en": "Identify yourself"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "consentement-rgpd-image-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 80
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "consentement-rgpd-image-f3",
+      "type": "date",
+      "label": {
+        "fr": "Date de naissance",
+        "en": "Date of birth"
+      },
+      "description": {
+        "fr": "Pour une personne mineure, le consentement doit être donné par le représentant légal.",
+        "en": "For a minor, consent must be given by the legal guardian."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "consentement-rgpd-image-f4",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail",
+        "en": "Email address"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "consentement-rgpd-image-f5",
+      "type": "section_break",
+      "label": {
+        "fr": "Le consentement",
+        "en": "Your consent"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "consentement-rgpd-image-f6",
+      "type": "statement",
+      "label": {
+        "fr": "Information sur le traitement de vos données et de votre image",
+        "en": "Information about the processing of your data and your image"
+      },
+      "description": {
+        "fr": "Responsable du traitement : [Nom de l’organisation], [adresse complète], joignable à [adresse e-mail de contact]. Finalités : gestion de la relation avec les participants, communication institutionnelle et promotion des activités de l’organisation. Base légale : votre consentement, recueilli usage par usage ci-dessous. Données traitées : nom, prénom, date de naissance, adresse e-mail, ainsi que les photographies et vidéos sur lesquelles vous apparaissez. Destinataires : les services internes chargés de la communication et, le cas échéant, les prestataires techniques d’hébergement et de diffusion, agissant en qualité de sous-traitants. Durée de conservation : trois ans à compter du recueil pour les données d’identification, cinq ans pour les images publiées, sauf retrait antérieur de votre consentement. Vos droits : vous disposez d’un droit d’accès, de rectification, d’effacement, de limitation et d’opposition, ainsi que du droit à la portabilité de vos données. Vous pouvez retirer votre consentement à tout moment, sans avoir à vous justifier ; ce retrait ne remet pas en cause la licéité du traitement effectué avant celui-ci. Pour exercer ces droits, écrivez à l’adresse de contact ci-dessus. Vous pouvez également introduire une réclamation auprès de l’autorité de contrôle compétente.",
+        "en": "Data controller: [Organisation name], [full address], reachable at [contact email address]. Purposes: managing the relationship with participants, institutional communication and promotion of the organisation’s activities. Legal basis: your consent, collected use by use below. Data processed: surname, first name, date of birth, email address, together with the photographs and videos in which you appear. Recipients: the internal communications teams and, where applicable, the technical hosting and distribution providers acting as processors. Retention: three years from collection for identification data, five years for published images, unless you withdraw your consent sooner. Your rights: you have the right of access, rectification, erasure, restriction and objection, as well as the right to data portability. You may withdraw your consent at any time, without justification; withdrawal does not affect the lawfulness of processing carried out beforehand. To exercise these rights, write to the contact address above. You may also lodge a complaint with the competent supervisory authority."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "consentement-rgpd-image-f7",
+      "type": "single_choice",
+      "label": {
+        "fr": "J’autorise le traitement de mes données personnelles aux finalités décrites ci-dessus",
+        "en": "I authorise the processing of my personal data for the purposes described above"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "consentement-rgpd-image-f7-o1",
+          "label": {
+            "fr": "Oui, je consens",
+            "en": "Yes, I consent"
+          }
+        },
+        {
+          "id": "consentement-rgpd-image-f7-o2",
+          "label": {
+            "fr": "Non, je refuse",
+            "en": "No, I decline"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "consentement-rgpd-image-f8",
+      "type": "single_choice",
+      "label": {
+        "fr": "J’autorise la prise et l’utilisation de photographies sur lesquelles j’apparais",
+        "en": "I authorise the taking and use of photographs in which I appear"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "consentement-rgpd-image-f8-o1",
+          "label": {
+            "fr": "Oui, je consens",
+            "en": "Yes, I consent"
+          }
+        },
+        {
+          "id": "consentement-rgpd-image-f8-o2",
+          "label": {
+            "fr": "Non, je refuse",
+            "en": "No, I decline"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "consentement-rgpd-image-f9",
+      "type": "single_choice",
+      "label": {
+        "fr": "J’autorise l’enregistrement et l’utilisation de vidéos sur lesquelles j’apparais",
+        "en": "I authorise the recording and use of videos in which I appear"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "consentement-rgpd-image-f9-o1",
+          "label": {
+            "fr": "Oui, je consens",
+            "en": "Yes, I consent"
+          }
+        },
+        {
+          "id": "consentement-rgpd-image-f9-o2",
+          "label": {
+            "fr": "Non, je refuse",
+            "en": "No, I decline"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "consentement-rgpd-image-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "J’autorise la publication de ces images sur les réseaux sociaux de l’organisation",
+        "en": "I authorise publication of these images on the organisation’s social media"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "consentement-rgpd-image-f10-o1",
+          "label": {
+            "fr": "Oui, je consens",
+            "en": "Yes, I consent"
+          }
+        },
+        {
+          "id": "consentement-rgpd-image-f10-o2",
+          "label": {
+            "fr": "Non, je refuse",
+            "en": "No, I decline"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "consentement-rgpd-image-f11",
+      "type": "single_choice",
+      "label": {
+        "fr": "J’autorise la publication de ces images sur des supports imprimés",
+        "en": "I authorise publication of these images in printed materials"
+      },
+      "description": {
+        "fr": "Brochures, affiches, rapport annuel, presse.",
+        "en": "Brochures, posters, annual report, press."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "consentement-rgpd-image-f11-o1",
+          "label": {
+            "fr": "Oui, je consens",
+            "en": "Yes, I consent"
+          }
+        },
+        {
+          "id": "consentement-rgpd-image-f11-o2",
+          "label": {
+            "fr": "Non, je refuse",
+            "en": "No, I decline"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "consentement-rgpd-image-f12",
+      "type": "section_break",
+      "label": {
+        "fr": "Confirmation",
+        "en": "Confirmation"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "consentement-rgpd-image-f13",
+      "type": "short_text",
+      "label": {
+        "fr": "Recopiez vos nom et prénom pour valider vos choix",
+        "en": "Type your full name to confirm your choices"
+      },
+      "description": {
+        "fr": "Cette saisie vaut acceptation électronique des consentements donnés ci-dessus.",
+        "en": "This entry constitutes electronic acknowledgement of the consents given above."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 80
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "consentement-rgpd-image-f14",
+      "type": "date",
+      "label": {
+        "fr": "Date de signature",
+        "en": "Date signed"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

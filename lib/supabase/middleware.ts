@@ -58,6 +58,9 @@ export async function updateSession(request: NextRequest) {
     // `startsWith('/api/forms')` : le reste de /api/forms gère les intégrations
     // d'un formulaire et doit rester réservé à ses propriétaires.
     pathname === '/api/forms/access' ||
+    // Catalogue de modèles : contenu statique versionné dans le dépôt, aucune
+    // donnée d'utilisateur, aucune requête Supabase — donc aucune surface RLS.
+    pathname.startsWith('/api/templates') ||
     pathname.startsWith('/api/check-duplicate') ||
     pathname.startsWith('/api/uploads') || // valide lui-même ses appelants
     pathname.startsWith('/api/health') || // sonde de vie Docker / Uptime Kuma

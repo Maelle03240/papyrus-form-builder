@@ -1,0 +1,515 @@
+{
+  "id": "tpl-mooove-etude-perception-marque",
+  "slug": "etude-perception-marque",
+  "category": "Marketing & Agence",
+  "icon": "PieChart",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Étude de perception de marque",
+    "en": "Brand perception study"
+  },
+  "description": {
+    "fr": "Cinq minutes pour nous dire ce que vous pensez vraiment de notre marque. Les réponses sont anonymes et servent uniquement à orienter nos décisions.",
+    "en": "Five minutes to tell us what you really think of our brand. Answers are anonymous and only used to guide our decisions."
+  },
+  "template_description": {
+    "fr": "Mesurez notoriété, image et considération : notoriété assistée, matrice d’image et NPS.",
+    "en": "Measure awareness, image and consideration: aided awareness, image matrix and NPS."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "etude-perception-marque-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Vous connaissez-nous ?",
+        "en": "Do you know us?"
+      },
+      "description": {
+        "fr": "Deux questions rapides sur ce que vous avez déjà croisé.",
+        "en": "Two quick questions on what you have already come across."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "etude-perception-marque-f2",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Parmi ces marques, lesquelles connaissez-vous, ne serait-ce que de nom ?",
+        "en": "Which of these brands do you know, even just by name?"
+      },
+      "description": {
+        "fr": "Remplacez cette liste par votre marque et vos principaux concurrents avant publication.",
+        "en": "Replace this list with your own brand and its main competitors before publishing."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "randomize_options": true
+      },
+      "options": [
+        {
+          "id": "etude-perception-marque-f2-o1",
+          "label": {
+            "fr": "Notre marque",
+            "en": "Our brand"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f2-o2",
+          "label": {
+            "fr": "Premier concurrent",
+            "en": "First competitor"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f2-o3",
+          "label": {
+            "fr": "Deuxième concurrent",
+            "en": "Second competitor"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f2-o4",
+          "label": {
+            "fr": "Troisième concurrent",
+            "en": "Third competitor"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f2-o5",
+          "label": {
+            "fr": "Quatrième concurrent",
+            "en": "Fourth competitor"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f2-o6",
+          "label": {
+            "fr": "Aucune de ces marques",
+            "en": "None of these brands"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "etude-perception-marque-f3",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Où avez-vous déjà vu ou entendu parler de notre marque ?",
+        "en": "Where have you seen or heard about our brand?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "etude-perception-marque-f3-o1",
+          "label": {
+            "fr": "Réseaux sociaux",
+            "en": "Social media"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f3-o2",
+          "label": {
+            "fr": "Affichage ou presse",
+            "en": "Billboards or press"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f3-o3",
+          "label": {
+            "fr": "Radio ou télévision",
+            "en": "Radio or television"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f3-o4",
+          "label": {
+            "fr": "En magasin ou en point de vente",
+            "en": "In store or at a point of sale"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f3-o5",
+          "label": {
+            "fr": "Bouche-à-oreille",
+            "en": "Word of mouth"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f3-o6",
+          "label": {
+            "fr": "Recherche en ligne",
+            "en": "Online search"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f3-o7",
+          "label": {
+            "fr": "Événement ou sponsoring",
+            "en": "Event or sponsorship"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f3-o8",
+          "label": {
+            "fr": "Nulle part, je la découvre ici",
+            "en": "Nowhere, I am discovering it here"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "etude-perception-marque-f4",
+      "type": "section_break",
+      "label": {
+        "fr": "Ce que vous en pensez",
+        "en": "What you think of it"
+      },
+      "description": {
+        "fr": "Répondez spontanément, il n’y a pas de bonne réponse.",
+        "en": "Answer spontaneously, there is no right answer."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "etude-perception-marque-f5",
+      "type": "long_text",
+      "label": {
+        "fr": "Quels sont les trois premiers mots qui vous viennent à l’esprit à propos de notre marque ?",
+        "en": "What are the first three words that come to mind about our brand?"
+      },
+      "description": {
+        "fr": "Un mot par ligne, sans réfléchir trop longtemps.",
+        "en": "One word per line, without overthinking."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 200
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "etude-perception-marque-f6",
+      "type": "matrix",
+      "label": {
+        "fr": "Dans quelle mesure êtes-vous d’accord avec ces affirmations ?",
+        "en": "How much do you agree with these statements?"
+      },
+      "description": {
+        "fr": "Une réponse par ligne.",
+        "en": "One answer per row."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "matrix_mode": "single",
+        "randomize_options": false
+      },
+      "options": [
+        {
+          "id": "etude-perception-marque-f6-o1",
+          "label": {
+            "fr": "Pas du tout d’accord",
+            "en": "Strongly disagree"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f6-o2",
+          "label": {
+            "fr": "Plutôt pas d’accord",
+            "en": "Somewhat disagree"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f6-o3",
+          "label": {
+            "fr": "Ni d’accord ni pas d’accord",
+            "en": "Neither agree nor disagree"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f6-o4",
+          "label": {
+            "fr": "Plutôt d’accord",
+            "en": "Somewhat agree"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f6-o5",
+          "label": {
+            "fr": "Tout à fait d’accord",
+            "en": "Strongly agree"
+          }
+        }
+      ],
+      "rows": [
+        {
+          "id": "etude-perception-marque-f6-r1",
+          "label": {
+            "fr": "Cette marque propose des produits de qualité",
+            "en": "This brand offers quality products"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f6-r2",
+          "label": {
+            "fr": "Ses prix sont justifiés",
+            "en": "Its prices are justified"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f6-r3",
+          "label": {
+            "fr": "Elle sait innover",
+            "en": "It knows how to innovate"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f6-r4",
+          "label": {
+            "fr": "C’est une marque de confiance",
+            "en": "It is a trustworthy brand"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f6-r5",
+          "label": {
+            "fr": "Son service client est à la hauteur",
+            "en": "Its customer service delivers"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f6-r6",
+          "label": {
+            "fr": "C’est une marque moderne",
+            "en": "It is a modern brand"
+          }
+        }
+      ]
+    },
+    {
+      "id": "etude-perception-marque-f7",
+      "type": "nps",
+      "label": {
+        "fr": "Quelle est la probabilité que vous envisagiez cette marque lors de votre prochain achat ?",
+        "en": "How likely are you to consider this brand for your next purchase?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Pas du tout probable",
+        "nps_right_label": "Très probable"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "etude-perception-marque-f8",
+      "type": "section_break",
+      "label": {
+        "fr": "Vous",
+        "en": "About you"
+      },
+      "description": {
+        "fr": "Deux dernières questions, uniquement pour analyser les résultats par profil.",
+        "en": "Two last questions, purely to analyse results by profile."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "etude-perception-marque-f9",
+      "type": "dropdown",
+      "label": {
+        "fr": "Votre tranche d’âge",
+        "en": "Your age bracket"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une tranche",
+        "en": "Select a bracket"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "etude-perception-marque-f9-o1",
+          "label": {
+            "fr": "Moins de 18 ans",
+            "en": "Under 18"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f9-o2",
+          "label": {
+            "fr": "18 – 24 ans",
+            "en": "18 – 24"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f9-o3",
+          "label": {
+            "fr": "25 – 34 ans",
+            "en": "25 – 34"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f9-o4",
+          "label": {
+            "fr": "35 – 44 ans",
+            "en": "35 – 44"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f9-o5",
+          "label": {
+            "fr": "45 – 54 ans",
+            "en": "45 – 54"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f9-o6",
+          "label": {
+            "fr": "55 – 64 ans",
+            "en": "55 – 64"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f9-o7",
+          "label": {
+            "fr": "65 ans et plus",
+            "en": "65 and over"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "etude-perception-marque-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "Vous êtes…",
+        "en": "You are…"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "etude-perception-marque-f10-o1",
+          "label": {
+            "fr": "Une femme",
+            "en": "A woman"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f10-o2",
+          "label": {
+            "fr": "Un homme",
+            "en": "A man"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f10-o3",
+          "label": {
+            "fr": "Autre",
+            "en": "Other"
+          }
+        },
+        {
+          "id": "etude-perception-marque-f10-o4",
+          "label": {
+            "fr": "Je préfère ne pas répondre",
+            "en": "Prefer not to say"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

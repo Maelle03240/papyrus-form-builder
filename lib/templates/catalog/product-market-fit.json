@@ -1,0 +1,304 @@
+{
+  "id": "tpl-mooove-product-market-fit",
+  "slug": "product-market-fit",
+  "category": "Produit & Recherche",
+  "icon": "Gauge",
+  "display_mode": "typeform",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Enquête Product-Market Fit",
+    "en": "Product-market fit survey"
+  },
+  "description": {
+    "fr": "Le test de Sean Ellis : mesurez la déception de vos utilisateurs pour savoir où vous en êtes.",
+    "en": "The Sean Ellis test: measure user disappointment to find out where you really stand."
+  },
+  "template_description": {
+    "fr": "Au-delà de 40 % d’utilisateurs « très déçus », vous tenez votre marché. Six questions pour le vérifier.",
+    "en": "Above 40% of users “very disappointed”, you have product-market fit. Six questions to find out."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "product-market-fit-f1",
+      "type": "statement",
+      "label": {
+        "fr": "Deux minutes pour orienter la suite du produit",
+        "en": "Two minutes to shape what we build next"
+      },
+      "description": {
+        "fr": "Vos réponses nourrissent directement notre feuille de route. Il n’y a pas de bonne réponse, seulement la vôtre.",
+        "en": "Your answers feed straight into our roadmap. There is no right answer, only yours."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "product-market-fit-f2",
+      "type": "single_choice",
+      "label": {
+        "fr": "Comment vous sentiriez-vous si vous ne pouviez plus utiliser Papyrus ?",
+        "en": "How would you feel if you could no longer use Papyrus?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards"
+      },
+      "options": [
+        {
+          "id": "product-market-fit-f2-o1",
+          "label": {
+            "fr": "Très déçu·e",
+            "en": "Very disappointed"
+          }
+        },
+        {
+          "id": "product-market-fit-f2-o2",
+          "label": {
+            "fr": "Plutôt déçu·e",
+            "en": "Somewhat disappointed"
+          }
+        },
+        {
+          "id": "product-market-fit-f2-o3",
+          "label": {
+            "fr": "Pas déçu·e",
+            "en": "Not disappointed"
+          }
+        },
+        {
+          "id": "product-market-fit-f2-o4",
+          "label": {
+            "fr": "Je ne l’utilise plus",
+            "en": "I no longer use it"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "product-market-fit-f3",
+      "type": "long_text",
+      "label": {
+        "fr": "Pourquoi ne l’utilisez-vous plus ?",
+        "en": "Why did you stop using it?"
+      },
+      "description": {
+        "fr": "Soyez direct : c’est ce type de réponse qui nous fait progresser le plus vite.",
+        "en": "Be blunt: this is the kind of answer that helps us improve fastest."
+      },
+      "placeholder": {
+        "fr": "Ce qui m’a fait arrêter, c’est…",
+        "en": "What made me stop was…"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "product-market-fit-f4",
+      "type": "long_text",
+      "label": {
+        "fr": "À votre avis, quel type de personne profiterait le plus de Papyrus ?",
+        "en": "In your view, who would benefit most from Papyrus?"
+      },
+      "description": {
+        "fr": "Décrivez un métier, une taille d’équipe ou une situation précise.",
+        "en": "Describe a role, a team size or a specific situation."
+      },
+      "placeholder": {
+        "fr": "Les équipes RH qui recrutent en continu…",
+        "en": "HR teams hiring continuously…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "product-market-fit-f5",
+      "type": "long_text",
+      "label": {
+        "fr": "Quel bénéfice principal retirez-vous de Papyrus ?",
+        "en": "What is the main benefit you get from Papyrus?"
+      },
+      "description": {
+        "fr": "Une seule chose : celle que vous citeriez en premier à un collègue.",
+        "en": "Just one thing: whatever you would mention first to a colleague."
+      },
+      "placeholder": {
+        "fr": "Je gagne surtout…",
+        "en": "Mostly, I gain…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "product-market-fit-f6",
+      "type": "long_text",
+      "label": {
+        "fr": "Comment pourrions-nous améliorer Papyrus pour vous ?",
+        "en": "How could we improve Papyrus for you?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Ce qui me manque aujourd’hui…",
+        "en": "What I am missing today…"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "product-market-fit-f7",
+      "type": "dropdown",
+      "label": {
+        "fr": "Quel est votre rôle principal ?",
+        "en": "What is your main role?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Choisissez votre rôle",
+        "en": "Select your role"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "product-market-fit-f7-o1",
+          "label": {
+            "fr": "Fondateur·rice ou dirigeant·e",
+            "en": "Founder or executive"
+          }
+        },
+        {
+          "id": "product-market-fit-f7-o2",
+          "label": {
+            "fr": "Marketing et communication",
+            "en": "Marketing and communications"
+          }
+        },
+        {
+          "id": "product-market-fit-f7-o3",
+          "label": {
+            "fr": "Ventes et développement commercial",
+            "en": "Sales and business development"
+          }
+        },
+        {
+          "id": "product-market-fit-f7-o4",
+          "label": {
+            "fr": "Produit",
+            "en": "Product"
+          }
+        },
+        {
+          "id": "product-market-fit-f7-o5",
+          "label": {
+            "fr": "Design et recherche utilisateur",
+            "en": "Design and user research"
+          }
+        },
+        {
+          "id": "product-market-fit-f7-o6",
+          "label": {
+            "fr": "Ingénierie",
+            "en": "Engineering"
+          }
+        },
+        {
+          "id": "product-market-fit-f7-o7",
+          "label": {
+            "fr": "Ressources humaines",
+            "en": "Human resources"
+          }
+        },
+        {
+          "id": "product-market-fit-f7-o8",
+          "label": {
+            "fr": "Opérations et administration",
+            "en": "Operations and administration"
+          }
+        },
+        {
+          "id": "product-market-fit-f7-o9",
+          "label": {
+            "fr": "Conseil ou freelance",
+            "en": "Consultant or freelancer"
+          }
+        },
+        {
+          "id": "product-market-fit-f7-o10",
+          "label": {
+            "fr": "Enseignement et associatif",
+            "en": "Education and non-profit"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "product-market-fit-rule1",
+      "conditions": [
+        {
+          "source_field_id": "product-market-fit-f2",
+          "operator": "equals",
+          "value": "product-market-fit-f2-o4"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "product-market-fit-f3",
+      "rule_order": 0
+    }
+  ]
+}

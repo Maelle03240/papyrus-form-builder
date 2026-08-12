@@ -1,0 +1,203 @@
+{
+  "id": "tpl-mooove-demande-fonctionnalite",
+  "slug": "demande-fonctionnalite",
+  "category": "Produit & Recherche",
+  "icon": "Lightbulb",
+  "display_mode": "scroll",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Demande de fonctionnalité",
+    "en": "Feature request"
+  },
+  "description": {
+    "fr": "Collectez les demandes de vos utilisateurs avec le contexte nécessaire pour les arbitrer.",
+    "en": "Collect user requests with the context you need to prioritise them properly."
+  },
+  "template_description": {
+    "fr": "Le besoin réel, la solution de contournement actuelle et l’urgence : de quoi trancher sans réunion.",
+    "en": "The real need, the current workaround and the urgency: enough to decide without a meeting."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "demande-fonctionnalite-f1",
+      "type": "long_text",
+      "label": {
+        "fr": "Que cherchez-vous à faire que Papyrus ne permet pas aujourd’hui ?",
+        "en": "What are you trying to do that Papyrus does not allow today?"
+      },
+      "description": {
+        "fr": "Décrivez votre objectif plutôt que la solution imaginée : nous trouverons peut-être un chemin plus court.",
+        "en": "Describe your goal rather than the solution you have in mind: we may find a shorter path."
+      },
+      "placeholder": {
+        "fr": "J’aimerais pouvoir…",
+        "en": "I would like to be able to…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-fonctionnalite-f2",
+      "type": "long_text",
+      "label": {
+        "fr": "Comment vous débrouillez-vous en attendant ?",
+        "en": "What do you do instead today?"
+      },
+      "description": {
+        "fr": "Tableur, copier-coller, outil tiers, abandon pur et simple… tout nous intéresse.",
+        "en": "Spreadsheet, copy-paste, another tool, or simply giving up — all of it is useful."
+      },
+      "placeholder": {
+        "fr": "J’exporte les réponses puis…",
+        "en": "I export the responses and then…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-fonctionnalite-f3",
+      "type": "single_choice",
+      "label": {
+        "fr": "À quelle fréquence utiliseriez-vous cette fonctionnalité ?",
+        "en": "How often would you use this feature?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "demande-fonctionnalite-f3-o1",
+          "label": {
+            "fr": "Plusieurs fois par jour",
+            "en": "Several times a day"
+          }
+        },
+        {
+          "id": "demande-fonctionnalite-f3-o2",
+          "label": {
+            "fr": "Une fois par semaine environ",
+            "en": "About once a week"
+          }
+        },
+        {
+          "id": "demande-fonctionnalite-f3-o3",
+          "label": {
+            "fr": "Une fois par mois environ",
+            "en": "About once a month"
+          }
+        },
+        {
+          "id": "demande-fonctionnalite-f3-o4",
+          "label": {
+            "fr": "Quelques fois par an",
+            "en": "A few times a year"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "demande-fonctionnalite-f4",
+      "type": "nps",
+      "label": {
+        "fr": "Quelle importance cette fonctionnalité a-t-elle pour vous ?",
+        "en": "How important is this feature to you?"
+      },
+      "description": {
+        "fr": "0 : simple confort. 10 : je ne peux pas travailler sereinement sans.",
+        "en": "0: nice to have. 10: I cannot work properly without it."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Simple confort",
+        "nps_right_label": "Totalement bloquant",
+        "display_style": "slider"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-fonctionnalite-f5",
+      "type": "image",
+      "label": {
+        "fr": "Une capture d’écran ou une maquette à nous montrer ?",
+        "en": "A screenshot or mockup to show us?"
+      },
+      "description": {
+        "fr": "Facultatif, mais un croquis même approximatif vaut souvent trois paragraphes. 25 Mo maximum.",
+        "en": "Optional, but even a rough sketch often beats three paragraphs. 25 MB maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "creator_mode_enabled": false,
+        "respondent_mode_enabled": true,
+        "max_file_size_mb": 25
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-fonctionnalite-f6",
+      "type": "email",
+      "label": {
+        "fr": "Votre e-mail, pour vous tenir au courant",
+        "en": "Your email, so we can keep you posted"
+      },
+      "description": {
+        "fr": "Nous vous écrivons uniquement à propos de cette demande.",
+        "en": "We will only write to you about this request."
+      },
+      "placeholder": {
+        "fr": "prenom@entreprise.mu",
+        "en": "name@company.com"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

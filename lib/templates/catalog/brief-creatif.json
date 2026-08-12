@@ -1,0 +1,565 @@
+{
+  "id": "tpl-mooove-brief-creatif",
+  "slug": "brief-creatif",
+  "category": "Marketing & Agence",
+  "icon": "Palette",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Brief créatif",
+    "en": "Creative brief"
+  },
+  "description": {
+    "fr": "Quinze minutes pour cadrer votre projet créatif : objectifs, cible, ton, livrables et budget. Plus le brief est précis, plus la première proposition sera juste.",
+    "en": "Fifteen minutes to frame your creative project: goals, audience, tone, deliverables and budget. The sharper the brief, the closer the first proposal."
+  },
+  "template_description": {
+    "fr": "Le brief structuré qui évite trois allers-retours : objectifs, cible, ton, livrables, budget.",
+    "en": "The structured brief that saves three rounds of emails: goals, audience, tone, deliverables, budget."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "brief-creatif-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Le projet",
+        "en": "The project"
+      },
+      "description": {
+        "fr": "Commençons par le cadre général.",
+        "en": "Let’s start with the big picture."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom du projet",
+        "en": "Project name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Lancement gamme été 2026",
+        "en": "Summer 2026 range launch"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f3",
+      "type": "email",
+      "label": {
+        "fr": "Email de contact",
+        "en": "Contact email"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "prenom.nom@entreprise.com",
+        "en": "first.last@company.com"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f4",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Type de projet",
+        "en": "Type of project"
+      },
+      "description": {
+        "fr": "Plusieurs réponses possibles.",
+        "en": "Select all that apply."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "brief-creatif-f4-o1",
+          "label": {
+            "fr": "Identité de marque",
+            "en": "Brand identity"
+          }
+        },
+        {
+          "id": "brief-creatif-f4-o2",
+          "label": {
+            "fr": "Campagne publicitaire",
+            "en": "Advertising campaign"
+          }
+        },
+        {
+          "id": "brief-creatif-f4-o3",
+          "label": {
+            "fr": "Print et édition",
+            "en": "Print and editorial"
+          }
+        },
+        {
+          "id": "brief-creatif-f4-o4",
+          "label": {
+            "fr": "Motion design et vidéo",
+            "en": "Motion design and video"
+          }
+        },
+        {
+          "id": "brief-creatif-f4-o5",
+          "label": {
+            "fr": "Contenus réseaux sociaux",
+            "en": "Social media content"
+          }
+        },
+        {
+          "id": "brief-creatif-f4-o6",
+          "label": {
+            "fr": "Packaging",
+            "en": "Packaging"
+          }
+        },
+        {
+          "id": "brief-creatif-f4-o7",
+          "label": {
+            "fr": "Signalétique et événementiel",
+            "en": "Signage and events"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f5",
+      "type": "long_text",
+      "label": {
+        "fr": "Quel objectif ce projet doit-il atteindre ?",
+        "en": "What should this project achieve?"
+      },
+      "description": {
+        "fr": "Décrivez le résultat attendu, si possible avec un indicateur mesurable.",
+        "en": "Describe the expected outcome, with a measurable indicator if possible."
+      },
+      "placeholder": {
+        "fr": "Faire connaître la nouvelle gamme et générer 200 demandes de devis d’ici décembre.",
+        "en": "Build awareness for the new range and generate 200 quote requests by December."
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f6",
+      "type": "section_break",
+      "label": {
+        "fr": "La cible et le message",
+        "en": "Audience and message"
+      },
+      "description": {
+        "fr": "À qui parlons-nous, et pour dire quoi ?",
+        "en": "Who are we speaking to, and what are we saying?"
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f7",
+      "type": "long_text",
+      "label": {
+        "fr": "Décrivez votre cible principale",
+        "en": "Describe your main audience"
+      },
+      "description": {
+        "fr": "Âge, métier, habitudes, freins à l’achat, ce qu’elle lit ou regarde.",
+        "en": "Age, occupation, habits, purchase barriers, what they read or watch."
+      },
+      "placeholder": {
+        "fr": "Femmes 30-45 ans, actives, urbaines, sensibles au made in Moris…",
+        "en": "Women aged 30-45, working, urban, drawn to locally made products…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f8",
+      "type": "short_text",
+      "label": {
+        "fr": "Message clé : si l’on ne retient qu’une phrase, laquelle ?",
+        "en": "Key message: if they remember one sentence, which one?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Le confort d’un artisan, la fiabilité d’une industrie.",
+        "en": "Craftsman comfort, industrial reliability."
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f9",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quel ton de voix recherchez-vous ?",
+        "en": "What tone of voice are you after?"
+      },
+      "description": {
+        "fr": "Trois réponses maximum.",
+        "en": "Three answers maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 3,
+        "selection_max": 3
+      },
+      "options": [
+        {
+          "id": "brief-creatif-f9-o1",
+          "label": {
+            "fr": "Professionnel et rassurant",
+            "en": "Professional and reassuring"
+          }
+        },
+        {
+          "id": "brief-creatif-f9-o2",
+          "label": {
+            "fr": "Chaleureux et proche",
+            "en": "Warm and close"
+          }
+        },
+        {
+          "id": "brief-creatif-f9-o3",
+          "label": {
+            "fr": "Audacieux et direct",
+            "en": "Bold and direct"
+          }
+        },
+        {
+          "id": "brief-creatif-f9-o4",
+          "label": {
+            "fr": "Élégant et premium",
+            "en": "Elegant and premium"
+          }
+        },
+        {
+          "id": "brief-creatif-f9-o5",
+          "label": {
+            "fr": "Ludique et décalé",
+            "en": "Playful and offbeat"
+          }
+        },
+        {
+          "id": "brief-creatif-f9-o6",
+          "label": {
+            "fr": "Technique et factuel",
+            "en": "Technical and factual"
+          }
+        },
+        {
+          "id": "brief-creatif-f9-o7",
+          "label": {
+            "fr": "Militant et engagé",
+            "en": "Purpose-driven and vocal"
+          }
+        },
+        {
+          "id": "brief-creatif-f9-o8",
+          "label": {
+            "fr": "Minimal et sobre",
+            "en": "Minimal and understated"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f10",
+      "type": "section_break",
+      "label": {
+        "fr": "Contraintes et livrables",
+        "en": "Constraints and deliverables"
+      },
+      "description": {
+        "fr": "Le concret : ce que nous produisons, pour quand, avec quel budget.",
+        "en": "The practical part: what we produce, by when, on what budget."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f11",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Livrables attendus",
+        "en": "Expected deliverables"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "has_other": true,
+        "other_label": "Autre livrable"
+      },
+      "options": [
+        {
+          "id": "brief-creatif-f11-o1",
+          "label": {
+            "fr": "Logo et charte graphique",
+            "en": "Logo and brand guidelines"
+          }
+        },
+        {
+          "id": "brief-creatif-f11-o2",
+          "label": {
+            "fr": "Déclinaisons réseaux sociaux",
+            "en": "Social media adaptations"
+          }
+        },
+        {
+          "id": "brief-creatif-f11-o3",
+          "label": {
+            "fr": "Affiches et supports print",
+            "en": "Posters and print material"
+          }
+        },
+        {
+          "id": "brief-creatif-f11-o4",
+          "label": {
+            "fr": "Vidéo ou motion design",
+            "en": "Video or motion design"
+          }
+        },
+        {
+          "id": "brief-creatif-f11-o5",
+          "label": {
+            "fr": "Photographies",
+            "en": "Photography"
+          }
+        },
+        {
+          "id": "brief-creatif-f11-o6",
+          "label": {
+            "fr": "Landing page",
+            "en": "Landing page"
+          }
+        },
+        {
+          "id": "brief-creatif-f11-o7",
+          "label": {
+            "fr": "Packaging et étiquettes",
+            "en": "Packaging and labels"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f12",
+      "type": "date",
+      "label": {
+        "fr": "Date de livraison souhaitée",
+        "en": "Requested delivery date"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f13",
+      "type": "single_choice",
+      "label": {
+        "fr": "Budget envisagé",
+        "en": "Budget range"
+      },
+      "description": {
+        "fr": "Une fourchette suffit : elle oriente l’ambition de la proposition.",
+        "en": "A range is enough: it shapes the ambition of the proposal."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "brief-creatif-f13-o1",
+          "label": {
+            "fr": "Moins de 50 000 MUR",
+            "en": "Under MUR 50,000"
+          }
+        },
+        {
+          "id": "brief-creatif-f13-o2",
+          "label": {
+            "fr": "50 000 – 150 000 MUR",
+            "en": "MUR 50,000 – 150,000"
+          }
+        },
+        {
+          "id": "brief-creatif-f13-o3",
+          "label": {
+            "fr": "150 000 – 400 000 MUR",
+            "en": "MUR 150,000 – 400,000"
+          }
+        },
+        {
+          "id": "brief-creatif-f13-o4",
+          "label": {
+            "fr": "Plus de 400 000 MUR",
+            "en": "Over MUR 400,000"
+          }
+        },
+        {
+          "id": "brief-creatif-f13-o5",
+          "label": {
+            "fr": "À définir ensemble",
+            "en": "To be defined together"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f14",
+      "type": "long_text",
+      "label": {
+        "fr": "Références et inspirations",
+        "en": "References and inspiration"
+      },
+      "description": {
+        "fr": "Ce que vous aimez, ce que vous détestez, et pourquoi. Les liens sont les bienvenus.",
+        "en": "What you like, what you dislike, and why. Links are welcome."
+      },
+      "placeholder": {
+        "fr": "J’aime la sobriété de… je veux éviter tout ce qui ressemble à…",
+        "en": "I like how restrained… I want to avoid anything that looks like…"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 1000
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-creatif-f15",
+      "type": "file",
+      "label": {
+        "fr": "Vos éléments de marque existants",
+        "en": "Your existing brand assets"
+      },
+      "description": {
+        "fr": "Logo, charte, photos, ancien support — même incomplet, cela nous fait gagner du temps.",
+        "en": "Logo, guidelines, photos, an old layout — even partial, it saves us time."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "pdf",
+          "ai",
+          "eps",
+          "png",
+          "jpg",
+          "zip"
+        ],
+        "max_file_size_mb": 25
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

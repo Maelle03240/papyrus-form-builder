@@ -1,0 +1,532 @@
+{
+  "id": "tpl-mooove-candidature-poste",
+  "slug": "candidature-poste",
+  "category": "RH & Recrutement",
+  "icon": "Briefcase",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Candidature à un poste",
+    "en": "Job application"
+  },
+  "description": {
+    "fr": "Quatre étapes courtes. Chaque candidature reçoit une réponse, positive ou non, sous dix jours.",
+    "en": "Four short steps. Every application gets an answer, positive or not, within ten days."
+  },
+  "template_description": {
+    "fr": "Candidature complète avec CV, lettre, compétences et relances conditionnelles sur le préavis et le permis de travail.",
+    "en": "Full application with CV, cover letter, skills and conditional follow-ups on notice period and work permit."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "candidature-poste-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Coordonnées",
+        "en": "Contact details"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-poste-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Shailesh Bhugaloo",
+        "en": "Shailesh Bhugaloo"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 100
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-poste-f3",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail",
+        "en": "Email address"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "shailesh@exemple.mu",
+        "en": "shailesh@example.mu"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-poste-f4",
+      "type": "single_choice",
+      "label": {
+        "fr": "Votre autorisation de travail à Maurice",
+        "en": "Your right to work in Mauritius"
+      },
+      "description": {
+        "fr": "Cette réponse ne disqualifie personne, elle nous indique les démarches à prévoir.",
+        "en": "This answer disqualifies no one — it tells us what paperwork to plan for."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "candidature-poste-f4-o1",
+          "label": {
+            "fr": "Je suis citoyen·ne mauricien·ne",
+            "en": "I am a Mauritian citizen"
+          }
+        },
+        {
+          "id": "candidature-poste-f4-o2",
+          "label": {
+            "fr": "Je détiens un permis de travail ou de résidence valide",
+            "en": "I hold a valid work or residence permit"
+          }
+        },
+        {
+          "id": "candidature-poste-f4-o3",
+          "label": {
+            "fr": "J’aurais besoin d’un permis de travail",
+            "en": "I would need a work permit"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "candidature-poste-f5",
+      "type": "short_text",
+      "label": {
+        "fr": "Précisez votre situation administrative",
+        "en": "Tell us about your immigration situation"
+      },
+      "description": {
+        "fr": "Nationalité, lieu de résidence actuel et délai estimé pour vous installer.",
+        "en": "Nationality, where you currently live and how soon you could relocate."
+      },
+      "placeholder": {
+        "fr": "Nationalité, pays de résidence, délai d’installation",
+        "en": "Nationality, country of residence, relocation lead time"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 180
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-poste-f6",
+      "type": "section_break",
+      "label": {
+        "fr": "Expérience",
+        "en": "Experience"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-poste-f7",
+      "type": "number",
+      "label": {
+        "fr": "Années d’expérience professionnelle",
+        "en": "Years of professional experience"
+      },
+      "description": {
+        "fr": "Stages et alternance non compris.",
+        "en": "Internships and apprenticeships excluded."
+      },
+      "placeholder": {
+        "fr": "5",
+        "en": "5"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 50,
+        "response_type": "integer",
+        "unit": "none"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-poste-f8",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Compétences clés que vous maîtrisez",
+        "en": "Key skills you master"
+      },
+      "description": {
+        "fr": "Ne cochez que ce que vous pourriez défendre en entretien.",
+        "en": "Only tick what you could defend in an interview."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "has_other": true,
+        "other_label": "Autre compétence",
+        "selection_min": 1
+      },
+      "options": [
+        {
+          "id": "candidature-poste-f8-o1",
+          "label": {
+            "fr": "Gestion de projet",
+            "en": "Project management"
+          }
+        },
+        {
+          "id": "candidature-poste-f8-o2",
+          "label": {
+            "fr": "Relation client",
+            "en": "Client relationship"
+          }
+        },
+        {
+          "id": "candidature-poste-f8-o3",
+          "label": {
+            "fr": "Rédaction et communication",
+            "en": "Writing and communication"
+          }
+        },
+        {
+          "id": "candidature-poste-f8-o4",
+          "label": {
+            "fr": "Analyse de données",
+            "en": "Data analysis"
+          }
+        },
+        {
+          "id": "candidature-poste-f8-o5",
+          "label": {
+            "fr": "Design d’interface",
+            "en": "Interface design"
+          }
+        },
+        {
+          "id": "candidature-poste-f8-o6",
+          "label": {
+            "fr": "Développement logiciel",
+            "en": "Software development"
+          }
+        },
+        {
+          "id": "candidature-poste-f8-o7",
+          "label": {
+            "fr": "Encadrement d’équipe",
+            "en": "Team leadership"
+          }
+        },
+        {
+          "id": "candidature-poste-f8-o8",
+          "label": {
+            "fr": "Négociation commerciale",
+            "en": "Commercial negotiation"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "candidature-poste-f9",
+      "type": "section_break",
+      "label": {
+        "fr": "Documents",
+        "en": "Documents"
+      },
+      "description": {
+        "fr": "Deux fichiers, rien de plus.",
+        "en": "Two files, nothing more."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-poste-f10",
+      "type": "file",
+      "label": {
+        "fr": "Curriculum vitae",
+        "en": "Curriculum vitae"
+      },
+      "description": {
+        "fr": "PDF ou Word, 10 Mo maximum.",
+        "en": "PDF or Word, 10 MB maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "pdf",
+          "doc",
+          "docx"
+        ],
+        "max_file_size_mb": 10
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-poste-f11",
+      "type": "file",
+      "label": {
+        "fr": "Lettre de motivation",
+        "en": "Cover letter"
+      },
+      "description": {
+        "fr": "Une page suffit. PDF ou Word, 5 Mo maximum.",
+        "en": "One page is plenty. PDF or Word, 5 MB maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "pdf",
+          "doc",
+          "docx"
+        ],
+        "max_file_size_mb": 5
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-poste-f12",
+      "type": "section_break",
+      "label": {
+        "fr": "Disponibilité",
+        "en": "Availability"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "candidature-poste-f13",
+      "type": "single_choice",
+      "label": {
+        "fr": "Votre situation actuelle",
+        "en": "Your current situation"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "candidature-poste-f13-o1",
+          "label": {
+            "fr": "En poste, avec un préavis à respecter",
+            "en": "Employed, with a notice period to serve"
+          }
+        },
+        {
+          "id": "candidature-poste-f13-o2",
+          "label": {
+            "fr": "Disponible immédiatement",
+            "en": "Available immediately"
+          }
+        },
+        {
+          "id": "candidature-poste-f13-o3",
+          "label": {
+            "fr": "En freelance, missions en cours",
+            "en": "Freelancing, with ongoing engagements"
+          }
+        },
+        {
+          "id": "candidature-poste-f13-o4",
+          "label": {
+            "fr": "En études ou en formation",
+            "en": "Studying or in training"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "candidature-poste-f14",
+      "type": "single_choice",
+      "label": {
+        "fr": "Durée de votre préavis",
+        "en": "Length of your notice period"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "candidature-poste-f14-o1",
+          "label": {
+            "fr": "Deux semaines",
+            "en": "Two weeks"
+          }
+        },
+        {
+          "id": "candidature-poste-f14-o2",
+          "label": {
+            "fr": "Un mois",
+            "en": "One month"
+          }
+        },
+        {
+          "id": "candidature-poste-f14-o3",
+          "label": {
+            "fr": "Deux mois",
+            "en": "Two months"
+          }
+        },
+        {
+          "id": "candidature-poste-f14-o4",
+          "label": {
+            "fr": "Trois mois ou plus",
+            "en": "Three months or more"
+          }
+        },
+        {
+          "id": "candidature-poste-f14-o5",
+          "label": {
+            "fr": "Négociable avec mon employeur",
+            "en": "Negotiable with my employer"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "candidature-poste-rule1",
+      "conditions": [
+        {
+          "source_field_id": "candidature-poste-f4",
+          "operator": "equals",
+          "value": "candidature-poste-f4-o3"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "candidature-poste-f5",
+      "rule_order": 0
+    },
+    {
+      "id": "candidature-poste-rule2",
+      "conditions": [
+        {
+          "source_field_id": "candidature-poste-f13",
+          "operator": "equals",
+          "value": "candidature-poste-f13-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "candidature-poste-f14",
+      "rule_order": 1
+    }
+  ]
+}

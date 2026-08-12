@@ -14,7 +14,6 @@ import {
   Star,
   TrendingUp
 } from 'lucide-react';
-import * as Icons from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { Modal } from '@/components/ui/Modal';
@@ -22,11 +21,26 @@ import { formatCount, cn } from '@/lib/utils';
 import { useForms } from '@/lib/store/use-forms';
 import { createForm } from '@/lib/store';
 import { getWorkspaces } from '@/lib/store/workspaces';
-import { cloneTemplate, listTemplatesByScope } from '@/lib/store/templates';
+import {
+  cloneTemplate,
+  fetchGlobalTemplate,
+  listLocalTemplatesByScope
+} from '@/lib/store/templates';
 import { FAVORITES_EVENT, listFavorites } from '@/lib/store/favorites';
 import { toast } from '@/components/ui/Toast';
 import { getUserProfile } from '@/lib/store/team-invitations';
+import { resolveTemplateIcon } from '@/components/templates/template-icons';
+import type { TemplateIndexEntry } from '@/lib/templates/types';
 import type { Form, Workspace, UserProfile } from '@/types';
+
+/**
+ * Un favori affichable, qu'il vienne du catalogue Mooove ou des modèles de
+ * l'utilisateur. Les deux ne se clonent pas de la même façon : un modèle global
+ * doit d'abord être téléchargé depuis /api/templates.
+ */
+type FavoriteTemplate =
+  | { kind: 'global'; id: string; title: string; category: string; icon?: string; slug: string }
+  | { kind: 'local'; id: string; title: string; category: string; icon?: string; form: Form };
 
 export default function DashboardHome() {
   const forms = useForms();
@@ -37,6 +51,13 @@ export default function DashboardHome() {
   const [isWorkspaceModalOpen, setIsWorkspaceModalOpen] = useState(false);
   const [selectedWorkspaceId, setSelectedWorkspaceId] = useState<string>('');
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  /**
+   * Index du catalogue Mooove. Chargé depuis /api/templates plutôt qu'importé :
+   * cette page est un composant client, et embarquer le catalogue ici le ferait
+   * repartir dans le bundle — exactement ce que la sortie du catalogue visait à
+   * éviter. La route est mise en cache une heure par le navigateur.
+   */
+  const [templateIndex, setTemplateIndex] = useState<TemplateIndexEntry[]>([]);
 
   // Synchro favoris
   useEffect(() => {
@@ -46,6 +67,23 @@ export default function DashboardHome() {
     refresh();
     window.addEventListener(FAVORITES_EVENT, refresh);
     return () => window.removeEventListener(FAVORITES_EVENT, refresh);
+  }, []);
+
+  // Index du catalogue — sert uniquement à retrouver les favoris globaux.
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/templates')
+      .then((response) => (response.ok ? response.json() : []))
+      .then((index: TemplateIndexEntry[]) => {
+        if (!cancelled) setTemplateIndex(index);
+      })
+      .catch(() => {
+        // Sans index, la bande Favoris n'affiche que les modèles locaux : c'est
+        // une dégradation acceptable, pas une erreur à montrer à l'utilisateur.
+      });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   // Charger les espaces de travail pour afficher leurs noms sur les cartes
@@ -93,11 +131,33 @@ export default function DashboardHome() {
     [forms]
   );
 
-  const favoriteTemplates = useMemo(() => {
-    const buckets = listTemplatesByScope(forms);
-    const all = [...buckets.global, ...buckets.workspace, ...buckets.personal];
-    return all.filter((t) => favorites.has(t.id)).slice(0, 4);
-  }, [forms, favorites]);
+  const favoriteTemplates = useMemo<FavoriteTemplate[]>(() => {
+    const buckets = listLocalTemplatesByScope(forms);
+
+    const local: FavoriteTemplate[] = [...buckets.workspace, ...buckets.personal]
+      .filter((t) => favorites.has(t.id))
+      .map((form) => ({
+        kind: 'local',
+        id: form.id,
+        title: form.title,
+        category: form.template_category ?? '',
+        icon: form.template_icon,
+        form
+      }));
+
+    const global: FavoriteTemplate[] = templateIndex
+      .filter((entry) => favorites.has(entry.id))
+      .map((entry) => ({
+        kind: 'global',
+        id: entry.id,
+        title: entry.title.fr,
+        category: entry.category,
+        icon: entry.icon,
+        slug: entry.slug
+      }));
+
+    return [...global, ...local].slice(0, 4);
+  }, [forms, favorites, templateIndex]);
 
   // Réponses du mois — placeholder en attendant la collecte
   const responsesThisMonth = '—';
@@ -127,9 +187,14 @@ export default function DashboardHome() {
     }
   }
 
-  async function handleUseTemplate(template: Form) {
+  async function handleUseTemplate(favorite: FavoriteTemplate) {
     try {
-      const cloned = await cloneTemplate(template);
+      // Un modèle global n'est qu'une entrée d'index à ce stade : sa définition
+      // complète est téléchargée à la demande, comme dans la galerie.
+      const source =
+        favorite.kind === 'global' ? await fetchGlobalTemplate(favorite.slug) : favorite.form;
+
+      const cloned = await cloneTemplate(source);
       router.push(`/forms/${cloned.id}/edit`);
     } catch (error) {
       console.error('Failed to clone template:', error);
@@ -180,7 +245,7 @@ export default function DashboardHome() {
       <section>
         <SectionHeader
           title="Vos modèles favoris"
-          icon={<Star className="h-4 w-4 fill-mooove-amber text-mooove-amber" />}
+          icon={<Star className="h-4 w-4 fill-mooove-electric text-mooove-electric" />}
           linkHref="/templates"
           linkLabel="Voir tous les modèles"
         />
@@ -390,8 +455,14 @@ function FormCard({ form, workspaceName }: { form: Form; workspaceName?: string 
   );
 }
 
-function FavoriteTemplateCard({ template, onUse }: { template: Form; onUse: () => void }) {
-  const Icon = resolveIcon(template.template_icon);
+function FavoriteTemplateCard({
+  template,
+  onUse
+}: {
+  template: FavoriteTemplate;
+  onUse: () => void;
+}) {
+  const Icon = resolveTemplateIcon(template.icon);
   return (
     <button
       type="button"
@@ -402,9 +473,7 @@ function FavoriteTemplateCard({ template, onUse }: { template: Form; onUse: () =
         <Icon className="h-4 w-4" />
       </div>
       <div className="font-display text-base leading-tight text-text-primary">{template.title}</div>
-      {template.template_category && (
-        <div className="papyrus-meta text-xs">i. {template.template_category}</div>
-      )}
+      {template.category && <div className="papyrus-meta text-xs">i. {template.category}</div>}
       <div className="mt-1 inline-flex items-center gap-1 text-xs text-accent opacity-0 transition group-hover:opacity-100">
         Utiliser <ArrowRight className="h-3 w-3" />
       </div>
@@ -451,12 +520,4 @@ function StatusBadge({ status }: { status: string }) {
   if (status === 'published') return <Badge variant="published" className="text-xs px-2 py-1">Publié</Badge>;
   if (status === 'closed') return <Badge variant="closed" className="text-xs px-2 py-1">Clos</Badge>;
   return <Badge variant="draft" className="text-xs px-2 py-1">Brouillon</Badge>;
-}
-
-/** Résout un nom d'icône Lucide en composant. */
-function resolveIcon(name?: string): React.ComponentType<{ className?: string }> {
-  if (!name) return LayoutTemplate;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const lib = Icons as any;
-  return (lib[name] as React.ComponentType<{ className?: string }>) ?? LayoutTemplate;
 }

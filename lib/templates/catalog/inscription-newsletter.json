@@ -1,0 +1,296 @@
+{
+  "id": "tpl-mooove-inscription-newsletter",
+  "slug": "inscription-newsletter",
+  "category": "Contact & Leads",
+  "icon": "Send",
+  "display_mode": "scroll",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Inscription à la newsletter",
+    "en": "Newsletter signup"
+  },
+  "description": {
+    "fr": "Recevez nos analyses et nos coulisses. Deux champs, un désabonnement en un clic, jamais de revente de données.",
+    "en": "Get our analysis and behind-the-scenes notes. Two fields, one-click unsubscribe, and we never sell your data."
+  },
+  "template_description": {
+    "fr": "Inscription courte avec centres d’intérêt en cartes, fréquence au choix et consentement RGPD explicite.",
+    "en": "Short signup with interests as cards, a frequency choice and an explicit GDPR consent."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "inscription-newsletter-f1",
+      "type": "short_text",
+      "label": {
+        "fr": "Prénom",
+        "en": "First name"
+      },
+      "description": {
+        "fr": "Pour vous écrire correctement.",
+        "en": "So we can address you properly."
+      },
+      "placeholder": {
+        "fr": "Priya",
+        "en": "Priya"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 60
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-newsletter-f2",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail",
+        "en": "Email address"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "priya@exemple.mu",
+        "en": "priya@example.mu"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-newsletter-f3",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Les sujets qui vous intéressent",
+        "en": "Topics you care about"
+      },
+      "description": {
+        "fr": "Nous n’envoyons que ce que vous cochez.",
+        "en": "We only send what you tick."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 2,
+        "selection_min": 1
+      },
+      "options": [
+        {
+          "id": "inscription-newsletter-f3-o1",
+          "label": {
+            "fr": "Stratégie de marque",
+            "en": "Brand strategy"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f3-o2",
+          "label": {
+            "fr": "Design et interfaces",
+            "en": "Design and interfaces"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f3-o3",
+          "label": {
+            "fr": "Développement produit",
+            "en": "Product development"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f3-o4",
+          "label": {
+            "fr": "Marketing et acquisition",
+            "en": "Marketing and growth"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f3-o5",
+          "label": {
+            "fr": "Études de cas clients",
+            "en": "Client case studies"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f3-o6",
+          "label": {
+            "fr": "Offres d’emploi et coulisses",
+            "en": "Job openings and behind the scenes"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "inscription-newsletter-f4",
+      "type": "single_choice",
+      "label": {
+        "fr": "À quelle fréquence souhaitez-vous nous lire ?",
+        "en": "How often would you like to hear from us?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "inscription-newsletter-f4-o1",
+          "label": {
+            "fr": "Chaque semaine",
+            "en": "Weekly"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f4-o2",
+          "label": {
+            "fr": "Deux fois par mois",
+            "en": "Twice a month"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f4-o3",
+          "label": {
+            "fr": "Une fois par mois",
+            "en": "Monthly"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f4-o4",
+          "label": {
+            "fr": "Seulement les annonces importantes",
+            "en": "Major announcements only"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "inscription-newsletter-f5",
+      "type": "dropdown",
+      "label": {
+        "fr": "Vous êtes plutôt…",
+        "en": "You are mostly…"
+      },
+      "description": {
+        "fr": "Facultatif, cela nous aide à choisir nos sujets.",
+        "en": "Optional — it helps us pick the right subjects."
+      },
+      "placeholder": {
+        "fr": "Choisissez un profil",
+        "en": "Pick a profile"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "inscription-newsletter-f5-o1",
+          "label": {
+            "fr": "Dirigeant·e d’entreprise",
+            "en": "Business owner or executive"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f5-o2",
+          "label": {
+            "fr": "Marketing ou communication",
+            "en": "Marketing or communications"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f5-o3",
+          "label": {
+            "fr": "Design ou produit",
+            "en": "Design or product"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f5-o4",
+          "label": {
+            "fr": "Technique ou développement",
+            "en": "Engineering or development"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f5-o5",
+          "label": {
+            "fr": "Étudiant·e",
+            "en": "Student"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f5-o6",
+          "label": {
+            "fr": "Simple curieux·se",
+            "en": "Just curious"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "inscription-newsletter-f6",
+      "type": "single_choice",
+      "label": {
+        "fr": "Consentement",
+        "en": "Consent"
+      },
+      "description": {
+        "fr": "Vous pouvez vous désabonner à tout moment depuis le lien en bas de chaque e-mail.",
+        "en": "You can unsubscribe at any time from the link at the bottom of every email."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "inscription-newsletter-f6-o1",
+          "label": {
+            "fr": "J’accepte de recevoir la newsletter à cette adresse",
+            "en": "I agree to receive the newsletter at this address"
+          }
+        },
+        {
+          "id": "inscription-newsletter-f6-o2",
+          "label": {
+            "fr": "J’accepte aussi les invitations à vos événements",
+            "en": "I also agree to receive invitations to your events"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

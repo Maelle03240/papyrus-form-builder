@@ -48,3 +48,8 @@ Thumbs.db
 
 # Supabase temp files
 supabase/.temp/
+
+# Archive de livraison du catalogue de modèles — son contenu est désormais
+# versionné, décompressé, dans lib/templates/catalog/. La garder en binaire
+# dupliquerait 149 Ko dans l'historique pour toujours.
+Templates/*.zip

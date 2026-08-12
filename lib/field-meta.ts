@@ -55,7 +55,10 @@ export const FIELD_CATEGORIES: { title: string; types: FieldType[] }[] = [
   { title: 'Texte', types: ['short_text', 'long_text', 'email', 'phone', 'url'] },
   { title: 'Choix', types: ['single_choice', 'multiple_choice', 'dropdown'] },
   { title: 'Évaluation', types: ['rating', 'nps', 'matrix'] },
-  { title: 'Données', types: ['date', 'file'] },
+  // `number` était déclaré dans FIELD_META mais absent de toutes les familles :
+  // comme FieldPalette itère sur FIELD_CATEGORIES, le champ Nombre n'apparaissait
+  // nulle part dans la palette du builder. Le catalogue s'en sert 16 fois.
+  { title: 'Données', types: ['number', 'date', 'file'] },
   { title: 'Mise en page', types: ['section_break', 'statement', 'image', 'video'] }
 ];
 

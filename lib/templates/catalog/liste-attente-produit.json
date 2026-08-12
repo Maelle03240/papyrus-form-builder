@@ -1,0 +1,299 @@
+{
+  "id": "tpl-mooove-liste-attente-produit",
+  "slug": "liste-attente-produit",
+  "category": "Contact & Leads",
+  "icon": "Hourglass",
+  "display_mode": "typeform",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Liste d’attente produit",
+    "en": "Product waitlist"
+  },
+  "description": {
+    "fr": "Rejoignez la liste d’attente et aidez-nous à construire la bonne version.",
+    "en": "Join the waitlist and help us build the right version."
+  },
+  "template_description": {
+    "fr": "Une question par écran pour capter les premiers inscrits et mesurer l’urgence réelle du besoin.",
+    "en": "One question per screen to capture early signups and measure how urgent the need really is."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "liste-attente-produit-f1",
+      "type": "statement",
+      "label": {
+        "fr": "Nous ouvrons les premiers accès dans quelques semaines",
+        "en": "We open the first access slots in a few weeks"
+      },
+      "description": {
+        "fr": "Quatre questions, moins d’une minute. Les réponses orientent réellement ce que nous construisons en premier.",
+        "en": "Four questions, under a minute. Your answers genuinely shape what we build first."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "show_title": true,
+        "alignment": "center"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "liste-attente-produit-fmedia",
+      "type": "video",
+      "label": {
+        "fr": "Découvrez le produit en 90 secondes",
+        "en": "See the product in 90 seconds"
+      },
+      "description": {
+        "fr": "Remplacez cette vidéo par votre propre démo (YouTube ou Vimeo).",
+        "en": "Replace this video with your own demo (YouTube or Vimeo)."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "creator_mode_enabled": true,
+        "respondent_mode_enabled": false,
+        "show_title": true,
+        "alignment": "center"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "liste-attente-produit-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Comment doit-on vous appeler ?",
+        "en": "What should we call you?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Votre prénom",
+        "en": "Your first name"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 60
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "liste-attente-produit-f3",
+      "type": "email",
+      "label": {
+        "fr": "À quelle adresse vous prévenir ?",
+        "en": "Where should we send your invitation?"
+      },
+      "description": {
+        "fr": "Un seul e-mail, le jour de votre ouverture d’accès.",
+        "en": "One email only, the day your access opens."
+      },
+      "placeholder": {
+        "fr": "vous@exemple.mu",
+        "en": "you@example.mu"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "liste-attente-produit-f4",
+      "type": "long_text",
+      "label": {
+        "fr": "Quel problème essayez-vous de résoudre ?",
+        "en": "What problem are you trying to solve?"
+      },
+      "description": {
+        "fr": "Décrivez la situation concrète, pas la solution que vous imaginez.",
+        "en": "Describe the actual situation, not the solution you have in mind."
+      },
+      "placeholder": {
+        "fr": "Aujourd’hui, je perds deux heures par semaine à…",
+        "en": "Right now I lose two hours a week to…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "liste-attente-produit-f5",
+      "type": "nps",
+      "label": {
+        "fr": "À quel point ce problème est-il urgent pour vous ?",
+        "en": "How urgent is this problem for you?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Je peux vivre avec",
+        "nps_right_label": "Il me faut une solution maintenant",
+        "display_style": "slider"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "liste-attente-produit-f6",
+      "type": "single_choice",
+      "label": {
+        "fr": "Seriez-vous prêt·e à payer pour une solution qui règle ce problème ?",
+        "en": "Would you pay for something that solves this?"
+      },
+      "description": {
+        "fr": "Répondez franchement, cela ne vous engage à rien.",
+        "en": "Answer honestly — this commits you to nothing."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards"
+      },
+      "options": [
+        {
+          "id": "liste-attente-produit-f6-o1",
+          "label": {
+            "fr": "Oui, tout de suite",
+            "en": "Yes, right away"
+          }
+        },
+        {
+          "id": "liste-attente-produit-f6-o2",
+          "label": {
+            "fr": "Oui, si le prix reste raisonnable",
+            "en": "Yes, if the price stays reasonable"
+          }
+        },
+        {
+          "id": "liste-attente-produit-f6-o3",
+          "label": {
+            "fr": "Peut-être, après un essai",
+            "en": "Maybe, after a trial"
+          }
+        },
+        {
+          "id": "liste-attente-produit-f6-o4",
+          "label": {
+            "fr": "Non, je cherche une solution gratuite",
+            "en": "No, I am looking for a free option"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "liste-attente-produit-f7",
+      "type": "dropdown",
+      "label": {
+        "fr": "Comment avez-vous entendu parler de nous ?",
+        "en": "How did you hear about us?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Choisissez une réponse",
+        "en": "Pick an answer"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "liste-attente-produit-f7-o1",
+          "label": {
+            "fr": "Un ami ou un collègue",
+            "en": "A friend or colleague"
+          }
+        },
+        {
+          "id": "liste-attente-produit-f7-o2",
+          "label": {
+            "fr": "LinkedIn",
+            "en": "LinkedIn"
+          }
+        },
+        {
+          "id": "liste-attente-produit-f7-o3",
+          "label": {
+            "fr": "Instagram ou Facebook",
+            "en": "Instagram or Facebook"
+          }
+        },
+        {
+          "id": "liste-attente-produit-f7-o4",
+          "label": {
+            "fr": "Une recherche en ligne",
+            "en": "An online search"
+          }
+        },
+        {
+          "id": "liste-attente-produit-f7-o5",
+          "label": {
+            "fr": "Une newsletter ou un podcast",
+            "en": "A newsletter or a podcast"
+          }
+        },
+        {
+          "id": "liste-attente-produit-f7-o6",
+          "label": {
+            "fr": "Un événement",
+            "en": "An event"
+          }
+        },
+        {
+          "id": "liste-attente-produit-f7-o7",
+          "label": {
+            "fr": "Autre",
+            "en": "Other"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

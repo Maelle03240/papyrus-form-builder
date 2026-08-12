@@ -1,0 +1,495 @@
+{
+  "id": "tpl-mooove-evaluation-formation",
+  "slug": "evaluation-formation",
+  "category": "Éducation & Quiz",
+  "icon": "Award",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Évaluation de formation",
+    "en": "Training evaluation"
+  },
+  "description": {
+    "fr": "Votre avis à chaud sur la formation suivie : contenu, animation et progression. Cinq minutes suffisent et vos réponses guident la prochaine session.",
+    "en": "Your immediate feedback on the course you attended: content, delivery and progress. Five minutes is enough, and your answers shape the next session."
+  },
+  "template_description": {
+    "fr": "Évaluation à chaud (Kirkpatrick niveau 1) : matrice de satisfaction, progression avant/après et recommandation.",
+    "en": "Immediate reaction survey (Kirkpatrick level 1): satisfaction matrix, before/after progress and recommendation."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "evaluation-formation-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "La formation",
+        "en": "The course"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "evaluation-formation-f2",
+      "type": "dropdown",
+      "label": {
+        "fr": "Formation suivie",
+        "en": "Course attended"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une formation",
+        "en": "Select a course"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "evaluation-formation-f2-o1",
+          "label": {
+            "fr": "Tableur avancé — tableaux croisés et automatisation",
+            "en": "Advanced spreadsheets — pivot tables and automation"
+          }
+        },
+        {
+          "id": "evaluation-formation-f2-o2",
+          "label": {
+            "fr": "Gestion de projet agile — les fondamentaux de Scrum",
+            "en": "Agile project management — Scrum fundamentals"
+          }
+        },
+        {
+          "id": "evaluation-formation-f2-o3",
+          "label": {
+            "fr": "Communication professionnelle et prise de parole",
+            "en": "Professional communication and public speaking"
+          }
+        },
+        {
+          "id": "evaluation-formation-f2-o4",
+          "label": {
+            "fr": "Cybersécurité : les bons réflexes au quotidien",
+            "en": "Cybersecurity: everyday good practice"
+          }
+        },
+        {
+          "id": "evaluation-formation-f2-o5",
+          "label": {
+            "fr": "Intelligence artificielle générative pour les métiers",
+            "en": "Generative AI for business teams"
+          }
+        },
+        {
+          "id": "evaluation-formation-f2-o6",
+          "label": {
+            "fr": "Management d’équipe : les fondamentaux",
+            "en": "Team management: the fundamentals"
+          }
+        },
+        {
+          "id": "evaluation-formation-f2-o7",
+          "label": {
+            "fr": "Lecture et analyse des états financiers",
+            "en": "Reading and analysing financial statements"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "evaluation-formation-f3",
+      "type": "date",
+      "label": {
+        "fr": "Date de la session",
+        "en": "Session date"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "evaluation-formation-f4",
+      "type": "section_break",
+      "label": {
+        "fr": "Le formateur et le déroulé",
+        "en": "The trainer and the delivery"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "evaluation-formation-f5",
+      "type": "matrix",
+      "label": {
+        "fr": "Comment évaluez-vous chacun de ces aspects ?",
+        "en": "How do you rate each of these aspects?"
+      },
+      "description": {
+        "fr": "Une réponse par ligne.",
+        "en": "One answer per row."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "matrix_mode": "single"
+      },
+      "options": [
+        {
+          "id": "evaluation-formation-f5-o1",
+          "label": {
+            "fr": "Très insuffisant",
+            "en": "Very poor"
+          }
+        },
+        {
+          "id": "evaluation-formation-f5-o2",
+          "label": {
+            "fr": "Insuffisant",
+            "en": "Poor"
+          }
+        },
+        {
+          "id": "evaluation-formation-f5-o3",
+          "label": {
+            "fr": "Correct",
+            "en": "Fair"
+          }
+        },
+        {
+          "id": "evaluation-formation-f5-o4",
+          "label": {
+            "fr": "Très bien",
+            "en": "Good"
+          }
+        },
+        {
+          "id": "evaluation-formation-f5-o5",
+          "label": {
+            "fr": "Excellent",
+            "en": "Excellent"
+          }
+        }
+      ],
+      "rows": [
+        {
+          "id": "evaluation-formation-f5-r1",
+          "label": {
+            "fr": "Clarté des objectifs annoncés",
+            "en": "Clarity of the stated objectives"
+          }
+        },
+        {
+          "id": "evaluation-formation-f5-r2",
+          "label": {
+            "fr": "Qualité des supports remis",
+            "en": "Quality of the materials provided"
+          }
+        },
+        {
+          "id": "evaluation-formation-f5-r3",
+          "label": {
+            "fr": "Rythme de la formation",
+            "en": "Pace of the course"
+          }
+        },
+        {
+          "id": "evaluation-formation-f5-r4",
+          "label": {
+            "fr": "Équilibre entre théorie et pratique",
+            "en": "Balance between theory and practice"
+          }
+        },
+        {
+          "id": "evaluation-formation-f5-r5",
+          "label": {
+            "fr": "Animation et pédagogie du formateur",
+            "en": "Trainer’s delivery and teaching"
+          }
+        },
+        {
+          "id": "evaluation-formation-f5-r6",
+          "label": {
+            "fr": "Réponses apportées à vos questions",
+            "en": "Answers given to your questions"
+          }
+        },
+        {
+          "id": "evaluation-formation-f5-r7",
+          "label": {
+            "fr": "Organisation matérielle (salle, horaires, accueil)",
+            "en": "Practical organisation (room, schedule, welcome)"
+          }
+        }
+      ]
+    },
+    {
+      "id": "evaluation-formation-f6",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre progression",
+        "en": "Your progress"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "evaluation-formation-f7",
+      "type": "nps",
+      "label": {
+        "fr": "Votre niveau de maîtrise du sujet AVANT la formation",
+        "en": "Your command of the subject BEFORE the course"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Aucune connaissance",
+        "nps_right_label": "Parfaitement à l’aise"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "evaluation-formation-f8",
+      "type": "nps",
+      "label": {
+        "fr": "Votre niveau de maîtrise du sujet APRÈS la formation",
+        "en": "Your command of the subject AFTER the course"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Aucune connaissance",
+        "nps_right_label": "Parfaitement à l’aise"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "evaluation-formation-f9",
+      "type": "long_text",
+      "label": {
+        "fr": "Qu’allez-vous mettre en pratique en premier ?",
+        "en": "What will you put into practice first?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "evaluation-formation-f10",
+      "type": "long_text",
+      "label": {
+        "fr": "Qu’est-ce qui vous a manqué pendant cette formation ?",
+        "en": "What was missing from this course?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "evaluation-formation-f11",
+      "type": "nps",
+      "label": {
+        "fr": "Recommanderiez-vous cette formation à un collègue ?",
+        "en": "Would you recommend this course to a colleague?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Pas du tout",
+        "nps_right_label": "Tout à fait"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "evaluation-formation-f12",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quels autres sujets aimeriez-vous voir programmés ?",
+        "en": "Which other topics would you like to see scheduled?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "has_other": true,
+        "other_label": "Autre sujet"
+      },
+      "options": [
+        {
+          "id": "evaluation-formation-f12-o1",
+          "label": {
+            "fr": "Perfectionnement sur le même sujet",
+            "en": "Advanced level on the same subject"
+          }
+        },
+        {
+          "id": "evaluation-formation-f12-o2",
+          "label": {
+            "fr": "Management et animation d’équipe",
+            "en": "Management and team leadership"
+          }
+        },
+        {
+          "id": "evaluation-formation-f12-o3",
+          "label": {
+            "fr": "Analyse de données et reporting",
+            "en": "Data analysis and reporting"
+          }
+        },
+        {
+          "id": "evaluation-formation-f12-o4",
+          "label": {
+            "fr": "Intelligence artificielle générative",
+            "en": "Generative artificial intelligence"
+          }
+        },
+        {
+          "id": "evaluation-formation-f12-o5",
+          "label": {
+            "fr": "Cybersécurité et protection des données",
+            "en": "Cybersecurity and data protection"
+          }
+        },
+        {
+          "id": "evaluation-formation-f12-o6",
+          "label": {
+            "fr": "Gestion du temps et des priorités",
+            "en": "Time and priority management"
+          }
+        },
+        {
+          "id": "evaluation-formation-f12-o7",
+          "label": {
+            "fr": "Langues professionnelles",
+            "en": "Business languages"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

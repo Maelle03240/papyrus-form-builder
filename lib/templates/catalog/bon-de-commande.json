@@ -1,0 +1,578 @@
+{
+  "id": "tpl-mooove-bon-de-commande",
+  "slug": "bon-de-commande",
+  "category": "Réservations & Voyage",
+  "icon": "ShoppingCart",
+  "display_mode": "sections",
+  "feasibility": "blocked",
+  "feasibility_note": {
+    "fr": "Papyrus n’a ni champ de paiement, ni répéteur de lignes de commande, ni champ calculé : le formulaire recueille la commande mais ne peut ni la chiffrer ni l’encaisser, et le total doit être saisi à la main. Un champ de paiement Stripe, un groupe répétable et un champ formule sont nécessaires avant que ce modèle soit réellement exploitable.",
+    "en": "Papyrus has no payment field, no line-item repeater and no calculated field: the form collects the order but cannot price it or take payment, and the total has to be typed by hand. A Stripe payment field, a repeating group and a formula field are required before this template is genuinely usable."
+  },
+  "title": {
+    "fr": "Bon de commande",
+    "en": "Order form"
+  },
+  "description": {
+    "fr": "Renseignez votre commande et vos coordonnées de livraison. Nous vous adressons une facture proforma pour validation avant expédition.",
+    "en": "Fill in your order and delivery details. We send a proforma invoice for approval before shipping."
+  },
+  "template_description": {
+    "fr": "Prise de commande produit avec livraison : coordonnées, articles, quantité, adresse et instructions.",
+    "en": "Product order intake with delivery: contact details, items, quantity, address and instructions."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "bon-de-commande-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Vos coordonnées",
+        "en": "Your details"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f3",
+      "type": "short_text",
+      "label": {
+        "fr": "Société (facultatif)",
+        "en": "Company (optional)"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f4",
+      "type": "email",
+      "label": {
+        "fr": "Email de facturation",
+        "en": "Billing email"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "vous@exemple.com",
+        "en": "you@example.com"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f5",
+      "type": "phone",
+      "label": {
+        "fr": "Téléphone",
+        "en": "Phone"
+      },
+      "description": {
+        "fr": "Le livreur vous appelle avant de passer.",
+        "en": "The courier calls you before delivering."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "default_country": "MU"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f6",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre commande",
+        "en": "Your order"
+      },
+      "description": {
+        "fr": "Les prix sont indiqués TTC, hors frais de livraison.",
+        "en": "Prices include VAT and exclude delivery charges."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f7",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quels articles souhaitez-vous commander ?",
+        "en": "Which items would you like to order?"
+      },
+      "description": {
+        "fr": "Adaptez cette liste à votre catalogue avant publication.",
+        "en": "Adapt this list to your own catalogue before publishing."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "bon-de-commande-f7-o1",
+          "label": {
+            "fr": "T-shirt coton bio — 890 MUR",
+            "en": "Organic cotton T-shirt — MUR 890"
+          }
+        },
+        {
+          "id": "bon-de-commande-f7-o2",
+          "label": {
+            "fr": "Sweat à capuche — 1 750 MUR",
+            "en": "Hooded sweatshirt — MUR 1,750"
+          }
+        },
+        {
+          "id": "bon-de-commande-f7-o3",
+          "label": {
+            "fr": "Casquette brodée — 650 MUR",
+            "en": "Embroidered cap — MUR 650"
+          }
+        },
+        {
+          "id": "bon-de-commande-f7-o4",
+          "label": {
+            "fr": "Tote bag toile épaisse — 450 MUR",
+            "en": "Heavy canvas tote bag — MUR 450"
+          }
+        },
+        {
+          "id": "bon-de-commande-f7-o5",
+          "label": {
+            "fr": "Gourde isotherme — 1 200 MUR",
+            "en": "Insulated water bottle — MUR 1,200"
+          }
+        },
+        {
+          "id": "bon-de-commande-f7-o6",
+          "label": {
+            "fr": "Coffret découverte — 2 400 MUR",
+            "en": "Discovery box — MUR 2,400"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f8",
+      "type": "number",
+      "label": {
+        "fr": "Quantité totale d’articles",
+        "en": "Total quantity of items"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "1",
+        "en": "1"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "min": 1,
+        "max": 500,
+        "response_type": "integer",
+        "unit": "none"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f9",
+      "type": "dropdown",
+      "label": {
+        "fr": "Taille",
+        "en": "Size"
+      },
+      "description": {
+        "fr": "Pour les articles textiles uniquement.",
+        "en": "For clothing items only."
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une taille",
+        "en": "Select a size"
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "bon-de-commande-f9-o1",
+          "label": {
+            "fr": "XS",
+            "en": "XS"
+          }
+        },
+        {
+          "id": "bon-de-commande-f9-o2",
+          "label": {
+            "fr": "S",
+            "en": "S"
+          }
+        },
+        {
+          "id": "bon-de-commande-f9-o3",
+          "label": {
+            "fr": "M",
+            "en": "M"
+          }
+        },
+        {
+          "id": "bon-de-commande-f9-o4",
+          "label": {
+            "fr": "L",
+            "en": "L"
+          }
+        },
+        {
+          "id": "bon-de-commande-f9-o5",
+          "label": {
+            "fr": "XL",
+            "en": "XL"
+          }
+        },
+        {
+          "id": "bon-de-commande-f9-o6",
+          "label": {
+            "fr": "XXL",
+            "en": "XXL"
+          }
+        },
+        {
+          "id": "bon-de-commande-f9-o7",
+          "label": {
+            "fr": "Sans objet",
+            "en": "Not applicable"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f10",
+      "type": "section_break",
+      "label": {
+        "fr": "Livraison",
+        "en": "Delivery"
+      },
+      "description": {
+        "fr": "Où et comment vous livrer.",
+        "en": "Where and how to deliver."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f11",
+      "type": "short_text",
+      "label": {
+        "fr": "Rue et numéro",
+        "en": "Street and number"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "12, Royal Road",
+        "en": "12 Royal Road"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f12",
+      "type": "short_text",
+      "label": {
+        "fr": "Ville ou village",
+        "en": "Town or village"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Curepipe",
+        "en": "Curepipe"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f13",
+      "type": "short_text",
+      "label": {
+        "fr": "Code postal",
+        "en": "Postcode"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "74213",
+        "en": "74213"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f14",
+      "type": "dropdown",
+      "label": {
+        "fr": "Pays de livraison",
+        "en": "Delivery country"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un pays",
+        "en": "Select a country"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "bon-de-commande-f14-o1",
+          "label": {
+            "fr": "Maurice",
+            "en": "Mauritius"
+          }
+        },
+        {
+          "id": "bon-de-commande-f14-o2",
+          "label": {
+            "fr": "Rodrigues",
+            "en": "Rodrigues"
+          }
+        },
+        {
+          "id": "bon-de-commande-f14-o3",
+          "label": {
+            "fr": "La Réunion",
+            "en": "Réunion"
+          }
+        },
+        {
+          "id": "bon-de-commande-f14-o4",
+          "label": {
+            "fr": "Madagascar",
+            "en": "Madagascar"
+          }
+        },
+        {
+          "id": "bon-de-commande-f14-o5",
+          "label": {
+            "fr": "Seychelles",
+            "en": "Seychelles"
+          }
+        },
+        {
+          "id": "bon-de-commande-f14-o6",
+          "label": {
+            "fr": "France métropolitaine",
+            "en": "Mainland France"
+          }
+        },
+        {
+          "id": "bon-de-commande-f14-o7",
+          "label": {
+            "fr": "Autre pays — nous vous recontactons pour les frais",
+            "en": "Another country — we will come back to you on shipping costs"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f15",
+      "type": "single_choice",
+      "label": {
+        "fr": "Mode de livraison",
+        "en": "Delivery method"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards"
+      },
+      "options": [
+        {
+          "id": "bon-de-commande-f15-o1",
+          "label": {
+            "fr": "Retrait en boutique — gratuit",
+            "en": "Collect in store — free"
+          }
+        },
+        {
+          "id": "bon-de-commande-f15-o2",
+          "label": {
+            "fr": "Livraison standard (3 à 5 jours) — 250 MUR",
+            "en": "Standard delivery (3 to 5 days) — MUR 250"
+          }
+        },
+        {
+          "id": "bon-de-commande-f15-o3",
+          "label": {
+            "fr": "Livraison express (24 h) — 600 MUR",
+            "en": "Express delivery (24 h) — MUR 600"
+          }
+        },
+        {
+          "id": "bon-de-commande-f15-o4",
+          "label": {
+            "fr": "Envoi international — sur devis",
+            "en": "International shipping — quoted separately"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f16",
+      "type": "long_text",
+      "label": {
+        "fr": "Instructions particulières",
+        "en": "Special instructions"
+      },
+      "description": {
+        "fr": "Point de repère, horaires de présence, emballage cadeau, message à joindre.",
+        "en": "Landmark, when you are in, gift wrapping, a note to include."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 500
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "bon-de-commande-f17",
+      "type": "number",
+      "label": {
+        "fr": "Total de votre commande, calculé par vos soins",
+        "en": "Your order total, worked out by you"
+      },
+      "description": {
+        "fr": "Le formulaire ne calcule pas les totaux : reportez ici la somme des articles et des frais de livraison. Nous la vérifions sur la facture proforma.",
+        "en": "The form does not calculate totals: enter the sum of items and delivery charges here. We check it on the proforma invoice."
+      },
+      "placeholder": {
+        "fr": "2890",
+        "en": "2890"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "response_type": "decimal",
+        "unit": "mur"
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

@@ -1,0 +1,417 @@
+{
+  "id": "tpl-mooove-questionnaire-marque",
+  "slug": "questionnaire-marque",
+  "category": "Marketing & Agence",
+  "icon": "Sparkles",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Questionnaire de marque",
+    "en": "Brand discovery questionnaire"
+  },
+  "description": {
+    "fr": "Avant de dessiner quoi que ce soit, nous avons besoin de comprendre votre entreprise, votre positionnement et vos goûts. Prenez le temps : ce document sert de socle à toute la suite.",
+    "en": "Before we design anything, we need to understand your business, your positioning and your taste. Take your time: this document is the foundation for everything that follows."
+  },
+  "template_description": {
+    "fr": "L’atelier de marque en questionnaire : histoire, positionnement, personnalité, univers visuel.",
+    "en": "The brand workshop as a questionnaire: story, positioning, personality, visual world."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "questionnaire-marque-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre entreprise",
+        "en": "Your company"
+      },
+      "description": {
+        "fr": "Qui êtes-vous, et d’où venez-vous ?",
+        "en": "Who are you, and where do you come from?"
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "questionnaire-marque-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "En une phrase, que fait votre entreprise ?",
+        "en": "In one sentence, what does your company do?"
+      },
+      "description": {
+        "fr": "Comme si vous l’expliquiez à quelqu’un rencontré dans un ascenseur.",
+        "en": "As if you were explaining it to someone you met in a lift."
+      },
+      "placeholder": {
+        "fr": "Nous fabriquons des meubles sur mesure pour les hôtels de l’océan Indien.",
+        "en": "We build bespoke furniture for hotels across the Indian Ocean."
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "questionnaire-marque-f3",
+      "type": "long_text",
+      "label": {
+        "fr": "Racontez la naissance de l’entreprise",
+        "en": "Tell us how the company came to be"
+      },
+      "description": {
+        "fr": "Le déclic, les débuts, les moments qui comptent. C’est souvent là que se trouve la marque.",
+        "en": "The spark, the early days, the moments that mattered. That is often where the brand lives."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1500
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "questionnaire-marque-f4",
+      "type": "long_text",
+      "label": {
+        "fr": "Quelle est votre mission ? Pourquoi l’entreprise existe-t-elle, au-delà du chiffre d’affaires ?",
+        "en": "What is your mission? Why does the company exist, beyond revenue?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "questionnaire-marque-f5",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre positionnement",
+        "en": "Your positioning"
+      },
+      "description": {
+        "fr": "Votre place sur le marché, face aux autres.",
+        "en": "Your place in the market, next to the others."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "questionnaire-marque-f6",
+      "type": "long_text",
+      "label": {
+        "fr": "Vos trois principaux concurrents",
+        "en": "Your top three competitors"
+      },
+      "description": {
+        "fr": "Un par ligne, avec un mot sur ce qu’ils font mieux ou moins bien que vous.",
+        "en": "One per line, with a word on what they do better or worse than you."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "questionnaire-marque-f7",
+      "type": "long_text",
+      "label": {
+        "fr": "Qu’est-ce qui vous rend réellement différent ?",
+        "en": "What genuinely makes you different?"
+      },
+      "description": {
+        "fr": "Évitez « la qualité » et « le service » : cherchez ce qu’un concurrent ne pourrait pas dire.",
+        "en": "Avoid “quality” and “service”: look for what a competitor could not claim."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1000
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "questionnaire-marque-f8",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Si votre marque était une personne, quels traits la décriraient ?",
+        "en": "If your brand were a person, which traits would describe them?"
+      },
+      "description": {
+        "fr": "Cinq réponses maximum.",
+        "en": "Five answers maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 3,
+        "selection_max": 5
+      },
+      "options": [
+        {
+          "id": "questionnaire-marque-f8-o1",
+          "label": {
+            "fr": "Fiable",
+            "en": "Reliable"
+          }
+        },
+        {
+          "id": "questionnaire-marque-f8-o2",
+          "label": {
+            "fr": "Audacieuse",
+            "en": "Bold"
+          }
+        },
+        {
+          "id": "questionnaire-marque-f8-o3",
+          "label": {
+            "fr": "Chaleureuse",
+            "en": "Warm"
+          }
+        },
+        {
+          "id": "questionnaire-marque-f8-o4",
+          "label": {
+            "fr": "Exigeante",
+            "en": "Exacting"
+          }
+        },
+        {
+          "id": "questionnaire-marque-f8-o5",
+          "label": {
+            "fr": "Créative",
+            "en": "Creative"
+          }
+        },
+        {
+          "id": "questionnaire-marque-f8-o6",
+          "label": {
+            "fr": "Discrète",
+            "en": "Understated"
+          }
+        },
+        {
+          "id": "questionnaire-marque-f8-o7",
+          "label": {
+            "fr": "Experte",
+            "en": "Expert"
+          }
+        },
+        {
+          "id": "questionnaire-marque-f8-o8",
+          "label": {
+            "fr": "Accessible",
+            "en": "Approachable"
+          }
+        },
+        {
+          "id": "questionnaire-marque-f8-o9",
+          "label": {
+            "fr": "Élégante",
+            "en": "Elegant"
+          }
+        },
+        {
+          "id": "questionnaire-marque-f8-o10",
+          "label": {
+            "fr": "Engagée",
+            "en": "Purpose-driven"
+          }
+        },
+        {
+          "id": "questionnaire-marque-f8-o11",
+          "label": {
+            "fr": "Joueuse",
+            "en": "Playful"
+          }
+        },
+        {
+          "id": "questionnaire-marque-f8-o12",
+          "label": {
+            "fr": "Pionnière",
+            "en": "Pioneering"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "questionnaire-marque-f9",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre univers visuel",
+        "en": "Your visual world"
+      },
+      "description": {
+        "fr": "Vos goûts, vos rejets, ce que vous avez déjà.",
+        "en": "Your taste, your dislikes, and what already exists."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "questionnaire-marque-f10",
+      "type": "long_text",
+      "label": {
+        "fr": "Quelles couleurs aimez-vous pour votre marque ?",
+        "en": "Which colours do you love for your brand?"
+      },
+      "description": {
+        "fr": "Nommez-les, décrivez-les ou donnez des codes hexadécimaux.",
+        "en": "Name them, describe them or give hex codes."
+      },
+      "placeholder": {
+        "fr": "Un bleu profond, presque nuit, avec une touche de turquoise.",
+        "en": "A deep, almost midnight blue, with a touch of turquoise."
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 500
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "questionnaire-marque-f11",
+      "type": "long_text",
+      "label": {
+        "fr": "Quelles couleurs faut-il éviter, et pourquoi ?",
+        "en": "Which colours should we avoid, and why?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Pas de rouge : c’est la couleur de notre principal concurrent.",
+        "en": "No red: that is our main competitor’s colour."
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 500
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "questionnaire-marque-f12",
+      "type": "long_text",
+      "label": {
+        "fr": "Quelles marques admirez-vous, tous secteurs confondus ?",
+        "en": "Which brands do you admire, in any sector?"
+      },
+      "description": {
+        "fr": "Trois à cinq marques, et ce que vous leur enviez.",
+        "en": "Three to five brands, and what you envy about them."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "questionnaire-marque-f13",
+      "type": "file",
+      "label": {
+        "fr": "Vos fichiers logo existants",
+        "en": "Your existing logo files"
+      },
+      "description": {
+        "fr": "Formats vectoriels si possible : .ai, .eps, .svg, .pdf.",
+        "en": "Vector formats if possible: .ai, .eps, .svg, .pdf."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "ai",
+          "eps",
+          "svg",
+          "pdf",
+          "png",
+          "zip"
+        ],
+        "max_file_size_mb": 25
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

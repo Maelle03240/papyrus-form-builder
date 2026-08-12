@@ -1,0 +1,495 @@
+{
+  "id": "tpl-mooove-auto-evaluation-annuelle",
+  "slug": "auto-evaluation-annuelle",
+  "category": "Vie interne",
+  "icon": "TrendingUp",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Auto-évaluation annuelle",
+    "en": "Annual self-assessment"
+  },
+  "description": {
+    "fr": "À remplir avant votre entretien annuel. Vos réponses servent de base à la discussion avec votre manager.",
+    "en": "To be completed before your annual review. Your answers form the basis of the conversation with your manager."
+  },
+  "template_description": {
+    "fr": "Préparez l’entretien annuel : réussites, auto-évaluation des compétences, besoins de formation et objectifs.",
+    "en": "Prepare the annual review: achievements, competency self-rating, training needs and goals."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "auto-evaluation-annuelle-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Bilan de l’année",
+        "en": "Review of the year"
+      },
+      "description": {
+        "fr": "Prenez le temps : ce document reste dans votre dossier et sert de référence l’an prochain.",
+        "en": "Take your time: this document stays in your file and serves as a reference next year."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "auto-evaluation-annuelle-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Poste occupé",
+        "en": "Current role"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Responsable des opérations",
+        "en": "Operations lead"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 120
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "auto-evaluation-annuelle-f3",
+      "type": "short_text",
+      "label": {
+        "fr": "Période évaluée",
+        "en": "Period under review"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Janvier – décembre 2026",
+        "en": "January – December 2026"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 80
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "auto-evaluation-annuelle-f4",
+      "type": "long_text",
+      "label": {
+        "fr": "Vos trois principales réussites de l’année",
+        "en": "Your three main achievements this year"
+      },
+      "description": {
+        "fr": "Citez des faits mesurables plutôt que des intentions : chiffres, délais tenus, projets livrés.",
+        "en": "Give measurable facts rather than intentions: figures, deadlines met, projects delivered."
+      },
+      "placeholder": {
+        "fr": "1. …\n2. …\n3. …",
+        "en": "1. …\n2. …\n3. …"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1200
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "auto-evaluation-annuelle-f5",
+      "type": "long_text",
+      "label": {
+        "fr": "Quel a été votre plus grand défi et comment l’avez-vous abordé ?",
+        "en": "What was your biggest challenge and how did you tackle it?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 900
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "auto-evaluation-annuelle-f6",
+      "type": "section_break",
+      "label": {
+        "fr": "Compétences",
+        "en": "Competencies"
+      },
+      "description": {
+        "fr": "Positionnez-vous honnêtement : la surévaluation comme la modestie excessive faussent l’échange.",
+        "en": "Be honest with yourself: both over-rating and excessive modesty distort the conversation."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "auto-evaluation-annuelle-f7",
+      "type": "matrix",
+      "label": {
+        "fr": "Comment évaluez-vous votre niveau sur chacune de ces compétences ?",
+        "en": "How do you rate your own level on each competency?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "matrix_mode": "single"
+      },
+      "options": [
+        {
+          "id": "auto-evaluation-annuelle-f7-o1",
+          "label": {
+            "fr": "À développer",
+            "en": "Needs development"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f7-o2",
+          "label": {
+            "fr": "En progression",
+            "en": "Progressing"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f7-o3",
+          "label": {
+            "fr": "Conforme aux attentes",
+            "en": "Meets expectations"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f7-o4",
+          "label": {
+            "fr": "Au-dessus des attentes",
+            "en": "Above expectations"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f7-o5",
+          "label": {
+            "fr": "Point fort reconnu",
+            "en": "Recognised strength"
+          }
+        }
+      ],
+      "rows": [
+        {
+          "id": "auto-evaluation-annuelle-f7-r1",
+          "label": {
+            "fr": "Expertise technique et maîtrise du métier",
+            "en": "Technical expertise and job mastery"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f7-r2",
+          "label": {
+            "fr": "Qualité et fiabilité du travail rendu",
+            "en": "Quality and reliability of my work"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f7-r3",
+          "label": {
+            "fr": "Communication écrite et orale",
+            "en": "Written and spoken communication"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f7-r4",
+          "label": {
+            "fr": "Collaboration et esprit d’équipe",
+            "en": "Collaboration and team spirit"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f7-r5",
+          "label": {
+            "fr": "Autonomie et prise d’initiative",
+            "en": "Autonomy and initiative"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f7-r6",
+          "label": {
+            "fr": "Gestion des priorités et respect des délais",
+            "en": "Managing priorities and meeting deadlines"
+          }
+        }
+      ]
+    },
+    {
+      "id": "auto-evaluation-annuelle-f8",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quels besoins de formation identifiez-vous pour l’année à venir ?",
+        "en": "What training needs do you see for the coming year?"
+      },
+      "description": {
+        "fr": "Trois choix maximum, pour que le budget formation reste réaliste.",
+        "en": "Three choices maximum, to keep the training budget realistic."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "selection_min": 1,
+        "selection_max": 3,
+        "has_other": true,
+        "other_label": "Autre besoin"
+      },
+      "options": [
+        {
+          "id": "auto-evaluation-annuelle-f8-o1",
+          "label": {
+            "fr": "Compétences techniques liées à mon métier",
+            "en": "Technical skills specific to my role"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f8-o2",
+          "label": {
+            "fr": "Langues",
+            "en": "Languages"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f8-o3",
+          "label": {
+            "fr": "Management et leadership",
+            "en": "Management and leadership"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f8-o4",
+          "label": {
+            "fr": "Gestion de projet",
+            "en": "Project management"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f8-o5",
+          "label": {
+            "fr": "Outils numériques et bureautique",
+            "en": "Digital and office tools"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f8-o6",
+          "label": {
+            "fr": "Communication et prise de parole",
+            "en": "Communication and public speaking"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f8-o7",
+          "label": {
+            "fr": "Vente et relation client",
+            "en": "Sales and client relations"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f8-o8",
+          "label": {
+            "fr": "Analyse de données",
+            "en": "Data analysis"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "auto-evaluation-annuelle-f9",
+      "type": "section_break",
+      "label": {
+        "fr": "Objectifs à venir",
+        "en": "Goals for the year ahead"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "auto-evaluation-annuelle-f10",
+      "type": "long_text",
+      "label": {
+        "fr": "Où souhaitez-vous être professionnellement dans deux à trois ans ?",
+        "en": "Where do you want to be professionally in two to three years?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Évolution vers un rôle d’encadrement, spécialisation, mobilité interne…",
+        "en": "A management role, deeper specialisation, an internal move…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 900
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "auto-evaluation-annuelle-f11",
+      "type": "long_text",
+      "label": {
+        "fr": "Quels objectifs vous fixez-vous pour l’année à venir ?",
+        "en": "What goals are you setting yourself for the coming year?"
+      },
+      "description": {
+        "fr": "Deux à quatre objectifs, formulés de façon vérifiable.",
+        "en": "Two to four goals, written so that progress can be checked."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1200
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "auto-evaluation-annuelle-f12",
+      "type": "single_choice",
+      "label": {
+        "fr": "Souhaitez-vous aborder un sujet particulier lors de l’entretien ?",
+        "en": "Is there a specific topic you want to raise during the review?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "auto-evaluation-annuelle-f12-o1",
+          "label": {
+            "fr": "Oui",
+            "en": "Yes"
+          }
+        },
+        {
+          "id": "auto-evaluation-annuelle-f12-o2",
+          "label": {
+            "fr": "Non",
+            "en": "No"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "auto-evaluation-annuelle-f13",
+      "type": "long_text",
+      "label": {
+        "fr": "Quel sujet souhaitez-vous aborder ?",
+        "en": "What topic would you like to raise?"
+      },
+      "description": {
+        "fr": "Votre manager en prendra connaissance avant l’entretien.",
+        "en": "Your manager will read this before the meeting."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 700
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "auto-evaluation-annuelle-rule1",
+      "conditions": [
+        {
+          "source_field_id": "auto-evaluation-annuelle-f12",
+          "operator": "equals",
+          "value": "auto-evaluation-annuelle-f12-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "auto-evaluation-annuelle-f13",
+      "rule_order": 0
+    }
+  ]
+}

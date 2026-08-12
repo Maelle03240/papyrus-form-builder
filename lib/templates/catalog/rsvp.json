@@ -1,0 +1,233 @@
+{
+  "id": "tpl-mooove-rsvp",
+  "slug": "rsvp",
+  "category": "Événements",
+  "icon": "PartyPopper",
+  "display_mode": "typeform",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "RSVP",
+    "en": "RSVP"
+  },
+  "description": {
+    "fr": "Confirmez votre présence en trente secondes : accompagnants, régime et petit mot à l’hôte.",
+    "en": "Confirm your attendance in thirty seconds: guests, dietary notes and a word to the host."
+  },
+  "template_description": {
+    "fr": "Réponse en une question, puis seulement les détails utiles à ceux qui viennent.",
+    "en": "One question to answer, then only the details that matter for those attending."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "rsvp-f1",
+      "type": "statement",
+      "label": {
+        "fr": "Vous êtes invité·e le samedi 18 octobre, à 18 h",
+        "en": "You are invited on Saturday 18 October, 6 pm"
+      },
+      "description": {
+        "fr": "Domaine des Cocotiers, Rivière Noire. Dîner debout, tenue décontractée, parking sur place. Merci de répondre avant le 5 octobre.",
+        "en": "Domaine des Cocotiers, Rivière Noire. Standing dinner, smart casual, parking on site. Please reply before 5 October."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rsvp-f2",
+      "type": "single_choice",
+      "label": {
+        "fr": "Serez-vous des nôtres ?",
+        "en": "Will you join us?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards"
+      },
+      "options": [
+        {
+          "id": "rsvp-f2-o1",
+          "label": {
+            "fr": "Oui, je serai là",
+            "en": "Yes, I will be there"
+          }
+        },
+        {
+          "id": "rsvp-f2-o2",
+          "label": {
+            "fr": "Non, je ne peux pas venir",
+            "en": "No, I cannot make it"
+          }
+        },
+        {
+          "id": "rsvp-f2-o3",
+          "label": {
+            "fr": "Peut-être, je confirme dès que possible",
+            "en": "Maybe, I will confirm as soon as I can"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "rsvp-f3",
+      "type": "short_text",
+      "label": {
+        "fr": "Votre nom",
+        "en": "Your name"
+      },
+      "description": {
+        "fr": "Tel qu’il figure sur l’invitation, pour que nous vous retrouvions dans la liste.",
+        "en": "As it appears on the invitation, so we can find you on the list."
+      },
+      "placeholder": {
+        "fr": "Prénom et nom",
+        "en": "First and last name"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rsvp-f4",
+      "type": "number",
+      "label": {
+        "fr": "Combien de personnes vous accompagnent ?",
+        "en": "How many guests are coming with you?"
+      },
+      "description": {
+        "fr": "Indiquez 0 si vous venez seul·e. Cinq accompagnants au maximum.",
+        "en": "Enter 0 if you are coming alone. Five guests maximum."
+      },
+      "placeholder": {
+        "fr": "0",
+        "en": "0"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 5,
+        "response_type": "integer"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rsvp-f5",
+      "type": "long_text",
+      "label": {
+        "fr": "Des allergies ou un régime particulier dans votre groupe ?",
+        "en": "Any allergies or dietary requirements in your group?"
+      },
+      "description": {
+        "fr": "Précisez pour chaque personne concernée, le traiteur s’adaptera.",
+        "en": "Mention each person concerned and the caterer will adapt."
+      },
+      "placeholder": {
+        "fr": "Ex. un menu végétarien et une allergie aux fruits de mer.",
+        "en": "e.g. one vegetarian menu and one seafood allergy."
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 400
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rsvp-f6",
+      "type": "long_text",
+      "label": {
+        "fr": "Un mot pour les hôtes ?",
+        "en": "A word for the hosts?"
+      },
+      "description": {
+        "fr": "Facultatif, et toujours apprécié.",
+        "en": "Optional, and always appreciated."
+      },
+      "placeholder": {
+        "fr": "Votre message",
+        "en": "Your message"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 500
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "rsvp-rule1",
+      "conditions": [
+        {
+          "source_field_id": "rsvp-f2",
+          "operator": "equals",
+          "value": "rsvp-f2-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "rsvp-f4",
+      "rule_order": 0
+    },
+    {
+      "id": "rsvp-rule2",
+      "conditions": [
+        {
+          "source_field_id": "rsvp-f2",
+          "operator": "equals",
+          "value": "rsvp-f2-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "rsvp-f5",
+      "rule_order": 1
+    },
+    {
+      "id": "rsvp-rule3",
+      "conditions": [
+        {
+          "source_field_id": "rsvp-f2",
+          "operator": "equals",
+          "value": "rsvp-f2-o2"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "end_form",
+      "target_field_id": null,
+      "rule_order": 2
+    }
+  ]
+}

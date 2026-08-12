@@ -1,0 +1,461 @@
+{
+  "id": "tpl-mooove-demande-conge",
+  "slug": "demande-conge",
+  "category": "Vie interne",
+  "icon": "CalendarOff",
+  "display_mode": "sections",
+  "feasibility": "degraded",
+  "feasibility_note": {
+    "fr": "Papyrus n’a ni champ de plage de dates ni champ calculé : le demandeur saisit lui-même le nombre de jours au lieu qu’il soit déduit des deux dates — un type `date_range` ou un champ formule corrigerait ce point.",
+    "en": "Papyrus has no date-range field and no calculated field, so the requester types the day count by hand instead of it being computed from the two dates — a `date_range` type or a formula field would fix this."
+  },
+  "title": {
+    "fr": "Demande de congé",
+    "en": "Leave request"
+  },
+  "description": {
+    "fr": "Déposez votre demande au moins deux semaines à l’avance, sauf urgence. Votre manager reçoit une notification dès l’envoi.",
+    "en": "Submit your request at least two weeks in advance, except in emergencies. Your manager is notified as soon as you send it."
+  },
+  "template_description": {
+    "fr": "Centralisez les demandes de congé : type, période, nombre de jours et passation vers un collègue.",
+    "en": "Centralise leave requests: type, dates, number of days and handover to a colleague."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "demande-conge-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Demandeur",
+        "en": "Requester"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-conge-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Priya Ramdhun",
+        "en": "Priya Ramdhun"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 120
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-conge-f3",
+      "type": "dropdown",
+      "label": {
+        "fr": "Département",
+        "en": "Department"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un département",
+        "en": "Select a department"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "demande-conge-f3-o1",
+          "label": {
+            "fr": "Direction",
+            "en": "Management"
+          }
+        },
+        {
+          "id": "demande-conge-f3-o2",
+          "label": {
+            "fr": "Ventes",
+            "en": "Sales"
+          }
+        },
+        {
+          "id": "demande-conge-f3-o3",
+          "label": {
+            "fr": "Marketing",
+            "en": "Marketing"
+          }
+        },
+        {
+          "id": "demande-conge-f3-o4",
+          "label": {
+            "fr": "Technique",
+            "en": "Engineering"
+          }
+        },
+        {
+          "id": "demande-conge-f3-o5",
+          "label": {
+            "fr": "Opérations",
+            "en": "Operations"
+          }
+        },
+        {
+          "id": "demande-conge-f3-o6",
+          "label": {
+            "fr": "Finance et administration",
+            "en": "Finance and administration"
+          }
+        },
+        {
+          "id": "demande-conge-f3-o7",
+          "label": {
+            "fr": "Service client",
+            "en": "Customer service"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "demande-conge-f4",
+      "type": "email",
+      "label": {
+        "fr": "Votre e-mail professionnel",
+        "en": "Your work email"
+      },
+      "description": {
+        "fr": "La confirmation d’acceptation y sera envoyée.",
+        "en": "The approval confirmation will be sent there."
+      },
+      "placeholder": {
+        "fr": "prenom.nom@entreprise.mu",
+        "en": "first.last@company.mu"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-conge-f5",
+      "type": "section_break",
+      "label": {
+        "fr": "Période demandée",
+        "en": "Requested period"
+      },
+      "description": {
+        "fr": "Indiquez les dates réelles d’absence, jours fériés inclus.",
+        "en": "Give the actual dates you will be away, public holidays included."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-conge-f6",
+      "type": "dropdown",
+      "label": {
+        "fr": "Type de congé",
+        "en": "Type of leave"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un type",
+        "en": "Select a type"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "demande-conge-f6-o1",
+          "label": {
+            "fr": "Congé annuel",
+            "en": "Annual leave"
+          }
+        },
+        {
+          "id": "demande-conge-f6-o2",
+          "label": {
+            "fr": "Congé maladie",
+            "en": "Sick leave"
+          }
+        },
+        {
+          "id": "demande-conge-f6-o3",
+          "label": {
+            "fr": "Congé sans solde",
+            "en": "Unpaid leave"
+          }
+        },
+        {
+          "id": "demande-conge-f6-o4",
+          "label": {
+            "fr": "Congé de maternité ou de paternité",
+            "en": "Maternity or paternity leave"
+          }
+        },
+        {
+          "id": "demande-conge-f6-o5",
+          "label": {
+            "fr": "Congé pour événement familial",
+            "en": "Family event leave"
+          }
+        },
+        {
+          "id": "demande-conge-f6-o6",
+          "label": {
+            "fr": "Récupération d’heures supplémentaires",
+            "en": "Time off in lieu"
+          }
+        },
+        {
+          "id": "demande-conge-f6-o7",
+          "label": {
+            "fr": "Congé exceptionnel",
+            "en": "Special leave"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "demande-conge-f7",
+      "type": "date",
+      "label": {
+        "fr": "Date de début",
+        "en": "Start date"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-conge-f8",
+      "type": "date",
+      "label": {
+        "fr": "Date de fin",
+        "en": "End date"
+      },
+      "description": {
+        "fr": "Dernier jour d’absence, pas le jour du retour.",
+        "en": "Your last day away, not the day you return."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-conge-f9",
+      "type": "single_choice",
+      "label": {
+        "fr": "S’agit-il d’une demi-journée ?",
+        "en": "Is this a half day?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 3
+      },
+      "options": [
+        {
+          "id": "demande-conge-f9-o1",
+          "label": {
+            "fr": "Non, journées complètes",
+            "en": "No, full days"
+          }
+        },
+        {
+          "id": "demande-conge-f9-o2",
+          "label": {
+            "fr": "Oui, matin",
+            "en": "Yes, morning"
+          }
+        },
+        {
+          "id": "demande-conge-f9-o3",
+          "label": {
+            "fr": "Oui, après-midi",
+            "en": "Yes, afternoon"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "demande-conge-f10",
+      "type": "number",
+      "label": {
+        "fr": "Nombre de jours ouvrables demandés",
+        "en": "Number of working days requested"
+      },
+      "description": {
+        "fr": "À calculer vous-même : samedis, dimanches et jours fériés exclus. Saisissez 0,5 pour une demi-journée.",
+        "en": "Work it out yourself: excluding weekends and public holidays. Enter 0.5 for a half day."
+      },
+      "placeholder": {
+        "fr": "5",
+        "en": "5"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "response_type": "decimal",
+        "min": 0.5,
+        "max": 60,
+        "unit": "none"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-conge-f11",
+      "type": "section_break",
+      "label": {
+        "fr": "Continuité de service",
+        "en": "Cover while you are away"
+      },
+      "description": {
+        "fr": "Une demande sans passation claire est renvoyée pour complément.",
+        "en": "A request without a clear handover will be sent back for completion."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-conge-f12",
+      "type": "long_text",
+      "label": {
+        "fr": "Consignes de passation",
+        "en": "Handover notes"
+      },
+      "description": {
+        "fr": "Dossiers en cours, échéances qui tombent pendant votre absence, contacts à prévenir.",
+        "en": "Ongoing files, deadlines falling during your absence, contacts to notify."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1000
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-conge-f13",
+      "type": "short_text",
+      "label": {
+        "fr": "Collègue qui assure l’intérim",
+        "en": "Colleague covering for you"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Nom du collègue prévenu",
+        "en": "Name of the colleague you briefed"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 120
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-conge-f14",
+      "type": "email",
+      "label": {
+        "fr": "E-mail de votre manager",
+        "en": "Your manager’s email"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "manager@entreprise.mu",
+        "en": "manager@company.mu"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

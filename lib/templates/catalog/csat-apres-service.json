@@ -1,0 +1,260 @@
+{
+  "id": "tpl-mooove-csat-apres-service",
+  "slug": "csat-apres-service",
+  "category": "Satisfaction client",
+  "icon": "Star",
+  "display_mode": "scroll",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Satisfaction après service",
+    "en": "Post-service satisfaction"
+  },
+  "description": {
+    "fr": "Votre demande vient d’être traitée. Dites-nous comment cela s’est passé — moins de deux minutes.",
+    "en": "Your request has just been handled. Tell us how it went — under two minutes."
+  },
+  "template_description": {
+    "fr": "Mesurez la satisfaction juste après une intervention : note globale, ressenti et pistes d’amélioration.",
+    "en": "Measure satisfaction right after a service interaction: overall score, highlights and improvements."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "csat-apres-service-f1",
+      "type": "rating",
+      "label": {
+        "fr": "Globalement, comment évaluez-vous le service reçu ?",
+        "en": "Overall, how would you rate the service you received?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 5
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "csat-apres-service-f2",
+      "type": "single_choice",
+      "label": {
+        "fr": "Qu’est-ce qui vous a le plus marqué ?",
+        "en": "What stood out most for you?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "csat-apres-service-f2-o1",
+          "label": {
+            "fr": "L’écoute et la courtoisie",
+            "en": "Attentiveness and courtesy"
+          }
+        },
+        {
+          "id": "csat-apres-service-f2-o2",
+          "label": {
+            "fr": "La rapidité de la réponse",
+            "en": "Speed of response"
+          }
+        },
+        {
+          "id": "csat-apres-service-f2-o3",
+          "label": {
+            "fr": "La clarté des explications",
+            "en": "Clarity of the explanations"
+          }
+        },
+        {
+          "id": "csat-apres-service-f2-o4",
+          "label": {
+            "fr": "La compétence de mon interlocuteur",
+            "en": "The expertise of the person I dealt with"
+          }
+        },
+        {
+          "id": "csat-apres-service-f2-o5",
+          "label": {
+            "fr": "Le suivi après l’intervention",
+            "en": "The follow-up afterwards"
+          }
+        },
+        {
+          "id": "csat-apres-service-f2-o6",
+          "label": {
+            "fr": "Rien de particulier",
+            "en": "Nothing in particular"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "csat-apres-service-f3",
+      "type": "nps",
+      "label": {
+        "fr": "À quel point la démarche a-t-elle été simple pour vous ?",
+        "en": "How easy was the process for you?"
+      },
+      "description": {
+        "fr": "0 = très compliquée, 10 = parfaitement fluide.",
+        "en": "0 = very complicated, 10 = completely effortless."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Très compliquée",
+        "nps_right_label": "Très simple"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "csat-apres-service-f4",
+      "type": "single_choice",
+      "label": {
+        "fr": "Votre demande a-t-elle été entièrement résolue ?",
+        "en": "Was your request fully resolved?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 3
+      },
+      "options": [
+        {
+          "id": "csat-apres-service-f4-o1",
+          "label": {
+            "fr": "Oui, entièrement",
+            "en": "Yes, completely"
+          }
+        },
+        {
+          "id": "csat-apres-service-f4-o2",
+          "label": {
+            "fr": "En partie seulement",
+            "en": "Only partly"
+          }
+        },
+        {
+          "id": "csat-apres-service-f4-o3",
+          "label": {
+            "fr": "Non, pas du tout",
+            "en": "No, not at all"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "csat-apres-service-f5",
+      "type": "long_text",
+      "label": {
+        "fr": "Que pourrions-nous améliorer ?",
+        "en": "What could we do better?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Même un détail nous est utile.",
+        "en": "Even a small detail helps us."
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 700
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "csat-apres-service-f6",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom de la personne qui vous a aidé(e)",
+        "en": "Name of the person who helped you"
+      },
+      "description": {
+        "fr": "Pour que le compliment ou la remarque arrive à la bonne personne.",
+        "en": "So the praise or the remark reaches the right person."
+      },
+      "placeholder": {
+        "fr": "Si vous vous en souvenez",
+        "en": "If you remember it"
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {
+        "max": 120
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "csat-apres-service-f7",
+      "type": "email",
+      "label": {
+        "fr": "Votre adresse e-mail",
+        "en": "Your email address"
+      },
+      "description": {
+        "fr": "Facultatif, uniquement si vous souhaitez une réponse.",
+        "en": "Optional, only if you would like a reply."
+      },
+      "placeholder": {
+        "fr": "prenom@exemple.mu",
+        "en": "first@example.mu"
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

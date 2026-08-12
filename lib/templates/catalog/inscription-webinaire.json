@@ -1,0 +1,291 @@
+{
+  "id": "tpl-mooove-inscription-webinaire",
+  "slug": "inscription-webinaire",
+  "category": "Événements",
+  "icon": "Video",
+  "display_mode": "scroll",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Inscription au webinaire",
+    "en": "Webinar registration"
+  },
+  "description": {
+    "fr": "Réservez votre place pour la session en ligne. Vous recevrez le lien de connexion par email quelques minutes après votre inscription.",
+    "en": "Save your seat for the online session. You will receive the joining link by email a few minutes after registering."
+  },
+  "template_description": {
+    "fr": "Collectez les inscriptions à votre webinaire et qualifiez les participants en une page.",
+    "en": "Collect webinar sign-ups and qualify attendees on a single page."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "inscription-webinaire-fmedia",
+      "type": "video",
+      "label": {
+        "fr": "Un aperçu de ce qui vous attend",
+        "en": "A preview of what to expect"
+      },
+      "description": {
+        "fr": "Teaser de l’intervenant — remplacez par votre propre lien YouTube ou Vimeo.",
+        "en": "Speaker teaser — replace with your own YouTube or Vimeo link."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "creator_mode_enabled": true,
+        "respondent_mode_enabled": false,
+        "show_title": true,
+        "alignment": "center"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-webinaire-f1",
+      "type": "short_text",
+      "label": {
+        "fr": "Prénom",
+        "en": "First name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Aurélie",
+        "en": "Sarah"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-webinaire-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom",
+        "en": "Last name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Ramdhony",
+        "en": "Ramdhony"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-webinaire-f3",
+      "type": "email",
+      "label": {
+        "fr": "Email professionnel",
+        "en": "Work email"
+      },
+      "description": {
+        "fr": "C’est à cette adresse que nous enverrons le lien de connexion.",
+        "en": "This is where we will send your joining link."
+      },
+      "placeholder": {
+        "fr": "prenom.nom@entreprise.com",
+        "en": "first.last@company.com"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-webinaire-f4",
+      "type": "short_text",
+      "label": {
+        "fr": "Entreprise ou organisation",
+        "en": "Company or organisation"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-webinaire-f5",
+      "type": "short_text",
+      "label": {
+        "fr": "Fonction",
+        "en": "Job title"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Responsable marketing",
+        "en": "Marketing manager"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-webinaire-f6",
+      "type": "long_text",
+      "label": {
+        "fr": "Qu’espérez-vous apprendre pendant cette session ?",
+        "en": "What do you hope to learn during this session?"
+      },
+      "description": {
+        "fr": "Vos réponses nous aident à préparer la partie questions-réponses.",
+        "en": "Your answers help us shape the Q&A part of the session."
+      },
+      "placeholder": {
+        "fr": "Une question précise, un cas concret, un point qui vous bloque…",
+        "en": "A specific question, a real use case, something you are stuck on…"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-webinaire-f7",
+      "type": "dropdown",
+      "label": {
+        "fr": "Comment avez-vous entendu parler de ce webinaire ?",
+        "en": "How did you hear about this webinar?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une réponse",
+        "en": "Select an answer"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "has_other": true,
+        "other_label": "Autre"
+      },
+      "options": [
+        {
+          "id": "inscription-webinaire-f7-o1",
+          "label": {
+            "fr": "LinkedIn",
+            "en": "LinkedIn"
+          }
+        },
+        {
+          "id": "inscription-webinaire-f7-o2",
+          "label": {
+            "fr": "Notre newsletter",
+            "en": "Our newsletter"
+          }
+        },
+        {
+          "id": "inscription-webinaire-f7-o3",
+          "label": {
+            "fr": "Un collègue ou une relation",
+            "en": "A colleague or contact"
+          }
+        },
+        {
+          "id": "inscription-webinaire-f7-o4",
+          "label": {
+            "fr": "Recherche Google",
+            "en": "Google search"
+          }
+        },
+        {
+          "id": "inscription-webinaire-f7-o5",
+          "label": {
+            "fr": "Instagram ou Facebook",
+            "en": "Instagram or Facebook"
+          }
+        },
+        {
+          "id": "inscription-webinaire-f7-o6",
+          "label": {
+            "fr": "Un partenaire ou un sponsor",
+            "en": "A partner or sponsor"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "inscription-webinaire-f8",
+      "type": "single_choice",
+      "label": {
+        "fr": "Souhaitez-vous recevoir le replay par email ?",
+        "en": "Would you like to receive the replay by email?"
+      },
+      "description": {
+        "fr": "Le replay est envoyé sous 48 heures après la session, même en cas d’absence.",
+        "en": "The replay is sent within 48 hours of the session, even if you cannot attend."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "inscription-webinaire-f8-o1",
+          "label": {
+            "fr": "Oui, envoyez-moi le replay",
+            "en": "Yes, send me the replay"
+          }
+        },
+        {
+          "id": "inscription-webinaire-f8-o2",
+          "label": {
+            "fr": "Non merci",
+            "en": "No thanks"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

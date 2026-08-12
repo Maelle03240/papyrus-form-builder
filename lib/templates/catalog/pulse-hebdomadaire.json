@@ -1,0 +1,265 @@
+{
+  "id": "tpl-mooove-pulse-hebdomadaire",
+  "slug": "pulse-hebdomadaire",
+  "category": "Vie interne",
+  "icon": "Activity",
+  "display_mode": "typeform",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Pulse hebdomadaire",
+    "en": "Weekly team pulse"
+  },
+  "description": {
+    "fr": "Un point rapide sur votre semaine, chaque vendredi.",
+    "en": "A quick check-in on your week, every Friday."
+  },
+  "template_description": {
+    "fr": "Six questions pour prendre le pouls de l’équipe chaque semaine : moral, charge, blocages.",
+    "en": "Six questions to take the team’s pulse each week: mood, workload, blockers."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "pulse-hebdomadaire-f1",
+      "type": "statement",
+      "label": {
+        "fr": "Deux minutes, pas plus",
+        "en": "Two minutes, no more"
+      },
+      "description": {
+        "fr": "Six questions pour que votre manager sache où vous en êtes avant lundi. Vos réponses sont lues, pas archivées.",
+        "en": "Six questions so your manager knows where you stand before Monday. Your answers get read, not filed away."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "show_title": true,
+        "alignment": "center"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "pulse-hebdomadaire-f2",
+      "type": "single_choice",
+      "label": {
+        "fr": "Comment s’est passée votre semaine ?",
+        "en": "How was your week?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "pulse-hebdomadaire-f2-o1",
+          "label": {
+            "fr": "Excellente, tout a avancé",
+            "en": "Great — everything moved forward"
+          }
+        },
+        {
+          "id": "pulse-hebdomadaire-f2-o2",
+          "label": {
+            "fr": "Bonne, sans accroc majeur",
+            "en": "Good, no major hitches"
+          }
+        },
+        {
+          "id": "pulse-hebdomadaire-f2-o3",
+          "label": {
+            "fr": "Correcte, ni haut ni bas",
+            "en": "Fine — neither high nor low"
+          }
+        },
+        {
+          "id": "pulse-hebdomadaire-f2-o4",
+          "label": {
+            "fr": "Difficile, j’ai tiré dessus",
+            "en": "Tough — I had to push hard"
+          }
+        },
+        {
+          "id": "pulse-hebdomadaire-f2-o5",
+          "label": {
+            "fr": "Très difficile, je suis à bout",
+            "en": "Very tough — I’m running on empty"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "pulse-hebdomadaire-f3",
+      "type": "nps",
+      "label": {
+        "fr": "Comment évaluez-vous votre charge de travail cette semaine ?",
+        "en": "How would you rate your workload this week?"
+      },
+      "description": {
+        "fr": "0 = je m’ennuie, 10 = c’est ingérable.",
+        "en": "0 = I’m under-loaded, 10 = it’s unmanageable."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Trop légère",
+        "nps_right_label": "Ingérable",
+        "display_style": "slider"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "pulse-hebdomadaire-f4",
+      "type": "long_text",
+      "label": {
+        "fr": "Quel a été votre principal point de blocage ?",
+        "en": "What was your biggest blocker?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Une attente, un outil, une décision manquante…",
+        "en": "A wait, a tool, a decision that never came…"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 500
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "pulse-hebdomadaire-f5",
+      "type": "long_text",
+      "label": {
+        "fr": "Y a-t-il une réussite à célébrer ?",
+        "en": "Anything worth celebrating?"
+      },
+      "description": {
+        "fr": "La vôtre ou celle d’un collègue.",
+        "en": "Yours or a colleague’s."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 500
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "pulse-hebdomadaire-f6",
+      "type": "single_choice",
+      "label": {
+        "fr": "Avez-vous besoin de l’aide de votre manager la semaine prochaine ?",
+        "en": "Do you need help from your manager next week?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "pulse-hebdomadaire-f6-o1",
+          "label": {
+            "fr": "Oui",
+            "en": "Yes"
+          }
+        },
+        {
+          "id": "pulse-hebdomadaire-f6-o2",
+          "label": {
+            "fr": "Non, tout est sous contrôle",
+            "en": "No, everything is under control"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "pulse-hebdomadaire-f7",
+      "type": "long_text",
+      "label": {
+        "fr": "Sur quoi précisément ?",
+        "en": "On what exactly?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Un arbitrage, une mise en relation, du temps…",
+        "en": "A decision, an introduction, some time…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 500
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "pulse-hebdomadaire-rule1",
+      "conditions": [
+        {
+          "source_field_id": "pulse-hebdomadaire-f6",
+          "operator": "equals",
+          "value": "pulse-hebdomadaire-f6-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "pulse-hebdomadaire-f7",
+      "rule_order": 0
+    }
+  ]
+}

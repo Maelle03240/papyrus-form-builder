@@ -1,0 +1,531 @@
+{
+  "id": "tpl-mooove-inscription-evenement",
+  "slug": "inscription-evenement",
+  "category": "Événements",
+  "icon": "Calendar",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Inscription à un événement",
+    "en": "Event registration"
+  },
+  "description": {
+    "fr": "Enregistrez vos participants, leurs choix de sessions et leurs contraintes pratiques en une fois.",
+    "en": "Capture attendees, their session choices and their practical needs in one pass."
+  },
+  "template_description": {
+    "fr": "Coordonnées, programme personnalisé, régime alimentaire et accessibilité : tout ce qu’il faut le jour J.",
+    "en": "Contact details, chosen sessions, dietary needs and accessibility: everything you need on the day."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "inscription-evenement-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Participant",
+        "en": "Attendee"
+      },
+      "description": {
+        "fr": "Ces informations figureront sur votre badge d’accès.",
+        "en": "This information will appear on your badge."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-fmedia",
+      "type": "image",
+      "label": {
+        "fr": "L’édition précédente en images",
+        "en": "Last edition in pictures"
+      },
+      "description": {
+        "fr": "Visuel d’ambiance — remplacez par une photo de votre événement.",
+        "en": "Mood image — replace with a photo of your own event."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "creator_mode_enabled": true,
+        "respondent_mode_enabled": false,
+        "show_title": true,
+        "alignment": "center"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Prénom",
+        "en": "First name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Prénom",
+        "en": "First name"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-f3",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom",
+        "en": "Last name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Nom",
+        "en": "Last name"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-f4",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail",
+        "en": "Email address"
+      },
+      "description": {
+        "fr": "Votre billet et le rappel de la veille y seront envoyés.",
+        "en": "Your ticket and the day-before reminder will be sent there."
+      },
+      "placeholder": {
+        "fr": "prenom@entreprise.mu",
+        "en": "name@company.com"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-f5",
+      "type": "phone",
+      "label": {
+        "fr": "Numéro de téléphone",
+        "en": "Phone number"
+      },
+      "description": {
+        "fr": "Uniquement en cas de changement de dernière minute.",
+        "en": "Only used in case of a last-minute change."
+      },
+      "placeholder": {
+        "fr": "5 123 4567",
+        "en": "5 123 4567"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "default_country": "MU"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-f6",
+      "type": "short_text",
+      "label": {
+        "fr": "Entreprise ou organisation",
+        "en": "Company or organisation"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Nom de l’organisation",
+        "en": "Organisation name"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-f7",
+      "type": "short_text",
+      "label": {
+        "fr": "Fonction",
+        "en": "Job title"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Responsable des opérations",
+        "en": "Operations Manager"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-f8",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre programme",
+        "en": "Your programme"
+      },
+      "description": {
+        "fr": "Les places par session sont limitées : votre choix nous aide à dimensionner les salles.",
+        "en": "Seats per session are limited: your choice helps us size the rooms."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-f9",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quelles sessions souhaitez-vous suivre ?",
+        "en": "Which sessions would you like to attend?"
+      },
+      "description": {
+        "fr": "Sélectionnez au moins une session. Vous pourrez encore changer d’avis sur place.",
+        "en": "Select at least one session. You can still change your mind on site."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "selection_min": 1,
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "inscription-evenement-f9-o1",
+          "label": {
+            "fr": "09h00 — Ouverture et keynote",
+            "en": "9:00 am — Opening keynote"
+          }
+        },
+        {
+          "id": "inscription-evenement-f9-o2",
+          "label": {
+            "fr": "10h30 — Atelier : automatiser sa collecte de données",
+            "en": "10:30 am — Workshop: automating data collection"
+          }
+        },
+        {
+          "id": "inscription-evenement-f9-o3",
+          "label": {
+            "fr": "11h45 — Table ronde : la donnée au service du client",
+            "en": "11:45 am — Panel: data in the service of the customer"
+          }
+        },
+        {
+          "id": "inscription-evenement-f9-o4",
+          "label": {
+            "fr": "14h00 — Atelier : concevoir un formulaire qui convertit",
+            "en": "2:00 pm — Workshop: designing a form that converts"
+          }
+        },
+        {
+          "id": "inscription-evenement-f9-o5",
+          "label": {
+            "fr": "15h30 — Retours d’expérience de trois équipes",
+            "en": "3:30 pm — Case studies from three teams"
+          }
+        },
+        {
+          "id": "inscription-evenement-f9-o6",
+          "label": {
+            "fr": "17h00 — Cocktail et networking",
+            "en": "5:00 pm — Drinks and networking"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-f10",
+      "type": "section_break",
+      "label": {
+        "fr": "Informations pratiques",
+        "en": "Practical details"
+      },
+      "description": {
+        "fr": "Quelques précisions pour que la journée se passe bien pour vous.",
+        "en": "A few details so the day runs smoothly for you."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-f11",
+      "type": "dropdown",
+      "label": {
+        "fr": "Avez-vous un régime alimentaire particulier ?",
+        "en": "Do you have any dietary requirements?"
+      },
+      "description": {
+        "fr": "Le déjeuner et les pauses sont inclus dans l’inscription.",
+        "en": "Lunch and breaks are included with your registration."
+      },
+      "placeholder": {
+        "fr": "Choisissez une option",
+        "en": "Select an option"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "has_other": true,
+        "other_label": "Autre régime, à préciser"
+      },
+      "options": [
+        {
+          "id": "inscription-evenement-f11-o1",
+          "label": {
+            "fr": "Aucun régime particulier",
+            "en": "No particular requirement"
+          }
+        },
+        {
+          "id": "inscription-evenement-f11-o2",
+          "label": {
+            "fr": "Végétarien",
+            "en": "Vegetarian"
+          }
+        },
+        {
+          "id": "inscription-evenement-f11-o3",
+          "label": {
+            "fr": "Végétalien",
+            "en": "Vegan"
+          }
+        },
+        {
+          "id": "inscription-evenement-f11-o4",
+          "label": {
+            "fr": "Halal",
+            "en": "Halal"
+          }
+        },
+        {
+          "id": "inscription-evenement-f11-o5",
+          "label": {
+            "fr": "Sans porc",
+            "en": "No pork"
+          }
+        },
+        {
+          "id": "inscription-evenement-f11-o6",
+          "label": {
+            "fr": "Sans gluten",
+            "en": "Gluten free"
+          }
+        },
+        {
+          "id": "inscription-evenement-f11-o7",
+          "label": {
+            "fr": "Sans fruits de mer",
+            "en": "No seafood"
+          }
+        },
+        {
+          "id": "inscription-evenement-f11-o8",
+          "label": {
+            "fr": "Allergie aux arachides",
+            "en": "Peanut allergy"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-f12",
+      "type": "long_text",
+      "label": {
+        "fr": "Avez-vous des besoins d’accessibilité ?",
+        "en": "Do you have any accessibility needs?"
+      },
+      "description": {
+        "fr": "Accès en fauteuil, place réservée au premier rang, interprétation, accompagnant… dites-nous tout.",
+        "en": "Wheelchair access, front-row seating, interpretation, a companion… tell us everything."
+      },
+      "placeholder": {
+        "fr": "Décrivez vos besoins en quelques mots",
+        "en": "Describe your needs in a few words"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 500
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-f13",
+      "type": "single_choice",
+      "label": {
+        "fr": "Comment avez-vous entendu parler de l’événement ?",
+        "en": "How did you hear about the event?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "inscription-evenement-f13-o1",
+          "label": {
+            "fr": "Par un collègue ou une connaissance",
+            "en": "From a colleague or acquaintance"
+          }
+        },
+        {
+          "id": "inscription-evenement-f13-o2",
+          "label": {
+            "fr": "Par la newsletter",
+            "en": "From the newsletter"
+          }
+        },
+        {
+          "id": "inscription-evenement-f13-o3",
+          "label": {
+            "fr": "Sur LinkedIn",
+            "en": "On LinkedIn"
+          }
+        },
+        {
+          "id": "inscription-evenement-f13-o4",
+          "label": {
+            "fr": "Sur Facebook ou Instagram",
+            "en": "On Facebook or Instagram"
+          }
+        },
+        {
+          "id": "inscription-evenement-f13-o5",
+          "label": {
+            "fr": "Dans la presse ou à la radio",
+            "en": "In the press or on the radio"
+          }
+        },
+        {
+          "id": "inscription-evenement-f13-o6",
+          "label": {
+            "fr": "Par une édition précédente",
+            "en": "From a previous edition"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "inscription-evenement-f14",
+      "type": "single_choice",
+      "label": {
+        "fr": "Nous autorisez-vous à vous photographier ou filmer pendant l’événement ?",
+        "en": "Do you allow us to photograph or film you during the event?"
+      },
+      "description": {
+        "fr": "Les images servent à la communication de l’événement et aux éditions suivantes.",
+        "en": "Images are used to promote this event and future editions."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "inscription-evenement-f14-o1",
+          "label": {
+            "fr": "Oui, sans restriction",
+            "en": "Yes, without restriction"
+          }
+        },
+        {
+          "id": "inscription-evenement-f14-o2",
+          "label": {
+            "fr": "Oui, pour les photos de groupe uniquement",
+            "en": "Yes, for group photos only"
+          }
+        },
+        {
+          "id": "inscription-evenement-f14-o3",
+          "label": {
+            "fr": "Non, merci",
+            "en": "No, thank you"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

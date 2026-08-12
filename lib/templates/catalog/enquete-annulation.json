@@ -1,0 +1,309 @@
+{
+  "id": "tpl-mooove-enquete-annulation",
+  "slug": "enquete-annulation",
+  "category": "Produit & Recherche",
+  "icon": "LogOut",
+  "display_mode": "typeform",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Enquête d’annulation",
+    "en": "Cancellation and churn survey"
+  },
+  "description": {
+    "fr": "Comprenez pourquoi un client s’en va, et gardez la porte ouverte pour son retour.",
+    "en": "Understand why a customer is leaving, and keep the door open for their return."
+  },
+  "template_description": {
+    "fr": "Six questions posées au bon moment pour transformer une résiliation en information exploitable.",
+    "en": "Six well-timed questions that turn a cancellation into information you can act on."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "enquete-annulation-f1",
+      "type": "statement",
+      "label": {
+        "fr": "Avant de nous quitter, un dernier mot ?",
+        "en": "Before you go, one last word?"
+      },
+      "description": {
+        "fr": "Votre résiliation est déjà enregistrée : rien de ce que vous direz ici ne la retardera. Nous cherchons simplement à comprendre.",
+        "en": "Your cancellation is already processed: nothing you say here will delay it. We simply want to understand."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "enquete-annulation-f2",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quelle est la principale raison de votre départ ?",
+        "en": "What is the main reason you are leaving?"
+      },
+      "description": {
+        "fr": "Une seule réponse, celle qui pèse le plus dans votre décision.",
+        "en": "One answer only: the one that weighed most in your decision."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "has_other": true,
+        "other_label": "Une autre raison"
+      },
+      "options": [
+        {
+          "id": "enquete-annulation-f2-o1",
+          "label": {
+            "fr": "Le prix ne correspond pas à mon budget",
+            "en": "The price does not fit my budget"
+          }
+        },
+        {
+          "id": "enquete-annulation-f2-o2",
+          "label": {
+            "fr": "Une fonctionnalité essentielle me manquait",
+            "en": "An essential feature was missing"
+          }
+        },
+        {
+          "id": "enquete-annulation-f2-o3",
+          "label": {
+            "fr": "L’outil est trop compliqué à prendre en main",
+            "en": "The tool is too hard to get started with"
+          }
+        },
+        {
+          "id": "enquete-annulation-f2-o4",
+          "label": {
+            "fr": "Nous passons à un autre outil",
+            "en": "We are moving to another tool"
+          }
+        },
+        {
+          "id": "enquete-annulation-f2-o5",
+          "label": {
+            "fr": "Mon projet ou mon événement est terminé",
+            "en": "My project or event is over"
+          }
+        },
+        {
+          "id": "enquete-annulation-f2-o6",
+          "label": {
+            "fr": "Le support n’a pas répondu à mes attentes",
+            "en": "Support did not meet my expectations"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "enquete-annulation-f3",
+      "type": "short_text",
+      "label": {
+        "fr": "Quel prix mensuel aurait été juste, selon vous ?",
+        "en": "What monthly price would have felt fair to you?"
+      },
+      "description": {
+        "fr": "Indiquez simplement un montant et une devise.",
+        "en": "Just give an amount and a currency."
+      },
+      "placeholder": {
+        "fr": "Ex. 600 Rs par mois",
+        "en": "e.g. 15 USD per month"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "enquete-annulation-f4",
+      "type": "long_text",
+      "label": {
+        "fr": "Quelle fonctionnalité vous a manqué ?",
+        "en": "Which feature was missing for you?"
+      },
+      "description": {
+        "fr": "Décrivez ce que vous vouliez faire : c’est souvent plus parlant que le nom de la fonctionnalité.",
+        "en": "Describe what you wanted to do: that usually tells us more than a feature name."
+      },
+      "placeholder": {
+        "fr": "J’avais besoin de…",
+        "en": "I needed to…"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "enquete-annulation-f5",
+      "type": "long_text",
+      "label": {
+        "fr": "Qu’espériez-vous accomplir avec Papyrus au moment de votre inscription ?",
+        "en": "What were you hoping Papyrus would do for you when you signed up?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Je pensais pouvoir…",
+        "en": "I thought I would be able to…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "enquete-annulation-f6",
+      "type": "short_text",
+      "label": {
+        "fr": "Vers quelle solution partez-vous ?",
+        "en": "Which solution are you moving to?"
+      },
+      "description": {
+        "fr": "Facultatif, mais très utile pour nous situer.",
+        "en": "Optional, but genuinely useful for us."
+      },
+      "placeholder": {
+        "fr": "Nom de l’outil",
+        "en": "Tool name"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "enquete-annulation-f7",
+      "type": "nps",
+      "label": {
+        "fr": "Quelle est la probabilité que vous reveniez un jour vers Papyrus ?",
+        "en": "How likely are you to come back to Papyrus one day?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Jamais",
+        "nps_right_label": "Très probable"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "enquete-annulation-f8",
+      "type": "single_choice",
+      "label": {
+        "fr": "Une remise de 30 % pendant trois mois changerait-elle votre décision ?",
+        "en": "Would a 30% discount for three months change your mind?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "enquete-annulation-f8-o1",
+          "label": {
+            "fr": "Oui, cela vaudrait la peine d’en reparler",
+            "en": "Yes, that would be worth discussing"
+          }
+        },
+        {
+          "id": "enquete-annulation-f8-o2",
+          "label": {
+            "fr": "Peut-être, mais le prix n’est pas mon vrai sujet",
+            "en": "Maybe, but price is not my real issue"
+          }
+        },
+        {
+          "id": "enquete-annulation-f8-o3",
+          "label": {
+            "fr": "Non, ma décision est prise",
+            "en": "No, my decision is final"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "enquete-annulation-rule1",
+      "conditions": [
+        {
+          "source_field_id": "enquete-annulation-f2",
+          "operator": "equals",
+          "value": "enquete-annulation-f2-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "enquete-annulation-f3",
+      "rule_order": 0
+    },
+    {
+      "id": "enquete-annulation-rule2",
+      "conditions": [
+        {
+          "source_field_id": "enquete-annulation-f2",
+          "operator": "equals",
+          "value": "enquete-annulation-f2-o2"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "enquete-annulation-f4",
+      "rule_order": 1
+    }
+  ]
+}

@@ -1,0 +1,508 @@
+{
+  "id": "tpl-mooove-engagement-collaborateurs",
+  "slug": "engagement-collaborateurs",
+  "category": "Vie interne",
+  "icon": "HeartHandshake",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Enquête d’engagement collaborateurs",
+    "en": "Employee engagement survey"
+  },
+  "description": {
+    "fr": "Enquête anonyme. Aucune réponse n’est reliée à votre nom : seuls des résultats agrégés par département sont partagés.",
+    "en": "Anonymous survey. No answer is linked to your name — only results aggregated by department are shared."
+  },
+  "template_description": {
+    "fr": "Mesurez l’engagement de vos équipes de façon anonyme : ressenti, eNPS et priorités d’amélioration.",
+    "en": "Measure team engagement anonymously: how people feel, eNPS and improvement priorities."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "engagement-collaborateurs-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre équipe",
+        "en": "Your team"
+      },
+      "description": {
+        "fr": "Ces deux informations servent uniquement à regrouper les résultats.",
+        "en": "These two details are only used to group results."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "engagement-collaborateurs-f2",
+      "type": "dropdown",
+      "label": {
+        "fr": "Votre département",
+        "en": "Your department"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un département",
+        "en": "Select a department"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "engagement-collaborateurs-f2-o1",
+          "label": {
+            "fr": "Direction",
+            "en": "Management"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f2-o2",
+          "label": {
+            "fr": "Ventes",
+            "en": "Sales"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f2-o3",
+          "label": {
+            "fr": "Marketing",
+            "en": "Marketing"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f2-o4",
+          "label": {
+            "fr": "Produit",
+            "en": "Product"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f2-o5",
+          "label": {
+            "fr": "Technique",
+            "en": "Engineering"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f2-o6",
+          "label": {
+            "fr": "Opérations",
+            "en": "Operations"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f2-o7",
+          "label": {
+            "fr": "Finance et administration",
+            "en": "Finance and administration"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f2-o8",
+          "label": {
+            "fr": "Ressources humaines",
+            "en": "Human resources"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f2-o9",
+          "label": {
+            "fr": "Service client",
+            "en": "Customer service"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "engagement-collaborateurs-f3",
+      "type": "dropdown",
+      "label": {
+        "fr": "Depuis combien de temps travaillez-vous ici ?",
+        "en": "How long have you worked here?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une durée",
+        "en": "Select a duration"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "engagement-collaborateurs-f3-o1",
+          "label": {
+            "fr": "Moins de 6 mois",
+            "en": "Less than 6 months"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f3-o2",
+          "label": {
+            "fr": "6 mois à 2 ans",
+            "en": "6 months to 2 years"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f3-o3",
+          "label": {
+            "fr": "2 à 5 ans",
+            "en": "2 to 5 years"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f3-o4",
+          "label": {
+            "fr": "Plus de 5 ans",
+            "en": "More than 5 years"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "engagement-collaborateurs-f4",
+      "type": "single_choice",
+      "label": {
+        "fr": "Encadrez-vous une équipe ?",
+        "en": "Do you manage a team?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "engagement-collaborateurs-f4-o1",
+          "label": {
+            "fr": "Oui",
+            "en": "Yes"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f4-o2",
+          "label": {
+            "fr": "Non",
+            "en": "No"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "engagement-collaborateurs-f5",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre quotidien",
+        "en": "Your day to day"
+      },
+      "description": {
+        "fr": "Il n’y a pas de bonne réponse. Répondez spontanément.",
+        "en": "There is no right answer. Go with your first instinct."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "engagement-collaborateurs-f6",
+      "type": "matrix",
+      "label": {
+        "fr": "Dans quelle mesure êtes-vous d’accord avec chacune de ces affirmations ?",
+        "en": "How much do you agree with each of these statements?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "matrix_mode": "single"
+      },
+      "options": [
+        {
+          "id": "engagement-collaborateurs-f6-o1",
+          "label": {
+            "fr": "Pas du tout d’accord",
+            "en": "Strongly disagree"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f6-o2",
+          "label": {
+            "fr": "Plutôt pas d’accord",
+            "en": "Somewhat disagree"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f6-o3",
+          "label": {
+            "fr": "Neutre",
+            "en": "Neutral"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f6-o4",
+          "label": {
+            "fr": "Plutôt d’accord",
+            "en": "Somewhat agree"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f6-o5",
+          "label": {
+            "fr": "Tout à fait d’accord",
+            "en": "Strongly agree"
+          }
+        }
+      ],
+      "rows": [
+        {
+          "id": "engagement-collaborateurs-f6-r1",
+          "label": {
+            "fr": "Je comprends en quoi mon travail contribue aux objectifs de l’entreprise",
+            "en": "I understand how my work contributes to the company’s goals"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f6-r2",
+          "label": {
+            "fr": "Ma charge de travail est raisonnable",
+            "en": "My workload is reasonable"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f6-r3",
+          "label": {
+            "fr": "Je dispose de l’autonomie nécessaire pour bien faire mon travail",
+            "en": "I have the autonomy I need to do my job well"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f6-r4",
+          "label": {
+            "fr": "Mes efforts sont reconnus",
+            "en": "My efforts are recognised"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f6-r5",
+          "label": {
+            "fr": "Mon manager me donne un retour utile et régulier",
+            "en": "My manager gives me useful, regular feedback"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f6-r6",
+          "label": {
+            "fr": "L’ambiance au sein de mon équipe est bonne",
+            "en": "The atmosphere in my team is good"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f6-r7",
+          "label": {
+            "fr": "Je parviens à préserver mon équilibre entre vie professionnelle et vie personnelle",
+            "en": "I manage to keep a healthy work-life balance"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f6-r8",
+          "label": {
+            "fr": "Les outils dont je dispose me permettent de travailler efficacement",
+            "en": "The tools I have let me work effectively"
+          }
+        }
+      ]
+    },
+    {
+      "id": "engagement-collaborateurs-f7",
+      "type": "nps",
+      "label": {
+        "fr": "Quelle est la probabilité que vous recommandiez notre entreprise comme lieu de travail ?",
+        "en": "How likely are you to recommend our company as a place to work?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Pas du tout probable",
+        "nps_right_label": "Extrêmement probable"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "engagement-collaborateurs-f8",
+      "type": "section_break",
+      "label": {
+        "fr": "Perspectives",
+        "en": "Looking ahead"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "engagement-collaborateurs-f9",
+      "type": "single_choice",
+      "label": {
+        "fr": "Vous voyez-vous toujours dans l’entreprise dans deux ans ?",
+        "en": "Do you see yourself still working here in two years?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "engagement-collaborateurs-f9-o1",
+          "label": {
+            "fr": "Oui, sans hésiter",
+            "en": "Yes, definitely"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f9-o2",
+          "label": {
+            "fr": "Probablement",
+            "en": "Probably"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f9-o3",
+          "label": {
+            "fr": "Je ne sais pas encore",
+            "en": "I’m not sure yet"
+          }
+        },
+        {
+          "id": "engagement-collaborateurs-f9-o4",
+          "label": {
+            "fr": "Probablement pas",
+            "en": "Probably not"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "engagement-collaborateurs-f10",
+      "type": "long_text",
+      "label": {
+        "fr": "S’il n’y avait qu’une seule chose à changer, laquelle choisiriez-vous ?",
+        "en": "If you could change just one thing, what would it be?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Soyez précis : c’est cette réponse qui déclenche des décisions.",
+        "en": "Be specific — this is the answer that drives decisions."
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 700
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "engagement-collaborateurs-f11",
+      "type": "long_text",
+      "label": {
+        "fr": "Qu’est-ce qui fonctionne bien et mérite d’être préservé ?",
+        "en": "What works well and deserves to be protected?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 700
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

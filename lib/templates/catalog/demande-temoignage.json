@@ -1,0 +1,264 @@
+{
+  "id": "tpl-mooove-demande-temoignage",
+  "slug": "demande-temoignage",
+  "category": "Satisfaction client",
+  "icon": "Quote",
+  "display_mode": "typeform",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Demande de témoignage client",
+    "en": "Customer testimonial request"
+  },
+  "description": {
+    "fr": "Recueillez un témoignage publiable en cinq minutes, avec l’accord écrit du client.",
+    "en": "Collect a publication-ready testimonial in five minutes, with written consent."
+  },
+  "template_description": {
+    "fr": "Transformez un client satisfait en preuve sociale : citation, résultat concret et autorisation de publication.",
+    "en": "Turn a happy customer into social proof: a quote, a concrete result and permission to publish."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "demande-temoignage-f1",
+      "type": "statement",
+      "label": {
+        "fr": "Votre expérience vaut de l’or",
+        "en": "Your experience is worth sharing"
+      },
+      "description": {
+        "fr": "Six questions, moins de cinq minutes. Votre témoignage aidera d’autres équipes à se décider en connaissance de cause.",
+        "en": "Six questions, under five minutes. Your words will help other teams make an informed decision."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-temoignage-f2",
+      "type": "rating",
+      "label": {
+        "fr": "Globalement, quelle note donneriez-vous à votre expérience avec nous ?",
+        "en": "Overall, how would you rate your experience with us?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 5
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-temoignage-f3",
+      "type": "long_text",
+      "label": {
+        "fr": "Quel problème cherchiez-vous à résoudre avant de travailler avec nous ?",
+        "en": "What problem were you trying to solve before working with us?"
+      },
+      "description": {
+        "fr": "Décrivez la situation telle qu’elle était : ce qui coinçait, ce que cela vous coûtait.",
+        "en": "Describe the situation as it was: what was stuck, and what it was costing you."
+      },
+      "placeholder": {
+        "fr": "Nous perdions deux jours par mois à recopier des réponses à la main…",
+        "en": "We were losing two days a month re-typing responses by hand…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-temoignage-f4",
+      "type": "long_text",
+      "label": {
+        "fr": "Quel résultat concret avez-vous obtenu depuis ?",
+        "en": "What concrete result have you seen since?"
+      },
+      "description": {
+        "fr": "Un chiffre, un délai ou un gain de temps rend le témoignage nettement plus convaincant.",
+        "en": "A number, a timeframe or a time saving makes a testimonial far more convincing."
+      },
+      "placeholder": {
+        "fr": "Ex. 40 % de réponses en plus et un rapport prêt en dix minutes.",
+        "en": "e.g. 40% more responses and a report ready in ten minutes."
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-temoignage-f5",
+      "type": "long_text",
+      "label": {
+        "fr": "Si vous deviez résumer votre expérience en une phrase citable, laquelle ?",
+        "en": "If you had to sum up your experience in one quotable sentence, what would it be?"
+      },
+      "description": {
+        "fr": "C’est cette phrase que nous mettrons en avant. Écrivez-la comme vous la diriez à un collègue.",
+        "en": "This is the line we would feature. Write it the way you would say it to a colleague."
+      },
+      "placeholder": {
+        "fr": "En une phrase…",
+        "en": "In one sentence…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 300
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-temoignage-f6",
+      "type": "single_choice",
+      "label": {
+        "fr": "Nous autorisez-vous à publier ce témoignage ?",
+        "en": "Do you allow us to publish this testimonial?"
+      },
+      "description": {
+        "fr": "Vous pourrez revenir sur cette autorisation à tout moment sur simple demande.",
+        "en": "You can withdraw this permission at any time, just ask."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards"
+      },
+      "options": [
+        {
+          "id": "demande-temoignage-f6-o1",
+          "label": {
+            "fr": "Oui, avec mon nom, ma fonction et le logo de mon entreprise",
+            "en": "Yes, with my name, job title and company logo"
+          }
+        },
+        {
+          "id": "demande-temoignage-f6-o2",
+          "label": {
+            "fr": "Oui, avec mon prénom et ma fonction seulement",
+            "en": "Yes, with my first name and job title only"
+          }
+        },
+        {
+          "id": "demande-temoignage-f6-o3",
+          "label": {
+            "fr": "Oui, mais de façon totalement anonyme",
+            "en": "Yes, but fully anonymous"
+          }
+        },
+        {
+          "id": "demande-temoignage-f6-o4",
+          "label": {
+            "fr": "Non, ce retour est réservé à votre équipe",
+            "en": "No, this feedback is for your team only"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "demande-temoignage-f7",
+      "type": "short_text",
+      "label": {
+        "fr": "Votre fonction",
+        "en": "Your job title"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Responsable marketing",
+        "en": "Marketing Manager"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-temoignage-f8",
+      "type": "short_text",
+      "label": {
+        "fr": "Votre entreprise",
+        "en": "Your company"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Nom de l’entreprise",
+        "en": "Company name"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "demande-temoignage-f9",
+      "type": "image",
+      "label": {
+        "fr": "Une photo de vous, pour accompagner la citation",
+        "en": "A photo of you to go with the quote"
+      },
+      "description": {
+        "fr": "Facultatif. Un portrait net, format carré de préférence, 25 Mo maximum.",
+        "en": "Optional. A sharp headshot, ideally square, 25 MB maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "creator_mode_enabled": false,
+        "respondent_mode_enabled": true,
+        "max_file_size_mb": 25
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

@@ -1,0 +1,519 @@
+{
+  "id": "tpl-mooove-entretien-depart",
+  "slug": "entretien-depart",
+  "category": "RH & Recrutement",
+  "icon": "DoorOpen",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Entretien de départ",
+    "en": "Exit interview"
+  },
+  "description": {
+    "fr": "Votre regard sur ces années nous aide à améliorer le quotidien de celles et ceux qui restent. Comptez une dizaine de minutes.",
+    "en": "Your perspective on your time here helps us improve daily life for those who stay. It takes about ten minutes."
+  },
+  "template_description": {
+    "fr": "Recueillez un retour structuré avant le dernier jour : motifs du départ, vécu, pistes d’amélioration.",
+    "en": "Collect structured feedback before the last day: reasons for leaving, experience, areas to improve."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "entretien-depart-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre départ",
+        "en": "Your departure"
+      },
+      "description": {
+        "fr": "Quelques repères pour situer votre parcours dans l’entreprise.",
+        "en": "A few details to put your time with us in context."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "entretien-depart-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Intitulé de votre poste",
+        "en": "Job title"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Chargé de clientèle",
+        "en": "Account manager"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 120
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "entretien-depart-f3",
+      "type": "dropdown",
+      "label": {
+        "fr": "Ancienneté dans l’entreprise",
+        "en": "Time with the company"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une durée",
+        "en": "Select a duration"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "entretien-depart-f3-o1",
+          "label": {
+            "fr": "Moins de 6 mois",
+            "en": "Less than 6 months"
+          }
+        },
+        {
+          "id": "entretien-depart-f3-o2",
+          "label": {
+            "fr": "6 mois à 1 an",
+            "en": "6 months to 1 year"
+          }
+        },
+        {
+          "id": "entretien-depart-f3-o3",
+          "label": {
+            "fr": "1 à 3 ans",
+            "en": "1 to 3 years"
+          }
+        },
+        {
+          "id": "entretien-depart-f3-o4",
+          "label": {
+            "fr": "3 à 5 ans",
+            "en": "3 to 5 years"
+          }
+        },
+        {
+          "id": "entretien-depart-f3-o5",
+          "label": {
+            "fr": "Plus de 5 ans",
+            "en": "More than 5 years"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "entretien-depart-f4",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quelle est la principale raison de votre départ ?",
+        "en": "What is the main reason for your departure?"
+      },
+      "description": {
+        "fr": "Une seule réponse, celle qui a le plus pesé dans votre décision.",
+        "en": "One answer only — the factor that weighed most in your decision."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "has_other": true,
+        "other_label": "Autre raison",
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "entretien-depart-f4-o1",
+          "label": {
+            "fr": "Une opportunité de carrière ailleurs",
+            "en": "A career opportunity elsewhere"
+          }
+        },
+        {
+          "id": "entretien-depart-f4-o2",
+          "label": {
+            "fr": "La rémunération et les avantages",
+            "en": "Pay and benefits"
+          }
+        },
+        {
+          "id": "entretien-depart-f4-o3",
+          "label": {
+            "fr": "La relation avec ma hiérarchie",
+            "en": "The relationship with my manager"
+          }
+        },
+        {
+          "id": "entretien-depart-f4-o4",
+          "label": {
+            "fr": "Le manque de perspectives d’évolution",
+            "en": "Lack of growth prospects"
+          }
+        },
+        {
+          "id": "entretien-depart-f4-o5",
+          "label": {
+            "fr": "L’équilibre vie professionnelle et vie personnelle",
+            "en": "Work-life balance"
+          }
+        },
+        {
+          "id": "entretien-depart-f4-o6",
+          "label": {
+            "fr": "Un déménagement ou une raison personnelle",
+            "en": "Relocation or a personal reason"
+          }
+        },
+        {
+          "id": "entretien-depart-f4-o7",
+          "label": {
+            "fr": "Une réorientation professionnelle",
+            "en": "A career change"
+          }
+        },
+        {
+          "id": "entretien-depart-f4-o8",
+          "label": {
+            "fr": "La fin de mon contrat ou de ma mission",
+            "en": "End of my contract or assignment"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "entretien-depart-f5",
+      "type": "date",
+      "label": {
+        "fr": "Date de votre dernier jour travaillé",
+        "en": "Your last working day"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "entretien-depart-f6",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre expérience",
+        "en": "Your experience"
+      },
+      "description": {
+        "fr": "Répondez en pensant aux douze derniers mois.",
+        "en": "Answer with the past twelve months in mind."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "entretien-depart-f7",
+      "type": "matrix",
+      "label": {
+        "fr": "Dans quelle mesure êtes-vous d’accord avec les affirmations suivantes ?",
+        "en": "How much do you agree with the following statements?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "matrix_mode": "single"
+      },
+      "options": [
+        {
+          "id": "entretien-depart-f7-o1",
+          "label": {
+            "fr": "Pas du tout d’accord",
+            "en": "Strongly disagree"
+          }
+        },
+        {
+          "id": "entretien-depart-f7-o2",
+          "label": {
+            "fr": "Plutôt pas d’accord",
+            "en": "Somewhat disagree"
+          }
+        },
+        {
+          "id": "entretien-depart-f7-o3",
+          "label": {
+            "fr": "Neutre",
+            "en": "Neutral"
+          }
+        },
+        {
+          "id": "entretien-depart-f7-o4",
+          "label": {
+            "fr": "Plutôt d’accord",
+            "en": "Somewhat agree"
+          }
+        },
+        {
+          "id": "entretien-depart-f7-o5",
+          "label": {
+            "fr": "Tout à fait d’accord",
+            "en": "Strongly agree"
+          }
+        }
+      ],
+      "rows": [
+        {
+          "id": "entretien-depart-f7-r1",
+          "label": {
+            "fr": "Mon manager était à l’écoute et disponible",
+            "en": "My manager listened and was available"
+          }
+        },
+        {
+          "id": "entretien-depart-f7-r2",
+          "label": {
+            "fr": "Ma charge de travail était soutenable",
+            "en": "My workload was sustainable"
+          }
+        },
+        {
+          "id": "entretien-depart-f7-r3",
+          "label": {
+            "fr": "J’ai eu de véritables occasions de progresser",
+            "en": "I had real opportunities to grow"
+          }
+        },
+        {
+          "id": "entretien-depart-f7-r4",
+          "label": {
+            "fr": "Mon travail était reconnu à sa juste valeur",
+            "en": "My work was properly recognised"
+          }
+        },
+        {
+          "id": "entretien-depart-f7-r5",
+          "label": {
+            "fr": "Les outils mis à ma disposition étaient adaptés",
+            "en": "The tools I was given were fit for purpose"
+          }
+        }
+      ]
+    },
+    {
+      "id": "entretien-depart-f8",
+      "type": "nps",
+      "label": {
+        "fr": "Recommanderiez-vous notre entreprise comme employeur à un proche ?",
+        "en": "Would you recommend our company as an employer to someone close to you?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Certainement pas",
+        "nps_right_label": "Sans hésiter"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "entretien-depart-f9",
+      "type": "section_break",
+      "label": {
+        "fr": "Ce qu’on peut améliorer",
+        "en": "What we can improve"
+      },
+      "description": {
+        "fr": "Cette partie est la plus utile pour nous. Soyez direct.",
+        "en": "This is the most useful part for us. Be direct."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "entretien-depart-f10",
+      "type": "long_text",
+      "label": {
+        "fr": "Qu’est-ce qui vous aurait fait rester ?",
+        "en": "What would have made you stay?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Une décision, un changement, une conversation…",
+        "en": "A decision, a change, a conversation…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "entretien-depart-f11",
+      "type": "long_text",
+      "label": {
+        "fr": "Que devrions-nous changer en priorité pour la personne qui vous succédera ?",
+        "en": "What should we change first for whoever takes over your role?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "entretien-depart-f12",
+      "type": "single_choice",
+      "label": {
+        "fr": "Acceptez-vous d’être recontacté(e) dans quelques mois ?",
+        "en": "Are you open to being contacted again in a few months?"
+      },
+      "description": {
+        "fr": "Certaines entreprises recrutent d’anciens collaborateurs. Nous en faisons partie.",
+        "en": "Some companies rehire former employees. We are one of them."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "entretien-depart-f12-o1",
+          "label": {
+            "fr": "Oui, avec plaisir",
+            "en": "Yes, happily"
+          }
+        },
+        {
+          "id": "entretien-depart-f12-o2",
+          "label": {
+            "fr": "Non, merci",
+            "en": "No, thank you"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "entretien-depart-f13",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail personnelle",
+        "en": "Personal email address"
+      },
+      "description": {
+        "fr": "Votre adresse professionnelle sera désactivée après votre départ.",
+        "en": "Your work address will be deactivated after you leave."
+      },
+      "placeholder": {
+        "fr": "prenom.nom@exemple.mu",
+        "en": "first.last@example.mu"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "entretien-depart-rule1",
+      "conditions": [
+        {
+          "source_field_id": "entretien-depart-f12",
+          "operator": "equals",
+          "value": "entretien-depart-f12-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "entretien-depart-f13",
+      "rule_order": 0
+    }
+  ]
+}

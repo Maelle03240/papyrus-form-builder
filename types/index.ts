@@ -311,6 +311,15 @@ export interface FormSettings {
 
   /** Dernière configuration d'intégration utilisée — mémorisée pour l'interface. */
   embed?: EmbedSettings;
+
+  /**
+   * Slug du modèle dont ce formulaire est issu.
+   *
+   * Chaîne libre, et non `template_origin_id` : cette colonne-là est un
+   * `uuid references papyrus.forms(id)`, alors qu'un modèle de catalogue n'est
+   * pas une ligne en base et porte un identifiant textuel.
+   */
+  template_origin_slug?: string;
 }
 
 export interface SelfNotificationSettings {

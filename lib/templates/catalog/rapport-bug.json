@@ -1,0 +1,424 @@
+{
+  "id": "tpl-mooove-rapport-bug",
+  "slug": "rapport-bug",
+  "category": "Produit & Recherche",
+  "icon": "Bug",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Rapport de bug",
+    "en": "Bug report"
+  },
+  "description": {
+    "fr": "Un signalement structuré : ce qui s’est passé, comment le reproduire et sur quel environnement.",
+    "en": "A structured report: what happened, how to reproduce it and on which environment."
+  },
+  "template_description": {
+    "fr": "Le formulaire qui évite les allers-retours : gravité, étapes de reproduction, capture et environnement.",
+    "en": "The form that avoids back-and-forth: severity, reproduction steps, screenshot and environment."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "rapport-bug-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Le problème",
+        "en": "The problem"
+      },
+      "description": {
+        "fr": "Décrivez ce que vous avez constaté, sans chercher à expliquer la cause.",
+        "en": "Describe what you observed, without trying to explain the cause."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-bug-f2",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quelle est la gravité du problème ?",
+        "en": "How severe is the problem?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards"
+      },
+      "options": [
+        {
+          "id": "rapport-bug-f2-o1",
+          "label": {
+            "fr": "Bloquant : impossible de continuer",
+            "en": "Blocking: I cannot continue"
+          }
+        },
+        {
+          "id": "rapport-bug-f2-o2",
+          "label": {
+            "fr": "Sérieux : contournement pénible mais possible",
+            "en": "Serious: painful workaround, but possible"
+          }
+        },
+        {
+          "id": "rapport-bug-f2-o3",
+          "label": {
+            "fr": "Gênant : le travail avance quand même",
+            "en": "Annoying: work still moves forward"
+          }
+        },
+        {
+          "id": "rapport-bug-f2-o4",
+          "label": {
+            "fr": "Cosmétique : affichage ou libellé",
+            "en": "Cosmetic: display or wording"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "rapport-bug-f3",
+      "type": "long_text",
+      "label": {
+        "fr": "Que s’est-il passé exactement ?",
+        "en": "What exactly happened?"
+      },
+      "description": {
+        "fr": "Recopiez le message d’erreur s’il y en a un.",
+        "en": "Copy the error message if there was one."
+      },
+      "placeholder": {
+        "fr": "Au moment de publier le formulaire, la page…",
+        "en": "When publishing the form, the page…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1000
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-bug-f4",
+      "type": "long_text",
+      "label": {
+        "fr": "Que deviez-vous obtenir à la place ?",
+        "en": "What did you expect to happen instead?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Je m’attendais à…",
+        "en": "I expected…"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-bug-f5",
+      "type": "section_break",
+      "label": {
+        "fr": "Reproduire le bug",
+        "en": "Reproducing the bug"
+      },
+      "description": {
+        "fr": "Plus vos étapes sont précises, plus la correction arrive vite.",
+        "en": "The more precise your steps, the faster the fix."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-bug-f6",
+      "type": "long_text",
+      "label": {
+        "fr": "Quelles étapes permettent de reproduire le problème ?",
+        "en": "What steps reproduce the problem?"
+      },
+      "description": {
+        "fr": "Numérotez les étapes, de la connexion jusqu’au moment où le problème apparaît.",
+        "en": "Number the steps, from login to the moment the problem appears."
+      },
+      "placeholder": {
+        "fr": "1. Ouvrir un formulaire\n2. Cliquer sur Publier\n3. …",
+        "en": "1. Open a form\n2. Click Publish\n3. …"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1500
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-bug-f7",
+      "type": "file",
+      "label": {
+        "fr": "Capture d’écran ou enregistrement vidéo",
+        "en": "Screenshot or screen recording"
+      },
+      "description": {
+        "fr": "Formats acceptés : PNG, JPG, MP4, MOV. 25 Mo maximum.",
+        "en": "Accepted formats: PNG, JPG, MP4, MOV. 25 MB maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "png",
+          "jpg",
+          "mp4",
+          "mov"
+        ],
+        "max_file_size_mb": 25
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-bug-f8",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre environnement",
+        "en": "Your environment"
+      },
+      "description": {
+        "fr": "Ces informations nous évitent de chercher au mauvais endroit.",
+        "en": "This information keeps us from looking in the wrong place."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-bug-f9",
+      "type": "dropdown",
+      "label": {
+        "fr": "Quel navigateur utilisiez-vous ?",
+        "en": "Which browser were you using?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Choisissez un navigateur",
+        "en": "Select a browser"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "rapport-bug-f9-o1",
+          "label": {
+            "fr": "Google Chrome",
+            "en": "Google Chrome"
+          }
+        },
+        {
+          "id": "rapport-bug-f9-o2",
+          "label": {
+            "fr": "Safari",
+            "en": "Safari"
+          }
+        },
+        {
+          "id": "rapport-bug-f9-o3",
+          "label": {
+            "fr": "Mozilla Firefox",
+            "en": "Mozilla Firefox"
+          }
+        },
+        {
+          "id": "rapport-bug-f9-o4",
+          "label": {
+            "fr": "Microsoft Edge",
+            "en": "Microsoft Edge"
+          }
+        },
+        {
+          "id": "rapport-bug-f9-o5",
+          "label": {
+            "fr": "Brave",
+            "en": "Brave"
+          }
+        },
+        {
+          "id": "rapport-bug-f9-o6",
+          "label": {
+            "fr": "Opera",
+            "en": "Opera"
+          }
+        },
+        {
+          "id": "rapport-bug-f9-o7",
+          "label": {
+            "fr": "Samsung Internet",
+            "en": "Samsung Internet"
+          }
+        },
+        {
+          "id": "rapport-bug-f9-o8",
+          "label": {
+            "fr": "Je ne sais pas",
+            "en": "I am not sure"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "rapport-bug-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "Sur quel appareil ?",
+        "en": "On which device?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "rapport-bug-f10-o1",
+          "label": {
+            "fr": "Ordinateur Windows",
+            "en": "Windows computer"
+          }
+        },
+        {
+          "id": "rapport-bug-f10-o2",
+          "label": {
+            "fr": "Mac",
+            "en": "Mac"
+          }
+        },
+        {
+          "id": "rapport-bug-f10-o3",
+          "label": {
+            "fr": "Téléphone Android",
+            "en": "Android phone"
+          }
+        },
+        {
+          "id": "rapport-bug-f10-o4",
+          "label": {
+            "fr": "iPhone ou iPad",
+            "en": "iPhone or iPad"
+          }
+        },
+        {
+          "id": "rapport-bug-f10-o5",
+          "label": {
+            "fr": "Tablette Android",
+            "en": "Android tablet"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "rapport-bug-f11",
+      "type": "url",
+      "label": {
+        "fr": "Adresse de la page où le problème est apparu",
+        "en": "Address of the page where the problem occurred"
+      },
+      "description": {
+        "fr": "Copiez l’adresse complète depuis la barre du navigateur.",
+        "en": "Copy the full address from the browser bar."
+      },
+      "placeholder": {
+        "fr": "https://papyrus.mooove.live/…",
+        "en": "https://papyrus.mooove.live/…"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-bug-f12",
+      "type": "email",
+      "label": {
+        "fr": "Votre e-mail",
+        "en": "Your email"
+      },
+      "description": {
+        "fr": "Pour vous répondre si nous avons besoin d’une précision.",
+        "en": "So we can reach you if we need a detail."
+      },
+      "placeholder": {
+        "fr": "prenom@entreprise.mu",
+        "en": "name@company.com"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

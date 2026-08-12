@@ -1,0 +1,587 @@
+{
+  "id": "tpl-mooove-recrutement-participants-recherche",
+  "slug": "recrutement-participants-recherche",
+  "category": "Produit & Recherche",
+  "icon": "Users",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Recrutement de participants à une étude",
+    "en": "User research participant screener"
+  },
+  "description": {
+    "fr": "Filtrez les volontaires et récupérez leurs disponibilités pour vos entretiens utilisateurs.",
+    "en": "Screen volunteers and capture their availability for your user interviews."
+  },
+  "template_description": {
+    "fr": "Profil, usage réel et créneaux : sélectionnez les bons participants avant de programmer vos entretiens.",
+    "en": "Profile, real usage and time slots: pick the right participants before scheduling interviews."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "recrutement-participants-recherche-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "À propos de vous",
+        "en": "About you"
+      },
+      "description": {
+        "fr": "Trois minutes suffisent. Nous ne recontactons que les profils correspondant à l’étude en cours.",
+        "en": "Three minutes is enough. We only contact profiles that match the current study."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "recrutement-participants-recherche-f2",
+      "type": "dropdown",
+      "label": {
+        "fr": "Quel est votre rôle dans votre organisation ?",
+        "en": "What is your role in your organisation?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Choisissez votre rôle",
+        "en": "Select your role"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "recrutement-participants-recherche-f2-o1",
+          "label": {
+            "fr": "Fondateur·rice ou dirigeant·e",
+            "en": "Founder or executive"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f2-o2",
+          "label": {
+            "fr": "Marketing et communication",
+            "en": "Marketing and communications"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f2-o3",
+          "label": {
+            "fr": "Ventes",
+            "en": "Sales"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f2-o4",
+          "label": {
+            "fr": "Produit ou projet",
+            "en": "Product or project"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f2-o5",
+          "label": {
+            "fr": "Design et recherche",
+            "en": "Design and research"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f2-o6",
+          "label": {
+            "fr": "Ingénierie",
+            "en": "Engineering"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f2-o7",
+          "label": {
+            "fr": "Ressources humaines",
+            "en": "Human resources"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f2-o8",
+          "label": {
+            "fr": "Opérations et administration",
+            "en": "Operations and administration"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f2-o9",
+          "label": {
+            "fr": "Enseignement ou associatif",
+            "en": "Education or non-profit"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f2-o10",
+          "label": {
+            "fr": "Indépendant·e ou consultant·e",
+            "en": "Freelancer or consultant"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "recrutement-participants-recherche-f3",
+      "type": "dropdown",
+      "label": {
+        "fr": "Combien de personnes travaillent dans votre organisation ?",
+        "en": "How many people work in your organisation?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Choisissez une taille",
+        "en": "Select a size"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "recrutement-participants-recherche-f3-o1",
+          "label": {
+            "fr": "Je travaille seul·e",
+            "en": "I work alone"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f3-o2",
+          "label": {
+            "fr": "2 à 10 personnes",
+            "en": "2 to 10 people"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f3-o3",
+          "label": {
+            "fr": "11 à 50 personnes",
+            "en": "11 to 50 people"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f3-o4",
+          "label": {
+            "fr": "51 à 200 personnes",
+            "en": "51 to 200 people"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f3-o5",
+          "label": {
+            "fr": "201 à 1 000 personnes",
+            "en": "201 to 1,000 people"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f3-o6",
+          "label": {
+            "fr": "Plus de 1 000 personnes",
+            "en": "More than 1,000 people"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "recrutement-participants-recherche-f4",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre usage",
+        "en": "Your usage"
+      },
+      "description": {
+        "fr": "Nous cherchons des profils variés, des utilisateurs quotidiens aux plus occasionnels.",
+        "en": "We are looking for a mix of profiles, from daily users to occasional ones."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "recrutement-participants-recherche-f5",
+      "type": "single_choice",
+      "label": {
+        "fr": "À quelle fréquence utilisez-vous Papyrus ?",
+        "en": "How often do you use Papyrus?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards"
+      },
+      "options": [
+        {
+          "id": "recrutement-participants-recherche-f5-o1",
+          "label": {
+            "fr": "Tous les jours ou presque",
+            "en": "Every day or almost"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f5-o2",
+          "label": {
+            "fr": "Plusieurs fois par semaine",
+            "en": "Several times a week"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f5-o3",
+          "label": {
+            "fr": "Quelques fois par mois",
+            "en": "A few times a month"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f5-o4",
+          "label": {
+            "fr": "Rarement, pour des besoins ponctuels",
+            "en": "Rarely, for one-off needs"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f5-o5",
+          "label": {
+            "fr": "Jamais, je ne l’ai pas encore utilisé",
+            "en": "Never, I have not used it yet"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "recrutement-participants-recherche-f6",
+      "type": "single_choice",
+      "label": {
+        "fr": "Accepteriez-vous un entretien visio de 45 minutes avec notre équipe ?",
+        "en": "Would you join a 45-minute video call with our team?"
+      },
+      "description": {
+        "fr": "L’entretien est enregistré uniquement avec votre accord, et jamais diffusé hors de l’équipe.",
+        "en": "The session is recorded only with your consent and never shared outside the team."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards"
+      },
+      "options": [
+        {
+          "id": "recrutement-participants-recherche-f6-o1",
+          "label": {
+            "fr": "Oui, je suis partant·e",
+            "en": "Yes, count me in"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f6-o2",
+          "label": {
+            "fr": "Peut-être, cela dépendra de la date",
+            "en": "Maybe, depending on the date"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f6-o3",
+          "label": {
+            "fr": "Non, je préfère répondre par écrit",
+            "en": "No, I would rather answer in writing"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "recrutement-participants-recherche-f7",
+      "type": "section_break",
+      "label": {
+        "fr": "Disponibilités",
+        "en": "Availability"
+      },
+      "description": {
+        "fr": "Indiquez vos préférences : nous vous proposerons deux créneaux au choix.",
+        "en": "Tell us your preferences and we will offer you two time slots to choose from."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "recrutement-participants-recherche-f8",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quels jours vous conviennent le mieux ?",
+        "en": "Which days suit you best?"
+      },
+      "description": {
+        "fr": "Sélectionnez au moins un jour.",
+        "en": "Select at least one day."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "selection_min": 1,
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "recrutement-participants-recherche-f8-o1",
+          "label": {
+            "fr": "Lundi",
+            "en": "Monday"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f8-o2",
+          "label": {
+            "fr": "Mardi",
+            "en": "Tuesday"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f8-o3",
+          "label": {
+            "fr": "Mercredi",
+            "en": "Wednesday"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f8-o4",
+          "label": {
+            "fr": "Jeudi",
+            "en": "Thursday"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f8-o5",
+          "label": {
+            "fr": "Vendredi",
+            "en": "Friday"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f8-o6",
+          "label": {
+            "fr": "Samedi",
+            "en": "Saturday"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "recrutement-participants-recherche-f9",
+      "type": "dropdown",
+      "label": {
+        "fr": "Dans quel fuseau horaire êtes-vous ?",
+        "en": "Which time zone are you in?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Choisissez un fuseau",
+        "en": "Select a time zone"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "recrutement-participants-recherche-f9-o1",
+          "label": {
+            "fr": "Maurice et Réunion (UTC+4)",
+            "en": "Mauritius and Réunion (UTC+4)"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f9-o2",
+          "label": {
+            "fr": "Afrique de l’Est, Madagascar (UTC+3)",
+            "en": "East Africa, Madagascar (UTC+3)"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f9-o3",
+          "label": {
+            "fr": "Afrique du Sud (UTC+2)",
+            "en": "South Africa (UTC+2)"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f9-o4",
+          "label": {
+            "fr": "Europe centrale (UTC+1 ou +2)",
+            "en": "Central Europe (UTC+1 or +2)"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f9-o5",
+          "label": {
+            "fr": "Royaume-Uni et Portugal (UTC+0 ou +1)",
+            "en": "United Kingdom and Portugal (UTC+0 or +1)"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f9-o6",
+          "label": {
+            "fr": "Inde (UTC+5:30)",
+            "en": "India (UTC+5:30)"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f9-o7",
+          "label": {
+            "fr": "Asie du Sud-Est (UTC+7 ou +8)",
+            "en": "Southeast Asia (UTC+7 or +8)"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f9-o8",
+          "label": {
+            "fr": "Amérique du Nord, côte est (UTC-5 ou -4)",
+            "en": "North America, east coast (UTC-5 or -4)"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f9-o9",
+          "label": {
+            "fr": "Amérique du Nord, côte ouest (UTC-8 ou -7)",
+            "en": "North America, west coast (UTC-8 or -7)"
+          }
+        },
+        {
+          "id": "recrutement-participants-recherche-f9-o10",
+          "label": {
+            "fr": "Autre fuseau",
+            "en": "Another time zone"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "recrutement-participants-recherche-f10",
+      "type": "email",
+      "label": {
+        "fr": "Votre e-mail",
+        "en": "Your email"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "prenom@entreprise.mu",
+        "en": "name@company.com"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "recrutement-participants-recherche-f11",
+      "type": "phone",
+      "label": {
+        "fr": "Votre numéro de téléphone",
+        "en": "Your phone number"
+      },
+      "description": {
+        "fr": "Utilisé uniquement pour confirmer le créneau la veille de l’entretien.",
+        "en": "Used only to confirm your slot the day before the interview."
+      },
+      "placeholder": {
+        "fr": "5 123 4567",
+        "en": "5 123 4567"
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {
+        "default_country": "MU"
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "recrutement-participants-recherche-rule1",
+      "conditions": [
+        {
+          "source_field_id": "recrutement-participants-recherche-f5",
+          "operator": "equals",
+          "value": "recrutement-participants-recherche-f5-o5"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "end_form",
+      "target_field_id": null,
+      "rule_order": 0
+    },
+    {
+      "id": "recrutement-participants-recherche-rule2",
+      "conditions": [
+        {
+          "source_field_id": "recrutement-participants-recherche-f6",
+          "operator": "equals",
+          "value": "recrutement-participants-recherche-f6-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "recrutement-participants-recherche-f11",
+      "rule_order": 1
+    }
+  ]
+}

@@ -68,11 +68,27 @@ poids. Titres en Bold. Coins : `rounded` 8px (inputs, badges) · `rounded-xl`
 
 ### Structure
 ```
-app/  pages et routes API      components/  builder · public · respondent · ui · layout
+app/  pages et routes API      components/  builder · public · respondent · templates · ui · layout
 lib/  logique métier           types/  source de vérité des types
 supabase/  migrations SQL uniquement
 ```
 Avant de créer un élément d'interface, vérifier `components/ui/`.
+
+### Catalogue de modèles
+Les modèles Mooove vivent dans `lib/templates/catalog/` — un fichier JSON par
+modèle, versionné. `lib/templates/generated.ts` est **auto-généré** : ne jamais
+l'éditer à la main, relancer `npm run templates:build`. Il porte
+`import 'server-only'`, ce qui empêche structurellement les ~600 Ko du catalogue
+d'entrer dans un bundle navigateur : le client ne reçoit que l'index, via
+`/api/templates`.
+
+Après toute modification d'un fichier du catalogue :
+```bash
+npm run templates:build && npm run templates:check
+```
+`lib/templates/types.ts` est une exception assumée à la règle « types dans
+`types/` » : ces types décrivent un format de fichier de contenu, pas le modèle
+de données de l'application.
 
 ---
 

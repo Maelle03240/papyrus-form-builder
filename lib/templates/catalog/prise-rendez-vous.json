@@ -1,0 +1,440 @@
+{
+  "id": "tpl-mooove-prise-rendez-vous",
+  "slug": "prise-rendez-vous",
+  "category": "Réservations & Voyage",
+  "icon": "CalendarClock",
+  "display_mode": "sections",
+  "feasibility": "degraded",
+  "feasibility_note": {
+    "fr": "Papyrus n’a pas de champ heure ni d’intégration d’agenda : le créneau est une liste déroulante figée, qui ignore les rendez-vous déjà pris. Un vrai parcours de réservation exige un champ heure et une intégration de disponibilités calendaires.",
+    "en": "Papyrus has no time field and no calendar integration: the slot is a hard-coded dropdown that cannot know what is already booked. A real booking flow needs a time field plus a calendar-availability integration."
+  },
+  "title": {
+    "fr": "Demande de rendez-vous",
+    "en": "Appointment request"
+  },
+  "description": {
+    "fr": "Indiquez le créneau qui vous arrange. Nous confirmons par email ou par téléphone dans la journée — sous réserve de disponibilité.",
+    "en": "Tell us which slot suits you. We confirm by email or phone the same day — subject to availability."
+  },
+  "template_description": {
+    "fr": "Demande de rendez-vous en deux pages : coordonnées, prestation, date et créneau souhaités.",
+    "en": "A two-page appointment request: contact details, service, preferred date and slot."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "prise-rendez-vous-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Vous",
+        "en": "About you"
+      },
+      "description": {
+        "fr": "Pour que nous puissions vous confirmer le rendez-vous.",
+        "en": "So that we can confirm the appointment with you."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "prise-rendez-vous-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "prise-rendez-vous-f3",
+      "type": "email",
+      "label": {
+        "fr": "Email",
+        "en": "Email"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "vous@exemple.com",
+        "en": "you@example.com"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "prise-rendez-vous-f4",
+      "type": "phone",
+      "label": {
+        "fr": "Téléphone",
+        "en": "Phone"
+      },
+      "description": {
+        "fr": "Nous appelons uniquement pour confirmer ou déplacer le rendez-vous.",
+        "en": "We only call to confirm or move the appointment."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "default_country": "MU"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "prise-rendez-vous-f5",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre rendez-vous",
+        "en": "Your appointment"
+      },
+      "description": {
+        "fr": "Les créneaux affichés sont indicatifs : nous vérifions la disponibilité avant de confirmer.",
+        "en": "The slots shown are indicative: we check availability before confirming."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "prise-rendez-vous-f6",
+      "type": "dropdown",
+      "label": {
+        "fr": "Quelle prestation souhaitez-vous ?",
+        "en": "Which service do you need?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une prestation",
+        "en": "Select a service"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "prise-rendez-vous-f6-o1",
+          "label": {
+            "fr": "Premier rendez-vous découverte (30 min)",
+            "en": "Introductory appointment (30 min)"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f6-o2",
+          "label": {
+            "fr": "Consultation de suivi (30 min)",
+            "en": "Follow-up consultation (30 min)"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f6-o3",
+          "label": {
+            "fr": "Bilan complet (1 h)",
+            "en": "Full review (1 hour)"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f6-o4",
+          "label": {
+            "fr": "Rendez-vous à domicile",
+            "en": "Home visit"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f6-o5",
+          "label": {
+            "fr": "Rendez-vous en visioconférence",
+            "en": "Video appointment"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "prise-rendez-vous-f7",
+      "type": "date",
+      "label": {
+        "fr": "Date souhaitée",
+        "en": "Preferred date"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "prise-rendez-vous-f8",
+      "type": "dropdown",
+      "label": {
+        "fr": "Créneau souhaité",
+        "en": "Preferred time slot"
+      },
+      "description": {
+        "fr": "Créneaux de 30 minutes, du lundi au vendredi.",
+        "en": "Thirty-minute slots, Monday to Friday."
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un créneau",
+        "en": "Select a slot"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "prise-rendez-vous-f8-o1",
+          "label": {
+            "fr": "09:00",
+            "en": "09:00"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o2",
+          "label": {
+            "fr": "09:30",
+            "en": "09:30"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o3",
+          "label": {
+            "fr": "10:00",
+            "en": "10:00"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o4",
+          "label": {
+            "fr": "10:30",
+            "en": "10:30"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o5",
+          "label": {
+            "fr": "11:00",
+            "en": "11:00"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o6",
+          "label": {
+            "fr": "11:30",
+            "en": "11:30"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o7",
+          "label": {
+            "fr": "12:00",
+            "en": "12:00"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o8",
+          "label": {
+            "fr": "12:30",
+            "en": "12:30"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o9",
+          "label": {
+            "fr": "13:00",
+            "en": "13:00"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o10",
+          "label": {
+            "fr": "13:30",
+            "en": "13:30"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o11",
+          "label": {
+            "fr": "14:00",
+            "en": "14:00"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o12",
+          "label": {
+            "fr": "14:30",
+            "en": "14:30"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o13",
+          "label": {
+            "fr": "15:00",
+            "en": "15:00"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o14",
+          "label": {
+            "fr": "15:30",
+            "en": "15:30"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o15",
+          "label": {
+            "fr": "16:00",
+            "en": "16:00"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o16",
+          "label": {
+            "fr": "16:30",
+            "en": "16:30"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f8-o17",
+          "label": {
+            "fr": "17:00",
+            "en": "17:00"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "prise-rendez-vous-f9",
+      "type": "date",
+      "label": {
+        "fr": "Date de repli, si le premier choix n’est pas disponible",
+        "en": "Alternative date, if your first choice is unavailable"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "prise-rendez-vous-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "Est-ce votre première visite ?",
+        "en": "Is this your first visit?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "prise-rendez-vous-f10-o1",
+          "label": {
+            "fr": "Oui, première visite",
+            "en": "Yes, first visit"
+          }
+        },
+        {
+          "id": "prise-rendez-vous-f10-o2",
+          "label": {
+            "fr": "Non, je suis déjà venu",
+            "en": "No, I have been before"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "prise-rendez-vous-f11",
+      "type": "long_text",
+      "label": {
+        "fr": "Motif du rendez-vous",
+        "en": "Reason for the appointment"
+      },
+      "description": {
+        "fr": "Quelques lignes suffisent : cela nous permet de prévoir le temps nécessaire.",
+        "en": "A few lines are enough: it lets us set aside the right amount of time."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 600
+      },
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

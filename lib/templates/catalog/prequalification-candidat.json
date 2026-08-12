@@ -1,0 +1,430 @@
+{
+  "id": "tpl-mooove-prequalification-candidat",
+  "slug": "prequalification-candidat",
+  "category": "RH & Recrutement",
+  "icon": "ClipboardCheck",
+  "display_mode": "typeform",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Préqualification candidat",
+    "en": "Candidate screening"
+  },
+  "description": {
+    "fr": "Sept questions rapides avant l’entretien. Aucune bonne réponse attendue : répondez simplement de façon exacte.",
+    "en": "Seven quick questions before the interview. There are no right answers — just accurate ones."
+  },
+  "template_description": {
+    "fr": "Filtre de préqualification scoré : droit de travail, expérience, langues, outils, disponibilité et salaire.",
+    "en": "Scored screening filter: right to work, experience, languages, tools, availability and salary."
+  },
+  "scoring_enabled": true,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "prequalification-candidat-f1",
+      "type": "statement",
+      "label": {
+        "fr": "Avant d’aller plus loin, sept questions",
+        "en": "Seven questions before we go further"
+      },
+      "description": {
+        "fr": "Comptez deux minutes. Vos réponses nous évitent de vous faire perdre du temps sur un poste qui ne correspond pas.",
+        "en": "Two minutes at most. Your answers stop us from wasting your time on a role that does not fit."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "show_title": true,
+        "alignment": "center"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "prequalification-candidat-f2",
+      "type": "email",
+      "label": {
+        "fr": "Votre adresse e-mail",
+        "en": "Your email address"
+      },
+      "description": {
+        "fr": "Pour rattacher vos réponses à votre candidature.",
+        "en": "So we can attach your answers to your application."
+      },
+      "placeholder": {
+        "fr": "vous@exemple.mu",
+        "en": "you@example.mu"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "prequalification-candidat-f3",
+      "type": "single_choice",
+      "label": {
+        "fr": "Êtes-vous autorisé·e à travailler à Maurice ?",
+        "en": "Are you authorised to work in Mauritius?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards"
+      },
+      "options": [
+        {
+          "id": "prequalification-candidat-f3-o1",
+          "label": {
+            "fr": "Oui, je suis citoyen·ne mauricien·ne",
+            "en": "Yes, I am a Mauritian citizen"
+          },
+          "points": 5
+        },
+        {
+          "id": "prequalification-candidat-f3-o2",
+          "label": {
+            "fr": "Oui, je détiens un permis valide",
+            "en": "Yes, I hold a valid permit"
+          },
+          "points": 5
+        },
+        {
+          "id": "prequalification-candidat-f3-o3",
+          "label": {
+            "fr": "Ma demande de permis est en cours",
+            "en": "My permit application is in progress"
+          },
+          "points": 2
+        },
+        {
+          "id": "prequalification-candidat-f3-o4",
+          "label": {
+            "fr": "Non, un permis devrait être obtenu",
+            "en": "No, a permit would have to be obtained"
+          },
+          "points": 0
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "prequalification-candidat-f4",
+      "type": "single_choice",
+      "label": {
+        "fr": "Combien d’années d’expérience avez-vous sur ce type de poste ?",
+        "en": "How many years of experience do you have in this kind of role?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "prequalification-candidat-f4-o1",
+          "label": {
+            "fr": "Aucune, ce serait une première",
+            "en": "None, this would be my first"
+          },
+          "points": 0
+        },
+        {
+          "id": "prequalification-candidat-f4-o2",
+          "label": {
+            "fr": "Moins de 2 ans",
+            "en": "Less than 2 years"
+          },
+          "points": 2
+        },
+        {
+          "id": "prequalification-candidat-f4-o3",
+          "label": {
+            "fr": "2 à 5 ans",
+            "en": "2 to 5 years"
+          },
+          "points": 4
+        },
+        {
+          "id": "prequalification-candidat-f4-o4",
+          "label": {
+            "fr": "Plus de 5 ans",
+            "en": "More than 5 years"
+          },
+          "points": 5
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "prequalification-candidat-f5",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quel est votre niveau d’anglais professionnel ?",
+        "en": "What is your professional English level?"
+      },
+      "description": {
+        "fr": "Nos comptes rendus et une partie de nos réunions sont en anglais.",
+        "en": "Our reporting and part of our meetings are in English."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "prequalification-candidat-f5-o1",
+          "label": {
+            "fr": "Notions de base",
+            "en": "Basic notions"
+          },
+          "points": 0
+        },
+        {
+          "id": "prequalification-candidat-f5-o2",
+          "label": {
+            "fr": "Je lis et j’écris, je parle peu",
+            "en": "I read and write, I speak little"
+          },
+          "points": 2
+        },
+        {
+          "id": "prequalification-candidat-f5-o3",
+          "label": {
+            "fr": "Courant à l’écrit comme à l’oral",
+            "en": "Fluent in writing and speaking"
+          },
+          "points": 4
+        },
+        {
+          "id": "prequalification-candidat-f5-o4",
+          "label": {
+            "fr": "Bilingue ou langue maternelle",
+            "en": "Bilingual or native"
+          },
+          "points": 5
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "prequalification-candidat-f6",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quels outils utilisez-vous couramment ?",
+        "en": "Which tools do you use regularly?"
+      },
+      "description": {
+        "fr": "Cochez uniquement ceux que vous utilisez chaque semaine.",
+        "en": "Only tick the ones you use every week."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "selection_min": 1
+      },
+      "options": [
+        {
+          "id": "prequalification-candidat-f6-o1",
+          "label": {
+            "fr": "Suite Google Workspace",
+            "en": "Google Workspace"
+          },
+          "points": 1
+        },
+        {
+          "id": "prequalification-candidat-f6-o2",
+          "label": {
+            "fr": "Excel ou Google Sheets avancé",
+            "en": "Advanced Excel or Google Sheets"
+          },
+          "points": 2
+        },
+        {
+          "id": "prequalification-candidat-f6-o3",
+          "label": {
+            "fr": "Un CRM (HubSpot, Salesforce, Odoo…)",
+            "en": "A CRM (HubSpot, Salesforce, Odoo…)"
+          },
+          "points": 3
+        },
+        {
+          "id": "prequalification-candidat-f6-o4",
+          "label": {
+            "fr": "Un outil de gestion de projet (Notion, Jira, Asana)",
+            "en": "A project tool (Notion, Jira, Asana)"
+          },
+          "points": 2
+        },
+        {
+          "id": "prequalification-candidat-f6-o5",
+          "label": {
+            "fr": "Figma ou la suite Adobe",
+            "en": "Figma or the Adobe suite"
+          },
+          "points": 2
+        },
+        {
+          "id": "prequalification-candidat-f6-o6",
+          "label": {
+            "fr": "Aucun de ces outils",
+            "en": "None of these tools"
+          },
+          "points": 0
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "prequalification-candidat-f7",
+      "type": "single_choice",
+      "label": {
+        "fr": "Sous quel délai pourriez-vous démarrer ?",
+        "en": "How soon could you start?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "prequalification-candidat-f7-o1",
+          "label": {
+            "fr": "Immédiatement",
+            "en": "Immediately"
+          },
+          "points": 5
+        },
+        {
+          "id": "prequalification-candidat-f7-o2",
+          "label": {
+            "fr": "Sous un mois",
+            "en": "Within a month"
+          },
+          "points": 4
+        },
+        {
+          "id": "prequalification-candidat-f7-o3",
+          "label": {
+            "fr": "Sous deux à trois mois",
+            "en": "Within two to three months"
+          },
+          "points": 2
+        },
+        {
+          "id": "prequalification-candidat-f7-o4",
+          "label": {
+            "fr": "Au-delà de trois mois",
+            "en": "More than three months"
+          },
+          "points": 0
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "prequalification-candidat-f8",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quelle fourchette salariale mensuelle brute visez-vous ?",
+        "en": "What gross monthly salary range are you aiming for?"
+      },
+      "description": {
+        "fr": "En roupies mauriciennes. Répondre franchement évite un entretien pour rien.",
+        "en": "In Mauritian rupees. An honest answer avoids a pointless interview."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "prequalification-candidat-f8-o1",
+          "label": {
+            "fr": "Moins de 30 000 MUR",
+            "en": "Under MUR 30,000"
+          },
+          "points": 5
+        },
+        {
+          "id": "prequalification-candidat-f8-o2",
+          "label": {
+            "fr": "30 000 à 50 000 MUR",
+            "en": "MUR 30,000 to 50,000"
+          },
+          "points": 4
+        },
+        {
+          "id": "prequalification-candidat-f8-o3",
+          "label": {
+            "fr": "50 000 à 80 000 MUR",
+            "en": "MUR 50,000 to 80,000"
+          },
+          "points": 2
+        },
+        {
+          "id": "prequalification-candidat-f8-o4",
+          "label": {
+            "fr": "Plus de 80 000 MUR",
+            "en": "Over MUR 80,000"
+          },
+          "points": 0
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

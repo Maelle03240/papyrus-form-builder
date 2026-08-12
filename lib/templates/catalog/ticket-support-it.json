@@ -1,0 +1,544 @@
+{
+  "id": "tpl-mooove-ticket-support-it",
+  "slug": "ticket-support-it",
+  "category": "Opérations & Conformité",
+  "icon": "LifeBuoy",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Ticket de support informatique",
+    "en": "IT support ticket"
+  },
+  "description": {
+    "fr": "Signalez un incident informatique. Plus votre description est précise, plus le traitement est rapide : les questions techniques s’adaptent à la catégorie choisie.",
+    "en": "Report an IT issue. The more precise your description, the faster the fix: the technical questions adapt to the category you pick."
+  },
+  "template_description": {
+    "fr": "Ouverture de ticket IT avec catégorie, urgence, capture d’écran et questions techniques conditionnelles.",
+    "en": "IT ticket intake with category, urgency, screenshot and conditional technical questions."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "ticket-support-it-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Vous",
+        "en": "About you"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f2",
+      "type": "short_text",
+      "label": {
+        "fr": "Nom et prénom",
+        "en": "Full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 80
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f3",
+      "type": "email",
+      "label": {
+        "fr": "Adresse e-mail professionnelle",
+        "en": "Work email address"
+      },
+      "description": {
+        "fr": "Le suivi du ticket sera envoyé à cette adresse.",
+        "en": "Ticket updates will be sent to this address."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f4",
+      "type": "dropdown",
+      "label": {
+        "fr": "Votre service",
+        "en": "Your department"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez un service",
+        "en": "Select a department"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "ticket-support-it-f4-o1",
+          "label": {
+            "fr": "Direction générale",
+            "en": "Executive management"
+          }
+        },
+        {
+          "id": "ticket-support-it-f4-o2",
+          "label": {
+            "fr": "Ventes",
+            "en": "Sales"
+          }
+        },
+        {
+          "id": "ticket-support-it-f4-o3",
+          "label": {
+            "fr": "Marketing et communication",
+            "en": "Marketing and communications"
+          }
+        },
+        {
+          "id": "ticket-support-it-f4-o4",
+          "label": {
+            "fr": "Finance et comptabilité",
+            "en": "Finance and accounting"
+          }
+        },
+        {
+          "id": "ticket-support-it-f4-o5",
+          "label": {
+            "fr": "Ressources humaines",
+            "en": "Human resources"
+          }
+        },
+        {
+          "id": "ticket-support-it-f4-o6",
+          "label": {
+            "fr": "Opérations et production",
+            "en": "Operations and production"
+          }
+        },
+        {
+          "id": "ticket-support-it-f4-o7",
+          "label": {
+            "fr": "Service client",
+            "en": "Customer service"
+          }
+        },
+        {
+          "id": "ticket-support-it-f4-o8",
+          "label": {
+            "fr": "Logistique et achats",
+            "en": "Logistics and purchasing"
+          }
+        },
+        {
+          "id": "ticket-support-it-f4-o9",
+          "label": {
+            "fr": "Qualité et conformité",
+            "en": "Quality and compliance"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f5",
+      "type": "section_break",
+      "label": {
+        "fr": "Le problème",
+        "en": "The problem"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f6",
+      "type": "single_choice",
+      "label": {
+        "fr": "Catégorie du problème",
+        "en": "Problem category"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "ticket-support-it-f6-o1",
+          "label": {
+            "fr": "Matériel (ordinateur, écran, imprimante)",
+            "en": "Hardware (computer, screen, printer)"
+          }
+        },
+        {
+          "id": "ticket-support-it-f6-o2",
+          "label": {
+            "fr": "Logiciel ou application",
+            "en": "Software or application"
+          }
+        },
+        {
+          "id": "ticket-support-it-f6-o3",
+          "label": {
+            "fr": "Accès et mot de passe",
+            "en": "Access and passwords"
+          }
+        },
+        {
+          "id": "ticket-support-it-f6-o4",
+          "label": {
+            "fr": "Réseau et connexion",
+            "en": "Network and connectivity"
+          }
+        },
+        {
+          "id": "ticket-support-it-f6-o5",
+          "label": {
+            "fr": "Autre",
+            "en": "Other"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f7",
+      "type": "single_choice",
+      "label": {
+        "fr": "Quel est le niveau d’urgence ?",
+        "en": "How urgent is it?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "ticket-support-it-f7-o1",
+          "label": {
+            "fr": "Bloquant — je ne peux plus travailler",
+            "en": "Blocking — I cannot work at all"
+          }
+        },
+        {
+          "id": "ticket-support-it-f7-o2",
+          "label": {
+            "fr": "Gênant — je peux contourner le problème",
+            "en": "Disruptive — I have a workaround"
+          }
+        },
+        {
+          "id": "ticket-support-it-f7-o3",
+          "label": {
+            "fr": "Mineur — cela peut attendre",
+            "en": "Minor — it can wait"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f8",
+      "type": "long_text",
+      "label": {
+        "fr": "Décrivez le problème et les étapes qui le déclenchent",
+        "en": "Describe the problem and the steps that trigger it"
+      },
+      "description": {
+        "fr": "Indiquez le message d’erreur exact s’il y en a un.",
+        "en": "Include the exact error message if there is one."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1500
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f9",
+      "type": "date",
+      "label": {
+        "fr": "Depuis quelle date le problème se produit-il ?",
+        "en": "Since what date has the problem occurred?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f10",
+      "type": "section_break",
+      "label": {
+        "fr": "Détails techniques",
+        "en": "Technical details"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f11",
+      "type": "short_text",
+      "label": {
+        "fr": "Quel logiciel et quelle version ?",
+        "en": "Which software and which version?"
+      },
+      "description": {
+        "fr": "Visible dans le menu « À propos » de l’application.",
+        "en": "Shown in the application’s “About” menu."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 120
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f12",
+      "type": "short_text",
+      "label": {
+        "fr": "Numéro de poste ou adresse IP",
+        "en": "Workstation number or IP address"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "192.168.1.24",
+        "en": "192.168.1.24"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 60
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f13",
+      "type": "short_text",
+      "label": {
+        "fr": "Numéro d’inventaire de l’appareil",
+        "en": "Device asset tag"
+      },
+      "description": {
+        "fr": "Étiquette collée sous l’appareil ou à l’arrière de l’écran.",
+        "en": "Label stuck under the device or behind the screen."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 40
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f14",
+      "type": "file",
+      "label": {
+        "fr": "Capture d’écran ou pièce jointe",
+        "en": "Screenshot or attachment"
+      },
+      "description": {
+        "fr": "PNG, JPG ou PDF, 10 Mo maximum.",
+        "en": "PNG, JPG or PDF, 10 MB maximum."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "png",
+          "jpg",
+          "pdf"
+        ],
+        "max_file_size_mb": 10
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "ticket-support-it-f15",
+      "type": "single_choice",
+      "label": {
+        "fr": "Ce problème s’est-il déjà produit ?",
+        "en": "Has this problem happened before?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "ticket-support-it-f15-o1",
+          "label": {
+            "fr": "Oui, et un ticket a déjà été ouvert",
+            "en": "Yes, and a ticket was already opened"
+          }
+        },
+        {
+          "id": "ticket-support-it-f15-o2",
+          "label": {
+            "fr": "Oui, mais je ne l’avais jamais signalé",
+            "en": "Yes, but I never reported it"
+          }
+        },
+        {
+          "id": "ticket-support-it-f15-o3",
+          "label": {
+            "fr": "Non, c’est la première fois",
+            "en": "No, this is the first time"
+          }
+        }
+      ],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "ticket-support-it-rule1",
+      "conditions": [
+        {
+          "source_field_id": "ticket-support-it-f6",
+          "operator": "equals",
+          "value": "ticket-support-it-f6-o2"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "ticket-support-it-f11",
+      "rule_order": 0
+    },
+    {
+      "id": "ticket-support-it-rule2",
+      "conditions": [
+        {
+          "source_field_id": "ticket-support-it-f6",
+          "operator": "equals",
+          "value": "ticket-support-it-f6-o4"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "ticket-support-it-f12",
+      "rule_order": 1
+    }
+  ]
+}

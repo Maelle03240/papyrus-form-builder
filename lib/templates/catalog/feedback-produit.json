@@ -1,0 +1,344 @@
+{
+  "id": "tpl-mooove-feedback-produit",
+  "slug": "feedback-produit",
+  "category": "Produit & Recherche",
+  "icon": "MessageCircle",
+  "display_mode": "typeform",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Feedback produit",
+    "en": "Product feedback"
+  },
+  "description": {
+    "fr": "Votre avis sur la dernière mise à jour nous aide à décider de la suite.",
+    "en": "Your take on the latest release helps us decide what comes next."
+  },
+  "template_description": {
+    "fr": "Court et ciblé après une mise à jour : ce qui plaît, ce qui manque, ce qui agace.",
+    "en": "Short and targeted after a release: what works, what is missing, what annoys."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "feedback-produit-f1",
+      "type": "statement",
+      "label": {
+        "fr": "Deux minutes pour nous dire ce que vous en pensez",
+        "en": "Two minutes to tell us what you think"
+      },
+      "description": {
+        "fr": "Vos réponses vont directement à l’équipe produit. Aucune question n’est obligatoire sauf la première.",
+        "en": "Your answers go straight to the product team. Nothing is required except the first question."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "feedback-produit-f2",
+      "type": "rating",
+      "label": {
+        "fr": "Globalement, à quel point êtes-vous satisfait·e de cette nouveauté ?",
+        "en": "Overall, how satisfied are you with this release?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 5
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "feedback-produit-f3",
+      "type": "long_text",
+      "label": {
+        "fr": "Qu’est-ce que vous appréciez le plus ?",
+        "en": "What do you like most about it?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Une chose précise — ce qui vous a marqué",
+        "en": "One specific thing that stood out"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "feedback-produit-f4",
+      "type": "long_text",
+      "label": {
+        "fr": "Qu’est-ce qui manque ou ne va pas ?",
+        "en": "What is missing or not working?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Soyez direct·e — c’est ce qui nous est le plus utile",
+        "en": "Be blunt — that is what helps us most"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "feedback-produit-f5",
+      "type": "single_choice",
+      "label": {
+        "fr": "À quelle fréquence utilisez-vous le produit ?",
+        "en": "How often do you use the product?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "feedback-produit-f5-o1",
+          "label": {
+            "fr": "Tous les jours",
+            "en": "Every day"
+          }
+        },
+        {
+          "id": "feedback-produit-f5-o2",
+          "label": {
+            "fr": "Plusieurs fois par semaine",
+            "en": "Several times a week"
+          }
+        },
+        {
+          "id": "feedback-produit-f5-o3",
+          "label": {
+            "fr": "Quelques fois par mois",
+            "en": "A few times a month"
+          }
+        },
+        {
+          "id": "feedback-produit-f5-o4",
+          "label": {
+            "fr": "Rarement",
+            "en": "Rarely"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "feedback-produit-f6",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quelles parties du produit utilisez-vous vraiment ?",
+        "en": "Which parts of the product do you actually use?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "has_other": true,
+        "other_label": "Autre"
+      },
+      "options": [
+        {
+          "id": "feedback-produit-f6-o1",
+          "label": {
+            "fr": "Le tableau de bord",
+            "en": "The dashboard"
+          }
+        },
+        {
+          "id": "feedback-produit-f6-o2",
+          "label": {
+            "fr": "Les rapports et exports",
+            "en": "Reports and exports"
+          }
+        },
+        {
+          "id": "feedback-produit-f6-o3",
+          "label": {
+            "fr": "Les notifications",
+            "en": "Notifications"
+          }
+        },
+        {
+          "id": "feedback-produit-f6-o4",
+          "label": {
+            "fr": "Les intégrations",
+            "en": "Integrations"
+          }
+        },
+        {
+          "id": "feedback-produit-f6-o5",
+          "label": {
+            "fr": "L’application mobile",
+            "en": "The mobile app"
+          }
+        },
+        {
+          "id": "feedback-produit-f6-o6",
+          "label": {
+            "fr": "Le travail en équipe",
+            "en": "Team collaboration"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "feedback-produit-f7",
+      "type": "nps",
+      "label": {
+        "fr": "À quel point cette mise à jour a-t-elle changé votre façon de travailler ?",
+        "en": "How much has this release changed the way you work?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Aucun changement",
+        "nps_right_label": "Ça change tout"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "feedback-produit-f8",
+      "type": "single_choice",
+      "label": {
+        "fr": "Accepteriez-vous qu’on vous appelle 20 minutes pour en parler ?",
+        "en": "Would you be open to a 20-minute call about this?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "feedback-produit-f8-o1",
+          "label": {
+            "fr": "Oui, avec plaisir",
+            "en": "Yes, happy to"
+          }
+        },
+        {
+          "id": "feedback-produit-f8-o2",
+          "label": {
+            "fr": "Non merci",
+            "en": "No thanks"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "feedback-produit-f9",
+      "type": "email",
+      "label": {
+        "fr": "Votre email",
+        "en": "Your email"
+      },
+      "description": {
+        "fr": "Uniquement si vous souhaitez qu’on revienne vers vous.",
+        "en": "Only if you would like us to follow up."
+      },
+      "placeholder": {
+        "fr": "vous@exemple.com",
+        "en": "you@example.com"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "feedback-produit-rule1",
+      "conditions": [
+        {
+          "source_field_id": "feedback-produit-f8",
+          "operator": "equals",
+          "value": "feedback-produit-f8-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "feedback-produit-f9",
+      "rule_order": 0
+    }
+  ]
+}

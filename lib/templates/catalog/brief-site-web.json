@@ -1,0 +1,689 @@
+{
+  "id": "tpl-mooove-brief-site-web",
+  "slug": "brief-site-web",
+  "category": "Marketing & Agence",
+  "icon": "Globe",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Brief site web",
+    "en": "Website project brief"
+  },
+  "description": {
+    "fr": "Décrivez votre projet de site : contexte, fonctionnalités, contenus, budget et planning. Nous revenons vers vous avec une estimation sous 72 heures.",
+    "en": "Tell us about your website project: context, features, content, budget and timeline. We come back with an estimate within 72 hours."
+  },
+  "template_description": {
+    "fr": "Cadrez création ou refonte de site : objectifs, fonctionnalités, contenus, budget, planning.",
+    "en": "Scope a new site or a redesign: goals, features, content, budget and timeline."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "brief-site-web-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Contexte",
+        "en": "Context"
+      },
+      "description": {
+        "fr": "Où en êtes-vous aujourd’hui ?",
+        "en": "Where do you stand today?"
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f2",
+      "type": "url",
+      "label": {
+        "fr": "Adresse de votre site actuel",
+        "en": "Your current website address"
+      },
+      "description": {
+        "fr": "Laissez vide si vous n’avez pas encore de site.",
+        "en": "Leave empty if you do not have a site yet."
+      },
+      "placeholder": {
+        "fr": "https://www.votre-entreprise.mu",
+        "en": "https://www.your-company.mu"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f3",
+      "type": "single_choice",
+      "label": {
+        "fr": "De quel type de projet s’agit-il ?",
+        "en": "What type of project is this?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards"
+      },
+      "options": [
+        {
+          "id": "brief-site-web-f3-o1",
+          "label": {
+            "fr": "Création — je pars de zéro",
+            "en": "New build — starting from scratch"
+          }
+        },
+        {
+          "id": "brief-site-web-f3-o2",
+          "label": {
+            "fr": "Refonte — je remplace un site existant",
+            "en": "Redesign — replacing an existing site"
+          }
+        },
+        {
+          "id": "brief-site-web-f3-o3",
+          "label": {
+            "fr": "Évolution — j’améliore un site qui fonctionne",
+            "en": "Evolution — improving a site that works"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f4",
+      "type": "long_text",
+      "label": {
+        "fr": "Que gardez-vous du site actuel, et que faut-il absolument changer ?",
+        "en": "What do you keep from the current site, and what must change?"
+      },
+      "description": {
+        "fr": "Contenus, pages, identité visuelle, référencement acquis…",
+        "en": "Content, pages, visual identity, existing search rankings…"
+      },
+      "placeholder": {
+        "fr": "On garde le blog et les URL produits, on change tout le reste.",
+        "en": "We keep the blog and the product URLs, everything else changes."
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f5",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Quels objectifs le site doit-il servir ?",
+        "en": "What goals should the site serve?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "brief-site-web-f5-o1",
+          "label": {
+            "fr": "Générer des demandes de contact",
+            "en": "Generate enquiries"
+          }
+        },
+        {
+          "id": "brief-site-web-f5-o2",
+          "label": {
+            "fr": "Vendre en ligne",
+            "en": "Sell online"
+          }
+        },
+        {
+          "id": "brief-site-web-f5-o3",
+          "label": {
+            "fr": "Asseoir la crédibilité de la marque",
+            "en": "Establish brand credibility"
+          }
+        },
+        {
+          "id": "brief-site-web-f5-o4",
+          "label": {
+            "fr": "Recruter",
+            "en": "Recruit"
+          }
+        },
+        {
+          "id": "brief-site-web-f5-o5",
+          "label": {
+            "fr": "Informer et documenter",
+            "en": "Inform and document"
+          }
+        },
+        {
+          "id": "brief-site-web-f5-o6",
+          "label": {
+            "fr": "Améliorer le référencement naturel",
+            "en": "Improve organic search"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f6",
+      "type": "long_text",
+      "label": {
+        "fr": "Trois sites concurrents ou inspirants, et ce que vous leur trouvez",
+        "en": "Three competitor or inspiring sites, and what you think of them"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "https://… — j’aime la clarté du menu\nhttps://… — trop chargé",
+        "en": "https://… — I like how clear the menu is\nhttps://… — far too busy"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f7",
+      "type": "section_break",
+      "label": {
+        "fr": "Fonctionnalités",
+        "en": "Features"
+      },
+      "description": {
+        "fr": "Ce que le site doit savoir faire.",
+        "en": "What the site needs to be able to do."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f8",
+      "type": "multiple_choice",
+      "label": {
+        "fr": "Fonctionnalités indispensables",
+        "en": "Must-have features"
+      },
+      "description": {
+        "fr": "Ne cochez que ce qui est réellement nécessaire au lancement.",
+        "en": "Only tick what is genuinely needed at launch."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2,
+        "has_other": true,
+        "other_label": "Autre fonctionnalité"
+      },
+      "options": [
+        {
+          "id": "brief-site-web-f8-o1",
+          "label": {
+            "fr": "Boutique en ligne (e-commerce)",
+            "en": "Online shop (e-commerce)"
+          }
+        },
+        {
+          "id": "brief-site-web-f8-o2",
+          "label": {
+            "fr": "Blog ou actualités",
+            "en": "Blog or news"
+          }
+        },
+        {
+          "id": "brief-site-web-f8-o3",
+          "label": {
+            "fr": "Espace membre / connexion",
+            "en": "Member area / login"
+          }
+        },
+        {
+          "id": "brief-site-web-f8-o4",
+          "label": {
+            "fr": "Site multilingue",
+            "en": "Multilingual site"
+          }
+        },
+        {
+          "id": "brief-site-web-f8-o5",
+          "label": {
+            "fr": "Réservation en ligne",
+            "en": "Online booking"
+          }
+        },
+        {
+          "id": "brief-site-web-f8-o6",
+          "label": {
+            "fr": "Formulaires et devis",
+            "en": "Forms and quote requests"
+          }
+        },
+        {
+          "id": "brief-site-web-f8-o7",
+          "label": {
+            "fr": "Carte et localisation",
+            "en": "Map and locations"
+          }
+        },
+        {
+          "id": "brief-site-web-f8-o8",
+          "label": {
+            "fr": "Newsletter",
+            "en": "Newsletter"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f9",
+      "type": "number",
+      "label": {
+        "fr": "Combien de produits comptez-vous mettre en ligne ?",
+        "en": "How many products do you plan to put online?"
+      },
+      "description": {
+        "fr": "Une estimation suffit : cela détermine la solution e-commerce retenue.",
+        "en": "An estimate is enough: it determines which e-commerce solution we pick."
+      },
+      "placeholder": {
+        "fr": "120",
+        "en": "120"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "min": 1,
+        "max": 100000,
+        "response_type": "integer",
+        "unit": "none"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f10",
+      "type": "section_break",
+      "label": {
+        "fr": "Contenu et technique",
+        "en": "Content and technical"
+      },
+      "description": {
+        "fr": "Qui produit quoi, et sur quelle base.",
+        "en": "Who produces what, and on which foundation."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f11",
+      "type": "long_text",
+      "label": {
+        "fr": "Quelles pages prévoyez-vous ?",
+        "en": "Which pages do you have in mind?"
+      },
+      "description": {
+        "fr": "Une liste simple, une par ligne.",
+        "en": "A plain list, one per line."
+      },
+      "placeholder": {
+        "fr": "Accueil\nNos services\nÀ propos\nRéalisations\nContact",
+        "en": "Home\nServices\nAbout\nWork\nContact"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1000
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f12",
+      "type": "single_choice",
+      "label": {
+        "fr": "Qui rédige les textes ?",
+        "en": "Who writes the copy?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "brief-site-web-f12-o1",
+          "label": {
+            "fr": "Nous, les textes sont prêts",
+            "en": "We do, the copy is ready"
+          }
+        },
+        {
+          "id": "brief-site-web-f12-o2",
+          "label": {
+            "fr": "Nous, mais les textes restent à écrire",
+            "en": "We do, but the copy still needs writing"
+          }
+        },
+        {
+          "id": "brief-site-web-f12-o3",
+          "label": {
+            "fr": "Vous, nous fournissons la matière",
+            "en": "You do, we provide the raw material"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f13",
+      "type": "single_choice",
+      "label": {
+        "fr": "Qui fournit les photos et visuels ?",
+        "en": "Who provides the photos and visuals?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "brief-site-web-f13-o1",
+          "label": {
+            "fr": "Nous avons une banque d’images à jour",
+            "en": "We have an up-to-date image library"
+          }
+        },
+        {
+          "id": "brief-site-web-f13-o2",
+          "label": {
+            "fr": "Il faut organiser un shooting",
+            "en": "A photo shoot needs to be organised"
+          }
+        },
+        {
+          "id": "brief-site-web-f13-o3",
+          "label": {
+            "fr": "Banque d’images sous licence",
+            "en": "Licensed stock photography"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f14",
+      "type": "dropdown",
+      "label": {
+        "fr": "Avez-vous une préférence de CMS ou de technologie ?",
+        "en": "Do you have a CMS or technology preference?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une réponse",
+        "en": "Select an answer"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {},
+      "options": [
+        {
+          "id": "brief-site-web-f14-o1",
+          "label": {
+            "fr": "Aucune préférence, conseillez-nous",
+            "en": "No preference, advise us"
+          }
+        },
+        {
+          "id": "brief-site-web-f14-o2",
+          "label": {
+            "fr": "WordPress",
+            "en": "WordPress"
+          }
+        },
+        {
+          "id": "brief-site-web-f14-o3",
+          "label": {
+            "fr": "Webflow",
+            "en": "Webflow"
+          }
+        },
+        {
+          "id": "brief-site-web-f14-o4",
+          "label": {
+            "fr": "Shopify",
+            "en": "Shopify"
+          }
+        },
+        {
+          "id": "brief-site-web-f14-o5",
+          "label": {
+            "fr": "WooCommerce",
+            "en": "WooCommerce"
+          }
+        },
+        {
+          "id": "brief-site-web-f14-o6",
+          "label": {
+            "fr": "Développement sur mesure",
+            "en": "Custom development"
+          }
+        },
+        {
+          "id": "brief-site-web-f14-o7",
+          "label": {
+            "fr": "Nous devons rester sur notre CMS actuel",
+            "en": "We must stay on our current CMS"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f15",
+      "type": "section_break",
+      "label": {
+        "fr": "Budget et planning",
+        "en": "Budget and timeline"
+      },
+      "description": {
+        "fr": "Deux réponses qui conditionnent tout le reste.",
+        "en": "Two answers that shape everything else."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f16",
+      "type": "single_choice",
+      "label": {
+        "fr": "Enveloppe budgétaire",
+        "en": "Budget bracket"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "brief-site-web-f16-o1",
+          "label": {
+            "fr": "Moins de 100 000 MUR",
+            "en": "Under MUR 100,000"
+          }
+        },
+        {
+          "id": "brief-site-web-f16-o2",
+          "label": {
+            "fr": "100 000 – 250 000 MUR",
+            "en": "MUR 100,000 – 250,000"
+          }
+        },
+        {
+          "id": "brief-site-web-f16-o3",
+          "label": {
+            "fr": "250 000 – 600 000 MUR",
+            "en": "MUR 250,000 – 600,000"
+          }
+        },
+        {
+          "id": "brief-site-web-f16-o4",
+          "label": {
+            "fr": "Plus de 600 000 MUR",
+            "en": "Over MUR 600,000"
+          }
+        },
+        {
+          "id": "brief-site-web-f16-o5",
+          "label": {
+            "fr": "Je ne sais pas encore",
+            "en": "I don’t know yet"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "brief-site-web-f17",
+      "type": "date",
+      "label": {
+        "fr": "Date de mise en ligne visée",
+        "en": "Target launch date"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "brief-site-web-rule1",
+      "conditions": [
+        {
+          "source_field_id": "brief-site-web-f3",
+          "operator": "equals",
+          "value": "brief-site-web-f3-o2"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "brief-site-web-f4",
+      "rule_order": 0
+    },
+    {
+      "id": "brief-site-web-rule2",
+      "conditions": [
+        {
+          "source_field_id": "brief-site-web-f8",
+          "operator": "contains",
+          "value": "brief-site-web-f8-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "brief-site-web-f9",
+      "rule_order": 1
+    }
+  ]
+}

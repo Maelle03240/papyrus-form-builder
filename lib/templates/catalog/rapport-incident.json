@@ -1,0 +1,437 @@
+{
+  "id": "tpl-mooove-rapport-incident",
+  "slug": "rapport-incident",
+  "category": "Opérations & Conformité",
+  "icon": "ShieldAlert",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Rapport d’incident",
+    "en": "Incident report"
+  },
+  "description": {
+    "fr": "Déclarez un accident, un dommage matériel ou un presqu’accident. Renseignez ce formulaire le jour même, tant que les faits sont précis dans votre mémoire.",
+    "en": "Report an accident, material damage or a near miss. Fill this in on the same day, while the facts are still fresh."
+  },
+  "template_description": {
+    "fr": "Déclaration d’incident : nature, circonstances, blessures, témoins, photos et suites données.",
+    "en": "Incident declaration: nature, circumstances, injuries, witnesses, photos and follow-up."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "rapport-incident-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "L’incident",
+        "en": "The incident"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f2",
+      "type": "single_choice",
+      "label": {
+        "fr": "Nature de l’incident",
+        "en": "Type of incident"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "cards",
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "rapport-incident-f2-o1",
+          "label": {
+            "fr": "Accident du travail",
+            "en": "Workplace accident"
+          }
+        },
+        {
+          "id": "rapport-incident-f2-o2",
+          "label": {
+            "fr": "Dommage matériel",
+            "en": "Material damage"
+          }
+        },
+        {
+          "id": "rapport-incident-f2-o3",
+          "label": {
+            "fr": "Incident de sécurité",
+            "en": "Security incident"
+          }
+        },
+        {
+          "id": "rapport-incident-f2-o4",
+          "label": {
+            "fr": "Presqu’accident",
+            "en": "Near miss"
+          }
+        },
+        {
+          "id": "rapport-incident-f2-o5",
+          "label": {
+            "fr": "Autre incident",
+            "en": "Other incident"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f3",
+      "type": "date",
+      "label": {
+        "fr": "Date de l’incident",
+        "en": "Date of the incident"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f4",
+      "type": "short_text",
+      "label": {
+        "fr": "Lieu précis",
+        "en": "Precise location"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Atelier 2, près du quai de chargement",
+        "en": "Workshop 2, near the loading bay"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 160
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f5",
+      "type": "long_text",
+      "label": {
+        "fr": "Que s’est-il passé exactement ?",
+        "en": "What exactly happened?"
+      },
+      "description": {
+        "fr": "Décrivez les faits dans l’ordre chronologique, sans interprétation ni jugement.",
+        "en": "Describe the facts in chronological order, without interpretation or blame."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 2000
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f6",
+      "type": "long_text",
+      "label": {
+        "fr": "Quelles mesures ont été prises immédiatement ?",
+        "en": "What immediate action was taken?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 1000
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f7",
+      "type": "section_break",
+      "label": {
+        "fr": "Les personnes concernées",
+        "en": "People involved"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f8",
+      "type": "single_choice",
+      "label": {
+        "fr": "Y a-t-il eu des blessures ?",
+        "en": "Were there any injuries?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 1
+      },
+      "options": [
+        {
+          "id": "rapport-incident-f8-o1",
+          "label": {
+            "fr": "Aucune blessure",
+            "en": "No injury"
+          }
+        },
+        {
+          "id": "rapport-incident-f8-o2",
+          "label": {
+            "fr": "Blessure légère, soins prodigués sur place",
+            "en": "Minor injury, treated on site"
+          }
+        },
+        {
+          "id": "rapport-incident-f8-o3",
+          "label": {
+            "fr": "Blessure ayant nécessité l’intervention d’un médecin",
+            "en": "Injury requiring a doctor"
+          }
+        },
+        {
+          "id": "rapport-incident-f8-o4",
+          "label": {
+            "fr": "Hospitalisation",
+            "en": "Hospitalisation"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f9",
+      "type": "long_text",
+      "label": {
+        "fr": "Personnes impliquées",
+        "en": "People involved"
+      },
+      "description": {
+        "fr": "Nom, fonction et rôle de chaque personne concernée.",
+        "en": "Name, job title and role of each person concerned."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f10",
+      "type": "long_text",
+      "label": {
+        "fr": "Témoins de l’incident",
+        "en": "Witnesses to the incident"
+      },
+      "description": {
+        "fr": "Nom et moyen de contact de chaque témoin, s’il y en a.",
+        "en": "Name and contact details of each witness, if any."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 800
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f11",
+      "type": "section_break",
+      "label": {
+        "fr": "Suites et preuves",
+        "en": "Follow-up and evidence"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f12",
+      "type": "file",
+      "label": {
+        "fr": "Photographies de l’incident",
+        "en": "Photographs of the incident"
+      },
+      "description": {
+        "fr": "PNG ou JPG, 25 Mo maximum par fichier.",
+        "en": "PNG or JPG, 25 MB maximum per file."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "accept": [
+          "png",
+          "jpg"
+        ],
+        "max_file_size_mb": 25
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f13",
+      "type": "short_text",
+      "label": {
+        "fr": "À qui l’incident a-t-il été signalé sur place ?",
+        "en": "Who was the incident reported to on site?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Nom et fonction",
+        "en": "Name and job title"
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 120
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f14",
+      "type": "short_text",
+      "label": {
+        "fr": "Votre nom et prénom",
+        "en": "Your full name"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {
+        "max": 80
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "rapport-incident-f15",
+      "type": "email",
+      "label": {
+        "fr": "Votre adresse e-mail",
+        "en": "Your email address"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": []
+}

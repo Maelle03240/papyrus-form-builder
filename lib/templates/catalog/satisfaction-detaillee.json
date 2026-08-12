@@ -1,0 +1,509 @@
+{
+  "id": "tpl-mooove-satisfaction-detaillee",
+  "slug": "satisfaction-detaillee",
+  "category": "Satisfaction client",
+  "icon": "BarChart3",
+  "display_mode": "sections",
+  "feasibility": "ready",
+  "feasibility_note": {
+    "fr": "",
+    "en": ""
+  },
+  "title": {
+    "fr": "Enquête de satisfaction détaillée",
+    "en": "Detailed satisfaction survey"
+  },
+  "description": {
+    "fr": "Sept dimensions de notre service passées en revue. Comptez cinq minutes — vos réponses orientent nos priorités de l’année.",
+    "en": "Seven dimensions of our service reviewed one by one. About five minutes — your answers shape our priorities for the year."
+  },
+  "template_description": {
+    "fr": "Évaluation complète de votre service : profil client, grille de satisfaction en sept critères, NPS et avis.",
+    "en": "A full service review: customer profile, seven-criteria satisfaction grid, NPS and open feedback."
+  },
+  "scoring_enabled": false,
+  "show_score_to_respondent": false,
+  "settings": {
+    "progress_bar": true
+  },
+  "fields": [
+    {
+      "id": "satisfaction-detaillee-f1",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre profil",
+        "en": "About you"
+      },
+      "description": {
+        "fr": "Pour comparer les résultats entre types de clients.",
+        "en": "So we can compare results across customer types."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "satisfaction-detaillee-f2",
+      "type": "single_choice",
+      "label": {
+        "fr": "Vous êtes",
+        "en": "You are"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "options_columns": 2
+      },
+      "options": [
+        {
+          "id": "satisfaction-detaillee-f2-o1",
+          "label": {
+            "fr": "Un particulier",
+            "en": "An individual"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f2-o2",
+          "label": {
+            "fr": "Une petite entreprise",
+            "en": "A small business"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f2-o3",
+          "label": {
+            "fr": "Une grande entreprise",
+            "en": "A large company"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f2-o4",
+          "label": {
+            "fr": "Une association ou une administration",
+            "en": "A non-profit or public body"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "satisfaction-detaillee-f3",
+      "type": "dropdown",
+      "label": {
+        "fr": "Depuis combien de temps êtes-vous client ?",
+        "en": "How long have you been a customer?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une durée",
+        "en": "Select a duration"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "satisfaction-detaillee-f3-o1",
+          "label": {
+            "fr": "Moins de 3 mois",
+            "en": "Less than 3 months"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f3-o2",
+          "label": {
+            "fr": "3 à 12 mois",
+            "en": "3 to 12 months"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f3-o3",
+          "label": {
+            "fr": "1 à 3 ans",
+            "en": "1 to 3 years"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f3-o4",
+          "label": {
+            "fr": "3 à 5 ans",
+            "en": "3 to 5 years"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f3-o5",
+          "label": {
+            "fr": "Plus de 5 ans",
+            "en": "More than 5 years"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "satisfaction-detaillee-f4",
+      "type": "dropdown",
+      "label": {
+        "fr": "À quelle fréquence faites-vous appel à nous ?",
+        "en": "How often do you use our services?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "Sélectionnez une fréquence",
+        "en": "Select a frequency"
+      },
+      "required": true,
+      "layout_width": "half",
+      "validation": {},
+      "options": [
+        {
+          "id": "satisfaction-detaillee-f4-o1",
+          "label": {
+            "fr": "Chaque semaine",
+            "en": "Weekly"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f4-o2",
+          "label": {
+            "fr": "Chaque mois",
+            "en": "Monthly"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f4-o3",
+          "label": {
+            "fr": "Quelques fois par an",
+            "en": "A few times a year"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f4-o4",
+          "label": {
+            "fr": "Plus rarement",
+            "en": "Less often"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "satisfaction-detaillee-f5",
+      "type": "section_break",
+      "label": {
+        "fr": "Votre évaluation",
+        "en": "Your ratings"
+      },
+      "description": {
+        "fr": "Notez chaque critère selon votre expérience des douze derniers mois.",
+        "en": "Rate each criterion based on your experience over the past twelve months."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "satisfaction-detaillee-f6",
+      "type": "matrix",
+      "label": {
+        "fr": "Quel est votre niveau de satisfaction sur chacun de ces points ?",
+        "en": "How satisfied are you with each of these?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "matrix_mode": "single"
+      },
+      "options": [
+        {
+          "id": "satisfaction-detaillee-f6-o1",
+          "label": {
+            "fr": "Très insatisfait",
+            "en": "Very dissatisfied"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f6-o2",
+          "label": {
+            "fr": "Plutôt insatisfait",
+            "en": "Somewhat dissatisfied"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f6-o3",
+          "label": {
+            "fr": "Neutre",
+            "en": "Neutral"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f6-o4",
+          "label": {
+            "fr": "Plutôt satisfait",
+            "en": "Somewhat satisfied"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f6-o5",
+          "label": {
+            "fr": "Très satisfait",
+            "en": "Very satisfied"
+          }
+        }
+      ],
+      "rows": [
+        {
+          "id": "satisfaction-detaillee-f6-r1",
+          "label": {
+            "fr": "La qualité du produit ou du service",
+            "en": "Quality of the product or service"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f6-r2",
+          "label": {
+            "fr": "Le rapport qualité-prix",
+            "en": "Value for money"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f6-r3",
+          "label": {
+            "fr": "Le respect des délais",
+            "en": "Meeting agreed deadlines"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f6-r4",
+          "label": {
+            "fr": "Le service client",
+            "en": "Customer service"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f6-r5",
+          "label": {
+            "fr": "La clarté de la communication",
+            "en": "Clarity of communication"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f6-r6",
+          "label": {
+            "fr": "La facilité d’utilisation au quotidien",
+            "en": "Ease of use day to day"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f6-r7",
+          "label": {
+            "fr": "La fiabilité dans la durée",
+            "en": "Reliability over time"
+          }
+        }
+      ]
+    },
+    {
+      "id": "satisfaction-detaillee-f7",
+      "type": "nps",
+      "label": {
+        "fr": "Quelle est la probabilité que vous nous recommandiez à un proche ou à un collègue ?",
+        "en": "How likely are you to recommend us to a friend or colleague?"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "min": 0,
+        "max": 10,
+        "nps_left_label": "Pas du tout probable",
+        "nps_right_label": "Extrêmement probable"
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "satisfaction-detaillee-f8",
+      "type": "section_break",
+      "label": {
+        "fr": "Vos commentaires",
+        "en": "Your comments"
+      },
+      "description": {
+        "fr": "",
+        "en": ""
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "satisfaction-detaillee-f9",
+      "type": "long_text",
+      "label": {
+        "fr": "Souhaitez-vous ajouter quelque chose ?",
+        "en": "Anything else you would like to add?"
+      },
+      "description": {
+        "fr": "Une remarque, une critique, une idée : tout est lu.",
+        "en": "A remark, a criticism, an idea — everything gets read."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {
+        "max": 1000
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "satisfaction-detaillee-f10",
+      "type": "single_choice",
+      "label": {
+        "fr": "Nous autorisez-vous à publier votre avis sur notre site ?",
+        "en": "Do you allow us to publish your review on our website?"
+      },
+      "description": {
+        "fr": "Aucune publication sans votre accord explicite.",
+        "en": "Nothing is published without your explicit consent."
+      },
+      "placeholder": {
+        "fr": "",
+        "en": ""
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "display_style": "buttons"
+      },
+      "options": [
+        {
+          "id": "satisfaction-detaillee-f10-o1",
+          "label": {
+            "fr": "Oui, vous pouvez le publier",
+            "en": "Yes, you may publish it"
+          }
+        },
+        {
+          "id": "satisfaction-detaillee-f10-o2",
+          "label": {
+            "fr": "Non, gardez-le en interne",
+            "en": "No, keep it internal"
+          }
+        }
+      ],
+      "rows": []
+    },
+    {
+      "id": "satisfaction-detaillee-f11",
+      "type": "short_text",
+      "label": {
+        "fr": "Sous quel nom souhaitez-vous apparaître ?",
+        "en": "Under what name should the review appear?"
+      },
+      "description": {
+        "fr": "Prénom, initiales ou nom de votre société, comme vous préférez.",
+        "en": "First name, initials or your company name — whichever you prefer."
+      },
+      "placeholder": {
+        "fr": "Priya R.",
+        "en": "Priya R."
+      },
+      "required": true,
+      "layout_width": "full",
+      "validation": {
+        "max": 100
+      },
+      "options": [],
+      "rows": []
+    },
+    {
+      "id": "satisfaction-detaillee-f12",
+      "type": "email",
+      "label": {
+        "fr": "Votre adresse e-mail",
+        "en": "Your email address"
+      },
+      "description": {
+        "fr": "Facultatif, uniquement si vous acceptez d’être recontacté.",
+        "en": "Optional, only if you are happy to be contacted."
+      },
+      "placeholder": {
+        "fr": "prenom@exemple.mu",
+        "en": "first@example.mu"
+      },
+      "required": false,
+      "layout_width": "full",
+      "validation": {},
+      "options": [],
+      "rows": []
+    }
+  ],
+  "logic_rules": [
+    {
+      "id": "satisfaction-detaillee-rule1",
+      "conditions": [
+        {
+          "source_field_id": "satisfaction-detaillee-f10",
+          "operator": "equals",
+          "value": "satisfaction-detaillee-f10-o1"
+        }
+      ],
+      "conditions_operator": "AND",
+      "action_type": "show_field",
+      "target_field_id": "satisfaction-detaillee-f11",
+      "rule_order": 0
+    }
+  ]
+}
