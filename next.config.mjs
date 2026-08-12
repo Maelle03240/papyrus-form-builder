@@ -99,20 +99,27 @@ const nextConfig = {
       }
     ];
 
+    // L'ORDRE COMPTE, ET C'EST LA DERNIÈRE RÈGLE QUI GAGNE.
+    //
+    // Next.js n'arrête pas au premier `source` qui correspond : il applique
+    // toutes les règles correspondantes, et pour une même clé d'en-tête, la
+    // dernière écrase les précédentes. La règle spécifique `/embed/:path*` doit
+    // donc être déclarée APRÈS le fourre-tout `/:path*`, sans quoi la politique
+    // générale reprend le dessus et les navigateurs refusent d'afficher le
+    // formulaire dans une iframe hébergée ailleurs — exactement ce que
+    // l'intégration est censée permettre.
     return [
-      // Déclaré avant la règle générale : Next.js applique la première source qui
-      // correspond, donc l'ordre décide laquelle des deux politiques s'applique.
-      {
-        source: '/embed/:path*',
-        headers: [
-          { key: 'Content-Security-Policy', value: embedContentSecurityPolicy },
-          ...commonHeaders
-        ]
-      },
       {
         source: '/:path*',
         headers: [
           { key: 'Content-Security-Policy', value: appContentSecurityPolicy },
+          ...commonHeaders
+        ]
+      },
+      {
+        source: '/embed/:path*',
+        headers: [
+          { key: 'Content-Security-Policy', value: embedContentSecurityPolicy },
           ...commonHeaders
         ]
       }
