@@ -46,6 +46,31 @@ export default function BuilderPage() {
   const [descriptionDraft, setDescriptionDraft] = useState('');
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
+  /**
+   * Montage de l'aperçu, distinct de son ouverture.
+   *
+   * L'aperçu était monté en permanence, simplement rendu invisible (`opacity: 0`,
+   * `translateY(100%)`). Il restait donc un composant vivant, garé sous le bas de
+   * la fenêtre, dont les effets s'exécutaient à chaque changement de formulaire.
+   * En basculant le mode d'affichage sur « Pages » ou « Une à une », l'aperçu
+   * correspondant se montait et appelait `scrollIntoView` : le navigateur faisait
+   * défiler la page jusqu'à ce bloc invisible, et le builder disparaissait de
+   * l'écran sans qu'aucun bouton ne permette d'y revenir.
+   *
+   * Le démontage est différé de la durée de l'animation de fermeture (500 ms),
+   * pour que le panneau glisse encore vers le bas avec son contenu.
+   */
+  const [isPreviewMounted, setIsPreviewMounted] = useState(false);
+
+  useEffect(() => {
+    if (isPreviewOpen) {
+      setIsPreviewMounted(true);
+      return;
+    }
+    const timer = window.setTimeout(() => setIsPreviewMounted(false), 500);
+    return () => window.clearTimeout(timer);
+  }, [isPreviewOpen]);
+
   // Indicateur d'état de sauvegarde (Google Forms / Tally style)
   const [saveStatus, setSaveStatus] = useState<'saved' | 'saving' | 'unsaved'>('saved');
 
@@ -848,7 +873,8 @@ export default function BuilderPage() {
         </aside>
       </div>
 
-      {/* APERÇU EN OVERLAY — s'affiche par-dessus le builder avec animation */}
+      {/* APERÇU EN OVERLAY — s'affiche par-dessus le builder avec animation.
+          Le contenu n'est monté que pendant l'ouverture : cf. `isPreviewMounted`. */}
       <div
         className="absolute inset-0 z-50 transition-all duration-500 ease-out"
         style={{
@@ -857,7 +883,9 @@ export default function BuilderPage() {
           transform: isPreviewOpen ? 'translateY(0)' : 'translateY(100%)'
         }}
       >
-        <PreviewModal form={form} onClose={() => setIsPreviewOpen(false)} />
+        {isPreviewMounted && (
+          <PreviewModal form={form} onClose={() => setIsPreviewOpen(false)} />
+        )}
       </div>
 
     </div>

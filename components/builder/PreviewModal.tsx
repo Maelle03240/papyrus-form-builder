@@ -104,7 +104,7 @@ export function PreviewModal({ form, onClose }: Props) {
               device={device}
               responses={responses}
               updateResponse={updateResponse}
-              scoreResult={scoreResult!}
+              scoreResult={scoreResult}
               showScoreToRespondent={showScoreToRespondent}
               visibleFields={visibleFields}
             />
@@ -114,7 +114,7 @@ export function PreviewModal({ form, onClose }: Props) {
               device={device}
               responses={responses}
               updateResponse={updateResponse}
-              scoreResult={scoreResult!}
+              scoreResult={scoreResult}
               showScoreToRespondent={showScoreToRespondent}
               visibleFields={visibleFields}
             />
@@ -124,7 +124,7 @@ export function PreviewModal({ form, onClose }: Props) {
               device={device}
               responses={responses}
               updateResponse={updateResponse}
-              scoreResult={scoreResult!}
+              scoreResult={scoreResult}
               showScoreToRespondent={showScoreToRespondent}
               visibleFields={visibleFields}
             />
@@ -438,7 +438,7 @@ function ScrollPreview({
   device: Device;
   responses: Record<string, any>;
   updateResponse: (fieldId: string, response: any) => void;
-  scoreResult: ScoreResult;
+  scoreResult: ScoreResult | null;
   showScoreToRespondent: boolean;
   visibleFields: Set<string>;
 }) {
@@ -493,7 +493,7 @@ function ScrollPreview({
       </div>
 
       {/* Affichage du score de maturité si activé */}
-      {showScoreToRespondent && scoreResult.maxScore > 0 && (
+      {showScoreToRespondent && scoreResult && scoreResult.maxScore > 0 && (
         <div className="mt-8">
           <ScoreDisplay
             scoreResult={scoreResult}
@@ -531,7 +531,7 @@ function SectionsPreview({
   device: Device;
   responses: Record<string, any>;
   updateResponse: (fieldId: string, response: any) => void;
-  scoreResult: ScoreResult;
+  scoreResult: ScoreResult | null;
   showScoreToRespondent: boolean;
   visibleFields: Set<string>;
 }) {
@@ -540,15 +540,33 @@ function SectionsPreview({
   const [pageIdx, setPageIdx] = useState(0);
 
   const formRef = useRef<HTMLFormElement>(null);
+  const isFirstRender = useRef(true);
 
+  /**
+   * Remonter en haut à chaque changement de page — mais jamais au montage.
+   *
+   * `scrollIntoView` fait défiler TOUS les conteneurs ancêtres, y compris ceux
+   * qui n'appartiennent pas à l'aperçu. Déclenché au montage, il emportait la
+   * page entière du builder.
+   */
   useEffect(() => {
-    if (formRef.current) {
-      formRef.current.scrollIntoView({ behavior: 'instant', block: 'start' });
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
     }
+    formRef.current?.scrollIntoView({ behavior: 'instant', block: 'nearest' });
   }, [pageIdx]);
 
   const total = pages.length;
-  const currentPage = pages[pageIdx] ?? [];
+
+  // Le nombre de pages peut diminuer (logique conditionnelle, suppression d'un
+  // champ) alors qu'on se trouve sur l'une des dernières : sans ce recadrage,
+  // `pages[pageIdx]` vaut undefined et la page s'affiche vide.
+  useEffect(() => {
+    if (pageIdx > total - 1) setPageIdx(Math.max(0, total - 1));
+  }, [pageIdx, total]);
+
+  const currentPage = pages[Math.min(pageIdx, total - 1)] ?? [];
   const progress = total > 0 ? ((pageIdx + 1) / total) * 100 : 0;
   const isLast = pageIdx === total - 1;
   const isFirst = pageIdx === 0;
@@ -663,7 +681,7 @@ function SectionsPreview({
       </div>
 
       {/* Affichage du score sur la dernière page */}
-      {isLast && showScoreToRespondent && scoreResult.maxScore > 0 && (
+      {isLast && showScoreToRespondent && scoreResult && scoreResult.maxScore > 0 && (
         <div className="mt-8">
           <ScoreDisplay
             scoreResult={scoreResult}
@@ -714,7 +732,7 @@ function TypeformPreview({
   device: Device;
   responses: Record<string, any>;
   updateResponse: (fieldId: string, response: any) => void;
-  scoreResult: ScoreResult;
+  scoreResult: ScoreResult | null;
   showScoreToRespondent: boolean;
   visibleFields: Set<string>;
 }) {
@@ -725,12 +743,18 @@ function TypeformPreview({
   const [history, setHistory] = useState<string[]>([]);
 
   const formRef = useRef<HTMLFormElement>(null);
+  const isFirstRender = useRef(true);
 
+  // Même précaution que dans SectionsPreview : ne jamais faire défiler au
+  // montage, sous peine d'emporter la page qui héberge l'aperçu.
   useEffect(() => {
-    if (formRef.current) {
-      formRef.current.scrollIntoView({ behavior: 'instant', block: 'start' });
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
     }
+    formRef.current?.scrollIntoView({ behavior: 'instant', block: 'nearest' });
   }, [idx]);
+
   const total = screens.length;
   const current = screens[idx];
   const isLast = idx === total - 1;
@@ -943,7 +967,7 @@ function TypeformPreview({
             />
 
             {/* Affichage du score sur la dernière question */}
-            {isLast && showScoreToRespondent && scoreResult.maxScore > 0 && (
+            {isLast && showScoreToRespondent && scoreResult && scoreResult.maxScore > 0 && (
               <div className="mt-8">
                 <ScoreDisplay
                   scoreResult={scoreResult}

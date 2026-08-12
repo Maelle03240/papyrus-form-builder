@@ -52,7 +52,16 @@ export function PublicSectionsView({
   }, [pageIdx, embed?.enabled]);
 
   const total = pages.length;
-  const currentPage = pages[pageIdx] ?? [];
+
+  // Le nombre de pages peut diminuer sous les pieds du répondant : une règle
+  // conditionnelle qui masque les derniers champs supprime la page qui les
+  // portait. Sans ce recadrage, `pages[pageIdx]` vaut undefined et le répondant
+  // se retrouve devant une page vide, sans bouton pour avancer.
+  useEffect(() => {
+    if (pageIdx > total - 1) setPageIdx(Math.max(0, total - 1));
+  }, [pageIdx, total]);
+
+  const currentPage = pages[Math.min(pageIdx, total - 1)] ?? [];
   const progress = total > 0 ? ((pageIdx + 1) / total) * 100 : 0;
   const isLast = pageIdx === total - 1;
   const isFirst = pageIdx === 0;
