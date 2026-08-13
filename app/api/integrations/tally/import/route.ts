@@ -155,7 +155,9 @@ export async function POST(request: Request) {
           description: field.description,
           placeholder: field.placeholder,
           options: field.options,
-          rows: field.rows ?? null,
+          // `rows` est `not null default '[]'` : un `null` explicite est refusé.
+          // Le convertisseur ne renseigne `rows` que pour les matrices.
+          rows: field.rows ?? [],
           required: field.required,
           field_order: field.field_order,
           validation: field.validation

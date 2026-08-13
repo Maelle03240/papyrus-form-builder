@@ -270,6 +270,75 @@ export async function createForm(title = 'Nouveau formulaire', customTeamId?: st
 }
 
 /**
+ * Lignes prêtes pour PostgREST.
+ *
+ * `insert()` et `upsert()` de postgrest-js construisent la liste des colonnes à
+ * partir de l'**union des clés de toutes les lignes** envoyées. Pour une ligne à
+ * laquelle une de ces colonnes manque, PostgREST écrit `NULL` — et non la valeur
+ * par défaut de la colonne : l'en-tête `Prefer: missing=default` n'est posé que
+ * si l'appelant passe `defaultToNull: false`, qui n'est pas le défaut.
+ *
+ * Deux conséquences, invisibles à la lecture du code appelant :
+ *
+ * - `Object.keys()` retient une clé dont la valeur vaut `undefined`, alors que
+ *   `JSON.stringify` la retire du corps de la requête. Un champ construit avec
+ *   `rows: undefined` — ce que fait le builder pour tout type autre que
+ *   `matrix` — inscrit donc `rows` dans la liste des colonnes sans fournir de
+ *   valeur. D'où un `NULL` dans `rows jsonb not null` : ajouter un champ à un
+ *   formulaire échouait, quel que soit le type de champ.
+ * - Un lot mêlant des lignes relues de la base (toutes les colonnes) et des
+ *   lignes fraîchement construites (un sous-ensemble) écrit `NULL` dans les
+ *   colonnes que les secondes ne portent pas — `subfields`, `style`,
+ *   `hidden_by_default`, toutes `not null`.
+ *
+ * D'où ces deux fonctions : toute ligne envoyée porte exactement les mêmes clés,
+ * explicitement remplies. `created_at` en est volontairement absent — la base le
+ * remplit à l'insertion et le conserve lors d'un upsert.
+ */
+// `type` reste obligatoire : la colonne est `not null` et sous contrainte
+// `check`, une ligne qui l'omettrait serait refusée à l'écriture.
+type FieldRow = Omit<Partial<Field>, 'type'> & {
+  id: string;
+  type: Field['type'];
+  hidden_by_default?: boolean;
+};
+
+function toFieldRow(field: FieldRow, formId: string) {
+  return {
+    id: field.id,
+    form_id: formId,
+    type: field.type,
+    label: field.label ?? {},
+    description: field.description ?? {},
+    placeholder: field.placeholder ?? {},
+    options: field.options ?? [],
+    rows: field.rows ?? [],
+    subfields: field.subfields ?? [],
+    style: field.style ?? {},
+    layout_width: field.layout_width ?? 'full',
+    required: field.required ?? false,
+    hidden_by_default: field.hidden_by_default ?? false,
+    field_order: field.field_order ?? 0,
+    validation: field.validation ?? {}
+  };
+}
+
+type LogicRuleRow = Partial<LogicRule> & { id: string };
+
+function toLogicRuleRow(rule: LogicRuleRow, formId: string) {
+  return {
+    id: rule.id,
+    form_id: formId,
+    conditions: rule.conditions ?? [],
+    conditions_operator: rule.conditions_operator ?? 'AND',
+    action_type: rule.action_type ?? null,
+    // La colonne est un uuid : une chaîne vide y déclencherait un 22P02.
+    target_field_id: rule.target_field_id || null,
+    rule_order: rule.rule_order ?? 0
+  };
+}
+
+/**
  * Helper pour synchroniser les entités liées (fields, logic_rules) avec rollback automatique
  */
 async function syncRelatedEntities<T extends { id: string }>(
@@ -345,16 +414,14 @@ async function syncRelatedEntities<T extends { id: string }>(
 
   // Étape 3 : Upsert des nouvelles entités et des entités mises à jour
   try {
-    const sanitizedEntities = entities.map((entity: any) => {
-      const copy = { ...entity, form_id: formId };
-      if (tableName === 'logic_rules') {
-        // Remplacer les chaînes vides ou undefined par null pour éviter les erreurs de type UUID SQL
-        if (!copy.target_field_id || copy.target_field_id === '') {
-          copy.target_field_id = null;
-        }
-      }
-      return copy;
-    });
+    // Annotation volontaire : sans elle, l'union des trois branches fait échouer
+    // l'inférence de `upsert()`, qui aligne toutes les lignes sur la première.
+    const sanitizedEntities: Record<string, unknown>[] =
+      tableName === 'fields'
+        ? (entities as unknown as FieldRow[]).map((f) => toFieldRow(f, formId))
+        : tableName === 'logic_rules'
+          ? (entities as unknown as LogicRuleRow[]).map((r) => toLogicRuleRow(r, formId))
+          : entities.map((entity) => ({ ...entity, form_id: formId }));
 
     const { error: upsertError } = await supabase
       .from(tableName)
@@ -497,7 +564,7 @@ export async function addField(
   // INSERT atomique d'un seul champ
   const { error } = await supabase
     .from('fields')
-    .insert([newField]);
+    .insert([toFieldRow(newField, formId)]);
 
   if (error) throw error;
 
@@ -555,7 +622,7 @@ export async function deleteField(formId: string, fieldId: string): Promise<Form
   if (nextFields.length > 0) {
     const { error: upsertError } = await supabase
       .from('fields')
-      .upsert(nextFields.map(f => ({ ...f, form_id: formId })));
+      .upsert(nextFields.map((f) => toFieldRow(f, formId)));
     if (upsertError) throw upsertError;
   }
 
@@ -638,7 +705,7 @@ export async function duplicateField(
   // Insérer / mettre à jour tous les champs
   const { error: upsertError } = await supabase
     .from('fields')
-    .upsert(finalFields.map(f => ({ ...f, form_id: formId })));
+    .upsert(finalFields.map((f) => toFieldRow(f, formId)));
 
   if (upsertError) throw upsertError;
 
@@ -715,7 +782,7 @@ export async function cloneForm(formId: string, customTeamId?: string): Promise<
 
     const { error: fieldsError } = await supabase
       .from('fields')
-      .insert(newFields);
+      .insert(newFields.map((f) => toFieldRow(f, cloned.id)));
 
     if (fieldsError) throw fieldsError;
   }
@@ -730,7 +797,7 @@ export async function cloneForm(formId: string, customTeamId?: string): Promise<
 
     const { error: rulesError } = await supabase
       .from('logic_rules')
-      .insert(newRules);
+      .insert(newRules.map((r) => toLogicRuleRow(r, cloned.id)));
 
     if (rulesError) throw rulesError;
   }
@@ -1121,7 +1188,7 @@ export async function importForm(
   if (mappedFields.length > 0) {
     const { error: fieldsError } = await supabase
       .from('fields')
-      .insert(mappedFields);
+      .insert(mappedFields.map((f) => toFieldRow(f, newFormId)));
     if (fieldsError) {
       await supabase.from('forms').delete().eq('id', newFormId);
       throw fieldsError;
@@ -1132,7 +1199,7 @@ export async function importForm(
   if (mappedRules.length > 0) {
     const { error: rulesError } = await supabase
       .from('logic_rules')
-      .insert(mappedRules);
+      .insert(mappedRules.map((r) => toLogicRuleRow(r, newFormId)));
     if (rulesError) {
       await supabase.from('fields').delete().eq('form_id', newFormId);
       await supabase.from('forms').delete().eq('id', newFormId);
