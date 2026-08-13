@@ -78,6 +78,66 @@ function getActiveTeamId(): string | null {
   return match ? match[2] : null;
 }
 
+/**
+ * Écrit le cookie d'espace actif, lu aussi bien par le client que par la coquille
+ * du tableau de bord (`app/(dashboard)/layout.tsx`).
+ */
+export function setActiveTeamId(teamId: string): void {
+  if (typeof document === 'undefined' || !teamId) return;
+  document.cookie = `papyrus:active-team-id=${teamId}; path=/; max-age=31536000; SameSite=Lax`;
+}
+
+/** Expose la lecture du cookie aux composants. */
+export function readActiveTeamId(): string | null {
+  return getActiveTeamId();
+}
+
+/**
+ * Résout l'espace de travail dans lequel écrire un nouveau formulaire.
+ *
+ * Le repli historique était `user.id`. Il ne pouvait jamais fonctionner :
+ * `papyrus.teams.id` est un `gen_random_uuid()`, sans rapport avec l'identifiant
+ * du compte. Un `team_id` égal à `user.id` échoue à la fois sur la policy
+ * `forms_insert` (`is_team_member(team_id)` est faux) et sur la clé étrangère
+ * `forms.team_id references papyrus.teams(id)`.
+ *
+ * Le cookie `papyrus:active-team-id` n'est écrit que par le sélecteur d'espace :
+ * un compte qui vient d'être créé ne l'a pas encore. Sur ce compte, tout chemin
+ * de création qui ne passe pas par le sélecteur — « Utiliser » un modèle, en
+ * particulier — tombait donc sur le repli et échouait, quel que soit le modèle.
+ * On interroge maintenant l'appartenance réelle plutôt que de deviner.
+ */
+async function resolveTeamId(
+  supabase: ReturnType<typeof createClient>,
+  userId: string,
+  customTeamId?: string
+): Promise<string> {
+  if (customTeamId) return customTeamId;
+
+  const fromCookie = getActiveTeamId();
+  if (fromCookie) return fromCookie;
+
+  // Même forme de requête que `listForms` : filtrée sur `user_id`, elle ne
+  // déclenche pas la récursion de la policy `team_members`.
+  const { data, error } = await supabase
+    .from('team_members')
+    .select('team_id')
+    .eq('user_id', userId)
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error resolving active team:', error);
+    throw new Error("Impossible de déterminer votre espace de travail.");
+  }
+
+  if (!data?.team_id) {
+    throw new Error("Aucun espace de travail disponible pour ce compte.");
+  }
+
+  return data.team_id;
+}
+
 /** Liste tous les formulaires triés par updated_at desc. */
 export async function listForms(): Promise<Form[]> {
   const supabase = createClient();
@@ -160,8 +220,8 @@ export async function createForm(title = 'Nouveau formulaire', customTeamId?: st
   const user = await getCurrentUser();
   const now = new Date().toISOString();
 
-  // Utiliser le customTeamId s'il est passé, sinon lire le cookie actif, sinon fallback sur l'ID de l'utilisateur
-  const teamId = customTeamId || getActiveTeamId() || user.id;
+  // customTeamId, sinon le cookie d'espace actif, sinon l'appartenance en base.
+  const teamId = await resolveTeamId(supabase, user.id, customTeamId);
 
   const formData = {
     team_id: teamId,
@@ -609,22 +669,11 @@ export async function cloneForm(formId: string, customTeamId?: string): Promise<
   const now = new Date().toISOString();
   const supabase = createClient();
 
-  let teamId = customTeamId;
-
-  if (!teamId) {
-    // Si aucun teamId n'est spécifié, utiliser celui du formulaire d'origine
-    teamId = original.team_id;
-
-    // Si le formulaire d'origine n'a pas de team_id, récupérer le team principal de l'utilisateur
-    if (!teamId) {
-      const { data: membership } = await supabase
-        .from('team_members')
-        .select('team_id')
-        .eq('user_id', user.id)
-        .maybeSingle();
-      teamId = membership?.team_id || user.id;
-    }
-  }
+  // Sans espace explicite, une copie reste dans l'espace du formulaire d'origine.
+  // Le repli interrogeait `team_members` avec `maybeSingle()`, qui échoue dès que
+  // le compte appartient à plusieurs espaces, puis retombait sur `user.id`.
+  const teamId =
+    customTeamId || original.team_id || (await resolveTeamId(supabase, user.id));
 
   const clonedData = {
     team_id: teamId,
@@ -938,8 +987,8 @@ export async function importForm(
   const now = new Date().toISOString();
   const newFormId = uuid();
   
-  const teamId = customTeamId || getActiveTeamId() || user.id;
-  
+  const teamId = await resolveTeamId(supabase, user.id, customTeamId);
+
   // 1. Remap fields and options/rows
   const fieldIdMap: Record<string, string> = {};
   const optionIdMap: Record<string, string> = {};

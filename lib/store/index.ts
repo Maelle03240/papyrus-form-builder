@@ -35,6 +35,8 @@ export {
   updateLogicRule,
   deleteLogicRule,
   newOptionId,
+  setActiveTeamId,
+  readActiveTeamId,
   createTeam,
   updateTeamName,
   listTeamMembers,

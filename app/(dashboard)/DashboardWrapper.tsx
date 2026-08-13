@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import { Sidebar } from '@/components/layout/Sidebar';
 import { Header } from '@/components/layout/Header';
+import { setActiveTeamId } from '@/lib/store';
 
 interface Props {
   teamName?: string;
@@ -22,6 +23,21 @@ export function DashboardWrapper({
 }: Props) {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
+
+  /**
+   * Aligne le cookie sur l'espace que la coquille vient de résoudre.
+   *
+   * Le layout choisit l'espace actif (cookie, sinon premier espace de
+   * l'utilisateur) mais ne pouvait pas l'écrire : un Server Component n'a pas le
+   * droit de modifier les cookies. Le client et le serveur pouvaient donc être en
+   * désaccord — soit parce que le cookie n'existait pas encore (compte neuf),
+   * soit parce qu'il désignait un espace quitté depuis. Dans les deux cas, toute
+   * création côté client visait un espace invalide et se faisait refuser par la
+   * RLS.
+   */
+  useEffect(() => {
+    if (activeTeam?.id) setActiveTeamId(activeTeam.id);
+  }, [activeTeam?.id]);
 
   // Détecter si on est sur la page builder pour supprimer le padding
   const isBuilderPage = pathname.includes('/edit');
