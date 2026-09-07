@@ -138,6 +138,58 @@ async function resolveTeamId(
   return data.team_id;
 }
 
+/**
+ * Résout le projet dans lequel écrire un nouveau formulaire.
+ *
+ * Tout formulaire réel appartient à un projet — la contrainte
+ * `forms_project_required` le garantit en base. Mais les chemins de création
+ * hérités (« Nouveau formulaire » depuis la barre latérale, import d'un JSON,
+ * duplication) ne connaissent qu'un espace de travail. Plutôt que de les faire
+ * échouer, on retombe sur le projet le plus récemment modifié de cet espace, et
+ * on en crée un si l'espace n'en a aucun.
+ *
+ * Créer le projet ici plutôt que refuser l'écriture est délibéré : un compte tout
+ * neuf doit pouvoir créer un formulaire sans avoir d'abord compris ce qu'est un
+ * projet.
+ */
+async function resolveProjectId(
+  supabase: ReturnType<typeof createClient>,
+  teamId: string,
+  userId: string,
+  customProjectId?: string
+): Promise<string> {
+  if (customProjectId) return customProjectId;
+
+  const { data: existing, error } = await supabase
+    .from('projects')
+    .select('id')
+    .eq('team_id', teamId)
+    .eq('status', 'active')
+    .order('updated_at', { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) {
+    console.error('Error resolving project:', error);
+    throw new Error("Impossible de déterminer le projet de destination.");
+  }
+
+  if (existing?.id) return existing.id as string;
+
+  const { data: created, error: createError } = await supabase
+    .from('projects')
+    .insert({ team_id: teamId, created_by: userId, name: 'Mes formulaires' })
+    .select('id')
+    .single();
+
+  if (createError) {
+    console.error('Error creating default project:', createError);
+    throw new Error("Impossible de créer un projet pour ce formulaire.");
+  }
+
+  return created.id as string;
+}
+
 /** Liste tous les formulaires triés par updated_at desc. */
 export async function listForms(): Promise<Form[]> {
   const supabase = createClient();
@@ -215,16 +267,22 @@ export async function getForm(id: string): Promise<Form | null> {
   };
 }
 
-export async function createForm(title = 'Nouveau formulaire', customTeamId?: string): Promise<Form> {
+export async function createForm(
+  title = 'Nouveau formulaire',
+  customTeamId?: string,
+  customProjectId?: string
+): Promise<Form> {
   const supabase = createClient();
   const user = await getCurrentUser();
   const now = new Date().toISOString();
 
   // customTeamId, sinon le cookie d'espace actif, sinon l'appartenance en base.
   const teamId = await resolveTeamId(supabase, user.id, customTeamId);
+  const projectId = await resolveProjectId(supabase, teamId, user.id, customProjectId);
 
   const formData = {
     team_id: teamId,
+    project_id: projectId,
     created_by: user.id,
     title,
     slug: uniqueSlug(title),
@@ -303,7 +361,7 @@ type FieldRow = Omit<Partial<Field>, 'type'> & {
   hidden_by_default?: boolean;
 };
 
-function toFieldRow(field: FieldRow, formId: string) {
+export function toFieldRow(field: FieldRow, formId: string) {
   return {
     id: field.id,
     form_id: formId,
@@ -325,7 +383,7 @@ function toFieldRow(field: FieldRow, formId: string) {
 
 type LogicRuleRow = Partial<LogicRule> & { id: string };
 
-function toLogicRuleRow(rule: LogicRuleRow, formId: string) {
+export function toLogicRuleRow(rule: LogicRuleRow, formId: string) {
   return {
     id: rule.id,
     form_id: formId,
@@ -728,7 +786,11 @@ export function newOptionId(): string {
 /**
  * Duplique un formulaire entier (nouveau ID, nouveau slug, statut brouillon).
  */
-export async function cloneForm(formId: string, customTeamId?: string): Promise<Form | null> {
+export async function cloneForm(
+  formId: string,
+  customTeamId?: string,
+  customProjectId?: string
+): Promise<Form | null> {
   const original = await getForm(formId);
   if (!original) return null;
 
@@ -742,8 +804,19 @@ export async function cloneForm(formId: string, customTeamId?: string): Promise<
   const teamId =
     customTeamId || original.team_id || (await resolveTeamId(supabase, user.id));
 
+  // Sans projet explicite, une copie reste dans le projet de l'original — sauf
+  // si la copie change d'espace de travail, auquel cas le projet d'origine n'y
+  // existe pas et la résolution retombe sur un projet de l'espace cible.
+  const projectId = await resolveProjectId(
+    supabase,
+    teamId,
+    user.id,
+    customProjectId ?? (teamId === original.team_id ? (original.project_id ?? undefined) : undefined)
+  );
+
   const clonedData = {
     team_id: teamId,
+    project_id: projectId,
     created_by: user.id,
     title: `${original.title} (copie)`,
     slug: uniqueSlug(`${original.title}-copie`),
@@ -1047,14 +1120,16 @@ const DEFAULT_IMPORT_THEME: FormTheme = {
  */
 export async function importForm(
   formJson: Partial<Form> & { fields?: Field[]; logic_rules?: LogicRule[] },
-  customTeamId?: string
+  customTeamId?: string,
+  customProjectId?: string
 ): Promise<Form> {
   const supabase = createClient();
   const user = await getCurrentUser();
   const now = new Date().toISOString();
   const newFormId = uuid();
-  
+
   const teamId = await resolveTeamId(supabase, user.id, customTeamId);
+  const projectId = await resolveProjectId(supabase, teamId, user.id, customProjectId);
 
   // 1. Remap fields and options/rows
   const fieldIdMap: Record<string, string> = {};
@@ -1143,6 +1218,7 @@ export async function importForm(
   const formData = {
     id: newFormId,
     team_id: teamId,
+    project_id: projectId,
     created_by: user.id,
     title: formJson.title || 'Formulaire importé',
     slug: uniqueSlug(formJson.title || 'Formulaire importé'),

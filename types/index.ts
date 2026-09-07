@@ -380,9 +380,86 @@ export interface IntegrationEvent {
   created_at: string;
 }
 
+export type ProjectStatus = 'active' | 'archived';
+
+/**
+ * Modules activables d'un projet.
+ *
+ * Ils commandent les onglets visibles : un projet d'enquête n'a aucune raison
+ * d'afficher une tarification. L'assistant de création les renseigne d'après les
+ * réponses au questionnaire, et ils restent modifiables ensuite.
+ */
+export interface ProjectModules {
+  pricing: boolean;
+  partners: boolean;
+  invoicing: boolean;
+  email: boolean;
+}
+
+export const DEFAULT_PROJECT_MODULES: ProjectModules = {
+  pricing: false,
+  partners: false,
+  invoicing: false,
+  email: false
+};
+
+/**
+ * Un projet regroupe plusieurs formulaires et porte ce qui leur est commun.
+ *
+ * Règle de répartition, valable pour tout le produit : une configuration qui
+ * référence des champs appartient au formulaire ; tout le reste appartient au
+ * projet. La tarification et les règles d'e-mail vivent donc sur le formulaire,
+ * les partenaires et la numérotation des factures sur le projet.
+ */
+export interface Project {
+  id: string;
+  team_id: string;
+  created_by?: string | null;
+  name: string;
+  description: string;
+  status: ProjectStatus;
+  languages: string[];
+  default_language: string;
+  theme: Partial<FormTheme>;
+  modules: ProjectModules;
+  created_at: string;
+  updated_at: string;
+  /** Renseigné par les requêtes de liste — jamais une colonne. */
+  form_count?: number;
+}
+
+/** Ce qu'un instantané fige : le formulaire, ses champs et sa logique. */
+export interface FormSnapshot {
+  form: Partial<Form>;
+  fields: Field[];
+  logic_rules: LogicRule[];
+}
+
+export type FormVersionKind = 'auto' | 'manual' | 'ai';
+
+export interface FormVersion {
+  id: string;
+  form_id: string;
+  snapshot: FormSnapshot;
+  label: string;
+  kind: FormVersionKind;
+  created_by?: string | null;
+  created_by_name: string;
+  created_at: string;
+}
+
 export interface Form {
   id: string;
   team_id: string;
+  /**
+   * Projet auquel appartient le formulaire.
+   *
+   * Nul uniquement pour un modèle : un modèle ne vit dans aucun projet, il sert
+   * à en peupler un. La contrainte `forms_project_required` fait respecter cette
+   * règle en base.
+   */
+  project_id?: string | null;
+  /** Alias historique de `team_id` — l'interface dit « espace de travail ». */
   workspace_id?: string;
   created_by?: string;
   title: string;

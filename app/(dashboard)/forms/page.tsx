@@ -567,11 +567,11 @@ export default function FormsListPage() {
             Importer (JSON)
           </button>
           <button
-            onClick={handleNew}
+            onClick={() => router.push('/projects')}
             className="inline-flex items-center gap-1.5 rounded-md border border-mooove-cyan bg-mooove-cyan px-2.5 py-1.5 text-xs font-medium text-black transition hover:bg-mooove-cyan/90"
           >
             <Plus className="h-3.5 w-3.5" />
-            Nouveau formulaire
+            Nouveau projet
           </button>
         </div>
       </div>

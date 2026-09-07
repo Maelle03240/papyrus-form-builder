@@ -23,23 +23,30 @@ import {
   Copy,
   Trash2,
   FolderInput,
+  FolderOpen,
   Share2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { createClient } from '@/lib/supabase/client';
-import {
-  getWorkspaces,
-  createWorkspace,
-  updateWorkspace,
-  deleteWorkspace
-} from '@/lib/store/workspaces';
+import { getWorkspaces, createWorkspace, updateWorkspace, deleteWorkspace } from '@/lib/store/workspaces';
 import type { Workspace, Form, WorkspaceScope } from '@/types';
 import { Modal } from '@/components/ui/Modal';
 import { ConfirmationModal } from '@/components/ui/ConfirmationModal';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { Button } from '@/components/ui/Button';
 import { toast } from '@/components/ui/Toast';
-import { createForm, cloneForm, deleteForm, updateForm } from '@/lib/store';
+import { cloneForm, deleteForm, updateForm } from '@/lib/store';
+
+/**
+ * Adresse d'un formulaire dans l'arborescence de projet.
+ *
+ * `project_id` est nul sur un modèle, et peut manquer sur une ligne servie par
+ * un cache antérieur à la migration : on retombe alors sur l'ancienne adresse,
+ * qui fonctionne toujours, plutôt que de construire une URL invalide.
+ */
+function formHref(form: Form): string {
+  return form.project_id ? `/projects/${form.project_id}/forms/${form.id}` : `/forms/${form.id}`;
+}
 
 interface Props {
   teamName?: string;
@@ -219,7 +226,6 @@ export function Sidebar({
     }
     document.body.removeChild(textarea);
   };
-
 
   // Espaces de travail : rendu immédiat depuis le layout serveur, puis rechargement.
   useEffect(() => {
@@ -479,6 +485,7 @@ export function Sidebar({
 
   // Navigation statique en bas de la sidebar
   const STATIC_NAV = [
+    { href: '/projects', label: 'Projets', icon: FolderOpen },
     { href: '/templates', label: 'Modèles', icon: FileText },
     { href: '/settings', label: 'Paramètres', icon: Settings },
     { href: '/billing', label: 'Billing', icon: CreditCard, badge: 'Bientôt' }
@@ -488,12 +495,6 @@ export function Sidebar({
 
   // État pour l'utilisateur Supabase
   const [currentUser, setCurrentUser] = useState<any>(null);
-
-
-
-
-
-
 
   // Récupérer l'utilisateur Supabase connecté
   // TODO: v0.2 Supabase — remplacer 'Utilisateur local' par le vrai email de l'utilisateur connecté (supabase.auth.getUser())
@@ -507,20 +508,17 @@ export function Sidebar({
     getCurrentUser();
   }, []);
 
-  // Fonction pour créer un nouveau formulaire dans un workspace spécifique
-  const handleCreateFormInWorkspace = async (workspaceId: string) => {
-    try {
-      // Ouvrir l'accordion du workspace pour afficher le formulaire
-      setOpenAccordions((prev) => ({ ...prev, [workspaceId]: true }));
-
-      document.cookie = `papyrus:active-team-id=${workspaceId}; path=/; max-age=31536000; SameSite=Lax`;
-      const newForm = await createForm('Nouveau formulaire', workspaceId);
-
-      router.push(`/forms/${newForm.id}/edit`);
-    } catch (err) {
-      console.error('Error creating form:', err);
-      toast.error('Erreur lors de la création du formulaire');
-    }
+  /**
+   * Ouvre la liste des projets de l'espace choisi.
+   *
+   * On n'y crée plus un formulaire directement : un formulaire vit dans un
+   * projet, et le nommer d'abord évite la traînée de « Nouveau formulaire »
+   * sans contexte que l'ancien bouton produisait.
+   */
+  const handleCreateProjectInWorkspace = (workspaceId: string) => {
+    setOpenAccordions((prev) => ({ ...prev, [workspaceId]: true }));
+    document.cookie = `papyrus:active-team-id=${workspaceId}; path=/; max-age=31536000; SameSite=Lax`;
+    router.push('/projects');
   };
 
   // Composant dropdown rendu dans un portail
@@ -885,11 +883,11 @@ export function Sidebar({
                                   </form>
                                 ) : (
                                   <Link
-                                    href={`/forms/${form.id}`}
+                                    href={formHref(form)}
                                     style={{ height: 'clamp(24px, 1.8vw, 28px)', fontSize: 'var(--sidebar-text-sm)' }}
                                     className={cn(
                                       'flex items-center gap-2 px-1 text-text-secondary hover:text-text-primary rounded-sm hover:bg-bg-elevated transition truncate flex-1',
-                                      pathname === `/forms/${form.id}` && 'text-text-primary font-medium'
+                                      pathname === formHref(form) && 'text-text-primary font-medium'
                                     )}
                                   >
                                     <FileText
@@ -943,7 +941,7 @@ export function Sidebar({
 
                       {/* Bouton + Nouveau formulaire */}
                       <button
-                        onClick={() => handleCreateFormInWorkspace(ws.id)}
+                        onClick={() => handleCreateProjectInWorkspace(ws.id)}
                         style={{ height: 'clamp(24px, 1.8vw, 28px)', fontSize: 'var(--sidebar-text-sm)' }}
                         className="flex items-center gap-2 px-1 text-mooove-cyan hover:bg-papyrus-border/20 rounded-md transition w-full text-left font-medium mt-0"
                       >
@@ -952,7 +950,7 @@ export function Sidebar({
                           className="shrink-0"
                         />
                         <span className={cn("truncate transition-all duration-200", isCollapsed && "hidden")}>
-                          Nouveau formulaire
+                          Nouveau projet
                         </span>
                       </button>
                     </div>

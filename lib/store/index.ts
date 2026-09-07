@@ -44,3 +44,23 @@ export {
   updateTeamMemberRole,
   deleteTeamMember
 } from './supabase-forms';
+
+export {
+  listProjects,
+  getProject,
+  getProjectForms,
+  createProject,
+  updateProject,
+  deleteProject,
+  archiveProject,
+  unarchiveProject,
+  PROJECTS_EVENT
+} from './projects';
+export type { CreateProjectInput } from './projects';
+
+export {
+  listFormVersions,
+  snapshotForm,
+  restoreFormVersion,
+  deleteFormVersion
+} from './versions';
