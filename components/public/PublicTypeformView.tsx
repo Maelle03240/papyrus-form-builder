@@ -10,6 +10,7 @@ import { FormHeader } from '@/components/builder/FormHeader';
 import { ScoreDisplay } from '@/components/respondent/ScoreDisplay';
 import { FieldRenderer } from '@/components/builder/FieldRenderer';
 import { PublicFieldCard } from './PublicFieldCard';
+import { PricingSummary } from './PricingSummary';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@/lib/utils';
 import { ArrowRight, Check } from 'lucide-react';
@@ -377,6 +378,17 @@ export function PublicTypeformView({
                     scoreResult={scoreResult}
                     scoreLabel={form.theme.score_label}
                     scoreDescription={form.theme.score_description}
+                  />
+                </div>
+              )}
+
+              {/* Récapitulatif chiffré — sur le dernier écran */}
+              {isLast && (
+                <div className="mb-8">
+                  <PricingSummary
+                    form={form}
+                    responses={responses}
+                    updateResponse={updateResponse}
                   />
                 </div>
               )}

@@ -7,6 +7,7 @@ import type { EmbedOptions } from '@/lib/embed';
 import { FormHeader } from '@/components/builder/FormHeader';
 import { ScoreDisplay } from '@/components/respondent/ScoreDisplay';
 import { PublicFieldCard } from './PublicFieldCard';
+import { PricingSummary } from './PricingSummary';
 import { buildPages } from '@/lib/sections';
 import { cn } from '@/lib/utils';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -225,6 +226,15 @@ export function PublicSectionsView({
               scoreLabel={form.theme.score_label}
               scoreDescription={form.theme.score_description}
             />
+          </div>
+        )}
+
+        {/* Récapitulatif chiffré — sur la dernière page, là où l'on envoie.
+            L'afficher plus tôt annoncerait un total que les pages suivantes
+            feraient encore bouger. */}
+        {isLast && (
+          <div className="mb-8">
+            <PricingSummary form={form} responses={responses} updateResponse={updateResponse} />
           </div>
         )}
 

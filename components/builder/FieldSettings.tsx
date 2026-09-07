@@ -12,6 +12,7 @@ import { StyleEditor } from './StyleEditor';
 import { LogicEditor } from './LogicEditor';
 import { ConditionsEditor } from './ConditionsEditor';
 import { Phase2Settings } from './Phase2Settings';
+import { FieldPricingSettings } from './FieldPricingSettings';
 import { isAnswerable } from '@/lib/submission-format';
 import { MatrixEditor } from './MatrixEditor';
 import { SubfieldsEditor } from './SubfieldsEditor';
@@ -737,6 +738,7 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
       )}
 
       <Phase2Settings form={form} field={field} onChange={onChange} />
+      <FieldPricingSettings form={form} field={field} onChange={onChange} />
     </div>
   );
 }

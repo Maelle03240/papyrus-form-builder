@@ -27,6 +27,7 @@ import { FormIntegrationsTab } from '@/components/dashboard/FormIntegrationsTab'
 import { FormSettingsTab } from '@/components/dashboard/FormSettingsTab';
 import { FormInsightsTab } from '@/components/dashboard/FormInsightsTab';
 import { FormRecordsTab } from '@/components/dashboard/FormRecordsTab';
+import { FormPricingTab } from '@/components/dashboard/FormPricingTab';
 import { getProject, getForm, updateForm } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
 import type { DisplayMode, Form, FormTheme, Project } from '@/types';
@@ -252,10 +253,10 @@ function FormWorkspace() {
         )}
 
         {tab === 'setup' && sub === 'pricing' && (
-          <ModuleUnavailable
-            icon={CreditCard}
-            title="Tarification"
-            description="Prix par option, quantités, TVA, codes de réduction et tarifs dégressifs. Le total se calcule en direct sur le formulaire public et se fige au moment de l'envoi."
+          <FormPricingTab
+            form={form}
+            onChange={(patch) => void patchForm(patch)}
+            buildHref={`${base}?tab=setup&sub=build`}
           />
         )}
 

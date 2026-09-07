@@ -22,6 +22,8 @@ import {
   SignatureField,
   YesNoField
 } from './fields/Phase2Fields';
+import { OptionPrice, QuantityRow, type RendererPricing } from './fields/OptionPricing';
+import { formatMoney } from '@/lib/pricing';
 
 /** Retourne les types de fichiers acceptés par défaut selon le type de champ */
 function getDefaultAcceptTypes(type: 'image' | 'video' | 'file'): string {
@@ -102,6 +104,14 @@ interface Props {
    * dont la valeur se lit ailleurs que dans la leur.
    */
   responses?: Record<string, unknown>;
+  /**
+   * Devise et compteurs, quand le formulaire affiche un total.
+   *
+   * Les quantités ne vivent pas dans la valeur du champ mais dans une clé
+   * voisine des réponses (`<champ>__qty`) : leur écriture passe donc par un
+   * rappel distinct de `onValueChange`.
+   */
+  pricing?: RendererPricing;
 }
 
 /** Rendu UI d'un champ — utilisé dans le builder (preview) et la vue publique. */
@@ -113,7 +123,8 @@ export function FieldRenderer({
   globalStyle,
   value,
   onValueChange,
-  responses
+  responses,
+  pricing
 }: Props) {
   const lang = 'fr';
   // Un champ ne collecte réellement une réponse que si quelqu'un l'écoute.
@@ -252,6 +263,7 @@ export function FieldRenderer({
       return (
         <SingleChoice
           field={field}
+          pricing={pricing}
           preview={preview}
           mobile={mobile}
           required={required}
@@ -264,6 +276,7 @@ export function FieldRenderer({
       return (
         <MultipleChoice
           field={field}
+          pricing={pricing}
           preview={preview}
           mobile={mobile}
           required={required}
@@ -276,6 +289,7 @@ export function FieldRenderer({
       return (
         <DropdownChoice
           field={field}
+          pricing={pricing}
           preview={preview}
           baseInput={baseInput}
           required={required}
@@ -421,6 +435,7 @@ export function FieldRenderer({
       return (
         <RepeaterField
           field={field}
+          pricing={pricing}
           interactive={isInteractive}
           mobile={mobile}
           value={value}
@@ -447,6 +462,22 @@ export function FieldRenderer({
     default:
       return null;
   }
+}
+
+/**
+ * Libellé d'une option de liste déroulante, prix compris.
+ *
+ * Une `<option>` native n'accepte que du texte : le prix ne peut pas y être un
+ * élément à part, comme ailleurs. Il est donc concaténé.
+ */
+function optionTextWithPrice(
+  option: FieldOption,
+  index: number,
+  pricing?: RendererPricing
+): string {
+  const label = option.label.fr || `Option ${index + 1}`;
+  if (!pricing?.enabled || !option.price) return label;
+  return `${label} — ${formatMoney(option.price, pricing.currency, pricing.position)}`;
 }
 
 function EmptyOptions() {
@@ -585,6 +616,7 @@ function optionsGridClass(cols: number, mobile: boolean): string {
 
 function SingleChoice({
   field,
+  pricing,
   preview,
   mobile,
   required,
@@ -592,6 +624,7 @@ function SingleChoice({
   onChange
 }: {
   field: Field;
+  pricing?: RendererPricing;
   preview: boolean;
   mobile: boolean;
   required?: boolean;
@@ -659,6 +692,7 @@ function SingleChoice({
                 )}
               >
                 {opt.label.fr || `Option ${i + 1}`}
+                <OptionPrice option={opt} pricing={pricing} />
               </button>
             );
           })}
@@ -691,6 +725,7 @@ function SingleChoice({
             style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
           />
         )}
+        <QuantityRow field={field} value={selected} pricing={pricing} />
       </div>
     );
   }
@@ -718,7 +753,10 @@ function SingleChoice({
               className="h-4 w-4"
               style={{ accentColor: 'var(--accent)' }}
             />
-            <span className="wrap-break-word">{opt.label.fr || `Option ${i + 1}`}</span>
+            <span className="wrap-break-word">
+              {opt.label.fr || `Option ${i + 1}`}
+              <OptionPrice option={opt} pricing={pricing} />
+            </span>
           </label>
         ))}
       </div>
@@ -752,12 +790,14 @@ function SingleChoice({
           )}
         </div>
       )}
+      <QuantityRow field={field} value={selected} pricing={pricing} />
     </div>
   );
 }
 
 function MultipleChoice({
   field,
+  pricing,
   preview,
   mobile,
   required,
@@ -765,6 +805,7 @@ function MultipleChoice({
   onChange
 }: {
   field: Field;
+  pricing?: RendererPricing;
   preview: boolean;
   mobile: boolean;
   required?: boolean;
@@ -876,7 +917,10 @@ function MultipleChoice({
                     className="h-4 w-4 rounded-sm"
                     style={{ accentColor: 'var(--accent)' }}
                   />
-                  <span className="wrap-break-word">{opt.label.fr || `Option ${i + 1}`}</span>
+                  <span className="wrap-break-word">
+              {opt.label.fr || `Option ${i + 1}`}
+              <OptionPrice option={opt} pricing={pricing} />
+            </span>
                 </label>
                 {checked && subfields.length > 0 && (
                   <div className="ml-6 mt-2 space-y-3 border-l-2 border-accent/30 pl-4">
@@ -917,7 +961,10 @@ function MultipleChoice({
                 className="h-4 w-4 rounded-sm"
                 style={{ accentColor: 'var(--accent)' }}
               />
-              <span className="wrap-break-word">{opt.label.fr || `Option ${i + 1}`}</span>
+              <span className="wrap-break-word">
+              {opt.label.fr || `Option ${i + 1}`}
+              <OptionPrice option={opt} pricing={pricing} />
+            </span>
             </label>
           ))}
         </div>
@@ -964,6 +1011,7 @@ function MultipleChoice({
           {limitMessage} · {totalChecked} coché{totalChecked > 1 ? 's' : ''}
         </p>
       )}
+      <QuantityRow field={field} value={[...selected]} pricing={pricing} />
     </div>
   );
 }
@@ -1035,6 +1083,7 @@ function SubfieldRenderer({
 
 function DropdownChoice({
   field,
+  pricing,
   preview,
   baseInput,
   required,
@@ -1042,6 +1091,7 @@ function DropdownChoice({
   onChange
 }: {
   field: Field;
+  pricing?: RendererPricing;
   preview: boolean;
   baseInput: string;
   required?: boolean;
@@ -1075,7 +1125,7 @@ function DropdownChoice({
         </option>
         {displayOptions.map((opt, i) => (
           <option key={opt.id} value={opt.id}>
-            {opt.label.fr || `Option ${i + 1}`}
+            {optionTextWithPrice(opt, i, pricing)}
           </option>
         ))}
         {hasOther && <option value={OTHER_VALUE}>{otherLabel}</option>}

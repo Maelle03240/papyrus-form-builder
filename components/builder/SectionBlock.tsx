@@ -43,6 +43,8 @@ interface Props {
   globalStyle?: FieldStyle;
   cardBg?: string;
   scoringEnabled?: boolean;
+  pricingEnabled?: boolean;
+  currency?: string;
   fieldHandlers: Record<string, SectionBlockHandlers>;
   onTitleChange: (sectionId: string, title: string) => void;
   onAddQuestion: (sectionId: string) => void;
@@ -61,6 +63,8 @@ export function SectionBlock({
   globalStyle,
   cardBg,
   scoringEnabled,
+  pricingEnabled,
+  currency,
   fieldHandlers,
   onTitleChange,
   onAddQuestion,
@@ -176,6 +180,8 @@ export function SectionBlock({
                   cardBg={cardBg}
                   theme={theme}
                   scoringEnabled={scoringEnabled}
+                  pricingEnabled={pricingEnabled}
+                  currency={currency}
                   onSelect={handlers.onSelect}
                   onChange={handlers.onChange}
                   onDuplicate={handlers.onDuplicate}

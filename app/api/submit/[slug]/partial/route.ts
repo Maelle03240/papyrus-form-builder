@@ -2,7 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/server';
 import { clientIp, rateLimit } from '@/lib/rate-limit';
 import { verifyFormAccessToken } from '@/lib/form-access';
+import { DISCOUNT_CODE_KEY } from '@/types';
 import type { Field, FormSettings } from '@/types';
+import { isAnswerable } from '@/lib/submission-format';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -107,13 +109,19 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
   }
 
   const knownFieldIds = new Set(
-    ((form.fields ?? []) as Pick<Field, 'id' | 'type'>[])
-      .filter((f) => !['statement', 'image', 'video'].includes(f.type))
-      .map((f) => f.id)
+    ((form.fields ?? []) as Field[]).filter(isAnswerable).map((f) => f.id)
   );
 
   const responses: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(submittedResponses)) {
+    // Le code de réduction n'appartient à aucun champ : sa racine est vide, donc
+    // ce filtre l'écarterait. Un répondant qui revient sur son formulaire
+    // retrouverait toutes ses réponses sauf sa remise — la plus visible.
+    if (key === DISCOUNT_CODE_KEY) {
+      responses[key] = typeof value === 'string' ? value.slice(0, 64) : '';
+      continue;
+    }
+
     if (!knownFieldIds.has(key.split('__')[0])) continue;
 
     if (typeof value === 'string') {

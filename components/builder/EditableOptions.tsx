@@ -13,10 +13,20 @@ interface Props {
   field: Field;
   onChange: (patch: Partial<Field>) => void;
   scoringEnabled?: boolean;
+  /** La tarification est active sur ce formulaire : chaque option porte un prix. */
+  pricingEnabled?: boolean;
+  currency?: string;
 }
 
 /** Édition inline des options d'un champ à choix — Enter ajoute, Backspace sur vide supprime. */
-export function EditableOptions({ type, field, onChange, scoringEnabled = false }: Props) {
+export function EditableOptions({
+  type,
+  field,
+  onChange,
+  scoringEnabled = false,
+  pricingEnabled = false,
+  currency = 'MUR'
+}: Props) {
   const options = field.options;
   const hasOther = field.validation?.has_other ?? false;
   const otherLabel = field.validation?.other_label ?? 'Autre';
@@ -37,6 +47,24 @@ export function EditableOptions({ type, field, onChange, scoringEnabled = false 
   function updatePoints(id: string, points: number) {
     onChange({
       options: options.map((o) => (o.id === id ? { ...o, points } : o))
+    });
+  }
+
+  /**
+   * Un prix vide n'est pas un prix à zéro : la clé disparaît de l'option.
+   * Sans cela, une option gratuite se retrouverait dans le détail de la facture,
+   * avec une ligne à 0,00 que personne n'a demandée.
+   */
+  function updatePrice(id: string, raw: string) {
+    const value = raw.trim() === '' ? undefined : Number(raw.replace(',', '.'));
+    onChange({
+      options: options.map((o) => {
+        if (o.id !== id) return o;
+        const next = { ...o };
+        if (value === undefined || !Number.isFinite(value) || value <= 0) delete next.price;
+        else next.price = value;
+        return next;
+      })
     });
   }
 
@@ -131,6 +159,23 @@ export function EditableOptions({ type, field, onChange, scoringEnabled = false 
               maxLength={LIMITS.OPTION_LABEL_MAX}
               className="h-8 min-w-0 flex-1 rounded-sm bg-transparent px-2 text-sm text-text-primary placeholder:text-text-tertiary focus:bg-bg-elevated/60 focus:outline-hidden"
             />
+            {pricingEnabled && (
+              <div className="flex shrink-0 items-center gap-1 rounded-md border border-border bg-bg-surface px-1.5 py-0.5 shadow-xs">
+                <span className="select-none text-[9px] uppercase text-text-tertiary">
+                  {currency}
+                </span>
+                <input
+                  type="number"
+                  min={0}
+                  step="0.01"
+                  value={opt.price ?? ''}
+                  onChange={(e) => updatePrice(opt.id, e.target.value)}
+                  placeholder="—"
+                  aria-label={`Prix de l'option ${i + 1}`}
+                  className="w-16 rounded-sm bg-transparent px-1 py-0.5 text-right text-xs tabular-nums text-text-primary placeholder:text-text-tertiary focus:bg-bg-elevated/60 focus:outline-hidden"
+                />
+              </div>
+            )}
             {scoringEnabled && (
               <div className="flex shrink-0 items-center gap-0.5 rounded-md border border-border bg-bg-surface px-1.5 py-0.5 shadow-xs">
                 <span className="text-xs font-semibold text-text-primary min-w-[14px] text-center">

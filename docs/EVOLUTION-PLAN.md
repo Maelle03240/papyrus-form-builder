@@ -291,9 +291,51 @@ abandonnée a pu emporter le bloc qu'il comptait. Sa valeur arrive bien dans la
 requête — le répondant la voit à l'écran — mais rien n'empêche de la remplacer
 avant l'envoi.
 
-**3 — Tarification.** Devise, TVA, codes de réduction, tarifs dégressifs /
-early-bird, prix par option, compteurs de quantité, `count_in_total`. Totaux en
-direct sur le formulaire public, instantané figé à l'envoi. Onglet Pricing.
+**3 — Tarification.** ✅ **Fait le 07/09/2026.** Prix par option, compteurs de
+quantité, `count_in_total`, TVA, codes de réduction, tarifs dégressifs. Totaux en
+direct sur le formulaire public et instantané figé à l'envoi. Onglet Tarification
+sur le formulaire, devise et TVA sur le projet. Migration 006 appliquée.
+
+**Trois principes tiennent tout le moteur** (`lib/pricing.ts`) :
+
+1. **On ne facture que ce qui est à l'écran.** Le calcul part de
+   `evaluateFormVisibility`, la même fonction que le rendu et que l'envoi. Une
+   option cochée puis masquée par un changement de branche ne peut pas rester
+   dans le total — c'est le genre d'écart qu'un répondant ne découvre qu'en
+   recevant sa facture.
+2. **Tout est compté en centimes entiers.** Additionner des flottants dérive dès
+   la troisième ligne, et la dérive s'imprime. La conversion en unités n'a lieu
+   qu'à la fin.
+3. **L'instantané se suffit à lui-même.** Il porte le détail ligne à ligne, pas
+   seulement le total. mooove-invoice ne gardait que sous-total, TVA et total :
+   six mois plus tard, avec des prix modifiés entre-temps, plus rien ne
+   permettait d'expliquer une facture.
+
+**Le piège de la phase, rencontré deux fois.** Le code de réduction n'est pas une
+question, donc pas un champ : sa clé réservée `__discount_code` a une racine
+vide. Or `/api/submit/[slug]` filtre les réponses sur « la racine correspond à un
+champ connu », **et** écarte ensuite celles des champs devenus invisibles. Les
+deux passes supprimaient le code. La remise s'affichait à l'écran et disparaissait
+de la facture, sans une erreur. La même faille existait dans la route des
+réponses partielles : un répondant qui revenait sur son formulaire retrouvait
+tout sauf sa remise. Les deux routes l'autorisent maintenant explicitement.
+
+**Où vit quoi.** Devise, position du symbole, TVA et son taux sont portés par le
+**projet** — un même événement facture dans une seule monnaie. Prix, remises,
+paliers et libellés sont portés par le **formulaire**, parce qu'ils désignent ses
+options. La résolution a lieu **à la lecture** (`resolvePricing`), jamais à
+l'écriture : changer la devise d'un projet se répercute sur ses formulaires au
+lieu de les laisser figés sur l'ancienne. Une seule règle, appliquée par le
+navigateur comme par le serveur, plutôt qu'une fusion dupliquée en SQL.
+
+**Les prix des options ne prennent pas de colonne** : ils vivent sur l'option
+elle-même, dans `fields.options`. C'est l'option qui est vendue — la renommer, la
+déplacer ou la dupliquer emporte son prix.
+
+**Le compte des inscriptions n'est exposé que s'il sert.** `public_forms` ne
+publie `registered_count` que lorsqu'un tarif dégressif est actif : un tarif early
+bird annonce de lui-même « il reste N places », alors que le nombre de réponses
+d'un sondage ne regarde personne.
 
 **4 — E-mails et facturation.** Règles d'e-mail conditionnelles, bilingue,
 `{{jetons}}`, éditeur riche, pièce jointe PDF. Numérotation de facture par projet
@@ -345,6 +387,10 @@ public, de la tarification et du parcours partenaire.
   phase 0 — c'est le but de la faire en premier, à vide.
 - Le coût des appels `gpt-5.6-terra` est réel : prévoir un budget mensuel par
   équipe dès la phase 7.
+- **La tarification s'appuie entièrement sur la visibilité.** Un défaut de
+  `lib/visibility.ts` devient désormais un défaut de facturation. Les deux
+  modules sont couverts par des tests, mais toute évolution de l'un doit relire
+  les tests de l'autre.
 - **Deux systèmes d'affichage cohabitent désormais** (`logic_rules` et les
   verrous de visibilité). Leur arbitrage est fixé par des tests, mais rien dans
   l'interface ne montre encore à l'auteur qu'une question est masquée à la fois

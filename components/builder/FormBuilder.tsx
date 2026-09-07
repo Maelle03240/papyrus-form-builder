@@ -37,6 +37,7 @@ import { validateForm, canPublishForm, formatValidationErrors } from '@/lib/vali
 import { FieldPalette } from '@/components/builder/FieldPalette';
 import { SectionBlock } from '@/components/builder/SectionBlock';
 import { SectionSettings } from '@/components/builder/SectionSettings';
+import { resolvePricing } from '@/lib/pricing';
 import { FieldSettings } from '@/components/builder/FieldSettings';
 import { FormDesignPanel } from '@/components/builder/FormDesignPanel';
 import { FormHeader } from '@/components/builder/FormHeader';
@@ -597,6 +598,10 @@ export function FormBuilder({
   const sections = [...(form?.sections ?? [])].sort((a, b) => a.section_order - b.section_order);
   const selected = fields.find((f) => f.id === selectedFieldId) ?? null;
   const selectedSection = sections.find((s) => s.id === selectedSectionId) ?? null;
+  // Devise et activation résolues une fois : le projet fournit la monnaie, le
+  // formulaire peut la surcharger, et c'est cette valeur que voient les champs
+  // de prix — sinon l'auteur saisirait des roupies sous un libellé « EUR ».
+  const pricing = resolvePricing(form);
 
   async function handleTitleBlur() {
     if (!form || !titleDraft || titleDraft === form.title) return;
@@ -1022,6 +1027,8 @@ export function FormBuilder({
                       globalStyle={form.theme.field_style}
                       cardBg={form.theme.field_bg_color}
                       scoringEnabled={form.scoring_enabled}
+                      pricingEnabled={pricing.enabled}
+                      currency={pricing.currency}
                       fieldHandlers={fieldHandlers}
                       onTitleChange={handleSectionTitleChange}
                       onAddQuestion={handleAddQuestionInSection}

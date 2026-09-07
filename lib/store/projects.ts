@@ -16,8 +16,8 @@
  * `lib/store/workspaces.ts` s'occupe du premier niveau, ce module du deuxième.
  */
 
-import type { Form, Project, ProjectModules, ProjectStatus } from '@/types';
-import { DEFAULT_PROJECT_MODULES } from '@/types';
+import type { Form, Project, ProjectModules, ProjectPricing, ProjectStatus } from '@/types';
+import { DEFAULT_PROJECT_MODULES, DEFAULT_PROJECT_PRICING } from '@/types';
 import { createClient } from '@/lib/supabase/client';
 
 const PROJECTS_CHANGED = 'papyrus:projects-changed';
@@ -41,6 +41,7 @@ interface ProjectRow {
   default_language: string | null;
   theme: Record<string, unknown> | null;
   modules: Partial<ProjectModules> | null;
+  pricing: Partial<ProjectPricing> | null;
   created_at: string;
   updated_at: string;
 }
@@ -67,6 +68,34 @@ export function normalizeProjectModules(raw: unknown): ProjectModules {
   return result;
 }
 
+/**
+ * Complète les réglages monétaires d'une ligne avec les valeurs par défaut.
+ *
+ * Même raison que pour les modules : la colonne est un jsonb, et une devise
+ * absente ne doit jamais se lire `undefined`. Un total affiché sans devise, ou
+ * pire dans une autre que celle facturée, ne se remarque qu'une fois la facture
+ * partie.
+ */
+export function normalizeProjectPricing(raw: unknown): ProjectPricing {
+  const source = raw && typeof raw === 'object' ? (raw as Record<string, unknown>) : {};
+  const result = { ...DEFAULT_PROJECT_PRICING };
+
+  if (typeof source.currency === 'string' && source.currency.trim()) {
+    result.currency = source.currency.trim();
+  }
+  if (source.currency_position === 'before' || source.currency_position === 'after') {
+    result.currency_position = source.currency_position;
+  }
+  if (typeof source.vat_enabled === 'boolean') result.vat_enabled = source.vat_enabled;
+  if (typeof source.vat_rate === 'number' && Number.isFinite(source.vat_rate)) {
+    // Un taux négatif ou supérieur à cent transformerait une TVA en remise, ou
+    // multiplierait la facture. Aucun des deux ne doit franchir la lecture.
+    result.vat_rate = Math.min(100, Math.max(0, source.vat_rate));
+  }
+
+  return result;
+}
+
 function toProject(row: ProjectRow, formCount?: number): Project {
   return {
     id: row.id,
@@ -79,6 +108,7 @@ function toProject(row: ProjectRow, formCount?: number): Project {
     default_language: row.default_language ?? 'fr',
     theme: (row.theme ?? {}) as Project['theme'],
     modules: normalizeProjectModules(row.modules),
+    pricing: normalizeProjectPricing(row.pricing),
     created_at: row.created_at,
     updated_at: row.updated_at,
     form_count: formCount
@@ -227,6 +257,7 @@ export async function updateProject(
   id: string,
   patch: Partial<Pick<Project, 'name' | 'description' | 'status' | 'languages' | 'default_language' | 'theme'>> & {
     modules?: Partial<ProjectModules>;
+    pricing?: Partial<ProjectPricing>;
   }
 ): Promise<Project | null> {
   const supabase = createClient();

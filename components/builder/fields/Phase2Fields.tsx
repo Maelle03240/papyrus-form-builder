@@ -9,6 +9,8 @@ import { calcFieldValue } from '@/lib/calculated';
 import { useAttachmentUpload } from '@/lib/hooks/useAttachmentUpload';
 import { useFormSlug } from '@/lib/hooks/useFormSlug';
 import { DEFAULT_CURRENCY } from '@/lib/submission-format';
+import { formatMoney } from '@/lib/pricing';
+import type { RendererPricing } from './OptionPricing';
 import { cn } from '@/lib/utils';
 import type { Field, SubField } from '@/types';
 
@@ -324,8 +326,9 @@ export function RepeaterField({
   interactive,
   mobile,
   value,
-  onValueChange
-}: FieldProps & { mobile?: boolean }) {
+  onValueChange,
+  pricing
+}: FieldProps & { mobile?: boolean; pricing?: RendererPricing }) {
   const config = field.repeater;
   const subfields = config?.fields ?? [];
   const min = Math.max(1, config?.min ?? 1);
@@ -391,6 +394,7 @@ export function RepeaterField({
                 // le libellé de la troisième ligne placerait le curseur dans la
                 // première.
                 domId={`${field.id}-${rowIndex}-${subfield.id}`}
+                pricing={pricing}
                 interactive={interactive}
                 value={row[subfield.id]}
                 onChange={(cell) => setCell(rowIndex, subfield.id, cell)}
@@ -432,6 +436,7 @@ export function RepeaterField({
 function RepeaterCell({
   subfield,
   domId,
+  pricing,
   interactive,
   value,
   onChange
@@ -439,6 +444,7 @@ function RepeaterCell({
   subfield: SubField;
   /** Identifiant unique de cette cellule — lie le libellé à sa saisie. */
   domId: string;
+  pricing?: RendererPricing;
   interactive?: boolean;
   value: unknown;
   onChange: (value: unknown) => void;
@@ -518,7 +524,7 @@ function RepeaterCell({
           <option value="">Sélectionnez…</option>
           {(subfield.options ?? []).map((option) => (
             <option key={option.id} value={option.id}>
-              {option.label?.fr || ''}
+              {optionTextWithPrice(option, pricing)}
             </option>
           ))}
         </select>
@@ -544,7 +550,7 @@ function RepeaterCell({
                 }
                 className="h-4 w-4 accent-[var(--accent)]"
               />
-              {option.label?.fr || ''}
+              {optionTextWithPrice(option, pricing)}
             </label>
           ))}
         </div>
@@ -581,6 +587,22 @@ function RepeaterCell({
       {input}
     </div>
   );
+}
+
+/**
+ * Libellé d'une option de sous-question, prix compris.
+ *
+ * Le prix s'affiche partout où l'on choisit, y compris dans un bloc répétable :
+ * c'est précisément là qu'on facture au participant, et un menu à huit cents
+ * roupies choisi sans le savoir se conteste à la réception de la facture.
+ */
+function optionTextWithPrice(
+  option: { label?: { fr: string }; price?: number },
+  pricing?: RendererPricing
+): string {
+  const label = option.label?.fr || '';
+  if (!pricing?.enabled || !option.price) return label;
+  return `${label} — ${formatMoney(option.price, pricing.currency, pricing.position)}`;
 }
 
 function inputTypeFor(type: SubField['type']): string {

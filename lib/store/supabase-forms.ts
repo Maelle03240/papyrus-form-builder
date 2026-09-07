@@ -13,6 +13,7 @@ import type {
   VisibilityRule
 } from '@/types';
 import { createClient } from '@/lib/supabase/client';
+import { normalizeProjectPricing } from '@/lib/store/projects';
 import { uniqueSlug } from '@/lib/utils';
 
 function uuid(): string {
@@ -222,7 +223,8 @@ export async function listForms(): Promise<Form[]> {
       *,
       sections(*),
       fields(*),
-      logic_rules(*)
+      logic_rules(*),
+      projects(pricing)
     `)
     .in('team_id', teamIds)
     .order('updated_at', { ascending: false });
@@ -245,7 +247,8 @@ export async function getForm(id: string): Promise<Form | null> {
       *,
       sections(*),
       fields(*),
-      logic_rules(*)
+      logic_rules(*),
+      projects(pricing)
     `)
     .eq('id', id)
     .maybeSingle();
@@ -433,8 +436,17 @@ function normalizeForm(row: Record<string, unknown>): Form {
     (a, b) => a.rule_order - b.rule_order
   );
 
+  // La relation `projects(pricing)` remonte comme un objet imbriqué. On la
+  // remet à plat sous `project_pricing` — le nom que `resolvePricing` attend —
+  // et on retire la relation elle-même, qui n'a rien à faire dans un `Form` et
+  // que `updateForm` renverrait telle quelle vers une colonne inexistante.
+  const { projects, ...rest } = row as Record<string, unknown> & {
+    projects?: { pricing?: unknown } | null;
+  };
+
   return {
-    ...(row as unknown as Form),
+    ...(rest as unknown as Form),
+    project_pricing: normalizeProjectPricing(projects?.pricing),
     sections: sections.map((section) => ({
       ...section,
       fields: fields.filter((field) => field.section_id === section.id)
@@ -503,10 +515,11 @@ export function toFieldRow(field: FieldRow, formId: string) {
     field_order: field.field_order ?? 0,
     validation: field.validation ?? {},
     visibility: field.visibility ?? {},
-    // Ces deux colonnes sont nullables : seuls `repeater` et `calculated` les
-    // renseignent, et un objet vide y serait pris pour une configuration.
+    // Ces colonnes sont nullables : seuls quelques types les renseignent, et un
+    // objet vide y serait pris pour une configuration.
     repeater: field.repeater ?? null,
-    calc: field.calc ?? null
+    calc: field.calc ?? null,
+    pricing: field.pricing ?? null
   };
 }
 
@@ -637,12 +650,17 @@ async function syncRelatedEntities<T extends { id: string }>(
 export async function updateForm(id: string, patch: Partial<Form>): Promise<Form | null> {
   const supabase = createClient();
 
-  // Séparer les relations et `workspace_id` (qui n'est pas une colonne) du reste.
+  // Séparer les relations et les champs qui ne sont pas des colonnes.
+  //
+  // `project_pricing` est joint à la lecture depuis le projet : le renvoyer ici
+  // ferait échouer la mise à jour sur une colonne inexistante — et un
+  // enregistrement automatique échouant en silence est pire qu'un qui plante.
   const {
     fields,
     logic_rules,
     sections,
     workspace_id: _workspaceIdIgnored,
+    project_pricing: _projectPricingIgnored,
     ...formPatch
   } = patch;
 
@@ -1007,6 +1025,9 @@ export async function cloneForm(
     access_password: original.access_password,
     languages: original.languages,
     default_language: original.default_language,
+    // La tarification suit la copie : dupliquer un bon de commande pour la
+    // session suivante et retrouver tous ses prix à zéro n'aurait aucun sens.
+    pricing_config: original.pricing_config ?? {},
     published_at: null,
     closes_at: null,
     created_at: now,

@@ -7,6 +7,7 @@ import { FormHeader } from '@/components/builder/FormHeader';
 import {} from '@/components/builder/FieldRenderer';
 import { ScoreDisplay } from '@/components/respondent/ScoreDisplay';
 import { PublicFieldCard } from './PublicFieldCard';
+import { PricingSummary } from './PricingSummary';
 import { cn } from '@/lib/utils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from '@/components/ui/Toast';
@@ -134,6 +135,11 @@ export function PublicScrollView({
           />
         </div>
       )}
+
+      {/* Récapitulatif chiffré — juste avant l'envoi, là où l'on décide */}
+      <div className="mt-8">
+        <PricingSummary form={form} responses={responses} updateResponse={updateResponse} />
+      </div>
 
       {/* Bouton de soumission */}
       {hasInputs && (

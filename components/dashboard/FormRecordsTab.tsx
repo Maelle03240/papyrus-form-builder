@@ -8,6 +8,8 @@ import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 import { toast } from '@/components/ui/Toast';
 import type { Field, Form } from '@/types';
+import { formatMoney, resolvePricing } from '@/lib/pricing';
+import { isAnswerable } from '@/lib/submission-format';
 
 /**
  * Onglet Réponses — le tableau brut : recherche, export, édition en ligne,
@@ -40,9 +42,8 @@ export function FormRecordsTab({ form, submissions: allSubmissions, setSubmissio
     ? allSubmissions
     : allSubmissions.filter((s) => !s.is_partial);
 
-  const fields = (form.fields ?? []).filter(
-    (f) => f.type !== 'statement' && f.type !== 'image' && f.type !== 'video'
-  );
+  const fields = (form.fields ?? []).filter(isAnswerable);
+  const pricingEnabled = resolvePricing(form).enabled;
 
   function renderResponseValue(field: Field, value: any): string {
     if (value === undefined || value === null || value === '') return '—';
@@ -218,6 +219,7 @@ export function FormRecordsTab({ form, submissions: allSubmissions, setSubmissio
             <tr>
               <th className="w-8 px-2 py-3" />
               <th className="px-4 py-3 min-w-[150px]">Date de soumission</th>
+              {pricingEnabled && <th className="px-4 py-3 text-right min-w-[110px]">Total</th>}
               {fields.map((f) => (
                 <th key={f.id} className="px-4 py-3 min-w-[200px] max-w-[350px] truncate">
                   {f.label.fr || 'Champ sans nom'}
@@ -275,6 +277,21 @@ export function FormRecordsTab({ form, submissions: allSubmissions, setSubmissio
                     </span>
                   )}
                 </td>
+
+                {/* Total figé à l'envoi.
+                    Il n'est jamais recalculé à l'affichage : c'est le montant
+                    que le répondant a vu, même si les prix ont changé depuis. */}
+                {pricingEnabled && (
+                  <td className="px-4 py-3 text-right whitespace-nowrap tabular-nums">
+                    {sub.pricing
+                      ? formatMoney(
+                          sub.pricing.total,
+                          sub.pricing.currency,
+                          sub.pricing.currency_position
+                        )
+                      : <span className="text-text-tertiary">—</span>}
+                  </td>
+                )}
 
                 {/* Cellules de réponse */}
                 {fields.map((f) => {

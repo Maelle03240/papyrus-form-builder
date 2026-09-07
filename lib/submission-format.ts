@@ -107,20 +107,38 @@ function optionLabel(field: Field, optionId: string): string {
  * `emptyValue` permet d'obtenir `—` dans un tableau et une chaîne vide dans une
  * feuille de calcul, où un tiret polluerait les formules.
  */
-export function formatAnswer(field: Field, value: unknown, emptyValue = ''): string {
+export function formatAnswer(
+  field: Field,
+  value: unknown,
+  emptyValue = '',
+  /**
+   * Toutes les réponses — nécessaire aux seuls compteurs de quantité, qui vivent
+   * dans une clé voisine (`<champ>__qty`) et non dans la valeur du champ.
+   */
+  bag?: Record<string, unknown>
+): string {
   if (value === undefined || value === null || value === '') return emptyValue;
 
   if (['single_choice', 'multiple_choice', 'dropdown'].includes(field.type)) {
-    if (Array.isArray(value)) return value.map((v) => optionLabel(field, String(v))).join(', ');
+    // « Table de 6 × 3 » plutôt que « Table de 6 » : sans la quantité, la
+    // colonne exportée dit qu'une table a été réservée alors qu'il y en a trois,
+    // et c'est sur cette colonne que se prépare la salle.
+    const withCount = (optionId: string) => {
+      const label = optionLabel(field, optionId);
+      const count = quantityFor(field, bag, optionId);
+      return count > 1 ? `${label} × ${count}` : label;
+    };
+
+    if (Array.isArray(value)) return value.map((v) => withCount(String(v))).join(', ');
     if (typeof value === 'string') {
       // Une réponse multiple peut arriver sérialisée en CSV d'identifiants.
       if (value.includes(',') && !field.options?.some((o) => o.id === value)) {
         return value
           .split(',')
-          .map((v) => optionLabel(field, v.trim()))
+          .map((v) => withCount(v.trim()))
           .join(', ');
       }
-      return optionLabel(field, value);
+      return withCount(value);
     }
   }
 
@@ -180,6 +198,30 @@ export function formatAnswer(field: Field, value: unknown, emptyValue = ''): str
 export const DEFAULT_CURRENCY = 'MUR';
 
 /**
+ * Quantité retenue pour une option.
+ *
+ * La logique complète vit dans `lib/pricing`, mais l'importer ici créerait un
+ * cycle : `lib/pricing` dépend de `lib/visibility`, qui dépend de
+ * `lib/logic-evaluation`, qui dépend de ce module. La lecture est simple et
+ * tolérante — une carte absente ou malformée vaut « une unité ».
+ */
+const QUANTITY_SUFFIX = '__qty';
+
+function quantityFor(
+  field: Field,
+  bag: Record<string, unknown> | undefined,
+  optionId: string
+): number {
+  if (field.pricing?.quantity?.enabled !== true) return 1;
+
+  const raw = bag?.[`${field.id}${QUANTITY_SUFFIX}`];
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return 1;
+
+  const count = Number((raw as Record<string, unknown>)[optionId]);
+  return Number.isFinite(count) && count > 0 ? Math.round(count) : 1;
+}
+
+/**
  * Une réponse mise à plat : une valeur par colonne, plus les réponses aux
  * sous-questions, qui utilisent des clés `champ__option__sousChamp`.
  */
@@ -189,10 +231,14 @@ export function formatSubmissionRow(
   emptyValue = ''
 ): string[] {
   return columns.map((column) => {
-    const direct = formatAnswer(column.field, responses[column.key], emptyValue);
+    const direct = formatAnswer(column.field, responses[column.key], emptyValue, responses);
 
     const subAnswers = Object.entries(responses)
       .filter(([key]) => key !== column.key && key.split('__')[0] === column.key)
+      // Le compteur de quantité partage la racine du champ, mais il est déjà
+      // rendu dans le libellé de l'option. Le laisser passer écrirait la carte
+      // des quantités en JSON brut au milieu de la cellule.
+      .filter(([key]) => !key.endsWith(QUANTITY_SUFFIX))
       .map(([, value]) => (typeof value === 'object' ? JSON.stringify(value) : String(value)))
       .filter((v) => v !== '' && v !== 'null' && v !== 'undefined');
 
@@ -209,7 +255,7 @@ export function formatSubmissionPairs(
   return buildSubmissionColumns(form)
     .map((column) => ({
       label: column.label,
-      value: formatAnswer(column.field, responses[column.key])
+      value: formatAnswer(column.field, responses[column.key], '', responses)
     }))
     .filter((pair) => pair.value !== '');
 }

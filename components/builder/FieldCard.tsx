@@ -27,6 +27,9 @@ interface Props {
   cardBg?: string;
   theme: FormTheme;
   scoringEnabled?: boolean;
+  /** La tarification est active : les options portent un prix. */
+  pricingEnabled?: boolean;
+  currency?: string;
   onSelect: () => void;
   onChange: (patch: Partial<Field>) => void;
   onDuplicate: () => void;
@@ -93,6 +96,8 @@ export const FieldCard = memo(function FieldCard({
   cardBg,
   theme,
   scoringEnabled,
+  pricingEnabled,
+  currency,
   onSelect,
   onChange,
   onDuplicate,
@@ -370,6 +375,8 @@ export const FieldCard = memo(function FieldCard({
           field={field}
           onChange={onChange}
           scoringEnabled={scoringEnabled}
+          pricingEnabled={pricingEnabled}
+          currency={currency}
         />
       ) : field.type === 'matrix' ? (
         <EditableMatrix field={field} onChange={onChange} />
@@ -386,6 +393,8 @@ export const FieldCard = memo(function FieldCard({
     prevProps.globalStyle === nextProps.globalStyle &&
     prevProps.cardBg === nextProps.cardBg &&
     prevProps.scoringEnabled === nextProps.scoringEnabled &&
+    prevProps.pricingEnabled === nextProps.pricingEnabled &&
+    prevProps.currency === nextProps.currency &&
     prevProps.theme.fields_icons_enabled === nextProps.theme.fields_icons_enabled &&
     prevProps.index === nextProps.index
   );

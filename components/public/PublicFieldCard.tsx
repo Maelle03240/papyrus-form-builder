@@ -2,9 +2,11 @@
 
 import type { Field, Form } from '@/types';
 import { FieldRenderer } from '@/components/builder/FieldRenderer';
+import type { RendererPricing } from '@/components/builder/fields/OptionPricing';
 import { getFieldIcon, isIconVisible } from '@/lib/field-icons';
+import { quantityKey, readQuantityMap, resolvePricing } from '@/lib/pricing';
 import { cn } from '@/lib/utils';
-import { createContext } from 'react';
+import { createContext, useMemo } from 'react';
 
 export const FieldContext = createContext<Field | null>(null);
 
@@ -26,6 +28,25 @@ export function PublicFieldCard({
   const isRespondentUpload =
     ['file', 'image', 'video'].includes(field.type) &&
     field.validation?.respondent_mode_enabled === true;
+
+  /**
+   * Devise et compteurs transmis au rendu.
+   *
+   * Les quantités vivent dans une clé voisine des réponses — `<champ>__qty` — et
+   * non dans la valeur du champ : la réponse garde ainsi sa forme habituelle, et
+   * la logique conditionnelle comme les exports continuent d'ignorer qu'il
+   * existe des compteurs.
+   */
+  const pricing: RendererPricing = useMemo(() => {
+    const resolved = resolvePricing(form);
+    return {
+      enabled: resolved.enabled,
+      currency: resolved.currency,
+      position: resolved.currency_position,
+      quantities: readQuantityMap(responses, field.id),
+      onQuantitiesChange: (next) => updateResponse(quantityKey(field.id), next)
+    };
+  }, [form, responses, field.id, updateResponse]);
 
   // En mode Créateur uniquement : on rend le contenu média enveloppé dans une carte avec titre et description
   if (['file', 'image', 'video'].includes(field.type) && !isRespondentUpload) {
@@ -131,6 +152,7 @@ export function PublicFieldCard({
             value={responses[field.id]}
             onValueChange={(val) => updateResponse(field.id, val)}
             responses={responses}
+            pricing={pricing}
           />
         </FieldContext.Provider>
       </div>

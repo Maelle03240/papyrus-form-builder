@@ -31,7 +31,9 @@ import {
   deleteForm
 } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
-import type { Form, Project } from '@/types';
+import type { Form, Project, ProjectPricing } from '@/types';
+import { Switch } from '@/components/ui/Switch';
+import { formatMoney } from '@/lib/pricing';
 
 type Tab = 'forms' | 'records' | 'partners' | 'insights' | 'settings';
 const TABS: Tab[] = ['forms', 'records', 'partners', 'insights', 'settings'];
@@ -456,6 +458,8 @@ function SettingsTab({ project, onChanged }: { project: Project; onChanged: () =
         </div>
       </section>
 
+      <ProjectPricingSection project={project} onChanged={onChanged} />
+
       <section className="mt-6 rounded-xl border border-border bg-bg-surface p-6">
         <h2 className="font-display text-base font-bold text-text-primary">Cycle de vie</h2>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
@@ -501,5 +505,120 @@ export default function ProjectPage() {
     <Suspense fallback={null}>
       <ProjectWorkspace />
     </Suspense>
+  );
+}
+
+// ============================================================================
+// Devise et TVA du projet
+// ============================================================================
+
+/**
+ * Réglages monétaires partagés par tous les formulaires du projet.
+ *
+ * Ils vivent ici et non sur chaque formulaire parce qu'un même événement facture
+ * dans une seule monnaie : régler la devise vingt fois, c'est se tromper une
+ * fois. Un formulaire peut tout de même la surcharger, depuis son propre onglet
+ * de tarification, mais c'est alors un geste délibéré.
+ */
+function ProjectPricingSection({
+  project,
+  onChanged
+}: {
+  project: Project;
+  onChanged: () => Promise<void>;
+}) {
+  const [pricing, setPricing] = useState<ProjectPricing>(project.pricing);
+  const [saving, setSaving] = useState(false);
+
+  const dirty = JSON.stringify(pricing) !== JSON.stringify(project.pricing);
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      await updateProject(project.id, { pricing });
+      await onChanged();
+      toast.success('Réglages enregistrés.');
+    } catch (error) {
+      console.error('Failed to save project pricing:', error);
+      toast.error("L'enregistrement a échoué.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <section className="mt-6 rounded-xl border border-border bg-bg-surface p-6">
+      <h2 className="font-display text-base font-bold text-text-primary">Devise et TVA</h2>
+      <p className="mt-1 text-sm leading-relaxed text-text-secondary">
+        Repris par tous les formulaires du projet. Chacun peut les surcharger depuis son
+        onglet Tarification.
+      </p>
+
+      <div className="mt-4 space-y-4">
+        <div className="grid grid-cols-2 gap-4">
+          <Input
+            label="Devise"
+            value={pricing.currency}
+            onChange={(event) =>
+              setPricing({ ...pricing, currency: event.target.value.toUpperCase().slice(0, 4) })
+            }
+          />
+          <div className="space-y-1.5">
+            <label htmlFor="project-currency-position" className="block text-sm text-text-secondary">
+              Position du symbole
+            </label>
+            <select
+              id="project-currency-position"
+              value={pricing.currency_position}
+              onChange={(event) =>
+                setPricing({
+                  ...pricing,
+                  currency_position: event.target.value as 'before' | 'after'
+                })
+              }
+              className="w-full rounded-md border border-border-strong bg-bg-surface px-3 py-2 text-sm text-text-primary focus:border-accent focus:outline-hidden"
+            >
+              <option value="before">
+                Avant — {formatMoney(1500, pricing.currency, 'before')}
+              </option>
+              <option value="after">
+                Après — {formatMoney(1500, pricing.currency, 'after')}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <div className="flex items-start gap-3">
+          <Switch
+            checked={pricing.vat_enabled}
+            onChange={(vat_enabled) => setPricing({ ...pricing, vat_enabled })}
+          />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm text-text-primary">Appliquer la TVA</p>
+            {pricing.vat_enabled && (
+              <div className="mt-2 max-w-[12rem]">
+                <Input
+                  label="Taux (%)"
+                  type="number"
+                  min={0}
+                  max={100}
+                  step="0.5"
+                  value={String(pricing.vat_rate)}
+                  onChange={(event) =>
+                    setPricing({ ...pricing, vat_rate: Number(event.target.value) || 0 })
+                  }
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="flex justify-end">
+          <Button size="sm" loading={saving} disabled={!dirty} onClick={() => void save()}>
+            Enregistrer
+          </Button>
+        </div>
+      </div>
+    </section>
   );
 }

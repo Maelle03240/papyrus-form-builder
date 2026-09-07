@@ -7,13 +7,15 @@ import { syncSubmissionToSheets } from '@/lib/integrations/google-sheets-sync';
 import { verifyFormAccessToken } from '@/lib/form-access';
 import { evaluateFormVisibility } from '@/lib/visibility';
 import { applyCalculatedFields } from '@/lib/calculated';
+import { computeTotals, resolvePricing, resolveTier } from '@/lib/pricing';
 import { canBeRequired, isAnswerable, isAnswerEmpty } from '@/lib/submission-format';
 import {
   checkDuplicateAnswer,
   checkSubmissionLimit,
   enforceDataRetention
 } from '@/lib/submission-guards';
-import type { Field, Form, FormSettings, LogicRule, Section } from '@/types';
+import { DISCOUNT_CODE_KEY } from '@/types';
+import type { Field, Form, FormSettings, LogicRule, Section, TotalsSnapshot } from '@/types';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -97,7 +99,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
   const { data: form, error: formError } = await supabase
     .from('forms')
     .select(
-      'id, team_id, created_by, title, slug, status, closes_at, access_type, unique_email, scoring_enabled, theme, settings, notification_settings, sections(*), fields(*), logic_rules(*)'
+      'id, team_id, created_by, title, slug, status, closes_at, access_type, unique_email, scoring_enabled, theme, settings, notification_settings, pricing_config, sections(*), fields(*), logic_rules(*), projects(pricing)'
     )
     .eq('slug', slug)
     .maybeSingle();
@@ -153,7 +155,18 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
 
   const responses: Record<string, unknown> = {};
   for (const [key, value] of Object.entries(submittedResponses)) {
-    // Les sous-questions utilisent la forme `champ__option__sousChamp`.
+    // Le code de réduction n'est pas une question, donc pas un champ : sans
+    // cette exception, le filtre l'écarterait et aucune remise ne s'appliquerait
+    // jamais côté serveur — le répondant verrait la remise à l'écran et
+    // recevrait une facture au prix fort.
+    if (key === DISCOUNT_CODE_KEY) {
+      responses[key] = typeof value === 'string' ? value.slice(0, 64) : '';
+      continue;
+    }
+
+    // Les sous-questions utilisent la forme `champ__option__sousChamp`, et les
+    // compteurs de quantité `champ__qty` : la racine est le champ dans les deux
+    // cas, donc ils suivent leur champ quand une branche est abandonnée.
     const rootId = key.split('__')[0];
     if (!knownFieldIds.has(rootId)) continue;
 
@@ -202,6 +215,11 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
   // ferait apparaître dans le tableau, l'export et la feuille Google comme une
   // réponse assumée.
   for (const key of Object.keys(responses)) {
+    // Le code de réduction n'appartient à aucun champ : sa racine est vide, donc
+    // ce filtre l'écarterait à tous les coups. La remise s'afficherait à l'écran
+    // et disparaîtrait de la facture — sans erreur, et sans que rien ne le
+    // laisse voir avant que le client ne s'en plaigne.
+    if (key === DISCOUNT_CODE_KEY) continue;
     if (!visibleFieldIds.has(key.split('__')[0])) delete responses[key];
   }
 
@@ -231,6 +249,56 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
         missingFields: missingFields.map((f) => f.label?.fr || f.id)
       },
       { status: 422 }
+    );
+  }
+
+  // 8 bis. Tarification.
+  //
+  //    Les totaux sont recalculés ici, jamais repris du client : le
+  //    récapitulatif affiché au répondant est produit par la MÊME fonction, sur
+  //    les mêmes réponses, mais rien n'empêche de modifier le corps de la
+  //    requête avant l'envoi. Un total accepté sur parole serait un tarif
+  //    négociable depuis les outils de développement.
+  //
+  //    Le calcul ne compte que les champs réellement visibles — `computeTotals`
+  //    repose sur le même évaluateur que le rendu —, donc une option cochée puis
+  //    masquée par un changement de branche ne peut pas rester facturée.
+  let pricingSnapshot: TotalsSnapshot | null = null;
+  const pricing = resolvePricing({
+    pricing_config: (form as { pricing_config?: Form['pricing_config'] }).pricing_config,
+    project_pricing: (form as { projects?: { pricing?: Form['project_pricing'] } | null }).projects
+      ?.pricing
+  });
+
+  if (pricing.enabled) {
+    // Le compte des inscriptions n'est lu que par les tarifs dégressifs : c'est
+    // une requête de plus, inutile partout ailleurs.
+    let registeredCount = 0;
+    if (pricing.tiered?.enabled) {
+      const { count } = await supabase
+        .from('submissions')
+        .select('id', { count: 'exact', head: true })
+        .eq('form_id', form.id)
+        .eq('is_partial', false);
+      registeredCount = count ?? 0;
+
+      // Inscriptions closes : le dernier palier est dépassé et l'auteur a
+      // demandé la fermeture. Le formulaire public le dit déjà, mais un onglet
+      // resté ouvert depuis une heure ne le sait pas.
+      const tier = resolveTier(pricing.tiered, registeredCount);
+      if (tier.closed) {
+        return NextResponse.json(
+          { error: 'Les inscriptions sont closes pour ce formulaire.' },
+          { status: 403 }
+        );
+      }
+    }
+
+    pricingSnapshot = computeTotals(
+      { fields, sections, logic_rules: (form.logic_rules ?? []) as LogicRule[] },
+      responses,
+      pricing,
+      registeredCount
     );
   }
 
@@ -303,7 +371,11 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
     actions_triggered: [],
     source: 'papyrus' as const,
     is_partial: false,
-    session_id: sessionId
+    session_id: sessionId,
+    // Les totaux sont figés ici et ne seront jamais recalculés : c'est ce qui
+    // permet de rééditer une facture six mois plus tard, avec des prix modifiés
+    // entre-temps.
+    pricing: pricingSnapshot
   };
 
   // L'ébauche devient la réponse définitive : la mettre à jour plutôt que

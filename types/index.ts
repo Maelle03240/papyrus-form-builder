@@ -106,6 +106,13 @@ export interface FieldOption {
   value?: string;
   /** Points attribués à cette option dans le système de scoring (0 par défaut) */
   points?: number;
+  /**
+   * Prix de l'option, dans la devise du projet.
+   *
+   * Il vit sur l'option et non dans un réglage à part, parce que c'est l'option
+   * qui est vendue : la renommer, la déplacer ou la dupliquer emporte son prix.
+   */
+  price?: number;
 }
 
 /**
@@ -124,6 +131,13 @@ export interface SubField {
   required: boolean;
   validation: FieldValidation;
   style?: FieldStyle;
+  /**
+   * Participation au total — comme pour un champ.
+   *
+   * Une sous-question porte bel et bien des prix : c'est ainsi qu'on facture un
+   * tarif par participant, chacun choisissant son option dans sa propre ligne.
+   */
+  pricing?: FieldPricing;
 }
 
 export interface FieldValidation {
@@ -267,6 +281,8 @@ export interface Field {
   repeater?: FieldRepeater;
   /** Uniquement pour `calculated`. */
   calc?: FieldCalc;
+  /** Participation du champ au total — cf. `FieldPricing`. */
+  pricing?: FieldPricing;
   created_at?: string;
 }
 
@@ -411,6 +427,153 @@ export interface LogicRule {
   target_section_id?: string | null;
   rule_order: number;
 }
+
+// ============================================================================
+// Tarification
+//
+// Règle de répartition, la même que partout : une configuration qui référence
+// des champs appartient au formulaire ; tout le reste appartient au projet. La
+// devise et la TVA sont donc portées par le projet — un même événement facture
+// dans une seule monnaie, quel que soit le formulaire —, et les prix, les
+// remises et les paliers par le formulaire, parce qu'ils désignent ses options.
+// ============================================================================
+
+export interface DiscountCode {
+  id: string;
+  code: string;
+  /** Remise en pourcentage du sous-total. */
+  percent: number;
+  label?: string;
+}
+
+/**
+ * Un palier de tarif dégressif — le tarif « early bird » et ses suites.
+ *
+ * `up_to` est un seuil **cumulé** : le palier s'applique tant que le nombre
+ * d'inscriptions lui reste inférieur. `null` signifie « et au-delà ».
+ */
+export interface PriceTier {
+  up_to: number | null;
+  price: number;
+  label?: string;
+}
+
+export interface TieredPricing {
+  enabled: boolean;
+  /**
+   * Ce qu'on compte comme une inscription : une réponse, ou chaque ligne d'un
+   * bloc répétable — un car de trente personnes n'est pas une inscription.
+   */
+  count_by: 'submission' | 'participant';
+  /** Le bloc répétable compté quand `count_by` vaut `participant`. */
+  participant_field_id?: string;
+  registration_label?: string;
+  tiers: PriceTier[];
+  /** Passé le dernier seuil : garder le dernier tarif, ou fermer les inscriptions. */
+  after_last: 'keep' | 'close';
+}
+
+/** Réglages monétaires d'un projet, hérités par tous ses formulaires. */
+export interface ProjectPricing {
+  currency: string;
+  currency_position: 'before' | 'after';
+  vat_enabled: boolean;
+  vat_rate: number;
+}
+
+export const DEFAULT_PROJECT_PRICING: ProjectPricing = {
+  // Papyrus est utilisé depuis Port-Louis : la roupie mauricienne est le défaut
+  // qui épargne un réglage à la quasi-totalité des projets.
+  currency: 'MUR',
+  currency_position: 'before',
+  vat_enabled: false,
+  vat_rate: 15
+};
+
+export interface PricingConfig {
+  enabled: boolean;
+  /** Surchargent les réglages du projet quand ils sont renseignés. */
+  currency?: string;
+  currency_position?: 'before' | 'after';
+  vat_enabled?: boolean;
+  vat_rate?: number;
+  vat_label?: string;
+  subtotal_label?: string;
+  total_label?: string;
+  discount_enabled?: boolean;
+  discount_label?: string;
+  discount_code_label?: string;
+  discounts?: DiscountCode[];
+  tiered?: TieredPricing;
+}
+
+/** Réglages de tarification propres à un champ. */
+export interface FieldPricing {
+  /** `number` et `currency` : la valeur saisie s'ajoute au sous-total. */
+  count_in_total?: boolean;
+  /**
+   * Choix unique et choix multiple : un compteur apparaît sous chaque option
+   * retenue, et son prix est multiplié par la quantité. « Trois tables de six »
+   * est une réponse, pas trois réponses.
+   */
+  quantity?: { enabled: boolean; min: number; max: number };
+}
+
+/**
+ * Une ligne du détail figé à l'envoi.
+ *
+ * mooove-invoice ne conservait que le sous-total, la TVA et le total. Six mois
+ * plus tard, avec des prix modifiés entre-temps, plus rien ne permettait
+ * d'expliquer une facture : il aurait fallu relire un formulaire qui n'était
+ * plus le même. L'instantané se suffit donc à lui-même.
+ */
+export interface PricingLine {
+  /** Champ d'origine — vide pour la ligne d'inscription des tarifs dégressifs. */
+  field_id?: string;
+  label: string;
+  /** Précision affichée sous le libellé : l'option retenue, le palier appliqué. */
+  detail?: string;
+  quantity: number;
+  unit_price: number;
+  amount: number;
+}
+
+/** Totaux figés au moment de l'envoi — ils ne bougent plus jamais. */
+export interface TotalsSnapshot {
+  currency: string;
+  currency_position: 'before' | 'after';
+  lines: PricingLine[];
+  subtotal: number;
+  discount: number;
+  discount_percent: number;
+  discount_code: string;
+  vat: number;
+  vat_rate: number;
+  total: number;
+  subtotal_label: string;
+  discount_label: string;
+  vat_label: string;
+  total_label: string;
+  /** Renseigné quand un tarif dégressif s'applique. */
+  registration?: {
+    label: string;
+    units: number;
+    unit_price: number;
+    amount: number;
+    tier_label: string;
+  };
+}
+
+/**
+ * Clé réservée du code de réduction dans les réponses.
+ *
+ * Ce n'est pas une question du formulaire, donc pas un champ : la saisie vit
+ * dans le bloc des totaux. Elle voyage néanmoins avec les réponses pour que
+ * l'enregistrement automatique et la reprise d'une réponse en cours la
+ * retrouvent. `/api/submit/[slug]` l'autorise explicitement, sans quoi son
+ * filtre — qui n'accepte que les clés correspondant à un champ — l'écarterait.
+ */
+export const DISCOUNT_CODE_KEY = '__discount_code';
 
 export type BackgroundType = 'color' | 'gradient' | 'image' | 'preset';
 export type BannerFit = 'cover' | 'contain';
@@ -658,6 +821,8 @@ export interface Project {
   default_language: string;
   theme: Partial<FormTheme>;
   modules: ProjectModules;
+  /** Devise et TVA, héritées par tous les formulaires du projet. */
+  pricing: ProjectPricing;
   created_at: string;
   updated_at: string;
   /** Renseigné par les requêtes de liste — jamais une colonne. */
@@ -741,6 +906,26 @@ export interface Form {
   settings?: FormSettings;
   /** Notifications email — jamais exposées à la vue publique. */
   notification_settings?: NotificationSettings;
+  /** Tarification du formulaire — cf. `PricingConfig`. */
+  pricing_config?: PricingConfig;
+  /**
+   * Réglages monétaires du projet, joints à la lecture.
+   *
+   * Ce n'est pas une colonne : `resolvePricing` s'en sert pour combler ce que le
+   * formulaire ne surcharge pas. Résoudre à la lecture plutôt qu'à l'écriture
+   * évite qu'un changement de devise au niveau du projet laisse derrière lui des
+   * formulaires figés sur l'ancienne.
+   */
+  project_pricing?: ProjectPricing;
+  /**
+   * Nombre de réponses déjà enregistrées.
+   *
+   * Pas une colonne non plus : la vue publique le calcule, et **uniquement** si
+   * le formulaire applique un tarif dégressif. Un tarif early bird annonce de
+   * lui-même « il reste N places » ; le compte des réponses d'un sondage ne
+   * regarde personne.
+   */
+  registered_count?: number | null;
   published_at?: string | null;
   closes_at?: string | null;
   created_at: string;
@@ -855,6 +1040,8 @@ export interface Submission {
   /** Ébauche enregistrée avant l'envoi définitif (option « réponses partielles »). */
   is_partial?: boolean;
   session_id?: string | null;
+  /** Totaux figés à l'envoi — jamais recalculés ensuite. */
+  pricing?: TotalsSnapshot | null;
   completed_at: string;
   actions_triggered: unknown[];
 }
