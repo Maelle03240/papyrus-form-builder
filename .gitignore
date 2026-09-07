@@ -53,3 +53,8 @@ supabase/.temp/
 # versionné, décompressé, dans lib/templates/catalog/. La garder en binaire
 # dupliquerait 149 Ko dans l'historique pour toujours.
 Templates/*.zip
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/

@@ -18,6 +18,16 @@ export const DEFAULT_FIELD_ICONS: Record<FieldType, string> = {
   video:           'ti-video',
   matrix:          'ti-layout-rows',
   statement:       'ti-info-circle',
+  currency:        'ti-cash',
+  address:         'ti-map-pin',
+  country:         'ti-world',
+  yesno:           'ti-toggle-left',
+  signature:       'ti-signature',
+  repeater:        'ti-stack-2',
+  calculated:      'ti-calculator',
+  link:            'ti-external-link',
+  hidden:          'ti-eye-off',
+  divider:         'ti-minus',
 };
 
 export function getFieldIcon(field: Field): string {

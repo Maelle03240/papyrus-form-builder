@@ -12,6 +12,16 @@ import { cn } from '@/lib/utils';
 import { LIMITS } from '@/lib/constants/limits';
 import { toast } from '@/components/ui/Toast';
 import { useAttachmentUpload } from '@/lib/hooks/useAttachmentUpload';
+import {
+  CalculatedField,
+  CountryField,
+  CurrencyField,
+  HiddenField,
+  LinkField,
+  RepeaterField,
+  SignatureField,
+  YesNoField
+} from './fields/Phase2Fields';
 
 /** Retourne les types de fichiers acceptés par défaut selon le type de champ */
 function getDefaultAcceptTypes(type: 'image' | 'video' | 'file'): string {
@@ -87,6 +97,11 @@ interface Props {
   value?: any;
   /** Callback appelé lors de la modification de la valeur. */
   onValueChange?: (val: any) => void;
+  /**
+   * Toutes les réponses du formulaire — nécessaire aux seuls champs calculés,
+   * dont la valeur se lit ailleurs que dans la leur.
+   */
+  responses?: Record<string, unknown>;
 }
 
 /** Rendu UI d'un champ — utilisé dans le builder (preview) et la vue publique. */
@@ -97,9 +112,12 @@ export function FieldRenderer({
   onChange,
   globalStyle,
   value,
-  onValueChange
+  onValueChange,
+  responses
 }: Props) {
   const lang = 'fr';
+  // Un champ ne collecte réellement une réponse que si quelqu'un l'écoute.
+  const isInteractive = typeof onValueChange === 'function';
   const placeholder = field.placeholder?.[lang] ?? '';
   const required = field.required;
   const baseInput =
@@ -339,6 +357,88 @@ export function FieldRenderer({
           onValueChange={onValueChange}
         />
       );
+
+    // Les dix types de la phase 2. `interactive` vaut la présence d'un
+    // `onValueChange` : le canevas du constructeur n'en fournit pas, la vue
+    // publique si. C'est le seul signal fiable — `preview` vaut `false` des deux
+    // côtés.
+    case 'currency':
+      return (
+        <CurrencyField
+          field={field}
+          placeholder={placeholder}
+          interactive={isInteractive}
+          value={value}
+          onValueChange={onValueChange}
+        />
+      );
+
+    case 'address':
+      return (
+        <AutoTextarea
+          value={isInteractive ? String(value ?? '') : ''}
+          onChange={(event) => onValueChange?.(event.target.value)}
+          disabled={!isInteractive}
+          minRows={field.validation?.address_rows ?? 3}
+          autoComplete="street-address"
+          placeholder={placeholder || 'Rue, ville, code postal, pays'}
+          maxLength={LIMITS.LONG_TEXT_MAX_CHARS}
+          className={cn(baseInput, 'resize-none')}
+        />
+      );
+
+    case 'country':
+      return (
+        <CountryField
+          field={field}
+          interactive={isInteractive}
+          value={value}
+          onValueChange={onValueChange}
+        />
+      );
+
+    case 'yesno':
+      return (
+        <YesNoField
+          field={field}
+          interactive={isInteractive}
+          value={value}
+          onValueChange={onValueChange}
+        />
+      );
+
+    case 'signature':
+      return (
+        <SignatureField
+          field={field}
+          interactive={isInteractive}
+          value={value}
+          onValueChange={onValueChange}
+        />
+      );
+
+    case 'repeater':
+      return (
+        <RepeaterField
+          field={field}
+          interactive={isInteractive}
+          mobile={mobile}
+          value={value}
+          onValueChange={onValueChange}
+        />
+      );
+
+    case 'calculated':
+      return <CalculatedField field={field} responses={responses} />;
+
+    case 'link':
+      return <LinkField field={field} builder={!isInteractive} />;
+
+    case 'hidden':
+      return <HiddenField field={field} builder={!isInteractive} value={value} />;
+
+    case 'divider':
+      return <hr className="my-1 border-t border-border" />;
 
     case 'statement':
       // Géré par FieldCard (rendu spécial)

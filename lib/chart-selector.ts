@@ -7,9 +7,14 @@ export type ChartKind = 'pie' | 'bar' | 'bar_horizontal' | 'number_big' | 'list'
  */
 export function selectChartKind(field: Field, _responseCount: number): ChartKind {
   switch (field.type) {
+    case 'yesno':
+      // Deux valeurs, jamais plus : le camembert est ici parfaitement lisible.
+      return 'pie';
     case 'single_choice':
     case 'dropdown':
       return (field.options ?? []).length <= 6 ? 'pie' : 'bar_horizontal';
+    case 'country':
+      return 'bar_horizontal';
     case 'multiple_choice':
       return 'bar_horizontal';
     case 'rating':
@@ -19,6 +24,8 @@ export function selectChartKind(field: Field, _responseCount: number): ChartKind
       return 'heatmap'; // toggle available to 'bar' grouped by row
     case 'date':
     case 'number':
+    case 'currency':
+    case 'calculated':
       return 'histogram';
     case 'short_text':
     case 'long_text':

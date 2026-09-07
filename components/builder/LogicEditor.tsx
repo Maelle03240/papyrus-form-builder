@@ -4,6 +4,13 @@ import { Plus, Trash2, Award, X } from 'lucide-react';
 import type { Field, Form, LogicCondition, LogicAction, LogicRule, DisplayMode } from '@/types';
 import { FIELD_META } from '@/lib/field-meta';
 import { getFieldsInSameSection, getSections } from '@/lib/sections';
+import {
+  conditionSourceFields,
+  conditionValueChoices,
+  getOperatorsForFieldType,
+  isChoiceField,
+  operatorNeedsValue
+} from '@/lib/condition-operators';
 
 /**
  * Cible d'une règle : une question ou une section.
@@ -31,32 +38,6 @@ const ALL_ACTIONS: { value: LogicAction; label: string; modes: DisplayMode[] }[]
   { value: 'end_form', label: 'Terminer le formulaire', modes: ['scroll', 'sections', 'typeform'] }
 ];
 
-function getOperatorsForFieldType(type: string) {
-  if (['short_text', 'long_text', 'email', 'url', 'phone'].includes(type)) {
-    return [
-      { value: 'equals', label: 'est égal à' },
-      { value: 'not_equals', label: 'est différent de' },
-      { value: 'contains', label: 'contient' },
-      { value: 'not_contains', label: 'ne contient pas' }
-    ];
-  }
-  if (['number', 'rating', 'nps'].includes(type)) {
-    return [
-      { value: 'equals', label: 'est égal à' },
-      { value: 'not_equals', label: 'est différent de' },
-      { value: 'greater_than', label: 'est supérieur à' },
-      { value: 'less_than', label: 'est inférieur à' }
-    ];
-  }
-  return [
-    { value: 'equals', label: 'est égal à' },
-    { value: 'not_equals', label: 'est différent de' }
-  ];
-}
-
-function isChoiceField(field?: Field) {
-  return field ? ['single_choice', 'multiple_choice', 'dropdown'].includes(field.type) : false;
-}
 
 /**
  * Calcule le score de maturité d'un champ (points min/max disponibles).
@@ -284,7 +265,7 @@ function RuleCard({
   const showTarget = rule.action_type !== 'end_form';
   const targets = getTargetsForAction(rule.action_type);
   const allFields = form.fields ?? [];
-  const sourceFields = allFields.filter(f => !['image', 'video', 'statement'].includes(f.type));
+  const sourceFields = conditionSourceFields(allFields);
 
   const handleAddCondition = () => {
     const defaultField = sourceFields[0] || allFields[0];
@@ -292,7 +273,7 @@ function RuleCard({
     const newCond: LogicCondition = {
       source_field_id: defaultField.id,
       operator: 'equals',
-      value: (defaultField.options || [])[0]?.id ?? ''
+      value: conditionValueChoices(defaultField)[0]?.value ?? ''
     };
     onChange({ conditions: [...rule.conditions, newCond] });
   };
@@ -310,8 +291,8 @@ function RuleCard({
         if (patch.source_field_id) {
           const newField = allFields.find(f => f.id === patch.source_field_id);
           const ops = getOperatorsForFieldType(newField?.type || '');
-          next.operator = (ops[0]?.value || 'equals') as any;
-          next.value = (newField?.options || [])[0]?.id ?? '';
+          next.operator = ops[0]?.value ?? 'equals';
+          next.value = newField ? conditionValueChoices(newField)[0]?.value ?? '' : '';
         }
         return next;
       }
@@ -407,30 +388,34 @@ function RuleCard({
                   </select>
                 </div>
 
-                {/* Valeur */}
-                <div className="grid grid-cols-[65px_1fr] items-center gap-2">
-                  <span className="text-[10px] text-text-tertiary uppercase font-medium">Valeur</span>
-                  {isChoiceField(condField) ? (
-                    <select
-                      value={cond.value}
-                      onChange={(e) => handleConditionChange(condIdx, { value: e.target.value })}
-                      className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-hidden"
-                    >
-                      {(condField?.options || []).map((o) => (
-                        <option key={o.id} value={o.id}>
-                          {o.label.fr || 'Option sans titre'}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <input
-                      value={cond.value}
-                      onChange={(e) => handleConditionChange(condIdx, { value: e.target.value })}
-                      placeholder="Valeur"
-                      className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-hidden"
-                    />
-                  )}
-                </div>
+                {/* Valeur — « est renseigné » et « est vide » ne comparent rien :
+                    leur laisser une case à remplir ferait croire que ce qu'on y
+                    saisit compte. */}
+                {operatorNeedsValue(cond.operator) && (
+                  <div className="grid grid-cols-[65px_1fr] items-center gap-2">
+                    <span className="text-[10px] text-text-tertiary uppercase font-medium">Valeur</span>
+                    {isChoiceField(condField) && condField ? (
+                      <select
+                        value={cond.value}
+                        onChange={(e) => handleConditionChange(condIdx, { value: e.target.value })}
+                        className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-hidden"
+                      >
+                        {conditionValueChoices(condField).map((choice) => (
+                          <option key={choice.value} value={choice.value}>
+                            {choice.label}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <input
+                        value={cond.value}
+                        onChange={(e) => handleConditionChange(condIdx, { value: e.target.value })}
+                        placeholder="Valeur"
+                        className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-hidden"
+                      />
+                    )}
+                  </div>
+                )}
               </div>
 
               {hasMultiple && (

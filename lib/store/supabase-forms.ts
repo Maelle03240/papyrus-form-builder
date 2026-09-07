@@ -2,13 +2,15 @@
 
 import type {
   Field,
+  FieldCalc,
   Form,
   Section,
   FormSettings,
   FormTheme,
   LogicRule,
   MultilingualText,
-  NotificationSettings
+  NotificationSettings,
+  VisibilityRule
 } from '@/types';
 import { createClient } from '@/lib/supabase/client';
 import { uniqueSlug } from '@/lib/utils';
@@ -442,6 +444,46 @@ function normalizeForm(row: Record<string, unknown>): Form {
   };
 }
 
+/**
+ * Réécrit les identifiants de champ cités par un verrou de visibilité.
+ *
+ * Un verrou copié tel quel continue de désigner les questions du formulaire
+ * d'ORIGINE, qui existent toujours : la copie hérite d'un verrou branché sur un
+ * autre formulaire, qui ne s'ouvre jamais. Sans erreur, et sans que rien ne le
+ * laisse voir dans l'éditeur — c'est le même piège que celui des règles de
+ * logique.
+ */
+export function remapVisibility(
+  visibility: VisibilityRule | undefined | null,
+  fieldIdMap: Record<string, string>,
+  /** Renseignée seulement quand les identifiants d'option changent aussi — à
+   *  l'import. Une condition désigne une option par son identifiant. */
+  optionIdMap: Record<string, string> = {}
+): VisibilityRule | undefined {
+  if (!visibility?.conditions?.length) return undefined;
+
+  return {
+    operator: visibility.operator ?? 'AND',
+    conditions: visibility.conditions.map((condition) => ({
+      ...condition,
+      source_field_id: fieldIdMap[condition.source_field_id] ?? condition.source_field_id,
+      value: optionIdMap[condition.value] ?? condition.value
+    }))
+  };
+}
+
+/** Même correspondance, pour les champs sources d'un champ calculé. */
+export function remapCalc(
+  calc: FieldCalc | undefined | null,
+  fieldIdMap: Record<string, string>
+): FieldCalc | null {
+  if (!calc) return null;
+  return {
+    ...calc,
+    sources: (calc.sources ?? []).map((source) => fieldIdMap[source] ?? source)
+  };
+}
+
 export function toFieldRow(field: FieldRow, formId: string) {
   return {
     id: field.id,
@@ -459,7 +501,12 @@ export function toFieldRow(field: FieldRow, formId: string) {
     required: field.required ?? false,
     hidden_by_default: field.hidden_by_default ?? false,
     field_order: field.field_order ?? 0,
-    validation: field.validation ?? {}
+    validation: field.validation ?? {},
+    visibility: field.visibility ?? {},
+    // Ces deux colonnes sont nullables : seuls `repeater` et `calculated` les
+    // renseignent, et un objet vide y serait pris pour une configuration.
+    repeater: field.repeater ?? null,
+    calc: field.calc ?? null
   };
 }
 
@@ -633,7 +680,9 @@ export async function updateForm(id: string, patch: Partial<Form>): Promise<Form
           .update({
             title: section.title,
             description: section.description,
-            section_order: section.section_order
+            section_order: section.section_order,
+            visibility: section.visibility ?? {},
+            hidden: section.hidden ?? false
           })
           .eq('id', section.id)
           .eq('form_id', id)
@@ -972,6 +1021,15 @@ export async function cloneForm(
 
   if (error) throw error;
 
+  // Les identifiants des champs sont attribués AVANT toute insertion, parce que
+  // trois choses y font référence et que deux d'entre elles partent en base
+  // avant les champs eux-mêmes : le verrou de visibilité d'une section, celui
+  // d'un champ — qui peut citer une question placée plus bas — et les sources
+  // d'un champ calculé. Construire la table de correspondance au fil de
+  // l'insertion laisserait ces trois-là pointer vers le formulaire d'origine.
+  const fieldIdMap: Record<string, string> = {};
+  for (const field of original.fields ?? []) fieldIdMap[field.id] = uuid();
+
   // Copier les sections d'abord : les champs y font référence.
   const sectionIdMap: Record<string, string> = {};
   const originalSections = [...(original.sections ?? [])].sort(
@@ -990,7 +1048,12 @@ export async function cloneForm(
       form_id: cloned.id,
       title: section.title ?? {},
       description: section.description ?? {},
-      section_order: index
+      section_order: index,
+      visibility: remapVisibility(
+        (section as Partial<Section>).visibility,
+        fieldIdMap
+      ),
+      hidden: (section as Partial<Section>).hidden ?? false
     };
   });
 
@@ -1006,19 +1069,15 @@ export async function cloneForm(
   // les renouveler cassait silencieusement toute la logique du formulaire copié.
   // Ils n'ont besoin d'être uniques qu'au sein de leur champ, et le champ, lui,
   // reçoit bien un nouvel identifiant.
-  const fieldIdMap: Record<string, string> = {};
-
   if (original.fields && original.fields.length > 0) {
-    const newFields = original.fields.map((f) => {
-      const newId = uuid();
-      fieldIdMap[f.id] = newId;
-      return {
-        ...f,
-        id: newId,
-        form_id: cloned.id,
-        section_id: sectionIdMap[f.section_id] ?? fallbackSectionId
-      };
-    });
+    const newFields = original.fields.map((f) => ({
+      ...f,
+      id: fieldIdMap[f.id],
+      form_id: cloned.id,
+      section_id: sectionIdMap[f.section_id] ?? fallbackSectionId,
+      visibility: remapVisibility(f.visibility, fieldIdMap),
+      calc: remapCalc(f.calc, fieldIdMap) ?? undefined
+    }));
 
     const { error: fieldsError } = await supabase
       .from('fields')
@@ -1111,7 +1170,7 @@ export async function addSection(formId: string, title = ''): Promise<Form | nul
 export async function updateSection(
   formId: string,
   sectionId: string,
-  patch: Partial<Pick<Section, 'title' | 'description' | 'section_order'>>
+  patch: Partial<Pick<Section, 'title' | 'description' | 'section_order' | 'visibility' | 'hidden'>>
 ): Promise<Form | null> {
   const supabase = createClient();
 
@@ -1501,6 +1560,12 @@ export async function importForm(
           }
         ];
 
+  // Les identifiants des champs sont attribués avant tout le reste : le verrou
+  // de visibilité d'une section cite des questions, et les sections sont
+  // construites en premier.
+  const fieldIdMap: Record<string, string> = {};
+  for (const field of formJson.fields ?? []) fieldIdMap[field.id] = uuid();
+
   const sectionIdMap: Record<string, string> = {};
   const mappedSections = sourceSections
     .slice()
@@ -1513,19 +1578,19 @@ export async function importForm(
         form_id: newFormId,
         title: normalizeMultilingual(section.title),
         description: normalizeMultilingual(section.description),
-        section_order: index
+        section_order: index,
+        visibility: undefined as VisibilityRule | undefined,
+        hidden: false
       };
     });
 
   const fallbackSectionId = mappedSections[0].id;
 
   // 1. Remap fields and options/rows
-  const fieldIdMap: Record<string, string> = {};
   const optionIdMap: Record<string, string> = {};
-  
+
   const mappedFields: Field[] = (formJson.fields || []).map((field, index) => {
-    const newFieldId = uuid();
-    fieldIdMap[field.id] = newFieldId;
+    const newFieldId = fieldIdMap[field.id];
     
     const mappedOptions = (field.options || []).map(opt => {
       const newOptId = uuid();
@@ -1574,7 +1639,29 @@ export async function importForm(
       field_order: index
     };
   });
-  
+
+  // 1 bis. Verrous de visibilité et champs calculés.
+  //
+  // En seconde passe, et non dans la boucle ci-dessus : un verrou peut citer une
+  // question placée plus bas dans le formulaire, et il désigne les options par
+  // leur identifiant — or `optionIdMap` n'est complet qu'une fois tous les
+  // champs parcourus. Réécrit à la volée, un verrou sur deux resterait branché
+  // sur le formulaire d'origine.
+  for (const field of mappedFields) {
+    const source = (formJson.fields || []).find((f) => fieldIdMap[f.id] === field.id);
+    field.visibility = remapVisibility(source?.visibility, fieldIdMap, optionIdMap);
+    field.calc = remapCalc(source?.calc, fieldIdMap) ?? undefined;
+    field.repeater = source?.repeater;
+  }
+
+  for (const section of mappedSections) {
+    const source = sourceSections.find((s) => sectionIdMap[s.id] === section.id) as
+      | Partial<Section>
+      | undefined;
+    section.visibility = remapVisibility(source?.visibility, fieldIdMap, optionIdMap);
+    section.hidden = source?.hidden ?? false;
+  }
+
   // 2. Remap logic rules
   const mappedRules: LogicRule[] = (formJson.logic_rules || []).map(rule => {
     const newRuleId = uuid();

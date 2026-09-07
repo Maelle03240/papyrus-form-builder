@@ -10,6 +10,9 @@ import { Input } from '@/components/ui/Input';
 import { OptionsEditor } from './OptionsEditor';
 import { StyleEditor } from './StyleEditor';
 import { LogicEditor } from './LogicEditor';
+import { ConditionsEditor } from './ConditionsEditor';
+import { Phase2Settings } from './Phase2Settings';
+import { isAnswerable } from '@/lib/submission-format';
 import { MatrixEditor } from './MatrixEditor';
 import { SubfieldsEditor } from './SubfieldsEditor';
 import { Switch } from '@/components/ui/Switch';
@@ -50,8 +53,13 @@ function readImageDimensions(url: string): Promise<{ width: number; height: numb
 export function FieldSettings({ form, field, globalStyle, onChange, onFormChange }: Props) {
   const [tab, setTab] = useState<Tab>('content');
   const meta = FIELD_META[field.type];
-  const isLayout = field.type === 'image';
-  const supportsLogic = !isLayout && field.type !== 'statement';
+  /**
+   * Une règle de logique part d'une question : elle a besoin d'une réponse à
+   * observer. Un verrou de visibilité, lui, vaut pour tout — masquer un bouton
+   * « Réserver » tant qu'on n'a pas répondu oui est un usage courant. L'onglet
+   * reste donc toujours accessible, et c'est son contenu qui s'adapte.
+   */
+  const canBeConditionSource = isAnswerable(field);
 
   return (
     <div className="flex h-full flex-col">
@@ -69,11 +77,7 @@ export function FieldSettings({ form, field, globalStyle, onChange, onFormChange
         <TabButton active={tab === 'style'} onClick={() => setTab('style')}>
           Style
         </TabButton>
-        <TabButton
-          active={tab === 'logic'}
-          onClick={() => setTab('logic')}
-          disabled={!supportsLogic}
-        >
+        <TabButton active={tab === 'logic'} onClick={() => setTab('logic')}>
           Logique
         </TabButton>
       </div>
@@ -82,7 +86,28 @@ export function FieldSettings({ form, field, globalStyle, onChange, onFormChange
       <div className="flex-1 pt-5">
         {tab === 'content' && <ContentTab form={form} field={field} onChange={onChange} />}
         {tab === 'style' && <StyleEditor field={field} globalStyle={globalStyle} onChange={onChange} />}
-        {tab === 'logic' && supportsLogic && <LogicEditor form={form} field={field} onFormChange={onFormChange} />}
+        {tab === 'logic' && (
+          <div className="space-y-6">
+            <div className="space-y-3">
+              <h3 className="text-xs font-semibold uppercase tracking-wide text-text-secondary">
+                Affichage conditionnel
+              </h3>
+              <ConditionsEditor
+                fields={form.fields ?? []}
+                excludeFieldId={field.id}
+                value={field.visibility}
+                onChange={(visibility) => onChange({ visibility })}
+                subject="Cette question"
+              />
+            </div>
+
+            {canBeConditionSource && (
+              <div className="border-t border-border pt-5">
+                <LogicEditor form={form} field={field} onFormChange={onFormChange} />
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -710,6 +735,8 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
           )}
         </Section>
       )}
+
+      <Phase2Settings form={form} field={field} onChange={onChange} />
     </div>
   );
 }

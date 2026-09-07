@@ -66,6 +66,32 @@ export function PublicFieldCard({
     );
   }
 
+  // Champs de mise en page : ni titre, ni carte, ni astérisque — ils ne posent
+  // aucune question. Les enfermer dans une carte de question ferait passer un
+  // filet de séparation pour quelque chose à remplir.
+  if (field.type === 'divider') {
+    return (
+      <div className={cn('py-2', span)}>
+        <FieldRenderer field={field} />
+      </div>
+    );
+  }
+
+  if (field.type === 'link') {
+    return (
+      <div className={cn(span)}>
+        <FieldRenderer field={field} />
+        {field.description?.fr && (
+          <p className="mt-1.5 text-sm text-text-secondary">{field.description.fr}</p>
+        )}
+      </div>
+    );
+  }
+
+  // Un champ caché ne se voit jamais : sa valeur vient de l'URL, et elle est
+  // déjà en mémoire. Occuper une place dans la grille laisserait un trou.
+  if (field.type === 'hidden') return null;
+
   // Statement = texte libre informatif
   if (field.type === 'statement') {
     return (
@@ -104,6 +130,7 @@ export function PublicFieldCard({
             mobile={false}
             value={responses[field.id]}
             onValueChange={(val) => updateResponse(field.id, val)}
+            responses={responses}
           />
         </FieldContext.Provider>
       </div>

@@ -29,13 +29,14 @@ import {
   addSection,
   deleteSection
 } from '@/lib/store';
-import type { Field, FieldType, Form } from '@/types';
+import type { Field, FieldType, Form, Section } from '@/types';
 import { LIMITS } from '@/lib/constants/limits';
 import { toast } from '@/components/ui/Toast';
 import { validateForm, canPublishForm, formatValidationErrors } from '@/lib/validation/form-validation';
 
 import { FieldPalette } from '@/components/builder/FieldPalette';
 import { SectionBlock } from '@/components/builder/SectionBlock';
+import { SectionSettings } from '@/components/builder/SectionSettings';
 import { FieldSettings } from '@/components/builder/FieldSettings';
 import { FormDesignPanel } from '@/components/builder/FormDesignPanel';
 import { FormHeader } from '@/components/builder/FormHeader';
@@ -74,6 +75,7 @@ export function FormBuilder({
   const [form, setForm] = useState<Form | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedFieldId, setSelectedFieldId] = useState<string | null>(null);
+  const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
   const [selectedHeaderElement, setSelectedHeaderElement] = useState<'banner' | 'logo' | null>(null);
   const [titleDraft, setTitleDraft] = useState('');
   const [descriptionDraft, setDescriptionDraft] = useState('');
@@ -212,16 +214,25 @@ export function FormBuilder({
   /** Cliquer sur un champ le sélectionne. Pour revenir au design global, cliquer dans le vide du canvas. */
   const selectField = useCallback((id: string) => {
     setSelectedFieldId(id);
+    setSelectedSectionId(null);
+    setSelectedHeaderElement(null);
+  }, []);
+
+  const selectSection = useCallback((id: string) => {
+    setSelectedSectionId(id);
+    setSelectedFieldId(null);
     setSelectedHeaderElement(null);
   }, []);
 
   const selectHeaderElement = useCallback((element: 'banner' | 'logo') => {
     setSelectedHeaderElement(element);
     setSelectedFieldId(null);
+    setSelectedSectionId(null);
   }, []);
 
   const clearSelection = useCallback(() => {
     setSelectedFieldId(null);
+    setSelectedSectionId(null);
     setSelectedHeaderElement(null);
   }, []);
 
@@ -367,6 +378,25 @@ export function FormBuilder({
     triggerAutosave(updatedForm);
   }, [form, triggerAutosave]);
 
+  /**
+   * Modification d'une section depuis son panneau de réglages.
+   *
+   * L'enregistrement passe par `triggerAutosave`, donc par `updateForm`, qui met
+   * les sections à jour une à une sans jamais les synchroniser par différence :
+   * une liste partie incomplète ne peut pas en supprimer une au passage.
+   */
+  const handleSectionChange = useCallback((sectionId: string, patch: Partial<Section>) => {
+    if (!form) return;
+    const updatedForm = {
+      ...form,
+      sections: (form.sections ?? []).map((section) =>
+        section.id === sectionId ? { ...section, ...patch } : section
+      )
+    };
+    setForm(updatedForm);
+    triggerAutosave(updatedForm);
+  }, [form, triggerAutosave]);
+
   const handleAddSection = useCallback(async () => {
     if (!form) return;
     try {
@@ -380,6 +410,7 @@ export function FormBuilder({
 
   const handleDeleteSection = useCallback(async (sectionId: string) => {
     if (!form) return;
+    if (selectedSectionId === sectionId) setSelectedSectionId(null);
     try {
       const updated = await deleteSection(form.id, sectionId);
       if (updated) setForm(updated);
@@ -389,7 +420,7 @@ export function FormBuilder({
         error instanceof Error ? error.message : "La section n'a pas pu être supprimée."
       );
     }
-  }, [form]);
+  }, [form, selectedSectionId]);
 
   // Helper pour créer un champ optimiste
   const createOptimisticField = useCallback(
@@ -565,6 +596,7 @@ export function FormBuilder({
   const fields = form?.fields ?? [];
   const sections = [...(form?.sections ?? [])].sort((a, b) => a.section_order - b.section_order);
   const selected = fields.find((f) => f.id === selectedFieldId) ?? null;
+  const selectedSection = sections.find((s) => s.id === selectedSectionId) ?? null;
 
   async function handleTitleBlur() {
     if (!form || !titleDraft || titleDraft === form.title) return;
@@ -984,6 +1016,8 @@ export function FormBuilder({
                       fields={fields.filter((field) => field.section_id === section.id)}
                       canDelete={sections.length > 1}
                       selectedFieldId={selectedFieldId}
+                      selected={selectedSectionId === section.id}
+                      onSelect={selectSection}
                       theme={form.theme}
                       globalStyle={form.theme.field_style}
                       cardBg={form.theme.field_bg_color}
@@ -1019,6 +1053,14 @@ export function FormBuilder({
                 globalStyle={form.theme.field_style}
                 onChange={(patch) => handleFieldChange(selected.id, patch)}
                 onFormChange={handleFormChange}
+              />
+            ) : selectedSection ? (
+              <SectionSettings
+                form={form}
+                section={selectedSection}
+                canDelete={sections.length > 1}
+                onChange={(patch) => handleSectionChange(selectedSection.id, patch)}
+                onDelete={() => void handleDeleteSection(selectedSection.id)}
               />
             ) : selectedHeaderElement ? (
               <FormHeaderSettings

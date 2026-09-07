@@ -7,9 +7,9 @@ import { FormSlugProvider } from '@/lib/hooks/useFormSlug';
 import { useFormScore } from '@/lib/hooks/useFormScore';
 import { useEmbedBridge } from '@/lib/hooks/useEmbedBridge';
 import { usePartialSubmission } from '@/lib/hooks/usePartialSubmission';
-import { evaluateLogicRules } from '@/lib/logic-evaluation';
+import { evaluateFormVisibility } from '@/lib/visibility';
 import { getBackgroundStyle } from '@/lib/theme';
-import { isAnswerEmpty } from '@/lib/submission-format';
+import { canBeRequired, isAnswerEmpty } from '@/lib/submission-format';
 import type { EmbedOptions } from '@/lib/embed';
 import {} from '@/components/builder/FormHeader';
 import { PublicScrollView } from './PublicScrollView';
@@ -61,18 +61,45 @@ export function FormPublicView({ form, embed, accessToken }: Props) {
   // États pour la logique conditionnelle
   const [visibleFields, setVisibleFields] = useState<Set<string>>(new Set());
 
-  // Évaluer la visibilité des champs (changement de réponses, structure ou règles)
+  // Évaluer la visibilité (changement de réponses, de structure ou de règles).
+  //
+  // `evaluateFormVisibility` combine les règles de logique et les verrous portés
+  // par les champs et les sections. C'est exactement la fonction qu'appelle
+  // `/api/submit/[slug]` : les deux ne peuvent pas diverger, donc aucun champ
+  // masqué ici ne peut être exigé là-bas.
   useEffect(() => {
-    const fields = form.fields || [];
-
-    const newVisibleFields = evaluateLogicRules(
-      form.logic_rules || [],
-      responses,
-      fields
+    setVisibleFields(
+      evaluateFormVisibility(
+        { fields: form.fields, sections: form.sections, logic_rules: form.logic_rules },
+        responses
+      ).fields
     );
+  }, [responses, form.logic_rules, form.fields, form.sections]);
 
-    setVisibleFields(newVisibleFields);
-  }, [responses, form.logic_rules, form.fields]);
+  /**
+   * Pré-remplissage des champs cachés depuis la chaîne de requête.
+   *
+   * `?utm_source=linkedin` renseigne le champ dont la clé est `utm_source`.
+   * C'est ainsi qu'une réponse se rattache à sa campagne, à son partenaire ou à
+   * son canal sans qu'on ait rien à demander au répondant.
+   *
+   * L'effet ne s'exécute qu'au montage et ne touche qu'aux champs cachés : il ne
+   * peut donc pas écraser une réponse saisie.
+   */
+  useEffect(() => {
+    const hiddenFields = (form.fields ?? []).filter((field) => field.type === 'hidden');
+    if (hiddenFields.length === 0) return;
+
+    const query = new URLSearchParams(window.location.search);
+
+    for (const field of hiddenFields) {
+      const key = field.validation?.hidden_key;
+      const fromUrl = key ? query.get(key) : null;
+      const value = fromUrl ?? field.validation?.hidden_default ?? '';
+      if (value !== '') updateResponse(field.id, value);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.id]);
 
   useEffect(() => {
     emit('form-loaded', { formId: form.id, slug: form.slug });
@@ -156,12 +183,8 @@ export function FormPublicView({ form, embed, accessToken }: Props) {
    */
   const validateRequiredFields = () => {
     const fields = form.fields || [];
-    const visibleRequiredFields = fields.filter(f =>
-      f.required &&
-      visibleFields.has(f.id) &&
-      f.type !== 'statement' &&
-      f.type !== 'image' &&
-      f.type !== 'video'
+    const visibleRequiredFields = fields.filter(
+      (f) => f.required && visibleFields.has(f.id) && canBeRequired(f)
     );
 
     const missingFields = visibleRequiredFields.filter((f) => isAnswerEmpty(responses[f.id]));

@@ -222,12 +222,74 @@ convertit en sections réelles à l'import. `lib/templates/types.ts` décrit un
 format de fichier de contenu, pas le modèle de données — les 51 fichiers JSON
 n'ont donc pas à être réécrits.
 
-**2 — Parité des champs et visibilité.** Dix nouveaux types : `currency`,
-`repeater`, `calculated`, `signature`, `address`, `country`, `yesno`, `link`,
-`hidden`, `divider`. `fields.visibility` par champ et par section, à côté de
-`logic_rules` pour les sauts. Éditeur de conditions dans le builder. Livrable :
-parité avec mooove-invoice, sans rien perdre de Papyrus (matrice, NPS, notation,
-vidéo).
+**2 — Parité des champs et visibilité.** ✅ **Fait le 07/09/2026.** Les dix
+types sont livrés — `currency`, `address`, `country`, `yesno`, `signature`,
+`repeater`, `calculated`, `link`, `hidden`, `divider` —, ainsi que le verrou de
+visibilité porté par le champ et par la section, l'éditeur de conditions, et le
+panneau de réglages d'une section. Migration 005 appliquée. Rien n'est perdu de
+Papyrus : matrice, NPS, notation, vidéo, sous-questions et score sont intacts.
+
+**La décision de conception qui structure toute la phase** : deux mécanismes
+d'affichage cohabitent, et leur arbitrage est un ET.
+
+- `logic_rules` s'écrit depuis la question **source** — « quand on répond oui
+  ici, montrer là-bas ». C'est le point de vue du parcours, et le seul qui sache
+  faire un saut de page.
+- `Field.visibility` / `Section.visibility` s'écrit depuis l'élément **cible** —
+  « ne m'affiche que si… ». C'est le seul point de vue praticable quand une même
+  question dépend de trois autres, et c'est celui de mooove-invoice.
+
+Un élément est visible si la logique le dit visible **et** que son verrou
+s'ouvre. Un verrou ne peut donc jamais forcer l'apparition de ce qu'une règle
+masque : sans cette règle, deux auteurs travaillant chacun dans son panneau
+écriraient l'inverse l'un de l'autre sans jamais voir le conflit.
+`lib/visibility.ts` est le point d'entrée unique — navigateur et serveur
+appellent la même fonction, sur les mêmes réponses.
+
+Quatre pièges rencontrés, tous silencieux :
+
+- **Le `select *` d'une vue est figé à sa création** — le même piège qu'en
+  migration 004, et il vaudra pour toute colonne ajoutée ensuite. Sans recréer
+  `public_fields` et `public_sections`, le répondant aurait vu toutes les
+  questions conditionnelles à la fois et les répéteurs sans leurs sous-questions.
+- **Une chaîne de conditions ne se referme pas d'elle-même.** « Q1 ouvre Q2, la
+  réponse à Q2 ouvre Q3 » : un retour en arrière sur Q1 fait disparaître Q2, mais
+  sa réponse reste en mémoire et continuerait d'afficher Q3.
+  `evaluateFormVisibility` itère donc jusqu'au point fixe, borné à vingt passes —
+  deux verrous peuvent s'exclure mutuellement et osciller indéfiniment.
+- **Un verrou copié reste branché sur le formulaire d'origine.** Ses conditions
+  désignent des champs par identifiant, et ceux-là existent toujours. Duplication
+  et import attribuent maintenant les identifiants de champ **avant** toute
+  insertion, parce que trois choses y font référence et que deux d'entre elles
+  partent en base avant les champs : le verrou d'une section, celui d'un champ —
+  qui peut citer une question placée plus bas — et les sources d'un champ calculé.
+- **Un bloc répétable garde toujours une ligne à l'écran.** Compter ses lignes
+  telles quelles ferait annoncer un participant à un formulaire auquel personne
+  ne s'est inscrit, et un bloc obligatoire passerait la validation sur sa seule
+  ligne d'accueil. `isAnswerEmpty` traite désormais une structure dont toutes les
+  valeurs sont vides comme vide, et le comptage ne retient que les lignes
+  remplies. C'est un test de navigateur qui a levé l'incohérence.
+
+Trois écarts assumés par rapport à mooove-invoice :
+
+- **La signature est tracée à la main**, déposée sur R2, et c'est son adresse qui
+  est enregistrée. mooove-invoice se contentait d'une case « je certifie » — une
+  case cochée n'est pas une signature, et personne ne la reconnaîtrait comme
+  telle sur un bon de commande.
+- **`calculated` fait aussi la somme**, pas seulement le décompte des lignes d'un
+  bloc. Un champ calculé qui ne sait que compter des répéteurs n'est pas un champ
+  calculé.
+- **`address` reste une saisie libre sur plusieurs lignes**, comme dans
+  mooove-invoice. Une adresse structurée changerait la forme de la réponse, donc
+  l'export, la feuille Google, le PDF et les colonnes — la phase 5 reprend tout
+  cela de toute façon.
+
+Le total d'un champ calculé est **recalculé côté serveur**, deux fois : avant
+l'évaluation des conditions, pour qu'un affichage qui dépend d'un total soit
+tranché par le vrai chiffre, et après le masquage, parce qu'une branche
+abandonnée a pu emporter le bloc qu'il comptait. Sa valeur arrive bien dans la
+requête — le répondant la voit à l'écran — mais rien n'empêche de la remplacer
+avant l'envoi.
 
 **3 — Tarification.** Devise, TVA, codes de réduction, tarifs dégressifs /
 early-bird, prix par option, compteurs de quantité, `count_in_total`. Totaux en
@@ -273,13 +335,21 @@ public, de la tarification et du parcours partenaire.
 ## 5. Risques
 
 - Le catalogue de modèles (~600 Ko auto-générés) doit être régénéré et revalidé
-  après les phases 1 et 2.
+  après les phases 1 et 2. Fait : 51 modèles reconstruits et validés à l'issue de
+  la phase 2. Ils continuent d'écrire `section_break` — c'est un format de
+  fichier de contenu, converti à l'import, et aucun n'utilise encore les dix
+  nouveaux types.
 - Le rendu public est touché en phases 1, 2 et 3 : ces phases se font en série,
   jamais en parallèle.
 - TypeScript 7 et Tailwind 4 peuvent remonter beaucoup d'erreurs d'un coup en
   phase 0 — c'est le but de la faire en premier, à vide.
 - Le coût des appels `gpt-5.6-terra` est réel : prévoir un budget mensuel par
   équipe dès la phase 7.
+- **Deux systèmes d'affichage cohabitent désormais** (`logic_rules` et les
+  verrous de visibilité). Leur arbitrage est fixé par des tests, mais rien dans
+  l'interface ne montre encore à l'auteur qu'une question est masquée à la fois
+  par une règle et par un verrou. À surveiller quand la phase 7 laissera l'IA
+  écrire les deux.
 - **59 violations des règles du React Compiler** (`eslint-plugin-react-hooks` v6),
   révélées par la phase 0 : 31 `set-state-in-effect`, 13 `refs`, 6
   `static-components`, 5 `immutability`, 2 `preserve-manual-memoization`, 2

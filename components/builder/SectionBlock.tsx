@@ -2,7 +2,7 @@
 
 import { useDroppable } from '@dnd-kit/core';
 import { SortableContext, rectSortingStrategy } from '@dnd-kit/sortable';
-import { Plus, Trash2 } from 'lucide-react';
+import { EyeOff, Filter, Plus, Settings2, Trash2 } from 'lucide-react';
 
 import { SortableFieldCard } from '@/components/builder/FieldCard';
 import { cn } from '@/lib/utils';
@@ -35,6 +35,9 @@ interface Props {
   index: number;
   /** La dernière section ne peut pas être supprimée : un formulaire en garde une. */
   canDelete: boolean;
+  /** La section est ouverte dans le panneau de droite. */
+  selected: boolean;
+  onSelect: (sectionId: string) => void;
   selectedFieldId: string | null;
   theme: FormTheme;
   globalStyle?: FieldStyle;
@@ -51,6 +54,8 @@ export function SectionBlock({
   fields,
   index,
   canDelete,
+  selected,
+  onSelect,
   selectedFieldId,
   theme,
   globalStyle,
@@ -63,12 +68,19 @@ export function SectionBlock({
 }: Props) {
   const { setNodeRef, isOver } = useDroppable({ id: `section:${section.id}` });
 
+  const conditionCount = section.visibility?.conditions?.length ?? 0;
+  const isHidden = section.hidden === true;
+
   return (
     <section
       ref={setNodeRef}
       className={cn(
-        'group/section rounded-2xl border border-transparent px-3 py-3 transition',
-        isOver && 'border-dashed border-accent-cta bg-accent-cta/5'
+        'group/section rounded-2xl border px-3 py-3 transition',
+        selected ? 'border-accent bg-accent/[0.03]' : 'border-transparent',
+        isOver && 'border-dashed border-accent-cta bg-accent-cta/5',
+        // Une section masquée reste manipulable, mais ne doit pas se lire comme
+        // le reste du formulaire : ce qu'on y écrit ne partira nulle part.
+        isHidden && 'opacity-60'
       )}
     >
       <header className="mb-3 flex items-center gap-2">
@@ -80,7 +92,44 @@ export function SectionBlock({
           className="min-w-0 flex-1 rounded-sm border-0 bg-transparent px-1 py-0.5 font-display text-lg font-bold text-text-primary placeholder:font-normal placeholder:italic placeholder:text-text-tertiary focus:bg-bg-elevated/50 focus:outline-hidden"
         />
 
-        <div className="flex shrink-0 items-center gap-1 opacity-0 transition group-hover/section:opacity-100 focus-within:opacity-100">
+        {(isHidden || conditionCount > 0) && (
+          <span
+            className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-bg-elevated px-2 py-0.5 text-[11px] text-text-secondary"
+            title={
+              isHidden
+                ? 'Section masquée — aucun répondant ne la voit'
+                : `Affichée sous ${conditionCount} condition${conditionCount > 1 ? 's' : ''}`
+            }
+          >
+            {isHidden ? (
+              <>
+                <EyeOff className="h-3 w-3" aria-hidden="true" />
+                Masquée
+              </>
+            ) : (
+              <>
+                <Filter className="h-3 w-3" aria-hidden="true" />
+                {conditionCount} condition{conditionCount > 1 ? 's' : ''}
+              </>
+            )}
+          </span>
+        )}
+
+        <div
+          className={cn(
+            'flex shrink-0 items-center gap-1 transition focus-within:opacity-100 group-hover/section:opacity-100',
+            selected ? 'opacity-100' : 'opacity-0'
+          )}
+        >
+          <button
+            type="button"
+            onClick={() => onSelect(section.id)}
+            title="Réglages de la section"
+            aria-label={`Réglages de la section ${index + 1}`}
+            className="rounded-md p-1.5 text-text-tertiary transition hover:bg-bg-elevated hover:text-text-primary focus-visible:opacity-100"
+          >
+            <Settings2 className="h-4 w-4" />
+          </button>
           <button
             type="button"
             onClick={() => onAddQuestion(section.id)}

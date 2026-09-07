@@ -1,4 +1,5 @@
 import type { Field } from '@/types';
+import { isAnswerable } from '@/lib/submission-format';
 
 /**
  * Convertit un texte (ex : libellé d'option) en slug sûr pour un nom de colonne SQL.
@@ -42,12 +43,8 @@ export function subfieldColumn(
  * du formulaire pour générer les ALTER TABLE / migrations Supabase.
  */
 export function fieldColumns(field: Field): string[] {
-  // Champs sans réponse stockable (image / vidéo / section / texte libre)
-  if (
-    field.type === 'image' ||
-    field.type === 'video' ||
-    field.type === 'statement'
-  ) {
+  // Champs sans réponse stockable (média du créateur, texte libre, mise en page)
+  if (!isAnswerable(field)) {
     return [];
   }
 

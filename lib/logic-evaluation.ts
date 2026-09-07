@@ -1,4 +1,5 @@
 import type { LogicRule, Field, LogicCondition } from '@/types';
+import { isAnswerEmpty } from '@/lib/submission-format';
 
 /**
  * Évalue toutes les règles logiques d'un formulaire et retourne les champs visibles
@@ -60,7 +61,14 @@ export function evaluateSingleCondition(
   responses: Record<string, any>
 ): boolean {
   const raw = responses[condition.source_field_id];
-  
+
+  // Ces deux-là ne comparent rien : ils regardent seulement si la question a
+  // reçu une réponse. Ils passent donc avant toute normalisation en texte, sans
+  // quoi la réponse `0` — parfaitement valable sur une échelle — serait déclarée
+  // vide, et le répondant le plus critique verrait la mauvaise branche.
+  if (condition.operator === 'is_filled') return !isAnswerEmpty(raw);
+  if (condition.operator === 'is_empty') return isAnswerEmpty(raw);
+
   // Si la réponse est un tableau (par exemple choix multiple), on normalise
   let value = '';
   if (Array.isArray(raw)) {

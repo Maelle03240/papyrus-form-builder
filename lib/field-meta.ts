@@ -2,20 +2,30 @@ import type { LucideIcon } from 'lucide-react';
 import {
   AlignLeft,
   AtSign,
+  Banknote,
+  Calculator,
   Calendar,
   CheckSquare,
   ChevronDown,
   CircleDot,
+  ExternalLink,
+  EyeOff,
   FileUp,
+  Globe,
   Grid3X3,
   Hash,
   Heading1,
   Image as ImageIcon,
   Link2,
+  MapPin,
+  Minus,
+  PenLine,
   Phone,
   Play,
+  Rows3,
   Smile,
   Star,
+  ToggleLeft,
   Type
 } from 'lucide-react';
 import type { FieldType } from '@/types';
@@ -46,17 +56,29 @@ export const FIELD_META: Record<FieldType, FieldMeta> = {
   statement: { type: 'statement', label: 'Texte libre', icon: Heading1, description: 'Bloc d\'information', hasOptions: false, hasPlaceholder: false },
   image: { type: 'image', label: 'Image', icon: ImageIcon, description: 'Photo ou illustration', hasOptions: false, hasPlaceholder: false },
   video: { type: 'video', label: 'Vidéo', icon: Play, description: 'YouTube ou Vimeo', hasOptions: false, hasPlaceholder: false },
-  matrix: { type: 'matrix', label: 'Matrice', icon: Grid3X3, description: 'Tableau de questions', hasOptions: true, hasPlaceholder: false }
+  matrix: { type: 'matrix', label: 'Matrice', icon: Grid3X3, description: 'Tableau de questions', hasOptions: true, hasPlaceholder: false },
+
+  // --- Phase 2 : parité avec mooove-invoice ---
+  currency: { type: 'currency', label: 'Montant', icon: Banknote, description: 'Somme avec devise', hasOptions: false, hasPlaceholder: true },
+  address: { type: 'address', label: 'Adresse', icon: MapPin, description: 'Adresse postale', hasOptions: false, hasPlaceholder: true },
+  country: { type: 'country', label: 'Pays', icon: Globe, description: 'Liste des pays', hasOptions: false, hasPlaceholder: false },
+  yesno: { type: 'yesno', label: 'Oui / Non', icon: ToggleLeft, description: 'Deux boutons', hasOptions: false, hasPlaceholder: false },
+  signature: { type: 'signature', label: 'Signature', icon: PenLine, description: 'Tracée à la main', hasOptions: false, hasPlaceholder: false },
+  repeater: { type: 'repeater', label: 'Bloc répétable', icon: Rows3, description: 'Lignes ajoutées à volonté', hasOptions: false, hasPlaceholder: false },
+  calculated: { type: 'calculated', label: 'Champ calculé', icon: Calculator, description: 'Total en lecture seule', hasOptions: false, hasPlaceholder: false },
+  link: { type: 'link', label: 'Lien ou bouton', icon: ExternalLink, description: 'Renvoie vers une page', hasOptions: false, hasPlaceholder: false },
+  hidden: { type: 'hidden', label: 'Champ caché', icon: EyeOff, description: 'Rempli depuis l\'URL', hasOptions: false, hasPlaceholder: false },
+  divider: { type: 'divider', label: 'Séparateur', icon: Minus, description: 'Filet horizontal', hasOptions: false, hasPlaceholder: false }
 };
 
 export const FIELD_CATEGORIES: { title: string; types: FieldType[] }[] = [
-  { title: 'Texte', types: ['short_text', 'long_text', 'email', 'phone', 'url'] },
-  { title: 'Choix', types: ['single_choice', 'multiple_choice', 'dropdown'] },
+  { title: 'Texte', types: ['short_text', 'long_text', 'email', 'phone', 'url', 'address'] },
+  { title: 'Choix', types: ['single_choice', 'multiple_choice', 'dropdown', 'yesno', 'country'] },
   { title: 'Évaluation', types: ['rating', 'nps', 'matrix'] },
   // `number` était déclaré dans FIELD_META mais absent de toutes les familles :
   // comme FieldPalette itère sur FIELD_CATEGORIES, le champ Nombre n'apparaissait
   // nulle part dans la palette du builder. Le catalogue s'en sert 16 fois.
-  { title: 'Données', types: ['number', 'date', 'file'] },
-  { title: 'Mise en page', types: ['statement', 'image', 'video'] }
+  { title: 'Données', types: ['number', 'currency', 'date', 'file', 'signature'] },
+  { title: 'Avancé', types: ['repeater', 'calculated', 'hidden'] },
+  { title: 'Mise en page', types: ['statement', 'image', 'video', 'link', 'divider'] }
 ];
-

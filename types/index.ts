@@ -17,7 +17,68 @@ export type FieldType =
   | 'statement'
   | 'image'
   | 'video'
-  | 'matrix';
+  | 'matrix'
+  // Ajoutés en phase 2 — parité avec mooove-invoice.
+  | 'currency'
+  | 'address'
+  | 'country'
+  | 'yesno'
+  | 'signature'
+  | 'repeater'
+  | 'calculated'
+  | 'link'
+  | 'hidden'
+  | 'divider';
+
+/**
+ * Types de champ qui ne collectent aucune réponse du répondant.
+ *
+ * `calculated` n'en fait pas partie : sa valeur est calculée, mais elle est bel
+ * et bien enregistrée avec la réponse — c'est tout l'intérêt du champ.
+ */
+export const NON_ANSWERABLE_FIELD_TYPES = [
+  'statement',
+  'image',
+  'video',
+  'divider',
+  'link'
+] as const;
+
+/**
+ * Types de champ auxquels « obligatoire » ne veut rien dire.
+ *
+ * `hidden` et `calculated` portent une valeur que le répondant ne saisit pas :
+ * l'exiger bloquerait l'envoi sur un champ qu'il n'a jamais vu, sans qu'aucun
+ * message ne puisse désigner quoi que ce soit à l'écran.
+ */
+export const NEVER_REQUIRED_FIELD_TYPES = [
+  ...NON_ANSWERABLE_FIELD_TYPES,
+  'hidden',
+  'calculated'
+] as const;
+
+/**
+ * Types autorisés à l'intérieur d'un répéteur.
+ *
+ * La liste est fermée à dessein : `SubField.type` est un `FieldType` complet,
+ * donc rien dans le typage n'empêche un répéteur de contenir un répéteur. Le
+ * rendu partirait alors en récursion infinie à la première ligne ajoutée.
+ */
+export const REPEATER_SUBFIELD_TYPES = [
+  'short_text',
+  'long_text',
+  'email',
+  'phone',
+  'number',
+  'currency',
+  'url',
+  'date',
+  'country',
+  'yesno',
+  'single_choice',
+  'multiple_choice',
+  'dropdown'
+] as const;
 
 export type DisplayMode = 'scroll' | 'sections' | 'typeform';
 export type FormStatus = 'draft' | 'published' | 'closed';
@@ -110,6 +171,42 @@ export interface FieldValidation {
   selection_max?: number; // pour 'multiple_choice' — nombre maximum de cases à cocher
   nps_left_label?: string; // Libellé gauche (min) pour l'échelle de notation
   nps_right_label?: string; // Libellé droite (max) pour l'échelle de notation
+
+  // --- Champs ajoutés en phase 2 ---
+  //
+  // Ces réglages vivent dans `validation` et non dans une colonne à eux, par
+  // cohérence avec ce qui précède : `validation` est le sac de configuration
+  // d'un champ, et non ses seules contraintes de saisie — `media_url`,
+  // `logo_shape` ou `display_style` y sont déjà. Seuls `repeater` et `calc`
+  // méritent une colonne : ils portent une structure, pas un réglage.
+
+  /** Code ISO 4217 pour `currency` — hérité du projet en phase 3. */
+  currency_code?: string;
+  /** Position du symbole monétaire pour `currency`. */
+  currency_position?: 'before' | 'after';
+  /** Pour `yesno` — libellés des deux boutons. */
+  yes_label?: string;
+  no_label?: string;
+  /** Pour `country` — code ISO présélectionné. */
+  default_country_code?: string;
+  /** Pour `address` — nombre de lignes du champ de saisie. */
+  address_rows?: number;
+  /** Pour `link` — destination, apparence et cible du lien affiché. */
+  link_url?: string;
+  link_variant?: 'button' | 'link';
+  link_new_tab?: boolean;
+  /**
+   * Pour `hidden` — clé de la chaîne de requête qui pré-remplit le champ.
+   *
+   * `?utm_source=linkedin` renseigne le champ dont `hidden_key` vaut
+   * `utm_source`. C'est ainsi qu'on rattache une réponse à sa campagne sans rien
+   * demander au répondant.
+   */
+  hidden_key?: string;
+  /** Pour `hidden` — valeur retenue quand la clé est absente de l'URL. */
+  hidden_default?: string;
+  /** Pour `signature` — épaisseur du trait, en pixels. */
+  signature_stroke_width?: number;
 }
 
 /** Familles disponibles dans le sélecteur de police par champ.
@@ -161,6 +258,15 @@ export interface Field {
    * `[field_id]__[option_slug]__[subfield_id]`.
    */
   subfields?: SubField[];
+  /**
+   * Verrou d'affichage propre au champ — cf. `VisibilityRule`. Absent ou vide,
+   * le champ ne dépend que des règles de logique du formulaire.
+   */
+  visibility?: VisibilityRule;
+  /** Uniquement pour `repeater`. */
+  repeater?: FieldRepeater;
+  /** Uniquement pour `calculated`. */
+  calc?: FieldCalc;
   created_at?: string;
 }
 
@@ -181,15 +287,110 @@ export interface Section {
   title: MultilingualText;
   description: MultilingualText;
   section_order: number;
+  /**
+   * Verrou d'affichage de la section — cf. `VisibilityRule`. Fermé, il emporte
+   * toutes les questions de la section : aucune n'est affichée, aucune n'est
+   * exigée, et les réponses déjà saisies sont écartées à l'envoi.
+   */
+  visibility?: VisibilityRule;
+  /**
+   * Section retirée du formulaire mais conservée dans le constructeur.
+   *
+   * Ce n'est pas la même chose qu'un verrou fermé : `hidden` est une décision de
+   * l'auteur, indépendante des réponses, et il n'existe aucune combinaison de
+   * réponses qui la rouvre.
+   */
+  hidden?: boolean;
   /** Les champs de la section, triés par `field_order` (relatif à la section). */
   fields?: Field[];
   created_at?: string;
 }
 
+export type ConditionOperator =
+  | 'equals'
+  | 'not_equals'
+  | 'contains'
+  | 'not_contains'
+  | 'greater_than'
+  | 'less_than'
+  /** La question a reçu une réponse, quelle qu'elle soit. */
+  | 'is_filled'
+  /** La question est restée sans réponse. */
+  | 'is_empty';
+
 export interface LogicCondition {
   source_field_id: string;
-  operator: 'equals' | 'not_equals' | 'contains' | 'not_contains' | 'greater_than' | 'less_than';
+  operator: ConditionOperator;
+  /** Ignorée par `is_filled` et `is_empty`, qui ne comparent rien. */
   value: string;
+}
+
+/**
+ * Condition d'affichage portée par le champ ou la section lui-même.
+ *
+ * Deux mécanismes cohabitent, et ce n'est pas un doublon — ils s'écrivent depuis
+ * deux endroits opposés :
+ *
+ * · `LogicRule` s'écrit depuis la question **source** : « quand on répond oui à
+ *   celle-ci, montrer celle-là ». C'est le point de vue du parcours, et c'est
+ *   aussi le seul qui sache faire un saut de page.
+ * · `VisibilityRule` s'écrit depuis l'élément **cible** : « n'affiche-moi que
+ *   si… ». C'est le point de vue de la question, et c'est le seul praticable
+ *   quand une même question dépend de trois autres.
+ *
+ * Règle d'arbitrage, valable partout : la visibilité est un **verrou**, jamais
+ * un ordre d'affichage. Un élément est visible si les règles de logique le
+ * disent visible **et** que son verrou s'ouvre. Une `VisibilityRule` ne peut
+ * donc jamais forcer l'apparition de ce qu'une règle `hide_field` masque —
+ * sinon deux auteurs, chacun dans son panneau, écriraient l'inverse l'un de
+ * l'autre sans jamais voir le conflit.
+ *
+ * Une liste de conditions vide ouvre le verrou : c'est l'état par défaut.
+ */
+export interface VisibilityRule {
+  conditions: LogicCondition[];
+  operator: 'AND' | 'OR';
+}
+
+export const EMPTY_VISIBILITY: VisibilityRule = { conditions: [], operator: 'AND' };
+
+/**
+ * Configuration d'un champ « répéteur » : un bloc de sous-questions que le
+ * répondant duplique autant de fois qu'il le faut (des participants, des
+ * accompagnants, des lignes de commande).
+ *
+ * La réponse enregistrée est un tableau de lignes, chaque ligne étant un objet
+ * `{ [id du sous-champ]: valeur }`.
+ */
+export interface FieldRepeater {
+  /** Nombre de lignes en dessous duquel le répondant ne peut pas descendre. */
+  min: number;
+  max: number;
+  /** Nom d'une ligne au singulier — « Participant », « Article ». */
+  item_label: MultilingualText;
+  fields: SubField[];
+}
+
+export type CalcMode = 'count' | 'sum';
+
+/**
+ * Configuration d'un champ calculé — une valeur en lecture seule, recalculée à
+ * chaque frappe et enregistrée avec la réponse.
+ *
+ * `count` compte les lignes des répéteurs cités ; `sum` additionne la valeur des
+ * champs numériques cités. `offset` s'ajoute au résultat, ce qui couvre le cas
+ * courant du « nombre de participants + l'organisateur ».
+ */
+export interface FieldCalc {
+  mode: CalcMode;
+  /** Identifiants des champs sources. */
+  sources: string[];
+  offset: number;
+  /**
+   * Calculer et enregistrer la valeur sans jamais la montrer au répondant —
+   * utile pour un total qui n'intéresse que l'organisateur.
+   */
+  hidden?: boolean;
 }
 export type LogicAction = 'show_field' | 'hide_field' | 'jump_to' | 'end_form';
 

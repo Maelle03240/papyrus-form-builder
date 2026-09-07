@@ -3,11 +3,12 @@
 import React, { memo } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { Columns2, Copy, GripVertical, Square, Trash2 } from 'lucide-react';
+import { Columns2, Copy, Filter, GripVertical, Square, Trash2 } from 'lucide-react';
 import type { CSSProperties } from 'react';
 import type { Field, FieldStyle, FormTheme, MultilingualText } from '@/types';
 import { cn } from '@/lib/utils';
 import { FIELD_META } from '@/lib/field-meta';
+import { canBeRequired } from '@/lib/submission-format';
 import { AutoTextarea } from '@/components/ui/AutoTextarea';
 import { Switch } from '@/components/ui/Switch';
 import { FieldRenderer } from './FieldRenderer';
@@ -106,6 +107,10 @@ export const FieldCard = memo(function FieldCard({
   const isVideo = field.type === 'video';
   const isFile = field.type === 'file';
   const isStatement = field.type === 'statement';
+  // Un séparateur n'a ni titre ni description : ce n'est qu'un filet. Lui offrir
+  // un champ de saisie ferait croire qu'il porte quelque chose.
+  const isDivider = field.type === 'divider';
+  const conditionCount = field.visibility?.conditions?.length ?? 0;
 
   const isRespondentUpload =
     ['file', 'image', 'video'].includes(field.type) &&
@@ -114,11 +119,16 @@ export const FieldCard = memo(function FieldCard({
   // Image, video et file avec titre activé sont traités comme des questions avec numéro
   const showTitleForMedia = (isImage || isVideo || isFile) && field.validation?.show_title;
   const isLayout =
+    isDivider ||
     (!isRespondentUpload &&
       ((isImage && !showTitleForMedia) ||
         (isVideo && !showTitleForMedia) ||
         (isFile && !showTitleForMedia)));
-  const collectsAnswer = !isLayout && !isStatement;
+  // « Obligatoire » n'a aucun sens sur un séparateur, un lien, un champ caché ou
+  // un total calculé : `canBeRequired` est la même règle que celle qu'applique
+  // `/api/submit/[slug]`, pour que la case affichée ici corresponde à ce qui est
+  // réellement exigé là-bas.
+  const collectsAnswer = !isLayout && canBeRequired(field);
   const isChoiceLike =
     field.type === 'single_choice' || field.type === 'multiple_choice' || field.type === 'dropdown';
 
@@ -172,6 +182,18 @@ export const FieldCard = memo(function FieldCard({
         <div className="flex min-w-0 items-center gap-1.5 text-xs uppercase tracking-wide text-text-tertiary">
           <Icon className="h-3.5 w-3.5 shrink-0" />
           <span className="truncate">{meta.label}</span>
+          {/* Une question conditionnelle doit se repérer sans ouvrir son
+              panneau : sans ce repère, retrouver laquelle des trente est
+              masquée impose de toutes les ouvrir. */}
+          {conditionCount > 0 && (
+            <span
+              className="inline-flex shrink-0 items-center gap-1 rounded-sm border border-border bg-bg-elevated px-1.5 py-0.5 normal-case tracking-normal text-text-secondary"
+              title={`Affichée sous ${conditionCount} condition${conditionCount > 1 ? 's' : ''}`}
+            >
+              <Filter className="h-3 w-3" aria-hidden="true" />
+              {conditionCount}
+            </span>
+          )}
         </div>
 
         <div
@@ -330,8 +352,8 @@ export const FieldCard = memo(function FieldCard({
         )
       )}
 
-      {/* Description — éditable inline (pas pour section_break, image, vidéo, fichier) */}
-      {!isImage && !isVideo && !isFile && (
+      {/* Description — éditable inline (ni pour les médias, ni pour un séparateur) */}
+      {!isImage && !isVideo && !isFile && !isDivider && (
         <AutoTextarea
           value={field.description.fr ?? ''}
           onChange={(e) => patchText('description', e.target.value)}

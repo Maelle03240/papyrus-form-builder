@@ -5,14 +5,15 @@ import { calculateFormScore, type FormResponses } from '@/lib/scoring';
 import { sendSubmissionNotifications } from '@/lib/email/notifications';
 import { syncSubmissionToSheets } from '@/lib/integrations/google-sheets-sync';
 import { verifyFormAccessToken } from '@/lib/form-access';
-import { evaluateLogicRules } from '@/lib/logic-evaluation';
-import { isAnswerEmpty } from '@/lib/submission-format';
+import { evaluateFormVisibility } from '@/lib/visibility';
+import { applyCalculatedFields } from '@/lib/calculated';
+import { canBeRequired, isAnswerable, isAnswerEmpty } from '@/lib/submission-format';
 import {
   checkDuplicateAnswer,
   checkSubmissionLimit,
   enforceDataRetention
 } from '@/lib/submission-guards';
-import type { Field, Form, FormSettings, LogicRule } from '@/types';
+import type { Field, Form, FormSettings, LogicRule, Section } from '@/types';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -96,7 +97,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
   const { data: form, error: formError } = await supabase
     .from('forms')
     .select(
-      'id, team_id, created_by, title, slug, status, closes_at, access_type, unique_email, scoring_enabled, theme, settings, notification_settings, fields(*), logic_rules(*)'
+      'id, team_id, created_by, title, slug, status, closes_at, access_type, unique_email, scoring_enabled, theme, settings, notification_settings, sections(*), fields(*), logic_rules(*)'
     )
     .eq('slug', slug)
     .maybeSingle();
@@ -133,6 +134,10 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
 
   const settings: FormSettings = (form.settings ?? {}) as FormSettings;
   const fields: Field[] = form.fields ?? [];
+  // Les sections portent leur propre verrou de visibilité depuis la phase 2 :
+  // sans elles, une section masquée par son auteur verrait ses questions
+  // exigées à l'envoi alors que personne ne les a jamais vues.
+  const sections: Section[] = form.sections ?? [];
 
   // 5. Quota de réponses fixé par l'auteur.
   const limitFailure = await checkSubmissionLimit(form.id, settings);
@@ -143,9 +148,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
   // 6. Ne conserver que les réponses correspondant à un champ existant.
   //    Sans ce filtre, n'importe quelle clé envoyée par le client finissait
   //    telle quelle dans la colonne JSONB.
-  const answerableFields = fields.filter(
-    (f) => !['statement', 'image', 'video'].includes(f.type)
-  );
+  const answerableFields = fields.filter(isAnswerable);
   const knownFieldIds = new Set(answerableFields.map((f) => f.id));
 
   const responses: Record<string, unknown> = {};
@@ -165,6 +168,17 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
     }
   }
 
+  // 6 bis. Champs calculés, première passe.
+  //
+  //    Avant d'évaluer quoi que ce soit : leur valeur arrive dans la requête,
+  //    puisque le répondant la voit à l'écran, mais rien n'empêche de la
+  //    remplacer avant l'envoi. Si une condition d'affichage s'appuie sur un
+  //    total — « à partir de 10 participants, demander la facturation » — c'est
+  //    la valeur recalculée qui doit la trancher, pas celle qu'on nous annonce.
+  for (const [key, value] of Object.entries(applyCalculatedFields(fields, responses))) {
+    responses[key] = value;
+  }
+
   // 7. Logique conditionnelle.
   //
   //    Le serveur l'ignorait complètement : il exigeait TOUS les champs marqués
@@ -174,13 +188,14 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
   //    l'écran, avec un message qui ne désignait rien de visible. Huit des
   //    cinquante modèles du catalogue sont dans ce cas.
   //
-  //    C'est le MÊME évaluateur que celui du navigateur (`lib/logic-evaluation`),
-  //    appelé sur les mêmes réponses : les deux ne peuvent pas diverger.
-  const visibleFieldIds = evaluateLogicRules(
-    (form.logic_rules ?? []) as LogicRule[],
-    responses,
-    fields
-  );
+  //    C'est le MÊME évaluateur que celui du navigateur (`lib/visibility`),
+  //    appelé sur les mêmes réponses : les deux ne peuvent pas diverger. Il
+  //    combine les règles de logique et les verrous portés par les champs et les
+  //    sections.
+  const visibleFieldIds = evaluateFormVisibility(
+    { fields, sections, logic_rules: (form.logic_rules ?? []) as LogicRule[] },
+    responses
+  ).fields;
 
   // Une réponse à un champ devenu invisible n'est pas une réponse : le
   // répondant est revenu en arrière et a changé de branche. La conserver la
@@ -190,9 +205,23 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
     if (!visibleFieldIds.has(key.split('__')[0])) delete responses[key];
   }
 
+  // 7 bis. Champs calculés, seconde passe.
+  //
+  //    Le masquage a pu retirer le bloc répétable qu'un total comptait : sans
+  //    cette reprise, un « nombre de participants » facturé au prix unitaire
+  //    resterait à la valeur d'une branche que le répondant a quittée.
+  for (const [key, value] of Object.entries(
+    applyCalculatedFields(
+      fields.filter((f) => visibleFieldIds.has(f.id)),
+      responses
+    )
+  )) {
+    responses[key] = value;
+  }
+
   // 8. Champs obligatoires — parmi les seuls champs réellement visibles.
   const missingFields = answerableFields
-    .filter((f) => f.required && visibleFieldIds.has(f.id))
+    .filter((f) => f.required && canBeRequired(f) && visibleFieldIds.has(f.id))
     .filter((f) => isAnswerEmpty(responses[f.id]));
 
   if (missingFields.length > 0) {
