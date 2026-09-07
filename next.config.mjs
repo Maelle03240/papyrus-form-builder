@@ -61,12 +61,12 @@ const nextConfig = {
   poweredByHeader: false,
   reactStrictMode: true,
 
-  // Les erreurs TypeScript et ESLint étaient ignorées au build. Un projet qui
-  // compile en masquant ses erreurs finit par livrer des pages cassées :
-  // `npm run typecheck` passe désormais, la vérification est réactivée.
-  eslint: {
-    ignoreDuringBuilds: false
-  },
+  // Les erreurs TypeScript étaient ignorées au build. Un projet qui compile en
+  // masquant ses erreurs finit par livrer des pages cassées : la vérification
+  // est réactivée, et ne doit pas être remise en veille.
+  //
+  // La clé `eslint` a disparu avec `next lint` en Next 16 : le lint passe
+  // désormais par `npm run lint` (donc par `npm run verify`), plus par le build.
   typescript: {
     ignoreBuildErrors: false
   },
