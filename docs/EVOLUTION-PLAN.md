@@ -188,11 +188,26 @@ les étiquettes de camembert Recharts 3 normalisées ; `rounded` nu réécrit en
 `rounded-sm`, `outline-none` en `outline-hidden`, l'échelle d'ombres décalée.
 `react-hook-form` et `@hookform/resolvers` ont été retirés : plus aucun import.
 
-**1 — Projets, sections, navigation.** Tables `projects` / `sections`,
-`forms.project_id`, `fields.section_id`, suppression du type `section_break`.
-Nouvelles routes et onglets. « Nouveau formulaire » devient « Nouveau projet ».
-Port de `form_versions` (l'annulation IA en dépend). Régénération du catalogue de
-modèles. Livrable : un projet contient plusieurs formulaires.
+**1 — Projets, sections, navigation.** Scindée en deux, parce que les deux
+moitiés n'ont ni la même surface ni le même risque.
+
+**1a — Couche projet.** ✅ **Fait le 07/09/2026.** Table `projects`,
+`forms.project_id` avec reprise des données, `form_versions`, les trois routes et
+toute l'arborescence d'onglets, « Nouveau projet » aux points d'entrée. Additif :
+rien de l'existant ne change de forme. Le builder, l'onglet Réponses et l'onglet
+Analyse sont sortis de `/forms/[id]` en composants pour être montés par les deux
+arborescences.
+
+**1b — Sections réelles.** À faire. Table `sections`, `fields.section_id`,
+suppression du type `section_break`. C'est la moitié invasive : le pseudo-champ
+est lu à une soixantaine d'endroits, dont tout le rendu public — précisément là
+où un défaut se voit chez le répondant et pas chez nous.
+
+Une décision réduit beaucoup le risque : **le catalogue de modèles garde
+`section_break` comme convention d'écriture**, et `lib/templates/to-form.ts` le
+convertit en sections réelles à l'import. `lib/templates/types.ts` décrit un
+format de fichier de contenu, pas le modèle de données — les 51 fichiers JSON
+n'ont donc pas à être réécrits.
 
 **2 — Parité des champs et visibilité.** Dix nouveaux types : `currency`,
 `repeater`, `calculated`, `signature`, `address`, `country`, `yesno`, `link`,
