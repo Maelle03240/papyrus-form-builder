@@ -12,7 +12,6 @@ import {
   Heading1,
   Image as ImageIcon,
   Link2,
-  Minus,
   Phone,
   Play,
   Smile,
@@ -44,7 +43,6 @@ export const FIELD_META: Record<FieldType, FieldMeta> = {
   nps: { type: 'nps', label: 'Échelle de notation', icon: Smile, description: 'Boutons ou slider', hasOptions: false, hasPlaceholder: false },
   date: { type: 'date', label: 'Date', icon: Calendar, description: 'Sélecteur de date', hasOptions: false, hasPlaceholder: false },
   file: { type: 'file', label: 'Fichier', icon: FileUp, description: 'Upload de fichier', hasOptions: false, hasPlaceholder: false },
-  section_break: { type: 'section_break', label: 'Section', icon: Minus, description: 'Séparateur', hasOptions: false, hasPlaceholder: false },
   statement: { type: 'statement', label: 'Texte libre', icon: Heading1, description: 'Bloc d\'information', hasOptions: false, hasPlaceholder: false },
   image: { type: 'image', label: 'Image', icon: ImageIcon, description: 'Photo ou illustration', hasOptions: false, hasPlaceholder: false },
   video: { type: 'video', label: 'Vidéo', icon: Play, description: 'YouTube ou Vimeo', hasOptions: false, hasPlaceholder: false },
@@ -59,6 +57,6 @@ export const FIELD_CATEGORIES: { title: string; types: FieldType[] }[] = [
   // comme FieldPalette itère sur FIELD_CATEGORIES, le champ Nombre n'apparaissait
   // nulle part dans la palette du builder. Le catalogue s'en sert 16 fois.
   { title: 'Données', types: ['number', 'date', 'file'] },
-  { title: 'Mise en page', types: ['section_break', 'statement', 'image', 'video'] }
+  { title: 'Mise en page', types: ['statement', 'image', 'video'] }
 ];
 

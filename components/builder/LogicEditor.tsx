@@ -4,6 +4,18 @@ import { Plus, Trash2, Award, X } from 'lucide-react';
 import type { Field, Form, LogicCondition, LogicAction, LogicRule, DisplayMode } from '@/types';
 import { FIELD_META } from '@/lib/field-meta';
 import { getFieldsInSameSection, getSections } from '@/lib/sections';
+
+/**
+ * Cible d'une règle : une question ou une section.
+ *
+ * `kind` n'est pas cosmétique — il décide laquelle des deux colonnes
+ * (`target_field_id` / `target_section_id`) la règle renseigne.
+ */
+interface LogicTarget {
+  id: string;
+  kind: 'field' | 'section';
+  label: string;
+}
 import { cn } from '@/lib/utils';
 
 interface Props {
@@ -109,29 +121,45 @@ export function LogicEditor({ form, field, onFormChange }: Props) {
   // Actions disponibles selon le mode
   const availableActions = ALL_ACTIONS.filter((a) => a.modes.includes(mode));
 
-  /** Cibles disponibles selon l'action choisie et le mode. */
-  function getTargetsForAction(action: LogicAction): Field[] {
+  /**
+   * Cibles disponibles selon l'action choisie et le mode.
+   *
+   * Une cible est soit une question, soit une section — et les deux ne vivent
+   * plus dans la même table. `kind` dit laquelle des deux colonnes la règle doit
+   * renseigner : `target_field_id` porte une clé étrangère vers `fields`, où une
+   * section n'existe pas.
+   */
+  function getTargetsForAction(action: LogicAction): LogicTarget[] {
     if (action === 'end_form') return [];
+
+    const asFieldTargets = (fields: Field[]): LogicTarget[] =>
+      fields.map((f) => ({
+        id: f.id,
+        kind: 'field' as const,
+        label: f.label.fr || `${FIELD_META[f.type].label} sans titre`
+      }));
 
     if (action === 'jump_to') {
       if (mode === 'typeform') {
-        // Toutes les questions sauf section_break
-        return allFields.filter((f) => f.id !== field.id && f.type !== 'section_break');
+        return asFieldTargets(allFields.filter((f) => f.id !== field.id));
       }
-      // scroll / sections : uniquement les sections
-      return getSections(allFields);
+      // scroll / sections : on saute vers une section, jamais vers une question.
+      return getSections(form).map((section, index) => ({
+        id: section.id,
+        kind: 'section' as const,
+        label: section.title.fr || `Section ${index + 1}`
+      }));
     }
 
     // show_field / hide_field
     if (mode === 'sections') {
-      // Uniquement les champs de la même section
-      return getFieldsInSameSection(allFields, field.id).filter(
-        (f) => f.type !== 'section_break'
-      );
+      // Afficher ou masquer un champ d'une autre page n'aurait aucun effet
+      // visible : cette page n'est pas à l'écran.
+      return asFieldTargets(getFieldsInSameSection(form, field.id));
     }
-    // scroll : tous les autres champs
-    return allFields.filter(
-      (f) => f.id !== field.id && f.type !== 'section_break' && f.type !== 'image' && f.type !== 'video'
+
+    return asFieldTargets(
+      allFields.filter((f) => f.id !== field.id && f.type !== 'image' && f.type !== 'video')
     );
   }
 
@@ -149,7 +177,7 @@ export function LogicEditor({ form, field, onFormChange }: Props) {
       }],
       conditions_operator: 'AND',
       action_type: defaultAction,
-      target_field_id: initialTargets[0]?.id,
+      ...targetPatch(initialTargets[0]),
       rule_order: rules.length
     };
 
@@ -239,7 +267,7 @@ interface RuleCardProps {
   index: number;
   form: Form;
   availableActions: { value: LogicAction; label: string }[];
-  getTargetsForAction: (action: LogicAction) => Field[];
+  getTargetsForAction: (action: LogicAction) => LogicTarget[];
   onChange: (patch: Partial<LogicRule>) => void;
   onDelete: () => void;
 }
@@ -256,7 +284,7 @@ function RuleCard({
   const showTarget = rule.action_type !== 'end_form';
   const targets = getTargetsForAction(rule.action_type);
   const allFields = form.fields ?? [];
-  const sourceFields = allFields.filter(f => !['section_break', 'image', 'video', 'statement'].includes(f.type));
+  const sourceFields = allFields.filter(f => !['image', 'video', 'statement'].includes(f.type));
 
   const handleAddCondition = () => {
     const defaultField = sourceFields[0] || allFields[0];
@@ -440,7 +468,7 @@ function RuleCard({
               const newTargets = getTargetsForAction(newAction);
               onChange({
                 action_type: newAction,
-                target_field_id: newAction === 'end_form' ? undefined : newTargets[0]?.id
+                ...targetPatch(newAction === 'end_form' ? undefined : newTargets[0])
               });
             }}
             className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-hidden"
@@ -463,19 +491,18 @@ function RuleCard({
               </span>
             ) : (
               <select
-                value={rule.target_field_id ?? ''}
-                onChange={(e) => onChange({ target_field_id: e.target.value })}
+                value={rule.target_section_id ?? rule.target_field_id ?? ''}
+                onChange={(e) =>
+                  onChange(targetPatch(targets.find((t) => t.id === e.target.value)))
+                }
                 className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-hidden"
               >
                 <option value="">Choisir</option>
-                {targets.map((f) => {
-                  const meta = FIELD_META[f.type];
-                  return (
-                    <option key={f.id} value={f.id}>
-                      {f.label.fr || `${meta.label} sans titre`}
-                    </option>
-                  );
-                })}
+                {targets.map((target) => (
+                  <option key={target.id} value={target.id}>
+                    {target.label}
+                  </option>
+                ))}
               </select>
             )}
           </div>
@@ -485,3 +512,17 @@ function RuleCard({
   );
 }
 
+/**
+ * Traduit une cible choisie en modification de règle.
+ *
+ * Exactement une des deux colonnes est renseignée, l'autre est explicitement
+ * remise à `null` : laisser traîner l'ancienne ferait cohabiter deux cibles, et
+ * c'est celle que le rendu lit en premier qui gagnerait — silencieusement.
+ */
+function targetPatch(target: LogicTarget | undefined): Partial<LogicRule> {
+  if (!target) return { target_field_id: null, target_section_id: null };
+
+  return target.kind === 'section'
+    ? { target_field_id: null, target_section_id: target.id }
+    : { target_field_id: target.id, target_section_id: null };
+}

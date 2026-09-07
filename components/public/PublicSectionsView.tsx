@@ -41,7 +41,20 @@ export function PublicSectionsView({
   embed
 }: Props) {
   const fields = form.fields?.filter(f => visibleFields.has(f.id)) || [];
-  const pages = buildPages(fields);
+
+  /**
+   * Une section dont tous les champs sont masqués par la logique ne fait pas une
+   * page : le répondant tomberait sur un écran vide, avec pour seul recours le
+   * bouton « Suivant ». Elle est donc écartée du parcours.
+   *
+   * Le repli garde la première section quand plus rien n'est visible : mieux
+   * vaut une page vide que zéro page, où il ne resterait aucun bouton pour
+   * envoyer le formulaire.
+   */
+  const allPages = buildPages({ sections: form.sections, fields });
+  const populated = allPages.filter((page) => page.fields.length > 0);
+  const pages = populated.length > 0 ? populated : allPages.slice(0, 1);
+
   const [pageIdx, setPageIdx] = useState(0);
 
   useEffect(() => {
@@ -61,13 +74,15 @@ export function PublicSectionsView({
     if (pageIdx > total - 1) setPageIdx(Math.max(0, total - 1));
   }, [pageIdx, total]);
 
-  const currentPage = pages[Math.min(pageIdx, total - 1)] ?? [];
+  const currentPage = pages[Math.min(pageIdx, total - 1)];
   const progress = total > 0 ? ((pageIdx + 1) / total) * 100 : 0;
   const isLast = pageIdx === total - 1;
   const isFirst = pageIdx === 0;
 
-  const pageHeader = currentPage[0]?.type === 'section_break' ? currentPage[0] : null;
-  const pageFields = pageHeader ? currentPage.slice(1) : currentPage;
+  // Une section sans titre ne montre pas d'entête : c'est le cas de la section
+  // d'ouverture d'un formulaire qui commence directement par ses questions.
+  const pageHeader = currentPage?.title?.fr ? currentPage : null;
+  const pageFields = currentPage?.fields ?? [];
 
   /**
    * Passage automatique à la page suivante.
@@ -175,7 +190,7 @@ export function PublicSectionsView({
         {pageHeader && (
           <div className="mb-8">
             <h2 className="font-display text-2xl text-text-primary">
-              {pageHeader.label.fr}
+              {pageHeader.title.fr}
             </h2>
             {pageHeader.description.fr && (
               <p className="papyrus-meta mt-2 text-base">

@@ -1,4 +1,4 @@
-import type { Field, FieldOption, FieldType, MultilingualText } from '@/types';
+import type { Field, FieldOption, FieldType, MultilingualText, Section } from '@/types';
 import type {
   TallyBlock,
   TallyFormDetail,
@@ -88,6 +88,11 @@ function blockTitle(block: TallyBlock): string {
 
 export interface ConvertedForm {
   title: string;
+  /**
+   * Les sections déduites des titres Tally. Il y en a toujours au moins une :
+   * `fields.section_id` est obligatoire côté base.
+   */
+  sections: Section[];
   fields: Field[];
   warnings: string[];
   /** Correspondance identifiant Tally → identifiant Papyrus, pour les réponses. */
@@ -102,6 +107,42 @@ export function convertForm(detail: TallyFormDetail, formId: string): ConvertedF
   const warnings: string[] = [];
   const fieldIdByTallyId = new Map<string, string>();
   const fields: Field[] = [];
+
+  /**
+   * Un titre Tally ouvre une section, il ne devient plus un champ.
+   *
+   * La section d'ouverture est créée d'emblée : un formulaire Tally peut très
+   * bien commencer par une question, et `fields.section_id` n'admet pas de vide.
+   */
+  const sections: Section[] = [
+    {
+      id: crypto.randomUUID(),
+      form_id: formId,
+      title: ml(''),
+      description: ml(''),
+      section_order: 0
+    }
+  ];
+
+  const openSection = (title: string): Section => {
+    const section: Section = {
+      id: crypto.randomUUID(),
+      form_id: formId,
+      title: ml(title),
+      description: ml(''),
+      section_order: sections.length
+    };
+    sections.push(section);
+    return section;
+  };
+
+  /** Rang du prochain champ, compté par section. */
+  const orderInSection = new Map<string, number>();
+  const nextOrder = (sectionId: string): number => {
+    const value = orderInSection.get(sectionId) ?? 0;
+    orderInSection.set(sectionId, value + 1);
+    return value;
+  };
 
   const blocks = detail.blocks ?? [];
 
@@ -138,12 +179,19 @@ export function convertForm(detail: TallyFormDetail, formId: string): ConvertedF
       const text = group.map(blockTitle).filter(Boolean).join(' ');
       if (!text) continue;
 
+      if (type.startsWith('HEADING') || type === 'TITLE') {
+        openSection(text);
+        continue;
+      }
+
+      const sectionId = sections[sections.length - 1].id;
       fields.push(
         makeField({
           formId,
-          type: type.startsWith('HEADING') || type === 'TITLE' ? 'section_break' : 'statement',
+          sectionId,
+          type: 'statement',
           label: text,
-          order: fields.length
+          order: nextOrder(sectionId)
         })
       );
       continue;
@@ -158,11 +206,13 @@ export function convertForm(detail: TallyFormDetail, formId: string): ConvertedF
     const payload = head.payload ?? {};
     const label = group.map(blockTitle).find(Boolean) ?? 'Question importée';
 
+    const sectionId = sections[sections.length - 1].id;
     const field = makeField({
       formId,
+      sectionId,
       type: papyrusType,
       label,
-      order: fields.length,
+      order: nextOrder(sectionId),
       required: payload.isRequired ?? payload.required ?? false,
       placeholder: stripHtml(payload.placeholder)
     });
@@ -229,8 +279,15 @@ export function convertForm(detail: TallyFormDetail, formId: string): ConvertedF
     "La logique conditionnelle Tally n'est pas transférable automatiquement : reconstruisez-la dans l'onglet Logique."
   );
 
+  // Une section d'ouverture restée vide n'apporte rien : elle afficherait une
+  // page sans titre ni question au répondant.
+  const usedSections = sections.filter(
+    (section, index) => index === 0 || fields.some((field) => field.section_id === section.id)
+  );
+
   return {
     title: detail.name || 'Formulaire importé de Tally',
+    sections: usedSections,
     fields,
     warnings,
     fieldIdByTallyId
@@ -258,6 +315,7 @@ function collectOptions(group: TallyBlock[]): FieldOption[] {
 
 function makeField(input: {
   formId: string;
+  sectionId: string;
   type: FieldType;
   label: string;
   order: number;
@@ -267,6 +325,7 @@ function makeField(input: {
   return {
     id: crypto.randomUUID(),
     form_id: input.formId,
+    section_id: input.sectionId,
     type: input.type,
     label: ml(input.label),
     description: ml(''),

@@ -94,7 +94,7 @@ export function PublicTypeformView({
       .filter((r) => r.conditions && r.conditions.some(c => c.source_field_id === currentField.id))
       .sort((a, b) => (a.rule_order || 0) - (b.rule_order || 0));
 
-    let triggeredAction: { action_type: string; target_field_id?: string } | null = null;
+    let triggeredAction: { action_type: string; target_field_id?: string | null } | null = null;
 
     for (const rule of fieldRules) {
       if (evaluateConditions(rule.conditions, rule.conditions_operator || 'AND', responses)) {
@@ -160,7 +160,7 @@ export function PublicTypeformView({
       .filter((r) => r.conditions && r.conditions.some(c => c.source_field_id === currentField.id))
       .sort((a, b) => (a.rule_order || 0) - (b.rule_order || 0));
 
-    let triggeredAction: { action_type: string; target_field_id?: string } | null = null;
+    let triggeredAction: { action_type: string; target_field_id?: string | null } | null = null;
 
     for (const rule of fieldRules) {
       if (evaluateConditions(rule.conditions, rule.conditions_operator || 'AND', responses)) {
@@ -342,8 +342,7 @@ export function PublicTypeformView({
 
               {/* Champ de saisie */}
               <div className="mb-8">
-                {currentField.type === 'section_break' ||
-                  currentField.type === 'statement' ||
+                {currentField.type === 'statement' ||
                   currentField.type === 'image' ||
                   currentField.type === 'video' ? (
                   <PublicFieldCard

@@ -41,7 +41,7 @@ export function FormRecordsTab({ form, submissions: allSubmissions, setSubmissio
     : allSubmissions.filter((s) => !s.is_partial);
 
   const fields = (form.fields ?? []).filter(
-    (f) => f.type !== 'section_break' && f.type !== 'statement' && f.type !== 'image' && f.type !== 'video'
+    (f) => f.type !== 'statement' && f.type !== 'image' && f.type !== 'video'
   );
 
   function renderResponseValue(field: Field, value: any): string {

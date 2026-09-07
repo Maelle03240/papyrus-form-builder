@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Award, GitBranch, Sparkles, X } from 'lucide-react';
+import { Award, GitBranch, Minus, Sparkles, X } from 'lucide-react';
 import { FIELD_META } from '@/lib/field-meta';
 import { fetchGlobalTemplateDefinition } from '@/lib/store/templates';
 import { cn } from '@/lib/utils';
@@ -239,7 +239,13 @@ function TemplateStructure({ def }: { def: TemplateDefinition }) {
 }
 
 function FieldRow({ field }: { field: TemplateField }) {
-  const meta = FIELD_META[field.type];
+  // `section_break` n'existe plus dans l'application — c'est une convention
+  // d'écriture propre aux fichiers de modèle. Le tiroir affiche encore le
+  // fichier tel quel, il lui faut donc son propre libellé.
+  const meta =
+    field.type === 'section_break'
+      ? { label: 'Section', icon: Minus, hasOptions: false }
+      : FIELD_META[field.type];
   const options = field.options ?? [];
 
   return (

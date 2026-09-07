@@ -11,13 +11,20 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { LIMITS } from '../lib/constants/limits';
-import type { TemplateDefinition, TemplateIndexEntry } from '../lib/templates/types';
-import type { FieldType, MultilingualText } from '../types';
+import type {
+  TemplateDefinition,
+  TemplateFieldType,
+  TemplateIndexEntry
+} from '../lib/templates/types';
+import type { MultilingualText } from '../types';
 
 const DIR = join(process.cwd(), 'lib/templates/catalog');
 
-/** Les 18 types réellement supportés. Toute addition passe d'abord par la checklist Phase 4. */
-const ALLOWED_TYPES: FieldType[] = [
+/**
+ * Les types acceptés dans un fichier de modèle : les 17 de l'application, plus
+ * `section_break`, que l'import convertit en section réelle.
+ */
+const ALLOWED_TYPES: TemplateFieldType[] = [
   'short_text', 'long_text', 'email', 'phone', 'number', 'url',
   'single_choice', 'multiple_choice', 'dropdown', 'rating', 'nps',
   'date', 'file', 'section_break', 'statement', 'image', 'video', 'matrix'

@@ -38,7 +38,7 @@ export function PublicScrollView({
 }: Props) {
   const fields = form.fields?.filter(f => visibleFields.has(f.id)) || [];
   const hasInputs = fields.some(
-    f => f.type !== 'section_break' && f.type !== 'image' && f.type !== 'video' && f.type !== 'statement'
+    f => f.type !== 'image' && f.type !== 'video' && f.type !== 'statement'
   );
 
   const handleSubmit = async (e: React.FormEvent) => {

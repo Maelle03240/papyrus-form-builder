@@ -23,50 +23,6 @@ export function PublicFieldCard({
   responses,
   updateResponse
 }: Props) {
-  // Section break = séparateur visuel
-  if (field.type === 'section_break') {
-    return (
-      <div className="col-span-2 pt-6">
-        {field.label.fr && (
-          <h2 className="font-display text-2xl text-text-primary flex items-center gap-2">
-            {isIconVisible(field, form.theme) && (
-              <span
-                className="inline-flex items-center justify-center shrink-0 rounded-lg"
-                style={{
-                  width: 36,
-                  height: 36,
-                  background: 'var(--papyrus-surface)',
-                  border: '0.5px solid var(--papyrus-border)',
-                  marginRight: 6,
-                }}
-              >
-                {field.style?.icon_value?.startsWith('ti-') ? (
-                  <i
-                    className={`ti ${field.style.icon_value}`}
-                    aria-hidden="true"
-                    style={{ fontSize: 20, color: 'var(--accent)' }}
-                  />
-                ) : field.style?.icon_value ? (
-                  <span style={{ fontSize: 22, lineHeight: 1 }}>
-                    {field.style.icon_value}
-                  </span>
-                ) : (
-                  <i
-                    className={`ti ${getFieldIcon(field)}`}
-                    aria-hidden="true"
-                    style={{ fontSize: 20, color: 'var(--accent)' }}
-                  />
-                )}
-              </span>
-            )}
-            <span>{field.label.fr}</span>
-          </h2>
-        )}
-        <div className="papyrus-divider mt-2" />
-      </div>
-    );
-  }
-
   const isRespondentUpload =
     ['file', 'image', 'video'].includes(field.type) &&
     field.validation?.respondent_mode_enabled === true;

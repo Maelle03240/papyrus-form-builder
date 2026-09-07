@@ -14,7 +14,6 @@ export type FieldType =
   | 'nps'
   | 'date'
   | 'file'
-  | 'section_break'
   | 'statement'
   | 'image'
   | 'video'
@@ -138,6 +137,12 @@ export type LayoutWidth = 'full' | 'half';
 export interface Field {
   id: string;
   form_id: string;
+  /**
+   * Section à laquelle appartient le champ. Obligatoire : depuis la migration
+   * 004, tout formulaire possède au moins une section et aucun champ ne flotte
+   * hors de l'une d'elles.
+   */
+  section_id: string;
   type: FieldType;
   label: MultilingualText;
   description: MultilingualText;
@@ -159,6 +164,28 @@ export interface Field {
   created_at?: string;
 }
 
+/**
+ * Une section d'un formulaire.
+ *
+ * Elle a remplacé le pseudo-champ `section_break`. Le marqueur planté dans la
+ * liste plate suffisait tant qu'une section n'était qu'un titre ; il ne permet
+ * ni de porter des conditions d'affichage propres, ni de déplacer un bloc d'un
+ * geste, ni d'être créée par un appel d'outil.
+ *
+ * Un titre vide est normal : c'est la section d'ouverture d'un formulaire qui
+ * commence directement par ses questions.
+ */
+export interface Section {
+  id: string;
+  form_id: string;
+  title: MultilingualText;
+  description: MultilingualText;
+  section_order: number;
+  /** Les champs de la section, triés par `field_order` (relatif à la section). */
+  fields?: Field[];
+  created_at?: string;
+}
+
 export interface LogicCondition {
   source_field_id: string;
   operator: 'equals' | 'not_equals' | 'contains' | 'not_contains' | 'greater_than' | 'less_than';
@@ -172,7 +199,15 @@ export interface LogicRule {
   conditions: LogicCondition[];
   conditions_operator: 'AND' | 'OR';
   action_type: LogicAction;
-  target_field_id?: string;
+  target_field_id?: string | null;
+  /**
+   * Cible d'un « aller à » qui vise une section.
+   *
+   * Deux colonnes plutôt qu'une : `target_field_id` porte une clé étrangère vers
+   * `fields`, où les sections ne vivent plus. Exactement l'une des deux est
+   * renseignée.
+   */
+  target_section_id?: string | null;
   rule_order: number;
 }
 
@@ -482,6 +517,13 @@ export interface Form {
   access_password?: string | null;
   languages: string[];
   default_language: string;
+  /** Les sections du formulaire, triées par `section_order`. */
+  sections?: Section[];
+  /**
+   * Tous les champs du formulaire, à plat et dans l'ordre de lecture
+   * (sections puis champs). Conservé parce que la quasi-totalité du produit
+   * raisonne sur une liste ordonnée ; `sections` porte le découpage.
+   */
   fields?: Field[];
   logic_rules?: LogicRule[];
   /** Si vrai, l'avancée du répondant est sauvegardée en localStorage et proposée au rechargement. */

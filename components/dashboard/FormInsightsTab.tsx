@@ -32,7 +32,7 @@ import type { Form, Field, ChartLayoutItem } from '@/types';
  */
 function getOrderedChartFields(fields: Field[], chartOrder?: string[], deletedCharts?: string[]): Field[] {
   const activeFields = fields.filter(
-    f => !['section_break', 'statement', 'image', 'video', 'file'].includes(f.type) &&
+    f => !['statement', 'image', 'video', 'file'].includes(f.type) &&
          !(deletedCharts ?? []).includes(f.id)
   );
 
@@ -121,8 +121,6 @@ function generateFormHTML(form: Form): string {
         return `<div class="field"><label>${label}${req}</label>${desc ? `<p class="desc">${esc(desc)}</p>` : ''}<div class="rating">☆ ☆ ☆ ☆ ☆</div></div>`;
       case 'nps':
         return `<div class="field"><label>${label}${req}</label>${desc ? `<p class="desc">${esc(desc)}</p>` : ''}<div class="nps">${Array.from({ length: 11 }, (_, i) => `<span>${i}</span>`).join('')}</div></div>`;
-      case 'section_break':
-        return `<div class="section-break"><hr><h3>${label}</h3></div>`;
       case 'statement':
         return `<p class="statement">${label}</p>`;
       default:
@@ -467,7 +465,7 @@ export function FormInsightsTab({ form, submissions, loading }: FormInsightsTabP
 
   if (submissions.length === 0) {
     const activeChartableCount = (localForm.fields ?? []).filter(
-      f => !['section_break', 'statement', 'image', 'video', 'file'].includes(f.type)
+      f => !['statement', 'image', 'video', 'file'].includes(f.type)
     ).length;
 
     return (

@@ -159,7 +159,6 @@ export function FormPublicView({ form, embed, accessToken }: Props) {
     const visibleRequiredFields = fields.filter(f =>
       f.required &&
       visibleFields.has(f.id) &&
-      f.type !== 'section_break' &&
       f.type !== 'statement' &&
       f.type !== 'image' &&
       f.type !== 'video'

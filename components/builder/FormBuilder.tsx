@@ -20,13 +20,14 @@ import {
   useSensors,
   type DragEndEvent
 } from '@dnd-kit/core';
-import { SortableContext, arrayMove, rectSortingStrategy } from '@dnd-kit/sortable';
-import { ArrowLeft, Eye, Send } from 'lucide-react';
+import { ArrowLeft, Eye, Plus, Send } from 'lucide-react';
 
 import { Badge } from '@/components/ui/Badge';
 import {
   updateForm,
-  getForm
+  getForm,
+  addSection,
+  deleteSection
 } from '@/lib/store';
 import type { Field, FieldType, Form } from '@/types';
 import { LIMITS } from '@/lib/constants/limits';
@@ -34,7 +35,7 @@ import { toast } from '@/components/ui/Toast';
 import { validateForm, canPublishForm, formatValidationErrors } from '@/lib/validation/form-validation';
 
 import { FieldPalette } from '@/components/builder/FieldPalette';
-import { SortableFieldCard } from '@/components/builder/FieldCard';
+import { SectionBlock } from '@/components/builder/SectionBlock';
 import { FieldSettings } from '@/components/builder/FieldSettings';
 import { FormDesignPanel } from '@/components/builder/FormDesignPanel';
 import { FormHeader } from '@/components/builder/FormHeader';
@@ -287,33 +288,116 @@ export function FormBuilder({
     triggerAutosave(updatedForm);
   }, [form, selectedFieldId, setSelectedFieldId, triggerAutosave]);
 
+  /**
+   * Fin de glisser-déposer.
+   *
+   * La cible est soit une question — on se place à sa hauteur — soit le
+   * conteneur d'une section, identifié `section:<id>`, ce qui permet de déposer
+   * dans une section encore vide.
+   *
+   * `field_order` est relatif à sa section : les deux sections concernées sont
+   * renumérotées, sinon l'ordre d'affichage devient arbitraire dès le premier
+   * déplacement entre sections.
+   */
   const handleDragEnd = useCallback((e: DragEndEvent) => {
     const { active, over } = e;
     if (!over || active.id === over.id || !form?.fields) return;
 
     const fieldsList = form.fields;
-    const ids = fieldsList.map((f) => f.id);
-    const oldIdx = ids.indexOf(active.id as string);
-    const newIdx = ids.indexOf(over.id as string);
-    if (oldIdx === -1 || newIdx === -1) return;
+    const activeId = String(active.id);
+    const overId = String(over.id);
 
-    const reorderedFields = arrayMove(fieldsList, oldIdx, newIdx)
-      .map((f, i) => ({ ...f, field_order: i }));
+    const moved = fieldsList.find((f) => f.id === activeId);
+    if (!moved) return;
 
-    const updatedForm = {
-      ...form,
-      fields: reorderedFields
-    };
+    const overSectionId = overId.startsWith('section:')
+      ? overId.slice('section:'.length)
+      : fieldsList.find((f) => f.id === overId)?.section_id;
+    if (!overSectionId) return;
 
+    const targetSiblings = fieldsList.filter(
+      (f) => f.section_id === overSectionId && f.id !== activeId
+    );
+    const overIndex = overId.startsWith('section:')
+      ? targetSiblings.length
+      : targetSiblings.findIndex((f) => f.id === overId);
+
+    targetSiblings.splice(
+      overIndex === -1 ? targetSiblings.length : overIndex,
+      0,
+      { ...moved, section_id: overSectionId }
+    );
+
+    const renumbered = new Map(
+      targetSiblings.map((f, i) => [f.id, { ...f, section_id: overSectionId, field_order: i }])
+    );
+
+    if (moved.section_id !== overSectionId) {
+      fieldsList
+        .filter((f) => f.section_id === moved.section_id && f.id !== activeId)
+        .forEach((f, i) => renumbered.set(f.id, { ...f, field_order: i }));
+    }
+
+    const nextFields = fieldsList.map((f) => renumbered.get(f.id) ?? f);
+    const sectionRank = new Map(
+      (form.sections ?? []).map((section) => [section.id, section.section_order])
+    );
+
+    nextFields.sort((a, b) => {
+      const bySection =
+        (sectionRank.get(a.section_id) ?? Number.MAX_SAFE_INTEGER) -
+        (sectionRank.get(b.section_id) ?? Number.MAX_SAFE_INTEGER);
+      return bySection !== 0 ? bySection : a.field_order - b.field_order;
+    });
+
+    const updatedForm = { ...form, fields: nextFields };
     setForm(updatedForm);
     triggerAutosave(updatedForm);
   }, [form, triggerAutosave]);
 
+  const handleSectionTitleChange = useCallback((sectionId: string, title: string) => {
+    if (!form) return;
+    const updatedForm = {
+      ...form,
+      sections: (form.sections ?? []).map((section) =>
+        section.id === sectionId ? { ...section, title: { ...section.title, fr: title } } : section
+      )
+    };
+    setForm(updatedForm);
+    triggerAutosave(updatedForm);
+  }, [form, triggerAutosave]);
+
+  const handleAddSection = useCallback(async () => {
+    if (!form) return;
+    try {
+      const updated = await addSection(form.id);
+      if (updated) setForm(updated);
+    } catch (error) {
+      console.error('Failed to add section:', error);
+      toast.error("La section n'a pas pu être ajoutée.");
+    }
+  }, [form]);
+
+  const handleDeleteSection = useCallback(async (sectionId: string) => {
+    if (!form) return;
+    try {
+      const updated = await deleteSection(form.id, sectionId);
+      if (updated) setForm(updated);
+    } catch (error) {
+      console.error('Failed to delete section:', error);
+      toast.error(
+        error instanceof Error ? error.message : "La section n'a pas pu être supprimée."
+      );
+    }
+  }, [form]);
+
   // Helper pour créer un champ optimiste
-  const createOptimisticField = useCallback((type: FieldType, formId: string, currentFieldsCount: number): Field => {
+  const createOptimisticField = useCallback(
+    (type: FieldType, formId: string, currentFieldsCount: number, sectionId: string): Field => {
     return {
       id: generateId(),
       form_id: formId,
+      section_id: sectionId,
       type,
       label: { fr: 'Nouvelle question' },
       description: { fr: '' },
@@ -354,7 +438,20 @@ export function FormBuilder({
     }
 
     const currentFields = form.fields ?? [];
-    const optimisticField = createOptimisticField(type, form.id, currentFields.length);
+
+    // La question rejoint la dernière section — c'est là que regarde quelqu'un
+    // qui vient d'ajouter la précédente. Le store applique la même règle côté
+    // serveur, l'ajout optimiste doit donc s'y conformer pour que la question
+    // n'apparaisse pas à un endroit puis saute à un autre.
+    const sections = form.sections ?? [];
+    const targetSectionId = sections[sections.length - 1]?.id ?? '';
+
+    const optimisticField = createOptimisticField(
+      type,
+      form.id,
+      currentFields.filter((f) => f.section_id === targetSectionId).length,
+      targetSectionId
+    );
     const updatedForm = {
       ...form,
       fields: [...currentFields, optimisticField]
@@ -364,6 +461,33 @@ export function FormBuilder({
     setSelectedFieldId(optimisticField.id);
     triggerAutosave(updatedForm);
   }, [form, createOptimisticField, setSelectedFieldId, triggerAutosave]);
+
+  /**
+   * Ajoute une question à une section donnée.
+   *
+   * Le rang est compté parmi les questions de cette section, pas parmi celles
+   * du formulaire : `field_order` est relatif à sa section.
+   */
+  const handleAddQuestionInSection = useCallback((sectionId: string) => {
+    if (!form || (form.fields ?? []).length >= LIMITS.FORM_FIELDS_MAX) {
+      toast.error(`Limite de ${LIMITS.FORM_FIELDS_MAX} champs atteinte`);
+      return;
+    }
+
+    const currentFields = form.fields ?? [];
+    const optimisticField = createOptimisticField(
+      'short_text',
+      form.id,
+      currentFields.filter((f) => f.section_id === sectionId).length,
+      sectionId
+    );
+
+    const updatedForm = { ...form, fields: [...currentFields, optimisticField] };
+    setForm(updatedForm);
+    setSelectedFieldId(optimisticField.id);
+    triggerAutosave(updatedForm);
+  }, [form, createOptimisticField, setSelectedFieldId, triggerAutosave]);
+
 
   // Mémorisation des handlers par field ID pour éviter les re-renders
   const fieldHandlers = useMemo(() => {
@@ -439,6 +563,7 @@ export function FormBuilder({
   }
 
   const fields = form?.fields ?? [];
+  const sections = [...(form?.sections ?? [])].sort((a, b) => a.section_order - b.section_order);
   const selected = fields.find((f) => f.id === selectedFieldId) ?? null;
 
   async function handleTitleBlur() {
@@ -847,33 +972,39 @@ export function FormBuilder({
             </div>
 
             <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-              <SortableContext items={fields.map((f) => f.id)} strategy={rectSortingStrategy}>
-                {fields.length === 0 ? (
-                  <EmptyCanvas />
-                ) : (
-                  <div className="grid grid-cols-2 gap-4">
-                    {fields.map((field, i) => {
-                      const handlers = fieldHandlers[field.id];
-                      return (
-                        <SortableFieldCard
-                          key={field.id}
-                          field={field}
-                          index={i}
-                          selected={selectedFieldId === field.id}
-                          globalStyle={form.theme.field_style}
-                          cardBg={form.theme.field_bg_color}
-                          theme={form.theme}
-                          scoringEnabled={form.scoring_enabled}
-                          onSelect={handlers.onSelect}
-                          onChange={handlers.onChange}
-                          onDuplicate={handlers.onDuplicate}
-                          onDelete={handlers.onDelete}
-                        />
-                      );
-                    })}
-                  </div>
-                )}
-              </SortableContext>
+              {sections.length === 0 || fields.length === 0 ? (
+                <EmptyCanvas />
+              ) : (
+                <div className="space-y-2">
+                  {sections.map((section, sectionIndex) => (
+                    <SectionBlock
+                      key={section.id}
+                      section={section}
+                      index={sectionIndex}
+                      fields={fields.filter((field) => field.section_id === section.id)}
+                      canDelete={sections.length > 1}
+                      selectedFieldId={selectedFieldId}
+                      theme={form.theme}
+                      globalStyle={form.theme.field_style}
+                      cardBg={form.theme.field_bg_color}
+                      scoringEnabled={form.scoring_enabled}
+                      fieldHandlers={fieldHandlers}
+                      onTitleChange={handleSectionTitleChange}
+                      onAddQuestion={handleAddQuestionInSection}
+                      onDelete={(id) => void handleDeleteSection(id)}
+                    />
+                  ))}
+                </div>
+              )}
+
+              <button
+                type="button"
+                onClick={() => void handleAddSection()}
+                className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-dashed border-border-strong px-4 py-3 text-sm text-text-tertiary transition hover:border-accent-cta hover:text-text-secondary"
+              >
+                <Plus className="h-4 w-4" />
+                Ajouter une section
+              </button>
             </DndContext>
           </div>
         </div>

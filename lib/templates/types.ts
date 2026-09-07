@@ -1,4 +1,4 @@
-import type { Field, FormSettings, LogicRule, MultilingualText } from '@/types';
+import type { Field, FieldType, FormSettings, LogicRule, MultilingualText } from '@/types';
 
 /**
  * Types du catalogue de modèles.
@@ -12,8 +12,29 @@ import type { Field, FormSettings, LogicRule, MultilingualText } from '@/types';
 /** Faisabilité d'un modèle vis-à-vis des types de champs disponibles. */
 export type TemplateFeasibility = 'ready' | 'degraded' | 'blocked';
 
-/** Un champ de catalogue : un `Field` sans les métadonnées liées au formulaire. */
-export type TemplateField = Omit<Field, 'form_id' | 'field_order' | 'created_at'>;
+/**
+ * Types de champ acceptés dans un fichier de modèle : ceux de l'application,
+ * plus `section_break`.
+ *
+ * L'application n'a plus de type `section_break` — une section y est un objet.
+ * Le catalogue le conserve comme **convention d'écriture** : dans un fichier de
+ * contenu, une rupture plantée dans la liste reste la façon la plus lisible
+ * d'exprimer un découpage en pages, et cela évite de réécrire les 51 fichiers.
+ * `to-form.ts` convertit ces ruptures en sections réelles à l'import.
+ */
+export type TemplateFieldType = FieldType | 'section_break';
+
+/**
+ * Un champ de catalogue : un `Field` sans les métadonnées liées au formulaire.
+ * `section_id` en est absent — c'est l'import qui rattache le champ à la section
+ * qu'il aura créée.
+ */
+export type TemplateField = Omit<
+  Field,
+  'form_id' | 'field_order' | 'created_at' | 'section_id' | 'type'
+> & {
+  type: TemplateFieldType;
+};
 
 /**
  * Une règle de catalogue : une `LogicRule` sans `form_id`.

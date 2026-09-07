@@ -50,7 +50,7 @@ function readImageDimensions(url: string): Promise<{ width: number; height: numb
 export function FieldSettings({ form, field, globalStyle, onChange, onFormChange }: Props) {
   const [tab, setTab] = useState<Tab>('content');
   const meta = FIELD_META[field.type];
-  const isLayout = field.type === 'section_break' || field.type === 'image';
+  const isLayout = field.type === 'image';
   const supportsLogic = !isLayout && field.type !== 'statement';
 
   return (
@@ -179,7 +179,7 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
     });
   }
 
-  const isLayout = field.type === 'section_break' || field.type === 'statement';
+  const isLayout = field.type === 'statement';
   const _supportsLogic = !isLayout && field.type !== 'image' && field.type !== 'video';
 
   return (
@@ -191,7 +191,7 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
             value={field.label?.[lang] ?? ''}
             onChange={(e) => patchMultilingual('label', e.target.value)}
             placeholder={isLayout ? 'Titre de la section' : 'Quelle est votre question ?'}
-            maxLength={field.type === 'section_break' ? LIMITS.SECTION_TITLE_MAX : LIMITS.FIELD_LABEL_MAX}
+            maxLength={LIMITS.FIELD_LABEL_MAX}
           />
           <Input
             label={field.type === 'statement' ? 'Texte' : 'Description'}

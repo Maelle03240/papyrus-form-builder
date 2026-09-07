@@ -4,7 +4,7 @@ import { cache } from 'react';
 import { createServerClient } from '@supabase/ssr';
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from '@/lib/env';
 import { PAPYRUS_SCHEMA } from '@/lib/supabase/client';
-import type { Field, Form, LogicRule } from '@/types';
+import type { Field, Form, LogicRule, Section } from '@/types';
 
 /**
  * Chargement d'un formulaire pour la vue publique `/f/[slug]`.
@@ -58,7 +58,7 @@ export const getPublicForm = cache(async (slug: string): Promise<PublicForm | nu
   // suivent renverraient de toute façon des listes vides. On s'épargne l'aller-
   // retour et on renvoie l'enveloppe nécessaire à l'affichage du message.
   if ((form as PublicForm).is_closed) {
-    return { ...(form as PublicForm), fields: [], logic_rules: [] };
+    return { ...(form as PublicForm), sections: [], fields: [], logic_rules: [] };
   }
 
   // Un formulaire protégé ne livre pas ses questions avant que le mot de passe
@@ -66,7 +66,7 @@ export const getPublicForm = cache(async (slug: string): Promise<PublicForm | nu
   // navigateur : l'écran de saisie ne serait qu'un rideau, contournable en
   // ouvrant les outils de développement.
   if ((form as PublicForm).requires_password) {
-    return { ...(form as PublicForm), fields: [], logic_rules: [] };
+    return { ...(form as PublicForm), sections: [], fields: [], logic_rules: [] };
   }
 
   return withRelations(supabase, form as PublicForm);
@@ -96,18 +96,39 @@ async function withRelations(
   form: PublicForm
 ): Promise<PublicForm> {
   // Les vues ne peuvent pas être jointes comme des relations PostgREST : on
-  // charge champs et règles en parallèle, filtrés sur le formulaire trouvé.
-  const [fieldsResult, rulesResult] = await Promise.all([
+  // charge sections, champs et règles en parallèle, filtrés sur le formulaire.
+  const [sectionsResult, fieldsResult, rulesResult] = await Promise.all([
+    supabase.from('public_sections').select('*').eq('form_id', form.id),
     supabase.from('public_fields').select('*').eq('form_id', form.id),
     supabase.from('public_logic_rules').select('*').eq('form_id', form.id)
   ]);
 
-  const fields = ((fieldsResult.data ?? []) as Field[]).sort(
-    (a, b) => a.field_order - b.field_order
+  const sections = ((sectionsResult.data ?? []) as Section[]).sort(
+    (a, b) => a.section_order - b.section_order
   );
+
+  // `field_order` est relatif à sa section : trier les champs sur ce seul
+  // critère entrelacerait les sections, et le répondant verrait les questions
+  // dans le désordre — sans la moindre erreur pour le signaler.
+  const rank = new Map(sections.map((section) => [section.id, section.section_order]));
+  const fields = ((fieldsResult.data ?? []) as Field[]).sort((a, b) => {
+    const bySection =
+      (rank.get(a.section_id) ?? Number.MAX_SAFE_INTEGER) -
+      (rank.get(b.section_id) ?? Number.MAX_SAFE_INTEGER);
+    return bySection !== 0 ? bySection : a.field_order - b.field_order;
+  });
+
   const logicRules = ((rulesResult.data ?? []) as LogicRule[]).sort(
     (a, b) => (a.rule_order ?? 0) - (b.rule_order ?? 0)
   );
 
-  return { ...form, fields, logic_rules: logicRules };
+  return {
+    ...form,
+    sections: sections.map((section) => ({
+      ...section,
+      fields: fields.filter((field) => field.section_id === section.id)
+    })),
+    fields,
+    logic_rules: logicRules
+  };
 }

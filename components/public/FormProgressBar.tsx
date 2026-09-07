@@ -24,7 +24,7 @@ export function FormProgressBar({
     const countable = (form.fields ?? []).filter(
       (field: Field) =>
         visibleFields.has(field.id) &&
-        !['section_break', 'statement', 'image', 'video'].includes(field.type)
+        !['statement', 'image', 'video'].includes(field.type)
     );
 
     if (countable.length === 0) return 0;

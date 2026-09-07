@@ -40,7 +40,7 @@ export function isAnswerEmpty(value: unknown): boolean {
 }
 
 /** Types de champ qui ne collectent aucune réponse. */
-const NON_ANSWERABLE = ['section_break', 'statement', 'image', 'video'] as const;
+const NON_ANSWERABLE = ['statement', 'image', 'video'] as const;
 
 export function isAnswerable(field: Field): boolean {
   return !(NON_ANSWERABLE as readonly string[]).includes(field.type);

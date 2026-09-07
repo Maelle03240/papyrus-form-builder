@@ -56,7 +56,7 @@ Voici la structure JSON stricte à respecter :
   "fields": [
     {
       "id": "generer_un_id_temporaire_unique_1",
-      "type": "single_choice", // 'short_text', 'long_text', 'email', 'phone', 'number', 'url', 'single_choice', 'multiple_choice', 'dropdown', 'rating', 'nps', 'date', 'file', 'section_break', 'statement', 'image', 'video', 'matrix'
+      "type": "single_choice", // 'short_text', 'long_text', 'email', 'phone', 'number', 'url', 'single_choice', 'multiple_choice', 'dropdown', 'rating', 'nps', 'date', 'file', 'statement', 'image', 'video', 'matrix'
       "label": {
         "fr": "Libellé de la question en français"
       },
@@ -99,7 +99,7 @@ Voici la structure JSON stricte à respecter :
 
 Consignes importantes :
 1. Les champs textuels 'label', 'description' et 'placeholder' doivent être des objets avec la clé "fr" (ex: "label": {"fr": "Nom"}).
-2. Les types de champs autorisés sont uniquement : 'short_text', 'long_text', 'email', 'phone', 'number', 'url', 'single_choice', 'multiple_choice', 'dropdown', 'rating', 'nps', 'date', 'file', 'section_break', 'statement', 'image', 'video', 'matrix'.
+2. Les types de champs autorisés sont uniquement : 'short_text', 'long_text', 'email', 'phone', 'number', 'url', 'single_choice', 'multiple_choice', 'dropdown', 'rating', 'nps', 'date', 'file', 'statement', 'image', 'video', 'matrix'.
 3. Si le brouillon indique des règles de logique (ex: "si Oui, afficher Q9") ou de notation (ex: "Oui = +10 pts"), intègre-les de manière rigoureuse dans les propriétés "points" et le tableau "logic_rules" en veillant à la correspondance des IDs.
 4. Génère uniquement le code JSON brut, sans introduction ni conclusion.
 

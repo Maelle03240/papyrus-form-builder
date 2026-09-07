@@ -1,4 +1,4 @@
-import type { Field, Form, LogicRule, MultilingualText } from '@/types';
+import type { Field, Form, LogicRule, MultilingualText, Section } from '@/types';
 import type { TemplateDefinition } from './types';
 
 /**
@@ -46,8 +46,7 @@ export function templateToForm(def: TemplateDefinition, lang: 'fr' | 'en' = 'fr'
     access_type: 'public',
     languages: ['fr', 'en'],
     default_language: lang,
-    fields: def.fields.map((f, i) => ({ ...f, form_id: def.id, field_order: i }) as Field),
-    logic_rules: def.logic_rules.map((r) => ({ ...r, form_id: def.id }) as LogicRule),
+    ...splitIntoSections(def),
     save_and_resume: true,
     unique_email: false,
     scoring_enabled: def.scoring_enabled,
@@ -58,4 +57,81 @@ export function templateToForm(def: TemplateDefinition, lang: 'fr' | 'en' = 'fr'
     created_at: now,
     updated_at: now
   };
+}
+
+/**
+ * Convertit la liste plate d'un fichier de modèle en sections réelles.
+ *
+ * Le catalogue exprime encore un découpage par `section_break` — c'est la façon
+ * la plus lisible de l'écrire dans un fichier de contenu. L'application, elle,
+ * n'a plus ce type : chaque rupture ouvre ici une section qui hérite de son
+ * libellé et de sa description, et les champs suivants lui sont rattachés. Les
+ * champs situés avant toute rupture forment une section d'ouverture sans titre.
+ *
+ * Les identifiants sont dérivés de celui du modèle et restent donc stables d'un
+ * aperçu à l'autre. `importForm` leur substituera de vrais uuid au moment
+ * d'écrire en base.
+ */
+function splitIntoSections(def: TemplateDefinition): Pick<Form, 'sections' | 'fields' | 'logic_rules'> {
+  const sections: Section[] = [];
+  const fields: Field[] = [];
+  /** Ancien identifiant de rupture → identifiant de la section créée. */
+  const breakToSection = new Map<string, string>();
+
+  let current: Section | null = null;
+  let fieldOrder = 0;
+
+  const openSection = (title: MultilingualText, description: MultilingualText): Section => {
+    const section: Section = {
+      id: `${def.id}-section-${sections.length}`,
+      form_id: def.id,
+      title,
+      description,
+      section_order: sections.length,
+      fields: []
+    };
+    sections.push(section);
+    fieldOrder = 0;
+    return section;
+  };
+
+  for (const templateField of def.fields) {
+    if (templateField.type === 'section_break') {
+      current = openSection(templateField.label, templateField.description);
+      breakToSection.set(templateField.id, current.id);
+      continue;
+    }
+
+    if (!current) current = openSection({ fr: '' }, { fr: '' });
+
+    const field = {
+      ...templateField,
+      form_id: def.id,
+      section_id: current.id,
+      field_order: fieldOrder++
+    } as Field;
+
+    fields.push(field);
+    current.fields?.push(field);
+  }
+
+  // Un modèle sans aucun champ doit tout de même ouvrir une section : le
+  // constructeur y déposera la première question.
+  if (sections.length === 0) openSection({ fr: '' }, { fr: '' });
+
+  const logicRules = def.logic_rules.map((rule) => {
+    const targetSection = rule.target_field_id
+      ? breakToSection.get(rule.target_field_id)
+      : undefined;
+
+    // Une règle « aller à » qui visait une rupture vise désormais la section.
+    return {
+      ...rule,
+      form_id: def.id,
+      target_field_id: targetSection ? null : rule.target_field_id,
+      target_section_id: targetSection ?? null
+    } as LogicRule;
+  });
+
+  return { sections, fields, logic_rules: logicRules };
 }

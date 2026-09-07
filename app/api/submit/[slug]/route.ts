@@ -144,7 +144,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
   //    Sans ce filtre, n'importe quelle clé envoyée par le client finissait
   //    telle quelle dans la colonne JSONB.
   const answerableFields = fields.filter(
-    (f) => !['section_break', 'statement', 'image', 'video'].includes(f.type)
+    (f) => !['statement', 'image', 'video'].includes(f.type)
   );
   const knownFieldIds = new Set(answerableFields.map((f) => f.id));
 

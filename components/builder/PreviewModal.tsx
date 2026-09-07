@@ -298,54 +298,6 @@ function PreviewFieldCard({
   responses: Record<string, any>;
   updateResponse: (fieldId: string, response: any) => void;
 }) {
-  if (field.type === 'section_break') {
-    // Dans la vue scroll, section_break = séparateur visuel
-    return (
-      <div key={field.id} className="col-span-full pt-6">
-        {field.label.fr && (
-          <h2 className="font-display text-2xl text-text-primary flex items-center gap-2">
-            {isIconVisible(field, form.theme) && (
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  borderRadius: 8,
-                  background: 'var(--papyrus-surface)',
-                  border: '0.5px solid var(--papyrus-border)',
-                  marginRight: 6,
-                  flexShrink: 0,
-                }}
-              >
-                {field.style?.icon_value?.startsWith('ti-') ? (
-                  <i
-                    className={`ti ${field.style.icon_value}`}
-                    aria-hidden="true"
-                    style={{ fontSize: 20, color: 'var(--accent)' }}
-                  />
-                ) : field.style?.icon_value ? (
-                  <span style={{ fontSize: 22, lineHeight: 1 }}>
-                    {field.style.icon_value}
-                  </span>
-                ) : (
-                  <i
-                    className={`ti ${getFieldIcon(field)}`}
-                    aria-hidden="true"
-                    style={{ fontSize: 20, color: 'var(--accent)' }}
-                  />
-                )}
-              </span>
-            )}
-            <span>{field.label.fr}</span>
-          </h2>
-        )}
-        <div className="papyrus-divider mt-2" />
-      </div>
-    );
-  }
-
   const isRespondentUpload =
     ['file', 'image', 'video'].includes(field.type) &&
     field.validation?.respondent_mode_enabled === true;
@@ -444,7 +396,7 @@ function ScrollPreview({
 }) {
   const fields = (form.fields ?? []).filter(f => visibleFields.has(f.id));
   const hasInputs = fields.some(
-    (f) => f.type !== 'section_break' && f.type !== 'image' && f.type !== 'video' && f.type !== 'statement'
+    (f) => f.type !== 'image' && f.type !== 'video' && f.type !== 'statement'
   );
 
   return (
@@ -515,7 +467,7 @@ function ScrollPreview({
 }
 
 // ============================================================================
-// Sections Preview (paginated by section_break)
+// Aperçu paginé — une page par section
 // ============================================================================
 
 function SectionsPreview({
@@ -536,7 +488,13 @@ function SectionsPreview({
   visibleFields: Set<string>;
 }) {
   const fields = (form.fields ?? []).filter(f => visibleFields.has(f.id));
-  const pages = buildPages(fields);
+
+  // Une section dont tous les champs sont masqués ne fait pas une page. On en
+  // garde une au minimum, sinon il ne resterait aucun bouton d'envoi.
+  const allPages = buildPages({ sections: form.sections, fields });
+  const populated = allPages.filter((page) => page.fields.length > 0);
+  const pages = populated.length > 0 ? populated : allPages.slice(0, 1);
+
   const [pageIdx, setPageIdx] = useState(0);
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -566,13 +524,14 @@ function SectionsPreview({
     if (pageIdx > total - 1) setPageIdx(Math.max(0, total - 1));
   }, [pageIdx, total]);
 
-  const currentPage = pages[Math.min(pageIdx, total - 1)] ?? [];
+  const currentPage = pages[Math.min(pageIdx, total - 1)];
   const progress = total > 0 ? ((pageIdx + 1) / total) * 100 : 0;
   const isLast = pageIdx === total - 1;
   const isFirst = pageIdx === 0;
 
-  const pageHeader = currentPage[0]?.type === 'section_break' ? currentPage[0] : null;
-  const pageFields = pageHeader ? currentPage.slice(1) : currentPage;
+  // Une section sans titre n'affiche pas d'entête.
+  const pageHeader = currentPage?.title?.fr ? currentPage : null;
+  const pageFields = currentPage?.fields ?? [];
 
   function handleSubmit(e: React.FormEvent) {
     // La validation native HTML5 a déjà filtré les erreurs ici (sinon submit ne fire pas)
@@ -597,8 +556,8 @@ function SectionsPreview({
           <span>
             Page <strong className="text-text-primary">{pageIdx + 1}</strong> sur {total}
           </span>
-          {pageHeader?.label.fr && (
-            <span className="papyrus-meta text-xs">{pageHeader.label.fr}</span>
+          {pageHeader?.title.fr && (
+            <span className="papyrus-meta text-xs">{pageHeader.title.fr}</span>
           )}
         </div>
         <div className="h-1.5 overflow-hidden rounded-full bg-bg-overlay">
@@ -611,45 +570,15 @@ function SectionsPreview({
 
       {pageIdx === 0 && <PreviewHeader form={form} />}
 
-      {pageHeader?.label.fr && pageIdx > 0 && (
+      {pageHeader?.title.fr && pageIdx > 0 && (
         <div className="mb-6">
-          <h2 className="font-display text-3xl text-text-primary flex items-center gap-2">
-            {isIconVisible(pageHeader, form.theme) && (
-              <span
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  width: 36,
-                  height: 36,
-                  borderRadius: 8,
-                  background: 'var(--papyrus-surface)',
-                  border: '0.5px solid var(--papyrus-border)',
-                  marginRight: 6,
-                  flexShrink: 0,
-                }}
-              >
-                {pageHeader.style?.icon_value?.startsWith('ti-') ? (
-                  <i
-                    className={`ti ${pageHeader.style.icon_value}`}
-                    aria-hidden="true"
-                    style={{ fontSize: 20, color: 'var(--accent)' }}
-                  />
-                ) : pageHeader.style?.icon_value ? (
-                  <span style={{ fontSize: 22, lineHeight: 1 }}>
-                    {pageHeader.style.icon_value}
-                  </span>
-                ) : (
-                  <i
-                    className={`ti ${getFieldIcon(pageHeader)}`}
-                    aria-hidden="true"
-                    style={{ fontSize: 20, color: 'var(--accent)' }}
-                  />
-                )}
-              </span>
-            )}
-            <span>{pageHeader.label.fr}</span>
-          </h2>
+          {/*
+            Une section n'a ni style propre ni icône : elle porte un titre et une
+            description. L'entête reprenait ceux du pseudo-champ `section_break`,
+            qui héritait de la mise en forme des champs — un héritage qui n'a plus
+            d'objet maintenant qu'une section est un objet à part.
+          */}
+          <h2 className="font-display text-3xl text-text-primary">{pageHeader.title.fr}</h2>
           {pageHeader.description?.fr && (
             <p className="papyrus-meta mt-2 text-base">{pageHeader.description.fr}</p>
           )}
@@ -737,7 +666,7 @@ function TypeformPreview({
   visibleFields: Set<string>;
 }) {
   const fields = (form.fields ?? []).filter(f => visibleFields.has(f.id));
-  const screens = fields.filter((f) => f.type !== 'section_break');
+  const screens = fields;
   const [idx, setIdx] = useState(0);
   const [direction, setDirection] = useState<'forward' | 'back'>('forward');
   const [history, setHistory] = useState<string[]>([]);
@@ -767,7 +696,7 @@ function TypeformPreview({
       .filter((r) => r.conditions && r.conditions.some(c => c.source_field_id === current.id))
       .sort((a, b) => (a.rule_order || 0) - (b.rule_order || 0));
 
-    let triggeredAction: { action_type: string; target_field_id?: string } | null = null;
+    let triggeredAction: { action_type: string; target_field_id?: string | null } | null = null;
 
     for (const rule of fieldRules) {
       if (evaluateConditions(rule.conditions, rule.conditions_operator || 'AND', responses)) {

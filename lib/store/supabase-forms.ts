@@ -3,6 +3,7 @@
 import type {
   Field,
   Form,
+  Section,
   FormSettings,
   FormTheme,
   LogicRule,
@@ -217,6 +218,7 @@ export async function listForms(): Promise<Form[]> {
     .from('forms')
     .select(`
       *,
+      sections(*),
       fields(*),
       logic_rules(*)
     `)
@@ -228,14 +230,7 @@ export async function listForms(): Promise<Form[]> {
     throw error;
   }
 
-  // Normaliser la structure et trier les relations
-  const normalizedForms = (forms || []).map(form => ({
-    ...form,
-    fields: (form.fields || []).sort((a: any, b: any) => a.field_order - b.field_order),
-    logic_rules: (form.logic_rules || []).sort((a: any, b: any) => a.rule_order - b.rule_order)
-  }));
-
-  return normalizedForms;
+  return (forms ?? []).map(normalizeForm);
 }
 
 export async function getForm(id: string): Promise<Form | null> {
@@ -246,6 +241,7 @@ export async function getForm(id: string): Promise<Form | null> {
     .from('forms')
     .select(`
       *,
+      sections(*),
       fields(*),
       logic_rules(*)
     `)
@@ -259,12 +255,7 @@ export async function getForm(id: string): Promise<Form | null> {
 
   if (!form) return null;
 
-  // Normaliser la structure et trier les relations
-  return {
-    ...form,
-    fields: (form.fields || []).sort((a: any, b: any) => a.field_order - b.field_order),
-    logic_rules: (form.logic_rules || []).sort((a: any, b: any) => a.rule_order - b.rule_order)
-  };
+  return normalizeForm(form);
 }
 
 export async function createForm(
@@ -315,11 +306,24 @@ export async function createForm(
 
   if (error) throw error;
 
+  // Tout formulaire possède au moins une section : `fields.section_id` est
+  // `not null`, donc sans elle la première question serait refusée à l'écriture.
+  // Elle est sans titre — le formulaire commence par ses questions tant que
+  // personne n'a décidé du contraire.
+  const { data: section, error: sectionError } = await supabase
+    .from('sections')
+    .insert({ form_id: form.id, section_order: 0 })
+    .select()
+    .single();
+
+  if (sectionError) throw sectionError;
+
   notifyFormsChanged();
   notifyFormCreated();
 
   return {
     ...form,
+    sections: [{ ...(section as Section), fields: [] }],
     fields: [],
     logic_rules: [],
     save_and_resume: true,
@@ -361,10 +365,88 @@ type FieldRow = Omit<Partial<Field>, 'type'> & {
   hidden_by_default?: boolean;
 };
 
+/**
+ * Section de repli quand l'appelant n'en fournit pas.
+ *
+ * `fields.section_id` est `not null` : une ligne sans section est refusée à
+ * l'écriture. Plutôt que de propager la contrainte jusqu'à chaque appelant, on
+ * résout ici la première section du formulaire — il en a toujours au moins une.
+ */
+async function resolveSectionId(
+  supabase: ReturnType<typeof createClient>,
+  formId: string,
+  preferred?: string
+): Promise<string> {
+  if (preferred) return preferred;
+
+  const { data, error } = await supabase
+    .from('sections')
+    .select('id')
+    .eq('form_id', formId)
+    .order('section_order', { ascending: true })
+    .limit(1)
+    .maybeSingle();
+
+  if (error) throw error;
+  if (data?.id) return data.id as string;
+
+  // Un formulaire sans section ne devrait pas exister ; s'il s'en présente un,
+  // on le répare plutôt que de refuser l'écriture.
+  const { data: created, error: createError } = await supabase
+    .from('sections')
+    .insert({ form_id: formId, section_order: 0 })
+    .select('id')
+    .single();
+
+  if (createError) throw createError;
+  return created.id as string;
+}
+
+/**
+ * Remet les champs dans l'ordre de lecture : sections dans l'ordre, puis champs
+ * dans l'ordre à l'intérieur de chacune.
+ *
+ * `field_order` est relatif à sa section depuis la migration 004 : trier les
+ * champs sur ce seul critère entrelacerait les sections, et la barre de
+ * progression comme les colonnes d'export s'en trouveraient fausses.
+ */
+function orderFields(fields: Field[], sections: Section[]): Field[] {
+  const rank = new Map(sections.map((section) => [section.id, section.section_order]));
+
+  return [...fields].sort((a, b) => {
+    const sectionDelta =
+      (rank.get(a.section_id) ?? Number.MAX_SAFE_INTEGER) -
+      (rank.get(b.section_id) ?? Number.MAX_SAFE_INTEGER);
+    return sectionDelta !== 0 ? sectionDelta : a.field_order - b.field_order;
+  });
+}
+
+/** Normalise la réponse PostgREST d'un formulaire et de ses relations. */
+function normalizeForm(row: Record<string, unknown>): Form {
+  const sections = ((row.sections as Section[]) ?? []).sort(
+    (a, b) => a.section_order - b.section_order
+  );
+  const fields = orderFields((row.fields as Field[]) ?? [], sections);
+  const logicRules = ((row.logic_rules as LogicRule[]) ?? []).sort(
+    (a, b) => a.rule_order - b.rule_order
+  );
+
+  return {
+    ...(row as unknown as Form),
+    sections: sections.map((section) => ({
+      ...section,
+      fields: fields.filter((field) => field.section_id === section.id)
+    })),
+    fields,
+    logic_rules: logicRules
+  };
+}
+
 export function toFieldRow(field: FieldRow, formId: string) {
   return {
     id: field.id,
     form_id: formId,
+    section_id: field.section_id,
     type: field.type,
     label: field.label ?? {},
     description: field.description ?? {},
@@ -392,6 +474,7 @@ export function toLogicRuleRow(rule: LogicRuleRow, formId: string) {
     action_type: rule.action_type ?? null,
     // La colonne est un uuid : une chaîne vide y déclencherait un 22P02.
     target_field_id: rule.target_field_id || null,
+    target_section_id: rule.target_section_id || null,
     rule_order: rule.rule_order ?? 0
   };
 }
@@ -507,8 +590,14 @@ async function syncRelatedEntities<T extends { id: string }>(
 export async function updateForm(id: string, patch: Partial<Form>): Promise<Form | null> {
   const supabase = createClient();
 
-  // Séparer les champs, logic_rules et workspace_id (non présent dans la BDD Supabase) du reste des données
-  const { fields, logic_rules, workspace_id: _workspaceIdIgnored, ...formPatch } = patch;
+  // Séparer les relations et `workspace_id` (qui n'est pas une colonne) du reste.
+  const {
+    fields,
+    logic_rules,
+    sections,
+    workspace_id: _workspaceIdIgnored,
+    ...formPatch
+  } = patch;
 
   // Mettre à jour le formulaire principal
   const { data: form, error: formError } = await supabase
@@ -524,6 +613,32 @@ export async function updateForm(id: string, patch: Partial<Form>): Promise<Form
   if (formError) {
     if (formError.code === 'PGRST116') return null;
     throw formError;
+  }
+
+  /*
+   * Les sections sont mises à jour, jamais synchronisées par différence.
+   *
+   * `syncRelatedEntities` supprime ce qui manque à la liste reçue. Appliqué aux
+   * sections, un enregistrement automatique parti avec une liste incomplète —
+   * un état intermédiaire, une réponse arrivée dans le désordre — supprimerait
+   * une section, et la cascade emporterait toutes ses questions avec elle.
+   * Supprimer une section est une action délibérée : elle passe par
+   * `deleteSection`, et par nulle part ailleurs.
+   */
+  if (sections && sections.length > 0) {
+    await Promise.all(
+      sections.map((section) =>
+        supabase
+          .from('sections')
+          .update({
+            title: section.title,
+            description: section.description,
+            section_order: section.section_order
+          })
+          .eq('id', section.id)
+          .eq('form_id', id)
+      )
+    );
   }
 
   // Synchroniser les champs avec gestion d'erreur et rollback
@@ -547,6 +662,7 @@ export async function updateForm(id: string, patch: Partial<Form>): Promise<Form
   // Construire le résultat localement au lieu de recharger depuis la DB
   const updatedForm: Form = {
     ...form,
+    sections,
     fields: finalFields,
     logic_rules: finalLogicRules
   };
@@ -574,19 +690,31 @@ export async function addField(
   formId: string,
   type: Field['type'],
   label = 'Nouvelle question',
-  customField?: Field
+  customField?: Field,
+  sectionId?: string
 ): Promise<Form | null> {
   const supabase = createClient();
 
   const form = await getForm(formId);
   if (!form) return null;
 
-  const fields = form.fields ?? [];
+  // Sans section explicite, la question rejoint la dernière — c'est là que
+  // regarde quelqu'un qui vient d'ajouter la précédente.
+  const targetSectionId = await resolveSectionId(
+    supabase,
+    formId,
+    sectionId ?? customField?.section_id ?? form.sections?.[form.sections.length - 1]?.id
+  );
+
+  // `field_order` est relatif à la section : le rang se compte parmi ses
+  // champs, pas parmi ceux du formulaire entier.
+  const fields = (form.fields ?? []).filter((f) => f.section_id === targetSectionId);
   const newField: Field = customField
-    ? { ...customField, form_id: formId, field_order: fields.length }
+    ? { ...customField, form_id: formId, section_id: targetSectionId, field_order: fields.length }
     : {
         id: uuid(),
         form_id: formId,
+        section_id: targetSectionId,
         type,
         label: emptyMultilingual(label),
         description: emptyMultilingual(''),
@@ -844,14 +972,53 @@ export async function cloneForm(
 
   if (error) throw error;
 
-  // Copier les champs
-  if (original.fields && original.fields.length > 0) {
-    const newFields = original.fields.map((f) => ({
-      ...f,
-      id: uuid(),
+  // Copier les sections d'abord : les champs y font référence.
+  const sectionIdMap: Record<string, string> = {};
+  const originalSections = [...(original.sections ?? [])].sort(
+    (a, b) => a.section_order - b.section_order
+  );
+
+  const clonedSections = (
+    originalSections.length > 0
+      ? originalSections
+      : [{ id: '__implicite__', title: {}, description: {}, section_order: 0 }]
+  ).map((section, index) => {
+    const newId = uuid();
+    sectionIdMap[section.id] = newId;
+    return {
+      id: newId,
       form_id: cloned.id,
-      options: f.options.map((o) => ({ ...o, id: uuid() }))
-    }));
+      title: section.title ?? {},
+      description: section.description ?? {},
+      section_order: index
+    };
+  });
+
+  const { error: sectionsError } = await supabase.from('sections').insert(clonedSections);
+  if (sectionsError) throw sectionsError;
+
+  const fallbackSectionId = clonedSections[0].id;
+
+  // Copier les champs.
+  //
+  // Les identifiants d'option sont conservés, alors qu'ils étaient auparavant
+  // régénérés. Une condition logique désigne une option par son identifiant :
+  // les renouveler cassait silencieusement toute la logique du formulaire copié.
+  // Ils n'ont besoin d'être uniques qu'au sein de leur champ, et le champ, lui,
+  // reçoit bien un nouvel identifiant.
+  const fieldIdMap: Record<string, string> = {};
+
+  if (original.fields && original.fields.length > 0) {
+    const newFields = original.fields.map((f) => {
+      const newId = uuid();
+      fieldIdMap[f.id] = newId;
+      return {
+        ...f,
+        id: newId,
+        form_id: cloned.id,
+        section_id: sectionIdMap[f.section_id] ?? fallbackSectionId
+      };
+    });
 
     const { error: fieldsError } = await supabase
       .from('fields')
@@ -860,12 +1027,23 @@ export async function cloneForm(
     if (fieldsError) throw fieldsError;
   }
 
-  // Copier les logic_rules
+  // Copier les règles logiques, cibles et sources remappées.
+  //
+  // Elles étaient copiées telles quelles : leurs `target_field_id` et
+  // `source_field_id` continuaient donc de désigner les champs de l'ORIGINAL,
+  // qui existent toujours. La copie héritait d'une logique branchée sur un autre
+  // formulaire — sans erreur, et sans que rien ne le laisse voir dans l'éditeur.
   if (original.logic_rules && original.logic_rules.length > 0) {
     const newRules = original.logic_rules.map((r) => ({
       ...r,
       id: uuid(),
-      form_id: cloned.id
+      form_id: cloned.id,
+      conditions: (r.conditions ?? []).map((condition) => ({
+        ...condition,
+        source_field_id: fieldIdMap[condition.source_field_id] ?? condition.source_field_id
+      })),
+      target_field_id: r.target_field_id ? (fieldIdMap[r.target_field_id] ?? null) : null,
+      target_section_id: r.target_section_id ? (sectionIdMap[r.target_section_id] ?? null) : null
     }));
 
     const { error: rulesError } = await supabase
@@ -903,6 +1081,177 @@ export async function setAsTemplate(
     is_template: isTemplate,
     scope: isTemplate ? scope : undefined
   });
+}
+
+// ============================================================================
+// Sections
+// ============================================================================
+
+/** Ajoute une section vide à la fin du formulaire. */
+export async function addSection(formId: string, title = ''): Promise<Form | null> {
+  const supabase = createClient();
+
+  const form = await getForm(formId);
+  if (!form) return null;
+
+  const { error } = await supabase.from('sections').insert({
+    form_id: formId,
+    title: title ? emptyMultilingual(title) : {},
+    section_order: (form.sections ?? []).length
+  });
+
+  if (error) throw error;
+
+  await touchForm(supabase, formId);
+  const updated = await getForm(formId);
+  if (updated) notifyFormUpdated(formId, updated);
+  return updated;
+}
+
+export async function updateSection(
+  formId: string,
+  sectionId: string,
+  patch: Partial<Pick<Section, 'title' | 'description' | 'section_order'>>
+): Promise<Form | null> {
+  const supabase = createClient();
+
+  const { error } = await supabase
+    .from('sections')
+    .update(patch)
+    .eq('id', sectionId)
+    .eq('form_id', formId);
+
+  if (error) throw error;
+
+  await touchForm(supabase, formId);
+  const updated = await getForm(formId);
+  if (updated) notifyFormUpdated(formId, updated);
+  return updated;
+}
+
+/**
+ * Supprime une section — et, par cascade en base, les questions qu'elle
+ * contient.
+ *
+ * La dernière section d'un formulaire ne peut pas être supprimée : `section_id`
+ * est `not null`, un formulaire sans section n'accepterait plus aucune question.
+ */
+export async function deleteSection(formId: string, sectionId: string): Promise<Form | null> {
+  const supabase = createClient();
+
+  const form = await getForm(formId);
+  if (!form) return null;
+
+  const sections = form.sections ?? [];
+  if (sections.length <= 1) {
+    throw new Error('Un formulaire doit garder au moins une section.');
+  }
+
+  const { error } = await supabase
+    .from('sections')
+    .delete()
+    .eq('id', sectionId)
+    .eq('form_id', formId);
+
+  if (error) throw error;
+
+  // Renumérote ce qui reste, pour que l'ordre n'ait pas de trou.
+  const remaining = sections.filter((section) => section.id !== sectionId);
+  await Promise.all(
+    remaining.map((section, index) =>
+      supabase.from('sections').update({ section_order: index }).eq('id', section.id)
+    )
+  );
+
+  await touchForm(supabase, formId);
+  const updated = await getForm(formId);
+  if (updated) notifyFormUpdated(formId, updated);
+  return updated;
+}
+
+/** Réordonne les sections d'un formulaire selon la liste d'identifiants fournie. */
+export async function reorderSections(formId: string, orderedIds: string[]): Promise<Form | null> {
+  const supabase = createClient();
+
+  await Promise.all(
+    orderedIds.map((sectionId, index) =>
+      supabase
+        .from('sections')
+        .update({ section_order: index })
+        .eq('id', sectionId)
+        .eq('form_id', formId)
+    )
+  );
+
+  await touchForm(supabase, formId);
+  const updated = await getForm(formId);
+  if (updated) notifyFormUpdated(formId, updated);
+  return updated;
+}
+
+/**
+ * Déplace un champ vers une section, à la position voulue.
+ *
+ * Les deux sections concernées sont renumérotées : `field_order` est relatif à
+ * la section, donc laisser un trou dans celle d'origine ou un doublon dans celle
+ * d'arrivée suffirait à rendre l'ordre d'affichage arbitraire.
+ */
+export async function moveFieldToSection(
+  formId: string,
+  fieldId: string,
+  targetSectionId: string,
+  targetIndex: number
+): Promise<Form | null> {
+  const supabase = createClient();
+
+  const form = await getForm(formId);
+  if (!form) return null;
+
+  const moved = (form.fields ?? []).find((field) => field.id === fieldId);
+  if (!moved) return form;
+
+  const sourceSectionId = moved.section_id;
+
+  const target = (form.fields ?? [])
+    .filter((field) => field.section_id === targetSectionId && field.id !== fieldId)
+    .sort((a, b) => a.field_order - b.field_order);
+  target.splice(Math.max(0, Math.min(targetIndex, target.length)), 0, moved);
+
+  const updates = target.map((field, index) =>
+    supabase
+      .from('fields')
+      .update({ section_id: targetSectionId, field_order: index })
+      .eq('id', field.id)
+  );
+
+  if (sourceSectionId !== targetSectionId) {
+    const source = (form.fields ?? [])
+      .filter((field) => field.section_id === sourceSectionId && field.id !== fieldId)
+      .sort((a, b) => a.field_order - b.field_order);
+    updates.push(
+      ...source.map((field, index) =>
+        supabase.from('fields').update({ field_order: index }).eq('id', field.id)
+      )
+    );
+  }
+
+  await Promise.all(updates);
+
+  await touchForm(supabase, formId);
+  const updated = await getForm(formId);
+  if (updated) notifyFormUpdated(formId, updated);
+  return updated;
+}
+
+/** Rafraîchit `updated_at` — le formulaire a changé même si sa ligne, elle, non. */
+async function touchForm(
+  supabase: ReturnType<typeof createClient>,
+  formId: string
+): Promise<void> {
+  await supabase
+    .from('forms')
+    .update({ updated_at: new Date().toISOString() })
+    .eq('id', formId);
 }
 
 // ============================================================================
@@ -1131,6 +1480,45 @@ export async function importForm(
   const teamId = await resolveTeamId(supabase, user.id, customTeamId);
   const projectId = await resolveProjectId(supabase, teamId, user.id, customProjectId);
 
+  /**
+   * Sections d'origine → sections créées.
+   *
+   * Un modèle du catalogue porte des identifiants textuels
+   * (`tpl-mooove-x-section-0`) : la colonne est un uuid, il faut donc en
+   * fabriquer de vrais. Une source sans section — un JSON exporté avant la
+   * migration 004 — en reçoit une, sans quoi ses champs seraient refusés.
+   */
+  const sourceSections =
+    formJson.sections && formJson.sections.length > 0
+      ? formJson.sections
+      : [
+          {
+            id: '__implicite__',
+            form_id: newFormId,
+            title: {} as MultilingualText,
+            description: {} as MultilingualText,
+            section_order: 0
+          }
+        ];
+
+  const sectionIdMap: Record<string, string> = {};
+  const mappedSections = sourceSections
+    .slice()
+    .sort((a, b) => a.section_order - b.section_order)
+    .map((section, index) => {
+      const newId = uuid();
+      sectionIdMap[section.id] = newId;
+      return {
+        id: newId,
+        form_id: newFormId,
+        title: normalizeMultilingual(section.title),
+        description: normalizeMultilingual(section.description),
+        section_order: index
+      };
+    });
+
+  const fallbackSectionId = mappedSections[0].id;
+
   // 1. Remap fields and options/rows
   const fieldIdMap: Record<string, string> = {};
   const optionIdMap: Record<string, string> = {};
@@ -1174,6 +1562,7 @@ export async function importForm(
       ...field,
       id: newFieldId,
       form_id: newFormId,
+      section_id: sectionIdMap[field.section_id] ?? fallbackSectionId,
       label: normalizeMultilingual(field.label),
       description: normalizeMultilingual(field.description),
       placeholder: normalizeMultilingual(field.placeholder),
@@ -1210,6 +1599,7 @@ export async function importForm(
       conditions_operator: rule.conditions_operator || 'AND',
       action_type: rule.action_type,
       target_field_id: rule.target_field_id ? (fieldIdMap[rule.target_field_id] || rule.target_field_id) : null,
+      target_section_id: rule.target_section_id ? (sectionIdMap[rule.target_section_id] ?? null) : null,
       rule_order: rule.rule_order
     } as any;
   });
@@ -1261,6 +1651,12 @@ export async function importForm(
   if (formError) throw formError;
   
   // 4. Insert fields
+  const { error: sectionsError } = await supabase.from('sections').insert(mappedSections);
+  if (sectionsError) {
+    await supabase.from('forms').delete().eq('id', newFormId);
+    throw sectionsError;
+  }
+
   if (mappedFields.length > 0) {
     const { error: fieldsError } = await supabase
       .from('fields')

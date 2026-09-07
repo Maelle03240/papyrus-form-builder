@@ -70,7 +70,6 @@ function getFieldTypeLabel(type: string): string {
     file: 'Fichier / Média',
     matrix: 'Matrice',
     statement: 'Message / Note',
-    section_break: 'Section'
   };
   return labels[type] || type;
 }
@@ -151,7 +150,6 @@ function getDecisionLines(rule: LogicRule, fields: Field[]): string[] {
 export function FormFlowView({ form }: Props) {
   const fields = useMemo(() => {
     return (form.fields || [])
-      .filter(f => f.type !== 'section_break')
       .sort((a, b) => a.field_order - b.field_order);
   }, [form.fields]);
 

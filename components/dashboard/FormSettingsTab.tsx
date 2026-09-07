@@ -141,7 +141,7 @@ export function FormSettingsTab({ form }: { form: Form }) {
     () =>
       (form.fields ?? []).filter(
         (field: Field) =>
-          !['section_break', 'statement', 'image', 'video', 'file'].includes(field.type)
+          !['statement', 'image', 'video', 'file'].includes(field.type)
       ),
     [form.fields]
   );

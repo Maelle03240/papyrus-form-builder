@@ -102,7 +102,6 @@ export const FieldCard = memo(function FieldCard({
   const meta = FIELD_META[field.type];
   if (!meta) return null;
   const Icon = meta.icon;
-  const isSectionBreak = field.type === 'section_break';
   const isImage = field.type === 'image';
   const isVideo = field.type === 'video';
   const isFile = field.type === 'file';
@@ -115,7 +114,6 @@ export const FieldCard = memo(function FieldCard({
   // Image, video et file avec titre activé sont traités comme des questions avec numéro
   const showTitleForMedia = (isImage || isVideo || isFile) && field.validation?.show_title;
   const isLayout =
-    isSectionBreak ||
     (!isRespondentUpload &&
       ((isImage && !showTitleForMedia) ||
         (isVideo && !showTitleForMedia) ||
@@ -320,7 +318,7 @@ export const FieldCard = memo(function FieldCard({
             <AutoTextarea
               value={field.label.fr ?? ''}
               onChange={(e) => patchText('label', e.target.value)}
-              placeholder={isSectionBreak ? 'Titre de la section' : 'Légende (optionnelle)'}
+              placeholder="Légende (optionnelle)"
               style={labelInlineStyle}
               maxLength={LIMITS.SECTION_TITLE_MAX}
               className={cn(
@@ -333,7 +331,7 @@ export const FieldCard = memo(function FieldCard({
       )}
 
       {/* Description — éditable inline (pas pour section_break, image, vidéo, fichier) */}
-      {!isSectionBreak && !isImage && !isVideo && !isFile && (
+      {!isImage && !isVideo && !isFile && (
         <AutoTextarea
           value={field.description.fr ?? ''}
           onChange={(e) => patchText('description', e.target.value)}
@@ -344,9 +342,7 @@ export const FieldCard = memo(function FieldCard({
       )}
 
       {/* Aperçu — édition inline pour les choix et la matrice, sinon FieldRenderer en preview */}
-      {isSectionBreak ? (
-        <div className="papyrus-divider" />
-      ) : isStatement ? null : isChoiceLike ? (
+      {isStatement ? null : isChoiceLike ? (
         <EditableOptions
           type={field.type as 'single_choice' | 'multiple_choice' | 'dropdown'}
           field={field}

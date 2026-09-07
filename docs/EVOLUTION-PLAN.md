@@ -198,10 +198,23 @@ rien de l'existant ne change de forme. Le builder, l'onglet Réponses et l'ongle
 Analyse sont sortis de `/forms/[id]` en composants pour être montés par les deux
 arborescences.
 
-**1b — Sections réelles.** À faire. Table `sections`, `fields.section_id`,
-suppression du type `section_break`. C'est la moitié invasive : le pseudo-champ
-est lu à une soixantaine d'endroits, dont tout le rendu public — précisément là
-où un défaut se voit chez le répondant et pas chez nous.
+**1b — Sections réelles.** ✅ **Fait le 07/09/2026.** Table `sections`,
+`fields.section_id`, `logic_rules.target_section_id`, suppression du type
+`section_break`. Migration 004 appliquée : 15 ruptures converties en 25 sections,
+70 champs rattachés, aucun orphelin.
+
+Trois pièges rencontrés, tous silencieux :
+
+- PostgreSQL **fige la liste des colonnes d'un `select *` à la création d'une
+  vue**. `public_fields` et `public_logic_rules` devaient être recréées, sans
+  quoi le rendu public aurait reçu des champs sans section — c'est-à-dire un
+  formulaire vide, sans la moindre erreur.
+- `field_order` est devenu **relatif à sa section**. Trier les champs sur ce seul
+  critère entrelace les sections : les questions s'affichent dans le désordre et
+  rien ne le signale. Le tri à deux niveaux est couvert par des tests.
+- `updateForm` ne synchronise pas les sections par différence, contrairement aux
+  champs : un enregistrement automatique parti avec une liste incomplète
+  supprimerait une section, et la cascade emporterait ses questions.
 
 Une décision réduit beaucoup le risque : **le catalogue de modèles garde
 `section_break` comme convention d'écriture**, et `lib/templates/to-form.ts` le

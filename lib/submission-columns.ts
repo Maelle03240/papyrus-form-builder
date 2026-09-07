@@ -46,7 +46,6 @@ export function fieldColumns(field: Field): string[] {
   if (
     field.type === 'image' ||
     field.type === 'video' ||
-    field.type === 'section_break' ||
     field.type === 'statement'
   ) {
     return [];

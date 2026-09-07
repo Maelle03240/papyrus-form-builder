@@ -145,11 +145,26 @@ export async function POST(request: Request) {
     const converted = convertForm(detail, form.id);
     warnings.push(...converted.warnings);
 
+    // Les sections partent d'abord : les champs y font référence, et
+    // `fields.section_id` est `not null`.
+    const { error: sectionsError } = await admin.from('sections').insert(
+      converted.sections.map((section) => ({
+        id: section.id,
+        form_id: form.id,
+        title: section.title,
+        description: section.description,
+        section_order: section.section_order
+      }))
+    );
+
+    if (sectionsError) throw sectionsError;
+
     if (converted.fields.length > 0) {
       const { error: fieldsError } = await admin.from('fields').insert(
         converted.fields.map((field) => ({
           id: field.id,
           form_id: form.id,
+          section_id: field.section_id,
           type: field.type,
           label: field.label,
           description: field.description,

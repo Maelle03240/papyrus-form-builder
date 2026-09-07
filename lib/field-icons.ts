@@ -17,7 +17,6 @@ export const DEFAULT_FIELD_ICONS: Record<FieldType, string> = {
   image:           'ti-photo',
   video:           'ti-video',
   matrix:          'ti-layout-rows',
-  section_break:   'ti-separator',
   statement:       'ti-info-circle',
 };
 

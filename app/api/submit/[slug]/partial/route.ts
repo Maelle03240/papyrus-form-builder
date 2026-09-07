@@ -108,7 +108,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
 
   const knownFieldIds = new Set(
     ((form.fields ?? []) as Pick<Field, 'id' | 'type'>[])
-      .filter((f) => !['section_break', 'statement', 'image', 'video'].includes(f.type))
+      .filter((f) => !['statement', 'image', 'video'].includes(f.type))
       .map((f) => f.id)
   );
 

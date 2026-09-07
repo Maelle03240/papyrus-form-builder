@@ -340,9 +340,8 @@ export function FieldRenderer({
         />
       );
 
-    case 'section_break':
     case 'statement':
-      // Gérés par FieldCard (rendu spécial)
+      // Géré par FieldCard (rendu spécial)
       return null;
 
     default:
@@ -906,6 +905,8 @@ function SubfieldRenderer({
   const pseudoField: Field = {
     id: compositeId,
     form_id: '',
+    // Un pseudo-champ n'est jamais enregistré : il n'appartient à aucune section.
+    section_id: '',
     type: subfield.type,
     label: subfield.label,
     description: subfield.description,

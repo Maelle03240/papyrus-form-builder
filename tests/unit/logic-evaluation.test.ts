@@ -13,10 +13,11 @@ import type { Field, LogicRule, LogicCondition } from '@/types';
  * une question qu'il ne devrait pas, c'est ici que ça doit casser en premier.
  */
 
-function field(id: string): Field {
+function field(id: string, sectionId = 'section-1'): Field {
   return {
     id,
     form_id: 'form-1',
+    section_id: sectionId,
     type: 'short_text',
     label: { fr: id },
     description: { fr: '' },

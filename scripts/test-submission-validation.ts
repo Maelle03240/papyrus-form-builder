@@ -23,7 +23,7 @@ function load(slug: string) {
 /** Ancienne validation : exige tous les champs requis, logique ignorée. */
 function oldValidation(fields: Field[], responses: Record<string, unknown>) {
   return fields
-    .filter((f) => !['section_break', 'statement', 'image', 'video'].includes(f.type))
+    .filter((f) => !['statement', 'image', 'video'].includes(f.type))
     .filter((f) => f.required)
     .filter((f) => {
       const v = responses[f.id];
@@ -39,7 +39,7 @@ function oldValidation(fields: Field[], responses: Record<string, unknown>) {
 function newValidation(fields: Field[], rules: LogicRule[], responses: Record<string, unknown>) {
   const visible = evaluateLogicRules(rules, responses, fields);
   return fields
-    .filter((f) => !['section_break', 'statement', 'image', 'video'].includes(f.type))
+    .filter((f) => !['statement', 'image', 'video'].includes(f.type))
     .filter((f) => f.required && visible.has(f.id))
     .filter((f) => isAnswerEmpty(responses[f.id]))
     .map((f) => f.id);
@@ -146,7 +146,7 @@ for (const slug of [
   const responses: Record<string, unknown> = {};
   for (const f of fields) {
     if (shown.has(f.id)) continue;
-    if (['section_break', 'statement', 'image', 'video'].includes(f.type)) continue;
+    if (['statement', 'image', 'video'].includes(f.type)) continue;
     if (!f.required) continue;
 
     if (f.options?.length) {
