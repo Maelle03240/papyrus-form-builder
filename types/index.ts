@@ -746,6 +746,126 @@ export interface NotificationSettings {
   respondent?: RespondentNotificationSettings;
 }
 
+// ============================================================================
+// E-mails de confirmation (phase 4)
+//
+// Deux mécanismes coexistent, et il faut savoir lequel parle :
+//
+//  · `NotificationSettings` ci-dessus est l'héritage de Papyrus : un accusé de
+//    réception en texte brut, une seule version, aucune condition.
+//  · `EmailConfig` est ce que la phase 4 apporte : plusieurs messages, choisis
+//    selon les réponses, bilingues, avec le bon de commande en pièce jointe.
+//
+// Quand `EmailConfig.enabled` vaut vrai, il REMPLACE l'accusé de réception au
+// répondant — la notification interne, elle, continue de partir. Sans cette
+// règle d'arbitrage, un auteur qui découvre le nouvel onglet sans penser à
+// l'ancien enverrait deux e-mails à chaque inscrit.
+// ============================================================================
+
+/** Un message : ce qui part réellement dans la boîte du répondant. */
+export interface EmailMessage {
+  /** Objet du message. Accepte les jetons `{{…}}`, rendus en texte brut. */
+  subject: MultilingualText;
+  /** Corps HTML. Accepte les jetons `{{…}}`, dont les valeurs sont échappées. */
+  body: MultilingualText;
+  /**
+   * Joint le bon de commande en PDF.
+   *
+   * Non renseigné : la valeur du formulaire s'applique. C'est le seul réglage
+   * qu'une règle peut surcharger — un message de refus n'a pas à porter un bon
+   * de commande, alors que l'objet et le corps changent forcément.
+   */
+  attach_pdf?: boolean;
+}
+
+/**
+ * Un message conditionnel.
+ *
+ * Les règles sont évaluées de haut en bas et la première qui correspond gagne :
+ * l'ordre est donc une décision de l'auteur, pas un détail d'affichage. Une
+ * règle sans condition est ignorée — elle capterait tout et masquerait
+ * silencieusement celles qui la suivent.
+ */
+export interface EmailRule {
+  id: string;
+  /** Nom interne, jamais envoyé — « Tarif étudiant », « Refus ». */
+  label: string;
+  /** Mêmes conditions qu'un verrou de visibilité : `lib/visibility` les évalue. */
+  when?: VisibilityRule;
+  message: EmailMessage;
+}
+
+export interface EmailConfig {
+  enabled: boolean;
+  /**
+   * Champ e-mail servant d'adresse de destination.
+   * Vide : le premier champ e-mail rempli et visible.
+   */
+  to_field_id?: string;
+  /** Nom d'expéditeur affiché. L'adresse, elle, est celle de l'instance. */
+  from_name?: string;
+  reply_to?: string;
+  cc?: string;
+  bcc?: string;
+  /** Joint le bon de commande en PDF, sauf surcharge par une règle. */
+  attach_pdf?: boolean;
+  /** Message envoyé quand aucune règle ne correspond. */
+  default_message: EmailMessage;
+  rules?: EmailRule[];
+}
+
+export function emptyEmailMessage(): EmailMessage {
+  return { subject: { fr: '' }, body: { fr: '' } };
+}
+
+export const DEFAULT_EMAIL_CONFIG: EmailConfig = {
+  enabled: false,
+  attach_pdf: true,
+  default_message: { subject: { fr: '' }, body: { fr: '' } }
+};
+
+/**
+ * Écran de remerciement.
+ *
+ * Il vit sur le formulaire et non sur le projet : c'est le dernier écran d'un
+ * parcours précis, et il peut citer les réponses qu'on vient d'y donner.
+ */
+export interface ConfirmationConfig {
+  title?: MultilingualText;
+  /** Accepte les jetons `{{…}}`. */
+  message?: MultilingualText;
+  /** Affiche le numéro de bon de commande. Sans objet si le projet n'en attribue pas. */
+  show_reference?: boolean;
+  reference_label?: MultilingualText;
+  /** Petite mention sous le numéro — « Un e-mail vient de vous être envoyé ». */
+  email_note?: MultilingualText;
+  /** Bouton facultatif : sans URL, aucun bouton n'est affiché. */
+  button_label?: MultilingualText;
+  button_url?: string;
+}
+
+/**
+ * Numérotation des bons de commande, portée par le projet.
+ *
+ * `next` n'est jamais modifié depuis le navigateur pendant une inscription :
+ * c'est la fonction SQL `assign_invoice_number` qui l'incrémente, sous verrou de
+ * ligne. Le réglage ci-dessous ne sert qu'à choisir le point de départ et la
+ * forme du numéro.
+ */
+export interface ProjectInvoicing {
+  prefix: string;
+  /** Prochain numéro à attribuer. */
+  next: number;
+  /** Nombre de chiffres — `4` donne `CMD-0001`. */
+  pad: number;
+}
+
+export const DEFAULT_PROJECT_INVOICING: ProjectInvoicing = {
+  prefix: 'CMD',
+  next: 1,
+  pad: 4
+};
+
 export type IntegrationProvider = 'google_sheets';
 
 export interface GoogleSheetsConfig {
@@ -823,6 +943,14 @@ export interface Project {
   modules: ProjectModules;
   /** Devise et TVA, héritées par tous les formulaires du projet. */
   pricing: ProjectPricing;
+  /**
+   * Numérotation des bons de commande.
+   *
+   * Sur le projet parce qu'une séquence appartient à un événement, pas à l'un
+   * de ses formulaires : l'inscription en ligne et le bulletin papier saisi à
+   * la main doivent tirer leurs numéros du même compteur.
+   */
+  invoicing: ProjectInvoicing;
   created_at: string;
   updated_at: string;
   /** Renseigné par les requêtes de liste — jamais une colonne. */
@@ -908,6 +1036,10 @@ export interface Form {
   notification_settings?: NotificationSettings;
   /** Tarification du formulaire — cf. `PricingConfig`. */
   pricing_config?: PricingConfig;
+  /** E-mails de confirmation — jamais exposés à la vue publique. */
+  email_config?: EmailConfig;
+  /** Écran de remerciement — exposé à la vue publique, lui. */
+  confirmation_config?: ConfirmationConfig;
   /**
    * Réglages monétaires du projet, joints à la lecture.
    *
@@ -1042,6 +1174,15 @@ export interface Submission {
   session_id?: string | null;
   /** Totaux figés à l'envoi — jamais recalculés ensuite. */
   pricing?: TotalsSnapshot | null;
+  /**
+   * Numéro du bon de commande, tiré de la séquence du projet.
+   * Nul quand le module facturation est éteint : un sondage n'en a pas.
+   */
+  invoice_number?: string | null;
+  /** Horodatage de l'e-mail de confirmation parti. */
+  email_sent_at?: string | null;
+  /** Motif du dernier échec d'envoi, pour que l'auteur puisse le voir. */
+  email_error?: string | null;
   completed_at: string;
   actions_triggered: unknown[];
 }

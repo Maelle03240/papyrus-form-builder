@@ -31,7 +31,7 @@ import {
   deleteForm
 } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
-import type { Form, Project, ProjectPricing } from '@/types';
+import type { Form, Project, ProjectInvoicing, ProjectPricing } from '@/types';
 import { Switch } from '@/components/ui/Switch';
 import { formatMoney } from '@/lib/pricing';
 
@@ -460,6 +460,8 @@ function SettingsTab({ project, onChanged }: { project: Project; onChanged: () =
 
       <ProjectPricingSection project={project} onChanged={onChanged} />
 
+      <ProjectInvoicingSection project={project} onChanged={onChanged} />
+
       <section className="mt-6 rounded-xl border border-border bg-bg-surface p-6">
         <h2 className="font-display text-base font-bold text-text-primary">Cycle de vie</h2>
         <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
@@ -618,6 +620,143 @@ function ProjectPricingSection({
             Enregistrer
           </Button>
         </div>
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
+// Numérotation des bons de commande
+// ============================================================================
+
+/**
+ * La séquence des numéros de bon de commande.
+ *
+ * Elle est portée par le projet parce qu'elle appartient à un événement, pas à
+ * l'un de ses formulaires : l'inscription en ligne et le bulletin papier saisi
+ * à la main doivent tirer leurs numéros du même compteur.
+ *
+ * Le compteur lui-même n'est jamais écrit ici pendant une inscription : c'est
+ * une fonction SQL qui l'incrémente, sous verrou de ligne, au moment où la
+ * réponse est déjà enregistrée. Ce panneau ne sert qu'à choisir la forme du
+ * numéro et son point de départ.
+ */
+function ProjectInvoicingSection({
+  project,
+  onChanged
+}: {
+  project: Project;
+  onChanged: () => Promise<void>;
+}) {
+  const [invoicing, setInvoicing] = useState<ProjectInvoicing>(project.invoicing);
+  const [enabled, setEnabled] = useState(project.modules.invoicing);
+  const [saving, setSaving] = useState(false);
+
+  const dirty =
+    JSON.stringify(invoicing) !== JSON.stringify(project.invoicing) ||
+    enabled !== project.modules.invoicing;
+
+  const preview = `${invoicing.prefix || 'CMD'}-${String(invoicing.next).padStart(
+    Math.min(8, Math.max(1, invoicing.pad)),
+    '0'
+  )}`;
+
+  const save = async () => {
+    setSaving(true);
+    try {
+      await updateProject(project.id, {
+        invoicing,
+        modules: { ...project.modules, invoicing: enabled }
+      });
+      await onChanged();
+      toast.success('Numérotation enregistrée.');
+    } catch (error) {
+      console.error('Failed to save project invoicing:', error);
+      toast.error("L'enregistrement a échoué.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <section className="mt-6 rounded-xl border border-border bg-bg-surface p-6">
+      <h2 className="font-display text-base font-bold text-text-primary">
+        Numérotation des bons de commande
+      </h2>
+      <p className="mt-1 text-sm leading-relaxed text-text-secondary">
+        Chaque réponse aux formulaires du projet reçoit un numéro, tiré d&apos;une seule
+        séquence.
+      </p>
+
+      <div className="mt-4 flex items-start gap-3">
+        <Switch checked={enabled} onChange={setEnabled} />
+        <div className="min-w-0 flex-1">
+          <p className="text-sm text-text-primary">Attribuer un numéro à chaque réponse</p>
+          <p className="mt-0.5 text-xs leading-relaxed text-text-secondary">
+            Un sondage n&apos;en a pas besoin ; une inscription payante, si.
+          </p>
+        </div>
+      </div>
+
+      {enabled && (
+        <div className="mt-5 space-y-4">
+          <div className="grid grid-cols-3 gap-4">
+            <Input
+              label="Préfixe"
+              value={invoicing.prefix}
+              maxLength={12}
+              onChange={(event) =>
+                setInvoicing({
+                  ...invoicing,
+                  prefix: event.target.value.toUpperCase().replace(/[^A-Z0-9-]/g, '').slice(0, 12)
+                })
+              }
+            />
+            <Input
+              label="Chiffres"
+              type="number"
+              min={1}
+              max={8}
+              value={String(invoicing.pad)}
+              onChange={(event) =>
+                setInvoicing({
+                  ...invoicing,
+                  pad: Math.min(8, Math.max(1, Number(event.target.value) || 4))
+                })
+              }
+            />
+            <Input
+              label="Prochain numéro"
+              type="number"
+              min={1}
+              value={String(invoicing.next)}
+              onChange={(event) =>
+                setInvoicing({
+                  ...invoicing,
+                  next: Math.max(1, Math.floor(Number(event.target.value) || 1))
+                })
+              }
+            />
+          </div>
+
+          <p className="text-sm text-text-secondary">
+            La prochaine réponse portera le numéro{' '}
+            <span className="font-mono font-semibold text-text-primary">{preview}</span>.
+          </p>
+
+          {invoicing.next < project.invoicing.next && (
+            <p className="rounded-lg border border-warning/40 bg-warning/10 px-4 py-3 text-sm leading-relaxed text-text-primary">
+              Reculer le compteur fera réattribuer des numéros déjà utilisés. Deux réponses
+              porteraient alors la même référence, et rien ne les distinguerait.
+            </p>
+          )}
+        </div>
+      )}
+
+      <div className="mt-5 flex justify-end">
+        <Button size="sm" loading={saving} disabled={!dirty} onClick={() => void save()}>
+          Enregistrer
+        </Button>
       </div>
     </section>
   );

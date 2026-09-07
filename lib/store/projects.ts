@@ -16,8 +16,19 @@
  * `lib/store/workspaces.ts` s'occupe du premier niveau, ce module du deuxième.
  */
 
-import type { Form, Project, ProjectModules, ProjectPricing, ProjectStatus } from '@/types';
-import { DEFAULT_PROJECT_MODULES, DEFAULT_PROJECT_PRICING } from '@/types';
+import type {
+  Form,
+  Project,
+  ProjectInvoicing,
+  ProjectModules,
+  ProjectPricing,
+  ProjectStatus
+} from '@/types';
+import {
+  DEFAULT_PROJECT_INVOICING,
+  DEFAULT_PROJECT_MODULES,
+  DEFAULT_PROJECT_PRICING
+} from '@/types';
 import { createClient } from '@/lib/supabase/client';
 
 const PROJECTS_CHANGED = 'papyrus:projects-changed';
@@ -42,6 +53,9 @@ interface ProjectRow {
   theme: Record<string, unknown> | null;
   modules: Partial<ProjectModules> | null;
   pricing: Partial<ProjectPricing> | null;
+  invoice_prefix: string | null;
+  invoice_next: number | string | null;
+  invoice_pad: number | null;
   created_at: string;
   updated_at: string;
 }
@@ -96,6 +110,33 @@ export function normalizeProjectPricing(raw: unknown): ProjectPricing {
   return result;
 }
 
+/**
+ * Réglages de numérotation d'une ligne.
+ *
+ * Trois colonnes réelles et non un jsonb : `invoice_next` est incrémenté sous
+ * verrou de ligne par la fonction SQL `assign_invoice_number`. Un compteur
+ * enfoui dans un jsonb se lirait, se modifierait et se réécrirait — et deux
+ * inscriptions simultanées repartiraient du même numéro.
+ *
+ * `invoice_next` peut revenir en chaîne : PostgREST rend les `bigint` en texte
+ * pour ne pas les tronquer au passage par un nombre JavaScript.
+ */
+export function normalizeProjectInvoicing(row: {
+  invoice_prefix?: string | null;
+  invoice_next?: number | string | null;
+  invoice_pad?: number | null;
+}): ProjectInvoicing {
+  const next = Number(row.invoice_next);
+
+  return {
+    prefix: (row.invoice_prefix ?? '').trim() || DEFAULT_PROJECT_INVOICING.prefix,
+    next: Number.isFinite(next) && next >= 1 ? Math.floor(next) : DEFAULT_PROJECT_INVOICING.next,
+    // Au-delà de huit chiffres le numéro devient illisible ; en dessous d'un, il
+    // n'y a plus de numéro du tout.
+    pad: Math.min(8, Math.max(1, row.invoice_pad ?? DEFAULT_PROJECT_INVOICING.pad))
+  };
+}
+
 function toProject(row: ProjectRow, formCount?: number): Project {
   return {
     id: row.id,
@@ -109,6 +150,7 @@ function toProject(row: ProjectRow, formCount?: number): Project {
     theme: (row.theme ?? {}) as Project['theme'],
     modules: normalizeProjectModules(row.modules),
     pricing: normalizeProjectPricing(row.pricing),
+    invoicing: normalizeProjectInvoicing(row),
     created_at: row.created_at,
     updated_at: row.updated_at,
     form_count: formCount
@@ -258,13 +300,24 @@ export async function updateProject(
   patch: Partial<Pick<Project, 'name' | 'description' | 'status' | 'languages' | 'default_language' | 'theme'>> & {
     modules?: Partial<ProjectModules>;
     pricing?: Partial<ProjectPricing>;
+    invoicing?: Partial<ProjectInvoicing>;
   }
 ): Promise<Project | null> {
   const supabase = createClient();
 
+  // La numérotation est un objet dans l'interface et trois colonnes en base :
+  // c'est ici, et nulle part ailleurs, que la traduction a lieu.
+  const { invoicing, ...rest } = patch;
+  const row: Record<string, unknown> = { ...rest };
+  if (invoicing) {
+    if (invoicing.prefix !== undefined) row.invoice_prefix = invoicing.prefix.trim();
+    if (invoicing.next !== undefined) row.invoice_next = Math.max(1, Math.floor(invoicing.next));
+    if (invoicing.pad !== undefined) row.invoice_pad = Math.min(8, Math.max(1, invoicing.pad));
+  }
+
   const { data, error } = await supabase
     .from('projects')
-    .update(patch)
+    .update(row)
     .eq('id', id)
     .select()
     .maybeSingle();

@@ -32,6 +32,7 @@ interface Props {
 export function FormPublicView({ form, embed, accessToken }: Props) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
+  const [invoiceNumber, setInvoiceNumber] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const settings = form.settings ?? {};
@@ -160,6 +161,7 @@ export function FormPublicView({ form, embed, accessToken }: Props) {
       }
 
       setSubmissionId(body?.submission_id ?? null);
+      setInvoiceNumber(typeof body?.invoice_number === 'string' ? body.invoice_number : null);
       setIsSubmitted(true);
     } catch (error) {
       const message =
@@ -228,6 +230,8 @@ export function FormPublicView({ form, embed, accessToken }: Props) {
       <ThankYouPage
         form={form}
         submissionId={submissionId}
+        invoiceNumber={invoiceNumber}
+        responses={responses}
         scoreResult={showScoreToRespondent ? (scoreResult || undefined) : undefined}
         embed={embed}
       />

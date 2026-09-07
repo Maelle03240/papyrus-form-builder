@@ -1,10 +1,9 @@
 import 'server-only';
 
-import { Resend } from 'resend';
-import { NOTIFICATION_FROM_EMAIL, getResendApiKey } from '@/lib/env';
 import { buildSubmissionPdf } from '@/lib/pdf/submission-pdf';
+import { sendEmail, wrapPlainText } from '@/lib/email/send';
 import { buildSubmissionColumns, formatSubmissionPairs } from '@/lib/submission-format';
-import type { Form, NotificationSettings } from '@/types';
+import type { EmailConfig, Form, NotificationSettings } from '@/types';
 
 /**
  * Notifications email déclenchées par une réponse.
@@ -17,20 +16,19 @@ import type { Form, NotificationSettings } from '@/types';
  * Aucune de ces deux envois ne doit faire échouer l'enregistrement d'une
  * réponse : un quota Resend atteint ne doit pas se traduire par une réponse
  * perdue. Toutes les erreurs sont donc journalisées, jamais propagées.
+ *
+ * Depuis la phase 4, l'accusé de réception a un successeur : `EmailConfig`, qui
+ * sait choisir un message selon les réponses et joindre un bon de commande.
+ * Quand il est actif, l'accusé de réception ci-dessous s'efface — deux e-mails
+ * pour une même inscription seraient une erreur que l'auteur ne découvrirait
+ * que par une plainte. La notification interne, elle, part dans tous les cas :
+ * elle ne s'adresse pas à la même personne.
  */
 
 /** Variables reconnues dans un objet ou un corps de message. */
 const BUILTIN_TOKENS = ['form.title', 'submission.date', 'all_answers'] as const;
 
 export const NOTIFICATION_TOKENS: readonly string[] = BUILTIN_TOKENS;
-
-function escapeHtml(input: string): string {
-  return input
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
-}
 
 /**
  * Remplace les variables `{{…}}` d'un gabarit.
@@ -66,16 +64,6 @@ function renderTemplate(
 
     return byLabel.get(token.toLowerCase()) ?? byId.get(token) ?? '';
   });
-}
-
-/** Corps HTML minimal — le message reste du texte, mis en page sobrement. */
-function toHtml(body: string): string {
-  const paragraphs = body
-    .split(/\n{2,}/)
-    .map((block) => `<p style="margin:0 0 16px">${escapeHtml(block).replace(/\n/g, '<br>')}</p>`)
-    .join('');
-
-  return `<div style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.6;color:#052139;max-width:600px">${paragraphs}</div>`;
 }
 
 /** Adresse email du répondant, d'après le champ désigné ou le premier champ email. */
@@ -118,19 +106,13 @@ export async function sendSubmissionNotifications(
 
   const settings = (context.form.notification_settings ?? {}) as NotificationSettings;
   const wantsSelf = settings.self?.enabled === true;
-  const wantsRespondent = settings.respondent?.enabled === true;
+
+  // L'onglet « E-mails » a la main sur ce qui part au répondant : quand il est
+  // actif, l'accusé de réception hérité s'efface plutôt que de doubler l'envoi.
+  const supersededByEmailTab = (context.form.email_config as EmailConfig | undefined)?.enabled === true;
+  const wantsRespondent = settings.respondent?.enabled === true && !supersededByEmailTab;
 
   if (!wantsSelf && !wantsRespondent) return result;
-
-  const apiKey = getResendApiKey();
-  if (!apiKey) {
-    console.warn(
-      'Notifications demandées mais RESEND_API_KEY est absente : aucun email envoyé.'
-    );
-    return result;
-  }
-
-  const resend = new Resend(apiKey);
 
   // --- Notification interne ------------------------------------------------
   if (wantsSelf && settings.self) {
@@ -152,19 +134,9 @@ export async function sendSubmissionNotifications(
           .map((pair) => `${pair.label} : ${pair.value}`)
           .join('\n')}`;
 
-      try {
-        const { error } = await resend.emails.send({
-          from: `Papyrus <${NOTIFICATION_FROM_EMAIL}>`,
-          to,
-          subject,
-          text: body,
-          html: toHtml(body)
-        });
-        if (error) throw new Error(error.message);
-        result.self = true;
-      } catch (error) {
-        console.error('Notification interne non envoyée:', error);
-      }
+      const sent = await sendEmail({ to, subject, text: body, html: wrapPlainText(body) });
+      if (sent.ok) result.self = true;
+      else console.error('Notification interne non envoyée:', sent.error);
     }
   }
 
@@ -190,41 +162,34 @@ export async function sendSubmissionNotifications(
       const fromName = settings.respondent.from_name?.trim() || 'Papyrus';
       const replyTo = settings.respondent.reply_to?.trim();
 
-      let attachments: { filename: string; content: string }[] | undefined;
+      let attachment: { filename: string; content: Uint8Array } | undefined;
       if (settings.respondent.attach_pdf) {
         try {
-          const pdf = await buildSubmissionPdf({
-            form: context.form,
-            responses: context.responses,
-            submittedAt: context.submittedAt
-          });
-          attachments = [
-            {
-              filename: 'reponses.pdf',
-              content: Buffer.from(pdf).toString('base64')
-            }
-          ];
+          attachment = {
+            filename: 'reponses.pdf',
+            content: await buildSubmissionPdf({
+              form: context.form,
+              responses: context.responses,
+              submittedAt: context.submittedAt
+            })
+          };
         } catch (error) {
           // Un PDF illisible ne doit pas empêcher l'accusé de réception de partir.
           console.error('Génération du PDF des réponses échouée:', error);
         }
       }
 
-      try {
-        const { error } = await resend.emails.send({
-          from: `${fromName} <${NOTIFICATION_FROM_EMAIL}>`,
-          to: [to],
-          ...(replyTo && replyTo.includes('@') ? { replyTo } : {}),
-          subject,
-          text: body,
-          html: toHtml(body),
-          ...(attachments ? { attachments } : {})
-        });
-        if (error) throw new Error(error.message);
-        result.respondent = true;
-      } catch (error) {
-        console.error('Accusé de réception non envoyé:', error);
-      }
+      const sent = await sendEmail({
+        to: [to],
+        fromName,
+        replyTo,
+        subject,
+        text: body,
+        html: wrapPlainText(body),
+        attachment
+      });
+      if (sent.ok) result.respondent = true;
+      else console.error('Accusé de réception non envoyé:', sent.error);
     }
   }
 

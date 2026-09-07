@@ -19,7 +19,6 @@ import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { toast } from '@/components/ui/Toast';
 import { WorkspaceTabs, SubTabs, type TabItem } from '@/components/dashboard/WorkspaceTabs';
-import { ModuleUnavailable } from '@/components/dashboard/ModuleUnavailable';
 import { FormBuilder } from '@/components/builder/FormBuilder';
 import { FormDesignPanel } from '@/components/builder/FormDesignPanel';
 import { FormShareTab } from '@/components/dashboard/FormShareTab';
@@ -28,6 +27,7 @@ import { FormSettingsTab } from '@/components/dashboard/FormSettingsTab';
 import { FormInsightsTab } from '@/components/dashboard/FormInsightsTab';
 import { FormRecordsTab } from '@/components/dashboard/FormRecordsTab';
 import { FormPricingTab } from '@/components/dashboard/FormPricingTab';
+import { FormEmailTab } from '@/components/dashboard/FormEmailTab';
 import { getProject, getForm, updateForm } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
 import type { DisplayMode, Form, FormTheme, Project } from '@/types';
@@ -261,10 +261,12 @@ function FormWorkspace() {
         )}
 
         {tab === 'setup' && sub === 'email' && (
-          <ModuleUnavailable
-            icon={Mail}
-            title="E-mails de confirmation"
-            description="Un message par situation : la réponse déclenche l'e-mail dont les conditions correspondent, dans la langue du répondant, avec le bon de commande en pièce jointe."
+          <FormEmailTab
+            form={form}
+            project={project}
+            buildHref={`${base}?tab=setup&sub=build`}
+            projectSettingsHref={`/projects/${params.id}?tab=settings`}
+            onSaved={(patch) => setForm((current) => (current ? { ...current, ...patch } : current))}
           />
         )}
 

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Check, Copy, Download, ListChecks, Pencil, Trash2 } from 'lucide-react';
+import { Check, Copy, Download, FileText, ListChecks, MailWarning, Pencil, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
 import { createClient } from '@/lib/supabase/client';
@@ -44,6 +44,11 @@ export function FormRecordsTab({ form, submissions: allSubmissions, setSubmissio
 
   const fields = (form.fields ?? []).filter(isAnswerable);
   const pricingEnabled = resolvePricing(form).enabled;
+
+  // La colonne n'apparaît que si des numéros ont réellement été attribués : sur
+  // un sondage, une colonne « Numéro » vide à cent pour cent n'apprend rien et
+  // repousse les réponses hors de l'écran.
+  const hasInvoiceNumbers = submissions.some((s) => Boolean(s.invoice_number));
 
   function renderResponseValue(field: Field, value: any): string {
     if (value === undefined || value === null || value === '') return '—';
@@ -219,6 +224,7 @@ export function FormRecordsTab({ form, submissions: allSubmissions, setSubmissio
             <tr>
               <th className="w-8 px-2 py-3" />
               <th className="px-4 py-3 min-w-[150px]">Date de soumission</th>
+              {hasInvoiceNumbers && <th className="px-4 py-3 min-w-[120px]">Numéro</th>}
               {pricingEnabled && <th className="px-4 py-3 text-right min-w-[110px]">Total</th>}
               {fields.map((f) => (
                 <th key={f.id} className="px-4 py-3 min-w-[200px] max-w-[350px] truncate">
@@ -277,6 +283,36 @@ export function FormRecordsTab({ form, submissions: allSubmissions, setSubmissio
                     </span>
                   )}
                 </td>
+
+                {/* Numéro de bon de commande, et l'accès au document.
+                    Le PDF est régénéré à la demande : les réponses et les totaux
+                    sont figés en base, donc le document l'est aussi. */}
+                {hasInvoiceNumbers && (
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    {sub.invoice_number ? (
+                      <span className="inline-flex items-center gap-2">
+                        <a
+                          href={`/api/submissions/${sub.id}/pdf`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          title="Ouvrir le bon de commande"
+                          className="inline-flex items-center gap-1.5 font-mono text-xs font-medium text-text-primary hover:text-accent hover:underline"
+                        >
+                          <FileText className="h-3.5 w-3.5 shrink-0" />
+                          {sub.invoice_number}
+                        </a>
+                        {sub.email_error && (
+                          <MailWarning
+                            className="h-3.5 w-3.5 shrink-0 text-warning"
+                            aria-label={`E-mail non envoyé : ${sub.email_error}`}
+                          />
+                        )}
+                      </span>
+                    ) : (
+                      <span className="text-text-tertiary">—</span>
+                    )}
+                  </td>
+                )}
 
                 {/* Total figé à l'envoi.
                     Il n'est jamais recalculé à l'affichage : c'est le montant

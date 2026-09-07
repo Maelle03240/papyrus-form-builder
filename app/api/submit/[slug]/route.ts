@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/server';
 import { clientIp, rateLimit } from '@/lib/rate-limit';
 import { calculateFormScore, type FormResponses } from '@/lib/scoring';
 import { sendSubmissionNotifications } from '@/lib/email/notifications';
+import { sendConfirmationEmail } from '@/lib/email/confirmation';
 import { syncSubmissionToSheets } from '@/lib/integrations/google-sheets-sync';
 import { verifyFormAccessToken } from '@/lib/form-access';
 import { evaluateFormVisibility } from '@/lib/visibility';
@@ -15,7 +16,15 @@ import {
   enforceDataRetention
 } from '@/lib/submission-guards';
 import { DISCOUNT_CODE_KEY } from '@/types';
-import type { Field, Form, FormSettings, LogicRule, Section, TotalsSnapshot } from '@/types';
+import type {
+  Field,
+  Form,
+  FormSettings,
+  LogicRule,
+  ProjectModules,
+  Section,
+  TotalsSnapshot
+} from '@/types';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -99,7 +108,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
   const { data: form, error: formError } = await supabase
     .from('forms')
     .select(
-      'id, team_id, created_by, title, slug, status, closes_at, access_type, unique_email, scoring_enabled, theme, settings, notification_settings, pricing_config, sections(*), fields(*), logic_rules(*), projects(pricing)'
+      'id, team_id, created_by, project_id, title, slug, status, closes_at, access_type, unique_email, scoring_enabled, theme, settings, notification_settings, pricing_config, email_config, confirmation_config, sections(*), fields(*), logic_rules(*), projects(name, pricing, modules)'
     )
     .eq('slug', slug)
     .maybeSingle();
@@ -394,7 +403,36 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
     return NextResponse.json({ error: "Erreur lors de l'enregistrement" }, { status: 500 });
   }
 
-  // 13. Effets de bord. Aucun ne peut plus faire échouer l'envoi : la réponse
+  // 13. Numéro de bon de commande.
+  //
+  //     APRÈS l'insertion, jamais avant. mooove-invoice tire le numéro d'abord :
+  //     un enregistrement qui échoue ensuite laisse un trou définitif dans une
+  //     séquence censée être continue. Ici la réponse existe déjà, donc un échec
+  //     ne consomme rien.
+  //
+  //     L'incrément lui-même est un `update ... returning` dans une fonction SQL
+  //     — donc sous verrou de ligne. Deux inscriptions simultanées ne peuvent
+  //     pas recevoir le même numéro.
+  const project = (form as { projects?: ProjectRelation | null }).projects ?? null;
+  const projectId = (form as { project_id?: string | null }).project_id ?? null;
+  const invoicingOn = (project?.modules as Partial<ProjectModules> | undefined)?.invoicing === true;
+
+  let invoiceNumber: string | null = null;
+  if (invoicingOn && projectId) {
+    const { data, error } = await supabase.rpc('assign_invoice_number', {
+      p_submission: inserted.id,
+      p_project: projectId
+    });
+    if (error) {
+      // Sans numéro, la réponse reste valide : elle est enregistrée, et l'auteur
+      // peut la retrouver. Refuser l'envoi pour un compteur serait pire.
+      console.error('Attribution du numéro de bon de commande échouée:', error);
+    } else {
+      invoiceNumber = typeof data === 'string' ? data : null;
+    }
+  }
+
+  // 14. Effets de bord. Aucun ne peut plus faire échouer l'envoi : la réponse
   //     est en base, le répondant a droit à sa confirmation quoi qu'il arrive
   //     du côté de Resend ou de Google.
   await runPostSubmissionEffects({
@@ -402,17 +440,29 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
     settings,
     responses,
     submissionId: inserted.id,
-    submittedAt: record.completed_at
+    submittedAt: record.completed_at,
+    language,
+    invoiceNumber,
+    projectName: project?.name ?? undefined,
+    pricing: pricingSnapshot
   });
 
   return NextResponse.json({
     success: true,
     submission_id: inserted.id,
+    ...(invoiceNumber ? { invoice_number: invoiceNumber } : {}),
     ...(settings.redirect_on_completion && settings.redirect_url
       ? { redirect_url: settings.redirect_url }
       : {}),
     ...(score && { score: score.totalScore, max_score: score.maxScore })
   });
+}
+
+/** Ce que la jointure sur `projects` ramène — et rien de plus. */
+interface ProjectRelation {
+  name?: string | null;
+  pricing?: Form['project_pricing'];
+  modules?: Partial<ProjectModules> | null;
 }
 
 /**
@@ -425,6 +475,10 @@ async function runPostSubmissionEffects(params: {
   responses: Record<string, unknown>;
   submissionId: string;
   submittedAt: string;
+  language: string;
+  invoiceNumber: string | null;
+  projectName?: string;
+  pricing: TotalsSnapshot | null;
 }): Promise<void> {
   const tasks: Promise<unknown>[] = [];
 
@@ -439,6 +493,41 @@ async function runPostSubmissionEffects(params: {
           submittedAt: params.submittedAt,
           ownerEmail
         });
+      })()
+    );
+  }
+
+  // E-mail de confirmation de l'onglet « E-mails ».
+  //
+  // Son issue est écrite sur la réponse, succès comme échec. « Le client a-t-il
+  // reçu son bon de commande ? » est la première question posée quand quelque
+  // chose cloche : sans cette trace, la seule réponse possible serait d'aller
+  // lire les journaux du serveur.
+  if (params.form.email_config?.enabled) {
+    tasks.push(
+      (async () => {
+        const result = await sendConfirmationEmail({
+          form: params.form,
+          responses: params.responses,
+          submittedAt: params.submittedAt,
+          language: params.language,
+          invoiceNumber: params.invoiceNumber,
+          projectName: params.projectName,
+          pricing: params.pricing
+        });
+
+        await createAdminClient()
+          .from('submissions')
+          .update(
+            result.sent
+              ? { email_sent_at: new Date().toISOString(), email_error: null }
+              : { email_error: result.reason.slice(0, 500) }
+          )
+          .eq('id', params.submissionId);
+
+        if (!result.sent) {
+          console.error(`E-mail de confirmation non envoyé (${params.submissionId}):`, result.reason);
+        }
       })()
     );
   }

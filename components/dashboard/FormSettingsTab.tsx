@@ -5,6 +5,7 @@ import { AlertTriangle, Info, Loader2, Save } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Switch } from '@/components/ui/Switch';
 import { toast } from '@/components/ui/Toast';
+import { stableStringify } from '@/lib/stable-stringify';
 import { updateForm } from '@/lib/store';
 import { cn } from '@/lib/utils';
 import type {
@@ -63,28 +64,6 @@ const LANGUAGES = [
   { value: 'en', label: 'English' },
   { value: 'es', label: 'Español' }
 ];
-
-/**
- * Sérialisation à clés triées, utilisée pour détecter les modifications.
- *
- * `JSON.stringify` ne suffit pas : `settings` et `notification_settings` sont
- * des colonnes `jsonb`, et PostgreSQL y réordonne les clés. Comparer la version
- * relue à celle qu'on vient d'envoyer produirait donc deux chaînes différentes
- * pour des données identiques, et la barre « modifications non enregistrées »
- * réapparaîtrait aussitôt après chaque enregistrement.
- */
-function stableStringify(value: unknown): string {
-  if (value === null || typeof value !== 'object') return JSON.stringify(value) ?? 'null';
-  if (Array.isArray(value)) return `[${value.map(stableStringify).join(',')}]`;
-
-  const entries = Object.entries(value as Record<string, unknown>)
-    // Une clé absente et une clé à `undefined` doivent se valoir : JSON.stringify
-    // omet la seconde, on fait de même.
-    .filter(([, item]) => item !== undefined)
-    .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0));
-
-  return `{${entries.map(([key, item]) => `${JSON.stringify(key)}:${stableStringify(item)}`).join(',')}}`;
-}
 
 /** Convertit un ISO 8601 en valeur acceptée par `<input type="datetime-local">`. */
 function toLocalInput(iso: string | null): string {

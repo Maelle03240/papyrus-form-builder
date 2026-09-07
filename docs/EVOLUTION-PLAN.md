@@ -337,10 +337,70 @@ publie `registered_count` que lorsqu'un tarif dégressif est actif : un tarif ea
 bird annonce de lui-même « il reste N places », alors que le nombre de réponses
 d'un sondage ne regarde personne.
 
-**4 — E-mails et facturation.** Règles d'e-mail conditionnelles, bilingue,
-`{{jetons}}`, éditeur riche, pièce jointe PDF. Numérotation de facture par projet
-(séquence sans course critique). Génération PDF. Écran de confirmation
-configurable.
+**4 — E-mails et facturation.** ✅ **Fait le 07/09/2026.** Règles d'e-mail
+conditionnelles, bilingues, `{{jetons}}`, éditeur riche, pièce jointe PDF.
+Numérotation par projet, sans course critique. Génération du bon de commande.
+Écran de remerciement configurable. Migration 007 appliquée.
+
+**La règle d'arbitrage de la phase** : quand `email_config.enabled` est vrai, il
+**remplace** l'accusé de réception hérité de `notification_settings.respondent`.
+La notification interne, elle, continue de partir — elle ne s'adresse pas à la
+même personne. Sans cet arbitrage, un auteur qui règle le nouvel onglet sans
+penser à l'ancien enverrait deux e-mails à chaque inscrit, et ne le découvrirait
+que par une plainte.
+
+**La numérotation tient trois propriétés, et chacune répond à une manière précise
+de se tromper** (`assign_invoice_number`, migration 007) :
+
+1. **Atomique.** L'incrément et sa lecture sont un seul `update … returning`,
+   donc sous verrou de ligne.
+2. **Après l'insertion, jamais avant.** mooove-invoice tire le numéro d'abord :
+   un enregistrement qui échoue ensuite laisse un trou définitif dans une
+   séquence censée être continue. Ici la réponse existe déjà, donc un échec ne
+   consomme rien.
+3. **Rejouable, et verrouillée pour l'être vraiment.** Le premier jet lisait le
+   numéro existant sans `for update` : huit sessions concurrentes sur la même
+   réponse ont brûlé **six numéros sur seize**. Chacune lisait « pas de numéro »,
+   en tirait un, et une seule s'écrivait. Avec le verrou, les mêmes quarante
+   appels attribuent dix numéros à dix réponses, sans un trou.
+
+**Quatre défauts silencieux rencontrés, tous trouvés en regardant le résultat
+plutôt que le code :**
+
+- **Les jetons de champ ne se résolvaient pas.** Le motif `\{\{([\w.]+)\}\}`
+  vient de mooove-invoice, dont les identifiants de champ sont des slugs. Ceux de
+  Papyrus sont des **UUID**, donc ils contiennent des tirets — que `\w` exclut.
+  Chaque réponse insérée partait telle quelle : « Bonjour
+  {{ea92b44b-d0e7-…}}, ». Rien ne le signalait ; il a fallu lire un message rendu.
+- **Les montants à quatre chiffres s'imprimaient « 3?000,00 ».** `formatMoney`
+  produit du fr-FR, où l'espace des milliers est une ESPACE FINE INSÉCABLE
+  (U+202F) : hors de Latin-1, donc remplacée par `?` avant d'atteindre le PDF.
+- **Les valeurs de jeton n'étaient pas échappées.** Elles viennent du répondant :
+  un nom contenant `<b>` déformait le message, et une balise mieux choisie aurait
+  fait pire. Le gabarit, lui, reste du HTML voulu — c'est l'auteur qui l'écrit.
+- **Une règle sans condition captait tout.** Elle correspond à n'importe quelle
+  réponse, donc elle masque en silence toutes celles qui la suivent. Elle est
+  maintenant ignorée à l'envoi *et* retirée à l'enregistrement, pour que
+  l'auteur voie disparaître ce qui ne servait à rien.
+
+**Deux choix d'interface qui ne sont pas cosmétiques.** Un jeton s'affiche dans
+l'éditeur sous le **libellé** de sa question, mais s'enregistre par son
+**identifiant** : renommer une question ne doit pas casser en silence les e-mails
+qui la citent, et un auteur ne doit pas relire un paragraphe rempli d'UUID. Et
+l'aperçu passe par la **même** fonction de rendu que l'envoi — un aperçu
+approximatif est pire que pas d'aperçu, parce qu'on cesse de vérifier le vrai
+message.
+
+**Le document PDF est le même dans les deux cas**, récapitulatif ou bon de
+commande : ce qui les distingue est la présence d'un numéro et de totaux, pas la
+mise en page. Deux gabarits divergeraient au premier changement.
+
+**Ce qui manque pour que la phase serve en production** : `RESEND_API_KEY`
+n'est configurée nulle part — ni en local, ni dans le service Easypanel. Le
+chemin complet est vérifié jusqu'à l'appel réseau (Resend répond « API key is
+invalid » avec une clé factice, et l'échec est écrit sur la réponse), mais aucun
+e-mail ne peut partir tant que la clé n'est pas posée. L'accusé de réception
+hérité avait déjà ce défaut, ce qui explique que personne ne l'ait vu.
 
 **5 — Records, Insights, Share, Integrations.** Workflow de statut, filtres, PDF
 par réponse, export XLSX en masse, resynchronisation. Vue Records agrégée au
@@ -396,6 +456,13 @@ public, de la tarification et du parcours partenaire.
   l'interface ne montre encore à l'auteur qu'une question est masquée à la fois
   par une règle et par un verrou. À surveiller quand la phase 7 laissera l'IA
   écrire les deux.
+- **Aucun libellé de la vue publique n'est associé à son contrôle.** Le `<label>`
+  d'une question n'a ni `for` ni imbrication, pour tous les types de champ : un
+  lecteur d'écran annonce une zone de saisie sans nom, et un test de navigateur
+  ne peut viser un champ que par son invite. Défaut antérieur à la phase 4,
+  découvert en écrivant ses tests, et qui vit dans `FieldRenderer` — partagé avec
+  le constructeur. À reprendre en phase 8, avec le reste du durcissement du rendu
+  public.
 - **59 violations des règles du React Compiler** (`eslint-plugin-react-hooks` v6),
   révélées par la phase 0 : 31 `set-state-in-effect`, 13 `refs`, 6
   `static-components`, 5 `immutability`, 2 `preserve-manual-memoization`, 2

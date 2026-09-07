@@ -287,6 +287,61 @@ layer(base);
    * confondrait avec « fond blanc » : c'est la convention des éditeurs d'images,
    * reprise ici parce qu'elle se lit sans légende.
    */
+  /*
+   * Corps d'e-mail, dans l'éditeur et dans son aperçu.
+   *
+   * Le HTML produit par TipTap n'hérite d'aucun style : sans ces règles, une
+   * liste à puces s'écrit sans puces et un lien ne se distingue pas du texte.
+   * L'auteur croirait alors que la commande n'a pas fonctionné, alors que la
+   * balise est bien là — et elle s'affichera correctement chez le destinataire.
+   */
+  .prose-email p {
+    margin: 0 0 0.75em;
+  }
+  .prose-email p:last-child {
+    margin-bottom: 0;
+  }
+  .prose-email ul,
+  .prose-email ol {
+    margin: 0 0 0.75em;
+    padding-left: 1.35em;
+  }
+  .prose-email ul {
+    list-style: disc;
+  }
+  .prose-email ol {
+    list-style: decimal;
+  }
+  .prose-email li {
+    margin: 0.15em 0;
+  }
+  .prose-email a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .prose-email strong {
+    font-weight: 600;
+  }
+
+  /*
+   * Un jeton `{{…}}` dans l'éditeur, affiché sous le libellé de sa question.
+   *
+   * Il se distingue du texte parce qu'il n'en est pas : c'est un emplacement,
+   * remplacé à l'envoi. Sans cette marque, l'auteur relit son message sans voir
+   * ce qui va changer.
+   */
+  .email-token {
+    display: inline-block;
+    border-radius: 0.25rem;
+    background-color: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--fg-primary);
+    padding: 0 0.35em;
+    font-size: 0.92em;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
   .papyrus-checkerboard {
     background-color: var(--bg-surface);
     background-image:

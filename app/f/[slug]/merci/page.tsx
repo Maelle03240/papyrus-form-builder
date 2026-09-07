@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { Check } from 'lucide-react';
 import { getPublicForm } from '@/lib/public-form';
+import { pickText } from '@/lib/email/tokens';
+import type { ConfirmationConfig } from '@/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -18,6 +20,10 @@ interface PageProps {
  *
  * Elle lisait la table `forms` avec le client navigateur : même cause, même
  * conséquence que la page publique — un 404 systématique.
+ *
+ * Le titre et le message viennent du même réglage que l'écran du parcours
+ * normal. Les jetons `{{…}}` n'y sont PAS résolus, et le numéro n'y figure
+ * pas : arrivé par un signet, personne ne sait de quelle réponse il s'agit.
  */
 export default async function ThankYouRoute({ params }: PageProps) {
   const { slug } = await params;
@@ -26,6 +32,11 @@ export default async function ThankYouRoute({ params }: PageProps) {
   if (!form) notFound();
 
   const accentColor = form.theme?.accent || '#052139';
+  const config = (form.confirmation_config ?? {}) as ConfirmationConfig;
+  const language = form.default_language || 'fr';
+  const title = pickText(config.title, language) || 'Merci pour votre réponse !';
+  const message =
+    pickText(config.message, language) || 'Nous avons bien reçu vos informations.';
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-bg-base p-6 text-center">
@@ -38,12 +49,8 @@ export default async function ThankYouRoute({ params }: PageProps) {
         </div>
 
         <div className="space-y-2">
-          <h1 className="font-display text-3xl font-bold text-text-primary">
-            Merci pour votre réponse !
-          </h1>
-          <p className="text-sm text-text-secondary">
-            Nous avons bien reçu vos informations.
-          </p>
+          <h1 className="font-display text-3xl font-bold text-text-primary">{title}</h1>
+          <p className="text-sm text-text-secondary">{message}</p>
         </div>
 
         <div className="border-t border-border pt-4">
