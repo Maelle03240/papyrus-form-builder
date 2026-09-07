@@ -258,7 +258,7 @@ function SubfieldRow({
         <button
           type="button"
           onClick={onRemove}
-          className="rounded p-1 text-text-tertiary transition hover:bg-danger/10 hover:text-danger"
+          className="rounded-sm p-1 text-text-tertiary transition hover:bg-danger/10 hover:text-danger"
           aria-label="Supprimer"
         >
           <Trash2 className="h-3.5 w-3.5" />
@@ -275,7 +275,7 @@ function SubfieldRow({
               value={subfield.label.fr ?? ''}
               onChange={(e) => patchLabel(e.target.value)}
               placeholder="Question complémentaire"
-              className="mt-1 h-8 w-full rounded border border-border-strong bg-bg-base px-2 text-sm text-text-primary focus:border-accent focus:outline-none"
+              className="mt-1 h-8 w-full rounded-sm border border-border-strong bg-bg-base px-2 text-sm text-text-primary focus:border-accent focus:outline-hidden"
             />
           </div>
 
@@ -288,7 +288,7 @@ function SubfieldRow({
                 value={subfield.placeholder.fr ?? ''}
                 onChange={(e) => patchPlaceholder(e.target.value)}
                 placeholder="Texte indicatif (optionnel)"
-                className="mt-1 h-8 w-full rounded border border-border-strong bg-bg-base px-2 text-xs text-text-primary focus:border-accent focus:outline-none"
+                className="mt-1 h-8 w-full rounded-sm border border-border-strong bg-bg-base px-2 text-xs text-text-primary focus:border-accent focus:outline-hidden"
               />
             </div>
           )}
@@ -303,13 +303,13 @@ function SubfieldRow({
                   <input
                     value={opt.label.fr ?? ''}
                     onChange={(e) => updateOption(opt.id, e.target.value)}
-                    className="h-7 flex-1 rounded border border-border-strong bg-bg-base px-2 text-xs text-text-primary focus:border-accent focus:outline-none"
+                    className="h-7 flex-1 rounded-sm border border-border-strong bg-bg-base px-2 text-xs text-text-primary focus:border-accent focus:outline-hidden"
                   />
                   <button
                     type="button"
                     onClick={() => removeOption(opt.id)}
                     disabled={subfield.options.length <= 1}
-                    className="rounded p-0.5 text-text-tertiary opacity-0 transition hover:bg-danger/10 hover:text-danger group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-20"
+                    className="rounded-sm p-0.5 text-text-tertiary opacity-0 transition hover:bg-danger/10 hover:text-danger group-hover:opacity-100 disabled:cursor-not-allowed disabled:opacity-20"
                     aria-label="Supprimer"
                   >
                     <Trash2 className="h-3 w-3" />
@@ -338,7 +338,7 @@ function SubfieldRow({
                     validation: { ...subfield.validation, max: Number(e.target.value) }
                   })
                 }
-                className="mt-1 h-8 w-full rounded border border-border-strong bg-bg-surface px-2 text-xs focus:border-accent focus:outline-none"
+                className="mt-1 h-8 w-full rounded-sm border border-border-strong bg-bg-surface px-2 text-xs focus:border-accent focus:outline-hidden"
               >
                 {[3, 5, 7, 10].map((n) => (
                   <option key={n} value={n}>

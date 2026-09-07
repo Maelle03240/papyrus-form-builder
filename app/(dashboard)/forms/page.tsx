@@ -591,7 +591,7 @@ export default function FormsListPage() {
                     type="button"
                     onClick={() => setOwnerFilter(active ? null : value)}
                     className={cn(
-                      'inline-flex items-center gap-2 rounded px-3 py-1.5 text-sm transition',
+                      'inline-flex items-center gap-2 rounded-sm px-3 py-1.5 text-sm transition',
                       active
                         ? 'bg-bg-elevated text-text-primary'
                         : 'text-text-secondary hover:text-text-primary'
@@ -754,9 +754,9 @@ export default function FormsListPage() {
                 onClick={() => handleMethodChange('site')}
                 disabled={isGenerating || isImportingMyIa}
                 className={cn(
-                  "flex items-center justify-center gap-1.5 rounded py-2 transition",
+                  "flex items-center justify-center gap-1.5 rounded-sm py-2 transition",
                   aiMethod === 'site'
-                    ? "bg-bg-surface text-text-primary shadow"
+                    ? "bg-bg-surface text-text-primary shadow-sm"
                     : "text-text-secondary hover:text-text-primary"
                 )}
               >
@@ -768,9 +768,9 @@ export default function FormsListPage() {
                 onClick={() => handleMethodChange('my-ia')}
                 disabled={isGenerating || isImportingMyIa}
                 className={cn(
-                  "flex items-center justify-center gap-1.5 rounded py-2 transition",
+                  "flex items-center justify-center gap-1.5 rounded-sm py-2 transition",
                   aiMethod === 'my-ia'
-                    ? "bg-bg-surface text-text-primary shadow"
+                    ? "bg-bg-surface text-text-primary shadow-sm"
                     : "text-text-secondary hover:text-text-primary"
                 )}
               >
@@ -874,7 +874,7 @@ Q1 - Êtes-vous satisfait ? (Oui/Non)
 - Non (0 point) -> redirige vers Q2
 Q2 - Pourquoi ? (texte libre)
 ..."
-                      className="h-48 w-full rounded-md border border-border bg-bg-surface p-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none disabled:opacity-50"
+                      className="h-48 w-full rounded-md border border-border bg-bg-surface p-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden disabled:opacity-50"
                     />
                     <div className="flex justify-between items-center text-[10px] text-text-tertiary">
                       <span>Caractères : {aiJsonInput.length} / 3000 max</span>
@@ -927,7 +927,7 @@ Q2 - Pourquoi ? (texte libre)
                     type="button"
                     onClick={handleCopyPrompt}
                     className={cn(
-                      "inline-flex items-center gap-2 rounded-md px-6 py-2.5 text-xs font-semibold shadow-sm transition-all border w-full justify-center max-w-[280px]",
+                      "inline-flex items-center gap-2 rounded-md px-6 py-2.5 text-xs font-semibold shadow-xs transition-all border w-full justify-center max-w-[280px]",
                       copiedPrompt
                         ? "bg-green-500/10 border-green-500 text-green-600 dark:text-green-400"
                         : "bg-mooove-cyan/10 border-mooove-cyan/30 text-mooove-cyan hover:bg-mooove-cyan/20"
@@ -942,7 +942,7 @@ Q2 - Pourquoi ? (texte libre)
                       href="https://chatgpt.com"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-1.5 rounded-md border border-border bg-bg-surface px-2.5 py-2 text-xs font-semibold text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition shadow-sm text-center"
+                      className="inline-flex items-center justify-center gap-1.5 rounded-md border border-border bg-bg-surface px-2.5 py-2 text-xs font-semibold text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition shadow-xs text-center"
                     >
                       ChatGPT
                       <ExternalLink className="h-3 w-3" />
@@ -952,7 +952,7 @@ Q2 - Pourquoi ? (texte libre)
                       href="https://claude.ai"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-1.5 rounded-md border border-border bg-bg-surface px-2.5 py-2 text-xs font-semibold text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition shadow-sm text-center"
+                      className="inline-flex items-center justify-center gap-1.5 rounded-md border border-border bg-bg-surface px-2.5 py-2 text-xs font-semibold text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition shadow-xs text-center"
                     >
                       Claude
                       <ExternalLink className="h-3 w-3" />
@@ -962,7 +962,7 @@ Q2 - Pourquoi ? (texte libre)
                       href="https://gemini.google.com"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-1.5 rounded-md border border-border bg-bg-surface px-2.5 py-2 text-xs font-semibold text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition shadow-sm text-center"
+                      className="inline-flex items-center justify-center gap-1.5 rounded-md border border-border bg-bg-surface px-2.5 py-2 text-xs font-semibold text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition shadow-xs text-center"
                     >
                       Gemini
                       <ExternalLink className="h-3 w-3" />
@@ -985,7 +985,7 @@ Q2 - Pourquoi ? (texte libre)
     ...
   ]
 }'
-                    className="h-48 w-full font-mono rounded-md border border-border bg-bg-surface p-3 text-xs text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none disabled:opacity-50"
+                    className="h-48 w-full font-mono rounded-md border border-border bg-bg-surface p-3 text-xs text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden disabled:opacity-50"
                   />
                 </div>
 
@@ -1063,14 +1063,14 @@ function SearchBar({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-9 w-full rounded-md border border-border bg-bg-surface pl-8 pr-8 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none"
+        className="h-9 w-full rounded-md border border-border bg-bg-surface pl-8 pr-8 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden"
       />
       {value && (
         <button
           type="button"
           onClick={() => onChange('')}
           aria-label="Effacer la recherche"
-          className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-text-tertiary transition hover:bg-bg-elevated hover:text-text-primary"
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-sm p-1 text-text-tertiary transition hover:bg-bg-elevated hover:text-text-primary"
         >
           <X className="h-3 w-3" />
         </button>
@@ -1171,7 +1171,7 @@ function FormsTable({
                       type="text"
                       value={editFormTitle}
                       onChange={(e) => setEditFormTitle(e.target.value)}
-                      className="h-8 w-full rounded-md border border-border-strong bg-bg-surface px-2.5 text-sm focus:border-accent focus:outline-none"
+                      className="h-8 w-full rounded-md border border-border-strong bg-bg-surface px-2.5 text-sm focus:border-accent focus:outline-hidden"
                       autoFocus
                       onBlur={() => {
                         if (editFormTitle.trim() && editFormTitle.trim() !== f.title) {
@@ -1219,7 +1219,7 @@ function FormsTable({
                 <div className="flex items-center justify-end">
                   <button
                     onClick={(e) => handleOpenMenu(f.id, e)}
-                    className="p-1 rounded text-text-tertiary hover:bg-bg-elevated hover:text-text-primary transition"
+                    className="p-1 rounded-sm text-text-tertiary hover:bg-bg-elevated hover:text-text-primary transition"
                     aria-label="Options"
                   >
                     <MoreHorizontal className="h-4 w-4" />
@@ -1246,7 +1246,7 @@ function FormsTable({
                 router.push(`/forms/${activeMenuId}/edit`);
                 setActiveMenuId(null);
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
             >
               <Edit2 className="h-4 w-4 text-text-tertiary" />
               Modifier
@@ -1260,7 +1260,7 @@ function FormsTable({
                 }
                 setActiveMenuId(null);
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
             >
               <Edit2 className="h-4 w-4 text-text-tertiary" />
               Renommer
@@ -1274,7 +1274,7 @@ function FormsTable({
                 }
                 setActiveMenuId(null);
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
             >
               <Share2 className="h-4 w-4 text-text-tertiary" />
               Copier le lien de partage
@@ -1284,7 +1284,7 @@ function FormsTable({
                 onMoveForm(activeMenuId);
                 setActiveMenuId(null);
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
             >
               <FolderInput className="h-4 w-4 text-text-tertiary" />
               Changer d'espace de travail
@@ -1297,7 +1297,7 @@ function FormsTable({
                 }
                 setActiveMenuId(null);
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
             >
               <Clock className="h-4 w-4 text-text-tertiary" />
               Date de clôture
@@ -1307,7 +1307,7 @@ function FormsTable({
                 onDuplicate(activeMenuId);
                 setActiveMenuId(null);
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
             >
               <Copy className="h-4 w-4 text-text-tertiary" />
               Dupliquer
@@ -1317,7 +1317,7 @@ function FormsTable({
                 handleExportJson(activeMenuId);
                 setActiveMenuId(null);
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
             >
               <Download className="h-4 w-4 text-text-tertiary" />
               Exporter (JSON)
@@ -1331,7 +1331,7 @@ function FormsTable({
                 }
                 setActiveMenuId(null);
               }}
-              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-danger hover:bg-danger/5 transition font-semibold rounded"
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-danger hover:bg-danger/5 transition font-semibold rounded-sm"
             >
               <Trash2 className="h-4 w-4" />
               Supprimer

@@ -166,7 +166,7 @@ function SettingsTab({ form, onFormChange }: { form: Form; onFormChange: (patch:
                     value={form.theme.score_label ?? ''}
                     onChange={(e) => onFormChange({ theme: { ...form.theme, score_label: e.target.value } })}
                     placeholder="Score"
-                    className="h-7 w-full rounded border border-border bg-bg-surface px-2 text-[11px] text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none"
+                    className="h-7 w-full rounded-sm border border-border bg-bg-surface px-2 text-[11px] text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden"
                   />
                 </div>
                 <div>
@@ -177,7 +177,7 @@ function SettingsTab({ form, onFormChange }: { form: Form; onFormChange: (patch:
                     value={form.theme.score_description ?? ''}
                     onChange={(e) => onFormChange({ theme: { ...form.theme, score_description: e.target.value } })}
                     placeholder="Basé sur vos réponses à ce formulaire"
-                    className="h-7 w-full rounded border border-border bg-bg-surface px-2 text-[11px] text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none"
+                    className="h-7 w-full rounded-sm border border-border bg-bg-surface px-2 text-[11px] text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden"
                   />
                 </div>
               </div>
@@ -251,7 +251,7 @@ function SettingsTab({ form, onFormChange }: { form: Form; onFormChange: (patch:
                   };
 
                   return (
-                    <div key={idx} className="rounded border border-border p-2 space-y-1.5 bg-bg-base/30 relative">
+                    <div key={idx} className="rounded-sm border border-border p-2 space-y-1.5 bg-bg-base/30 relative">
                       <button
                         type="button"
                         onClick={deleteLevel}
@@ -272,7 +272,7 @@ function SettingsTab({ form, onFormChange }: { form: Form; onFormChange: (patch:
                             const val = Math.max(0, Math.min(100, parseInt(e.target.value) || 0));
                             updateLevel({ minPercent: val });
                           }}
-                          className="h-6 rounded border border-border bg-bg-surface px-1.5 text-[11px] focus:border-accent focus:outline-none w-16"
+                          className="h-6 rounded-sm border border-border bg-bg-surface px-1.5 text-[11px] focus:border-accent focus:outline-hidden w-16"
                         />
                       </div>
 
@@ -282,7 +282,7 @@ function SettingsTab({ form, onFormChange }: { form: Form; onFormChange: (patch:
                           type="text"
                           value={level.title}
                           onChange={(e) => updateLevel({ title: e.target.value })}
-                          className="h-6 rounded border border-border bg-bg-surface px-1.5 text-[11px] focus:border-accent focus:outline-none w-full"
+                          className="h-6 rounded-sm border border-border bg-bg-surface px-1.5 text-[11px] focus:border-accent focus:outline-hidden w-full"
                         />
                       </div>
 
@@ -291,7 +291,7 @@ function SettingsTab({ form, onFormChange }: { form: Form; onFormChange: (patch:
                         <textarea
                           value={level.description}
                           onChange={(e) => updateLevel({ description: e.target.value })}
-                          className="h-12 rounded border border-border bg-bg-surface p-1.5 text-[11px] focus:border-accent focus:outline-none w-full resize-none leading-tight"
+                          className="h-12 rounded-sm border border-border bg-bg-surface p-1.5 text-[11px] focus:border-accent focus:outline-hidden w-full resize-none leading-tight"
                         />
                       </div>
 
@@ -300,7 +300,7 @@ function SettingsTab({ form, onFormChange }: { form: Form; onFormChange: (patch:
                         <select
                           value={level.color}
                           onChange={(e) => updateLevel({ color: e.target.value as any })}
-                          className="h-6 rounded border border-border bg-bg-surface px-1.5 text-[11px] focus:border-accent focus:outline-none w-28"
+                          className="h-6 rounded-sm border border-border bg-bg-surface px-1.5 text-[11px] focus:border-accent focus:outline-hidden w-28"
                         >
                           <option value="green">Vert (Excellent)</option>
                           <option value="blue">Bleu (Bien)</option>
@@ -383,7 +383,7 @@ function SettingsTab({ form, onFormChange }: { form: Form; onFormChange: (patch:
               type="datetime-local"
               value={form.closes_at.slice(0, 16)}
               onChange={(e) => onFormChange({ closes_at: e.target.value })}
-              className="h-10 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm text-text-primary focus:border-accent focus:outline-none"
+              className="h-10 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm text-text-primary focus:border-accent focus:outline-hidden"
             />
           </div>
         )}
@@ -519,7 +519,7 @@ function BackgroundTab({ theme, onChange }: { theme: FormTheme; onChange: (patch
             <DebouncedColorInput
               value={theme.bg_color ?? theme.bg ?? '#EFF9FE'}
               onChange={(val) => onChange({ bg_color: val, bg: val })}
-              className="h-9 w-12 cursor-pointer rounded border border-border-strong bg-bg-base"
+              className="h-9 w-12 cursor-pointer rounded-sm border border-border-strong bg-bg-base"
             />
             <Input
               value={theme.bg_color ?? theme.bg ?? ''}
@@ -540,7 +540,7 @@ function BackgroundTab({ theme, onChange }: { theme: FormTheme; onChange: (patch
               <DebouncedColorInput
                 value={theme.bg_gradient_from ?? '#EFF9FE'}
                 onChange={(val) => onChange({ bg_gradient_from: val })}
-                className="h-9 w-12 cursor-pointer rounded border border-border-strong bg-bg-base"
+                className="h-9 w-12 cursor-pointer rounded-sm border border-border-strong bg-bg-base"
               />
               <Input
                 value={theme.bg_gradient_from ?? ''}
@@ -556,7 +556,7 @@ function BackgroundTab({ theme, onChange }: { theme: FormTheme; onChange: (patch
               <DebouncedColorInput
                 value={theme.bg_gradient_to ?? '#EFF9FE'}
                 onChange={(val) => onChange({ bg_gradient_to: val })}
-                className="h-9 w-12 cursor-pointer rounded border border-border-strong bg-bg-base"
+                className="h-9 w-12 cursor-pointer rounded-sm border border-border-strong bg-bg-base"
               />
               <Input
                 value={theme.bg_gradient_to ?? ''}
@@ -713,7 +713,7 @@ function BackgroundTab({ theme, onChange }: { theme: FormTheme; onChange: (patch
           <DebouncedColorInput
             value={theme.field_bg_color ?? '#FFFFFF'}
             onChange={(val) => onChange({ field_bg_color: val })}
-            className="h-9 w-12 cursor-pointer rounded border border-border-strong bg-bg-base"
+            className="h-9 w-12 cursor-pointer rounded-sm border border-border-strong bg-bg-base"
           />
           <Input
             value={theme.field_bg_color ?? ''}
@@ -784,7 +784,7 @@ function FormStyleTab({
                 type="button"
                 onClick={() => onChange({ accent: c })}
                 className={cn(
-                  'h-5 w-5 rounded border transition',
+                  'h-5 w-5 rounded-sm border transition',
                   active ? 'ring-1 ring-accent ring-offset-1 ring-offset-bg-surface' : 'border-border'
                 )}
                 style={{ backgroundColor: c }}
@@ -797,7 +797,7 @@ function FormStyleTab({
           <DebouncedColorInput
             value={theme.accent ?? '#052139'}
             onChange={(val) => onChange({ accent: val })}
-            className="h-9 w-12 cursor-pointer rounded border border-border-strong bg-bg-base"
+            className="h-9 w-12 cursor-pointer rounded-sm border border-border-strong bg-bg-base"
             aria-label="Couleur des boutons"
           />
           <Input

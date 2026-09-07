@@ -151,7 +151,7 @@ export const FieldCard = memo(function FieldCard({
       className={cn(
         'group relative cursor-pointer rounded-lg border px-5 pb-4 pt-3 transition',
         cardBg ? '' : 'bg-bg-surface',
-        selected ? 'border-accent shadow-sm' : 'border-border hover:border-border-strong',
+        selected ? 'border-accent shadow-xs' : 'border-border hover:border-border-strong',
         isDragging && 'shadow-xl'
       )}
     >
@@ -160,7 +160,7 @@ export const FieldCard = memo(function FieldCard({
         type="button"
         {...dragHandleProps}
         onClick={(e) => e.stopPropagation()}
-        className="absolute -left-7 top-1/2 -translate-y-1/2 cursor-grab rounded p-1 text-text-tertiary opacity-0 transition hover:bg-bg-elevated hover:text-text-primary group-hover:opacity-100 active:cursor-grabbing"
+        className="absolute -left-7 top-1/2 -translate-y-1/2 cursor-grab rounded-sm p-1 text-text-tertiary opacity-0 transition hover:bg-bg-elevated hover:text-text-primary group-hover:opacity-100 active:cursor-grabbing"
         aria-label="Glisser pour réordonner"
       >
         <GripVertical className="h-4 w-4" />
@@ -274,7 +274,7 @@ export const FieldCard = memo(function FieldCard({
             style={labelInlineStyle}
             maxLength={LIMITS.FIELD_LABEL_MAX}
             className={cn(
-              '-mx-1 min-w-0 flex-1 rounded bg-transparent px-1 leading-snug text-text-primary placeholder:text-text-tertiary focus:bg-bg-elevated/50 focus:outline-none',
+              '-mx-1 min-w-0 flex-1 rounded-sm bg-transparent px-1 leading-snug text-text-primary placeholder:text-text-tertiary focus:bg-bg-elevated/50 focus:outline-hidden',
               labelClass
             )}
           />
@@ -324,7 +324,7 @@ export const FieldCard = memo(function FieldCard({
               style={labelInlineStyle}
               maxLength={LIMITS.SECTION_TITLE_MAX}
               className={cn(
-                '-mx-1 mb-1.5 w-full rounded bg-transparent px-1 leading-snug text-text-primary placeholder:text-text-tertiary focus:bg-bg-elevated/50 focus:outline-none',
+                '-mx-1 mb-1.5 w-full rounded-sm bg-transparent px-1 leading-snug text-text-primary placeholder:text-text-tertiary focus:bg-bg-elevated/50 focus:outline-hidden',
                 labelClass
               )}
             />
@@ -339,7 +339,7 @@ export const FieldCard = memo(function FieldCard({
           onChange={(e) => patchText('description', e.target.value)}
           placeholder={isStatement ? 'Tapez votre texte…' : 'Description (optionnelle)'}
           maxLength={field.type === 'statement' ? LIMITS.STATEMENT_TEXT_MAX : LIMITS.FIELD_DESCRIPTION_MAX}
-          className="-mx-1 mb-2.5 w-full rounded bg-transparent px-1 text-sm italic text-text-secondary placeholder:text-text-tertiary placeholder:not-italic focus:bg-bg-elevated/50 focus:outline-none"
+          className="-mx-1 mb-2.5 w-full rounded-sm bg-transparent px-1 text-sm italic text-text-secondary placeholder:text-text-tertiary placeholder:not-italic focus:bg-bg-elevated/50 focus:outline-hidden"
         />
       )}
 
@@ -396,7 +396,7 @@ function ToolbarButton({
       aria-label={label}
       title={label}
       className={cn(
-        'rounded p-1.5 transition',
+        'rounded-sm p-1.5 transition',
         active
           ? 'bg-accent/10 text-accent'
           : danger

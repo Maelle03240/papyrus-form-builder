@@ -232,7 +232,7 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
                 className={cn(
                   "flex-1 rounded-md py-1.5 text-xs font-medium transition",
                   pickerTab === 'icons'
-                    ? "bg-bg-surface text-text-primary shadow-sm border border-border"
+                    ? "bg-bg-surface text-text-primary shadow-xs border border-border"
                     : "text-text-tertiary hover:text-text-secondary"
                 )}
               >
@@ -244,7 +244,7 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
                 className={cn(
                   "flex-1 rounded-md py-1.5 text-xs font-medium transition",
                   pickerTab === 'emojis'
-                    ? "bg-bg-surface text-text-primary shadow-sm border border-border"
+                    ? "bg-bg-surface text-text-primary shadow-xs border border-border"
                     : "text-text-tertiary hover:text-text-secondary"
                 )}
               >
@@ -277,7 +277,7 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
                       className="hover:border-accent"
                       title={iconName}
                     >
-                      <i className={`ti ${iconName}`} style={{ fontSize: 16, color: active ? 'var(--mooove-cyan)' : 'var(--text-secondary)' }} />
+                      <i className={`ti ${iconName}`} style={{ fontSize: 16, color: active ? 'var(--mooove-cyan)' : 'var(--fg-secondary)' }} />
                     </button>
                   );
                 })}
@@ -290,7 +290,7 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
                   maxLength={2}
                   value={field.style?.icon_value && !field.style.icon_value.startsWith('ti-') ? field.style.icon_value : ''}
                   onChange={(e) => onFieldStyleChange({ icon_value: e.target.value })}
-                  className="w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none"
+                  className="w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden"
                 />
                 <div className="grid grid-cols-10 gap-1.5">
                   {PICKER_EMOJIS.map((emoji) => {
@@ -449,7 +449,7 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
           <select
             value={field.validation?.default_country ?? 'FR'}
             onChange={(e) => patchValidation({ default_country: e.target.value })}
-            className="h-10 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm focus:border-accent focus:outline-none"
+            className="h-10 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm focus:border-accent focus:outline-hidden"
           >
             {COUNTRIES.map((c) => (
               <option key={c.code} value={c.code}>
@@ -466,7 +466,7 @@ function ContentTab({ form, field, onChange }: { form: Form; field: Field; onCha
           <select
             value={field.validation?.max ?? 5}
             onChange={(e) => patchValidation({ max: Number(e.target.value) })}
-            className="h-10 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm focus:border-accent focus:outline-none"
+            className="h-10 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm focus:border-accent focus:outline-hidden"
           >
             {[3, 5, 7, 10].map((n) => (
               <option key={n} value={n}>
@@ -726,7 +726,7 @@ function MediaSettings({
 }: {
   field: Field;
   patchValidation: (patch: Partial<import('@/types').FieldValidation>) => void;
-  fileInputRef: React.RefObject<HTMLInputElement>;
+  fileInputRef: React.RefObject<HTMLInputElement | null>;
   handleImageUpload: (file: File) => void;
   onChange: (patch: Partial<Field>) => void;
   uploading: boolean;
@@ -991,7 +991,7 @@ function MediaSettings({
                         image_height: field.validation?.original_height
                       });
                     }}
-                    className="px-3 py-1 text-xs text-accent hover:text-accent-dark hover:bg-accent/5 rounded transition"
+                    className="px-3 py-1 text-xs text-accent hover:text-accent-dark hover:bg-accent/5 rounded-sm transition"
                   >
                     Réinitialiser
                   </button>

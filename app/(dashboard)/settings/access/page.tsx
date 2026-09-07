@@ -180,7 +180,7 @@ export default function AccessSettingsPage() {
             onChange={(e) => setDomainDraft(e.target.value)}
             placeholder="mooove.live"
             aria-label="Domaine à autoriser"
-            className="h-11 flex-1 rounded-xl border border-border-strong bg-bg-base px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent-cta focus:outline-none"
+            className="h-11 flex-1 rounded-xl border border-border-strong bg-bg-base px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent-cta focus:outline-hidden"
           />
           <Button type="submit" variant="cta" loading={saving} disabled={!domainDraft.trim()}>
             <Plus className="mr-1 h-4 w-4" />

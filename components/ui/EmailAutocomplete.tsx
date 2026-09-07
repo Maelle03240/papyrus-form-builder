@@ -147,12 +147,12 @@ export function EmailAutocomplete({
               onClick={() => selectSuggestion(suggestion)}
               className={cn(
                 "w-full flex items-center gap-3 px-4 py-3 text-left text-sm",
-                "hover:bg-bg-elevated focus:bg-bg-elevated focus:outline-none",
+                "hover:bg-bg-elevated focus:bg-bg-elevated focus:outline-hidden",
                 "border-b border-border last:border-b-0",
                 selectedIndex === index && "bg-blue-50"
               )}
             >
-              <div className="w-8 h-8 bg-var(--mooove-navy) rounded-full flex items-center justify-center text-white text-xs font-medium flex-shrink-0">
+              <div className="w-8 h-8 bg-var(--mooove-navy) rounded-full flex items-center justify-center text-white text-xs font-medium shrink-0">
                 {suggestion.name ?
                   suggestion.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2) :
                   suggestion.email[0].toUpperCase()

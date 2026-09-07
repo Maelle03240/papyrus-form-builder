@@ -37,7 +37,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
               'h-9 w-full rounded-md border bg-bg-surface px-3 text-sm text-text-primary',
               isPasswordType && 'pr-10',
               'placeholder:text-text-tertiary',
-              'transition focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent-cta/20',
+              'transition focus:border-accent focus:outline-hidden focus:ring-2 focus:ring-accent-cta/20',
               error ? 'border-danger' : 'border-border-strong',
               className
             )}

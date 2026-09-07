@@ -90,7 +90,7 @@ export function ClosingDateModal({
                 type="datetime-local"
                 value={dateValue}
                 onChange={(e) => setDateValue(e.target.value)}
-                className="h-10 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm text-text-primary focus:border-accent focus:outline-none"
+                className="h-10 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm text-text-primary focus:border-accent focus:outline-hidden"
               />
             </div>
           )}

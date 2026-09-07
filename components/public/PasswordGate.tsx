@@ -106,7 +106,7 @@ export function PasswordGate({
             aria-label="Mot de passe"
             aria-invalid={error !== null}
             placeholder="Mot de passe"
-            className="h-11 w-full rounded-xl border border-border-strong bg-bg-surface px-4 text-center text-sm text-text-primary focus:border-accent focus:outline-none"
+            className="h-11 w-full rounded-xl border border-border-strong bg-bg-surface px-4 text-center text-sm text-text-primary focus:border-accent focus:outline-hidden"
           />
 
           {error && (

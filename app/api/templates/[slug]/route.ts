@@ -12,7 +12,8 @@ import { getTemplateDefinition } from '@/lib/templates/generated';
  * Mêmes garanties que la route d'index : contenu statique du dépôt, aucune
  * donnée d'utilisateur, aucune requête Supabase.
  */
-export async function GET(_request: Request, { params }: { params: { slug: string } }) {
+export async function GET(_request: Request, context: { params: Promise<{ slug: string }> }) {
+  const params = await context.params;
   const def = getTemplateDefinition(params.slug);
 
   if (!def) {

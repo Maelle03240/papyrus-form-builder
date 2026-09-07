@@ -305,7 +305,7 @@ function LocalTemplateCard({
   const fieldCount = form.fields?.length ?? 0;
 
   return (
-    <div className="group flex flex-col rounded-2xl border border-border bg-bg-surface p-5 transition hover:border-border-strong hover:shadow-sm">
+    <div className="group flex flex-col rounded-2xl border border-border bg-bg-surface p-5 transition hover:border-border-strong hover:shadow-xs">
       <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-bg-elevated text-text-secondary">
         <Icon className="h-5 w-5" />
       </div>
@@ -316,10 +316,10 @@ function LocalTemplateCard({
       )}
 
       <div className="mt-3 flex flex-wrap items-center gap-1.5">
-        <span className="rounded bg-bg-elevated px-2 py-0.5 text-[10px] text-text-tertiary">
+        <span className="rounded-sm bg-bg-elevated px-2 py-0.5 text-[10px] text-text-tertiary">
           {fieldCount} champ{fieldCount > 1 ? 's' : ''}
         </span>
-        <span className="rounded bg-bg-elevated px-2 py-0.5 text-[10px] text-text-tertiary">
+        <span className="rounded-sm bg-bg-elevated px-2 py-0.5 text-[10px] text-text-tertiary">
           {modeLabel(form.display_mode)}
         </span>
       </div>
@@ -364,14 +364,14 @@ function SearchBar({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="h-9 w-full rounded-md border border-border bg-bg-surface pl-8 pr-8 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none"
+        className="h-9 w-full rounded-md border border-border bg-bg-surface pl-8 pr-8 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden"
       />
       {value && (
         <button
           type="button"
           onClick={() => onChange('')}
           aria-label="Effacer la recherche"
-          className="absolute right-2 top-1/2 -translate-y-1/2 rounded p-1 text-text-tertiary transition hover:bg-bg-elevated hover:text-text-primary"
+          className="absolute right-2 top-1/2 -translate-y-1/2 rounded-sm p-1 text-text-tertiary transition hover:bg-bg-elevated hover:text-text-primary"
         >
           <X className="h-3 w-3" />
         </button>

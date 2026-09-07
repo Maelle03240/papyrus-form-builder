@@ -211,8 +211,8 @@ export function PhoneField({ name, required, placeholder, value, onChange }: Pho
             alt={selected.name}
             style={{ borderRadius: '2px', flexShrink: 0 }}
           />
-          <span style={{ color: 'var(--text-secondary)' }}>{selected.dial}</span>
-          <span style={{ fontSize: '10px', color: 'var(--text-tertiary)' }}>▼</span>
+          <span style={{ color: 'var(--fg-secondary)' }}>{selected.dial}</span>
+          <span style={{ fontSize: '10px', color: 'var(--fg-tertiary)' }}>▼</span>
         </button>
 
         {/* INPUT NUMÉRO */}
@@ -231,7 +231,7 @@ export function PhoneField({ name, required, placeholder, value, onChange }: Pho
             background: 'transparent',
             fontSize: '16px',
             outline: 'none',
-            color: 'var(--text-primary)',
+            color: 'var(--fg-primary)',
             ...(errorMessage && { borderColor: 'red' })
           }}
         />
@@ -282,7 +282,7 @@ export function PhoneField({ name, required, placeholder, value, onChange }: Pho
                 fontSize: '16px',
                 outline: 'none',
                 background: 'var(--bg-base)',
-                color: 'var(--text-primary)'
+                color: 'var(--fg-primary)'
               }}
             />
           </div>
@@ -315,7 +315,7 @@ export function PhoneField({ name, required, placeholder, value, onChange }: Pho
                     border: 'none',
                     cursor: 'pointer',
                     fontSize: '13px',
-                    color: 'var(--text-primary)',
+                    color: 'var(--fg-primary)',
                     textAlign: 'left'
                   }}
                 >
@@ -327,7 +327,7 @@ export function PhoneField({ name, required, placeholder, value, onChange }: Pho
                     style={{ borderRadius: '2px', flexShrink: 0 }}
                   />
                   <span style={{ flex: 1 }}>{country.name}</span>
-                  <span style={{ color: 'var(--text-secondary)' }}>{country.dial}</span>
+                  <span style={{ color: 'var(--fg-secondary)' }}>{country.dial}</span>
                 </button>
               ))
             }

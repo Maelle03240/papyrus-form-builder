@@ -58,7 +58,7 @@ export default function SettingsLayout({ children }: Props) {
 
       <div className="flex gap-6">
         {/* Sidebar navigation */}
-        <div className="w-56 flex-shrink-0">
+        <div className="w-56 shrink-0">
           <nav className="space-y-2">
             {SETTINGS_NAVIGATION.map((item) => {
               const isActive = pathname === item.href;
@@ -72,14 +72,14 @@ export default function SettingsLayout({ children }: Props) {
                   className={cn(
                     'flex flex-col rounded-xl px-4 py-3 text-left transition-all',
                     isActive
-                      ? 'bg-mooove-navy text-white shadow-sm'
+                      ? 'bg-mooove-navy text-white shadow-xs'
                       : 'text-text-primary hover:bg-bg-elevated'
                   )}
                 >
                   <div className="flex items-center gap-3">
                     <Icon
                       className={cn(
-                        'h-5 w-5 flex-shrink-0 transition-colors',
+                        'h-5 w-5 shrink-0 transition-colors',
                         isActive ? 'text-mooove-cyan' : 'text-text-secondary'
                       )}
                     />

@@ -544,7 +544,7 @@ export function FormHeader({ theme, selectedElement, onSelectBanner, onSelectLog
                 alt="Logo"
                 className={cn(
                   'w-full h-full object-cover transition-transform',
-                  logoShape === 'circle' ? 'rounded-full' : logoShape === 'rounded' ? 'rounded-xl' : 'rounded'
+                  logoShape === 'circle' ? 'rounded-full' : logoShape === 'rounded' ? 'rounded-xl' : 'rounded-sm'
                 )}
                 style={{
                   transform: `scale(${theme.logo_size ?? 1})`, // Zoom appliqué uniquement sur l'image
@@ -555,9 +555,9 @@ export function FormHeader({ theme, selectedElement, onSelectBanner, onSelectLog
               {!preview && (
                 <div className={cn(
                   'absolute inset-0 bg-black/0 hover:bg-black/20 transition-colors flex items-center justify-center',
-                  logoShape === 'circle' ? 'rounded-full' : logoShape === 'rounded' ? 'rounded-xl' : 'rounded'
+                  logoShape === 'circle' ? 'rounded-full' : logoShape === 'rounded' ? 'rounded-xl' : 'rounded-sm'
                 )}>
-                  <div className="opacity-0 hover:opacity-100 bg-white/90 px-2 py-1 rounded text-xs text-text-primary whitespace-nowrap">
+                  <div className="opacity-0 hover:opacity-100 bg-white/90 px-2 py-1 rounded-sm text-xs text-text-primary whitespace-nowrap">
                     Modifier logo
                   </div>
                 </div>
@@ -568,7 +568,7 @@ export function FormHeader({ theme, selectedElement, onSelectBanner, onSelectLog
               <div
                 className={cn(
                   "w-full h-full border-2 border-dashed border-border-strong bg-bg-surface flex items-center justify-center text-text-tertiary",
-                  logoShape === 'circle' ? 'rounded-full' : logoShape === 'rounded' ? 'rounded-xl' : 'rounded'
+                  logoShape === 'circle' ? 'rounded-full' : logoShape === 'rounded' ? 'rounded-xl' : 'rounded-sm'
                 )}
               >
                 <div className="flex flex-col items-center gap-1">

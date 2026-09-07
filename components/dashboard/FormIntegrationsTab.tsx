@@ -497,7 +497,7 @@ function ProviderCard({
       )}
     >
       <div className="flex items-center gap-2.5">
-        {icon ?? <div className="h-5 w-5 rounded bg-text-tertiary/20" />}
+        {icon ?? <div className="h-5 w-5 rounded-sm bg-text-tertiary/20" />}
         <h3 className="font-display text-base font-bold text-text-primary">{name}</h3>
       </div>
       <p className="flex-1 text-sm text-text-secondary">{description}</p>
@@ -761,7 +761,7 @@ function GoogleSheetsEditor({
               <input
                 value={newTitle}
                 onChange={(event) => setNewTitle(event.target.value)}
-                className="h-9 w-full rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+                className="h-9 w-full rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
               />
               <span className="mt-1.5 block text-xs text-text-tertiary">
                 Elle sera créée dans le Drive du compte Google connecté.
@@ -823,7 +823,7 @@ function GoogleSheetsEditor({
                     value={linkInput}
                     onChange={(event) => setLinkInput(event.target.value)}
                     placeholder="https://docs.google.com/spreadsheets/d/…"
-                    className="h-9 flex-1 rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+                    className="h-9 flex-1 rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
                   />
                   <Button size="sm" variant="secondary" onClick={lookupByLink}>
                     Vérifier
@@ -844,7 +844,7 @@ function GoogleSheetsEditor({
             <input
               value={sheetTitle}
               onChange={(event) => setSheetTitle(event.target.value)}
-              className="h-9 w-full rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+              className="h-9 w-full rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
             />
             <span className="mt-1.5 block text-xs text-text-tertiary">
               Créé s’il n’existe pas. La première ligne accueille les intitulés des questions.

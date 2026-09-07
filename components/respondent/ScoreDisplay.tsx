@@ -79,7 +79,7 @@ export function ScoreDisplay({ scoreResult, className, scoreLabel, scoreDescript
                 {scoreResult.fieldScores.map((fieldScore) => (
                   <div
                     key={fieldScore.fieldId}
-                    className="flex items-center justify-between rounded border border-border-weak bg-bg-base px-2 py-1.5"
+                    className="flex items-center justify-between rounded-sm border border-border-weak bg-bg-base px-2 py-1.5"
                   >
                     <span className="text-xs text-text-secondary">
                       {fieldScore.fieldLabel}

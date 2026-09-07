@@ -3,8 +3,11 @@
 ## Contexte
 
 **Papyrus** — form builder SaaS de Mooove.
-Next.js 14 (App Router) · TypeScript strict · Tailwind · Supabase auto-hébergé ·
-Cloudflare R2 · Framer Motion · @dnd-kit · Recharts · React Hook Form + Zod.
+Next.js 16 (App Router) · React 19 · TypeScript strict · Tailwind 4 ·
+Supabase auto-hébergé · Cloudflare R2 · Framer Motion · @dnd-kit · Recharts · Zod 4.
+
+Feuille de route : `docs/EVOLUTION-PLAN.md` — projets multi-formulaires, parité
+avec mooove-invoice, construction pilotée par IA. Le plan fait autorité.
 
 Déploiement : Easypanel (projet `main`, service `papyrus`) sur le VPS Hostinger.
 Voir `docs/DEPLOYMENT.md`.
@@ -46,6 +49,27 @@ Toute lecture d'environnement passe par `lib/env.ts`.
 Zéro `any` nouveau, zéro `@ts-ignore`. Les types viennent de `types/index.ts`.
 `npm run build` échoue sur toute erreur TypeScript ou ESLint — ne pas remettre
 `ignoreBuildErrors`.
+
+Avant tout push : `npm run verify` (typecheck + lint + tests + build). C'est la
+seule commande qui fasse foi.
+
+### Versions figées à dessein
+- **TypeScript reste en 6.x.** La 7.0 est sortie, mais `typescript-eslint` refuse
+  de se charger contre elle (il lève explicitement). Repasser en 7 dès que le
+  plugin suit — suivi dans typescript-eslint#10940.
+- **ESLint reste en 9.x.** La 10 a retiré `context.getFilename()`, que
+  `eslint-plugin-react` 7.37 (embarqué par `eslint-config-next`) appelle encore.
+- `next lint` n'existe plus en Next 16 : le script `lint` appelle `eslint .`.
+
+### Tailwind 4
+La configuration vit dans `app/globals.css`, il n'y a plus de `tailwind.config.ts`.
+Le bloc `@theme` est marqué **`inline`**, et ce n'est pas cosmétique : sans lui,
+Tailwind résoudrait `var(--bg-surface)` une seule fois sur `:root`, avec la valeur
+claire, et tout le thème sombre afficherait des surfaces claires.
+
+Corollaire : aucun token brut ne doit porter un nom d'espace Tailwind. Les
+couleurs de texte s'appellent `--fg-*` et non `--text-*`, parce qu'en v4
+`--text-*` **est** l'échelle de tailles de police.
 
 ### Identité visuelle Mooove
 Couleurs via les tokens CSS de `app/globals.css`, jamais en dur.

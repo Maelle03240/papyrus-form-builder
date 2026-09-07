@@ -450,7 +450,7 @@ export function FormFlowView({ form }: Props) {
     <div className="relative w-full h-full flex flex-col bg-[#F8FAFC] overflow-hidden">
       {/* Note d'information logique si vide */}
       {!hasRules && (
-        <div className="shrink-0 bg-white border-b border-slate-100 px-6 py-3.5 text-xs text-slate-500 italic font-medium flex items-center gap-2 shadow-sm relative z-10">
+        <div className="shrink-0 bg-white border-b border-slate-100 px-6 py-3.5 text-xs text-slate-500 italic font-medium flex items-center gap-2 shadow-xs relative z-10">
           <span className="w-1.5 h-1.5 rounded-full bg-orange-400 shrink-0 animate-pulse" />
           Aucune logique conditionnelle configurée. Affichage de la liste séquentielle par défaut.
         </div>
@@ -618,7 +618,7 @@ export function FormFlowView({ form }: Props) {
                   >
                     <div
                       className={cn(
-                        "flex h-full w-full rounded-xl border bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md",
+                        "flex h-full w-full rounded-xl border bg-white shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-md",
                         isConditional
                           ? "border-orange-200 hover:border-orange-300 hover:shadow-orange-100/40"
                           : "border-slate-200/80 hover:border-slate-300 hover:shadow-slate-100/60"
@@ -639,8 +639,8 @@ export function FormFlowView({ form }: Props) {
                           <span className="font-semibold text-slate-800 text-[12px] truncate leading-tight select-none">
                             {node.label}
                           </span>
-                          <span className="shrink-0 p-1 bg-slate-50 rounded text-slate-400">
-                            <IconComponent size={12} className="stroke-[2]" />
+                          <span className="shrink-0 p-1 bg-slate-50 rounded-sm text-slate-400">
+                            <IconComponent size={12} className="stroke-2" />
                           </span>
                         </div>
                         
@@ -649,7 +649,7 @@ export function FormFlowView({ form }: Props) {
                             {node.subtitle}
                           </span>
                           {isConditional && (
-                            <span className="shrink-0 text-[8px] font-bold bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded border border-orange-100 uppercase tracking-wider select-none">
+                            <span className="shrink-0 text-[8px] font-bold bg-orange-50 text-orange-600 px-1.5 py-0.5 rounded-sm border border-orange-100 uppercase tracking-wider select-none">
                               Conditionnel
                             </span>
                           )}
@@ -707,7 +707,7 @@ export function FormFlowView({ form }: Props) {
                     className="overflow-visible"
                   >
                     <div
-                      className="flex items-center justify-center h-full w-full rounded-full shadow-sm border text-white font-semibold text-xs transition-all duration-300 hover:scale-[1.02] select-none"
+                      className="flex items-center justify-center h-full w-full rounded-full shadow-xs border text-white font-semibold text-xs transition-all duration-300 hover:scale-[1.02] select-none"
                       style={{
                         background: `linear-gradient(135deg, ${accentColor} 0%, #0F172A 100%)`,
                         borderColor: accentColor
@@ -726,16 +726,16 @@ export function FormFlowView({ form }: Props) {
       </div>
 
       {/* Légende en overlay fixe */}
-      <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-xl p-4 shadow-sm z-10 flex flex-col gap-2.5 text-[11px] text-slate-600 max-w-[280px]">
+      <div className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm border border-slate-200 rounded-xl p-4 shadow-xs z-10 flex flex-col gap-2.5 text-[11px] text-slate-600 max-w-[280px]">
         <span className="font-semibold text-slate-800 uppercase tracking-wider text-[9px]">Légende</span>
         
         <div className="flex items-center gap-3">
-          <div className="w-5 h-3.5 rounded bg-white border border-slate-200 border-l-[3px] shrink-0" style={{ borderLeftColor: accentColor }} />
+          <div className="w-5 h-3.5 rounded-sm bg-white border border-slate-200 border-l-[3px] shrink-0" style={{ borderLeftColor: accentColor }} />
           <span className="font-medium text-slate-700">Question standard</span>
         </div>
         
         <div className="flex items-center gap-3">
-          <div className="w-5 h-3.5 rounded bg-white border border-orange-200 border-l-[3px] border-l-orange-500 shrink-0" />
+          <div className="w-5 h-3.5 rounded-sm bg-white border border-orange-200 border-l-[3px] border-l-orange-500 shrink-0" />
           <span className="font-medium text-slate-700">Question conditionnelle</span>
         </div>
         

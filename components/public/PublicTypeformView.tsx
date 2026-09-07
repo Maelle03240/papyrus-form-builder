@@ -255,7 +255,7 @@ export function PublicTypeformView({
                 {form.description && (
                   <p
                     className="text-lg leading-relaxed"
-                    style={{ color: form.theme.text_color ?? 'var(--text-secondary)' }}
+                    style={{ color: form.theme.text_color ?? 'var(--fg-secondary)' }}
                   >
                     {form.description}
                   </p>

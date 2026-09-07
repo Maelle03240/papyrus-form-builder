@@ -103,7 +103,7 @@ export function FieldRenderer({
   const placeholder = field.placeholder?.[lang] ?? '';
   const required = field.required;
   const baseInput =
-    'w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none disabled:cursor-default disabled:opacity-100';
+    'w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden disabled:cursor-default disabled:opacity-100';
 
   switch (field.type) {
     case 'short_text': {
@@ -405,7 +405,7 @@ function ValidatedTextInput({
           onChange({ placeholder: { ...current, fr: e.target.value } });
         }}
         placeholder={placeholder || defaultPlaceholder}
-        className="w-full rounded-md border border-dashed border-border-strong bg-transparent px-3 py-2 text-sm text-text-tertiary placeholder:text-text-tertiary/40 focus:border-accent focus:bg-bg-elevated/50 focus:outline-none"
+        className="w-full rounded-md border border-dashed border-border-strong bg-transparent px-3 py-2 text-sm text-text-tertiary placeholder:text-text-tertiary/40 focus:border-accent focus:bg-bg-elevated/50 focus:outline-hidden"
       />
     );
   }
@@ -437,7 +437,7 @@ function ValidatedTextInput({
         disabled={preview}
         className={cn(
           baseInput,
-          'break-words overflow-hidden', // Empêche le débordement
+          'wrap-break-word overflow-hidden', // Empêche le débordement
           error ? 'border-danger focus:border-danger' : '',
           isAtLimit && !preview && 'border-orange-400 focus:border-orange-400'
         )}
@@ -552,7 +552,7 @@ function SingleChoice({
                 disabled={preview}
                 onClick={() => !preview && setSelected(opt.id)}
                 className={cn(
-                  'w-full break-words rounded-md border px-3 py-2 text-center text-sm transition',
+                  'w-full wrap-break-word rounded-md border px-3 py-2 text-center text-sm transition',
                   active
                     ? 'border-accent bg-accent text-mooove-ice'
                     : 'border-border-strong bg-bg-base text-text-primary',
@@ -569,7 +569,7 @@ function SingleChoice({
               disabled={preview}
               onClick={() => !preview && setSelected(OTHER_VALUE)}
               className={cn(
-                'w-full break-words rounded-md border px-3 py-2 text-center text-sm italic transition',
+                'w-full wrap-break-word rounded-md border px-3 py-2 text-center text-sm italic transition',
                 selected === OTHER_VALUE
                   ? 'border-accent bg-accent text-mooove-ice'
                   : 'border-border-strong bg-bg-base text-text-secondary',
@@ -588,7 +588,7 @@ function SingleChoice({
             disabled={preview}
             placeholder="Précisez…"
             maxLength={200}
-            className="w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none break-words overflow-hidden"
+            className="w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden wrap-break-word overflow-hidden"
             style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}
           />
         )}
@@ -619,7 +619,7 @@ function SingleChoice({
               className="h-4 w-4"
               style={{ accentColor: 'var(--accent)' }}
             />
-            <span className="break-words">{opt.label.fr || `Option ${i + 1}`}</span>
+            <span className="wrap-break-word">{opt.label.fr || `Option ${i + 1}`}</span>
           </label>
         ))}
       </div>
@@ -639,7 +639,7 @@ function SingleChoice({
               className="h-4 w-4"
               style={{ accentColor: 'var(--accent)' }}
             />
-            <span className="break-words italic text-text-secondary">{otherLabel}</span>
+            <span className="wrap-break-word italic text-text-secondary">{otherLabel}</span>
           </label>
           {selected === OTHER_VALUE && (
             <input
@@ -648,7 +648,7 @@ function SingleChoice({
               onChange={(e) => setOtherText(e.target.value)}
               disabled={preview}
               placeholder="Précisez…"
-              className="mt-1 w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none"
+              className="mt-1 w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden"
             />
           )}
         </div>
@@ -774,10 +774,10 @@ function MultipleChoice({
                     disabled={preview}
                     checked={checked}
                     onChange={() => toggle(opt.id)}
-                    className="h-4 w-4 rounded"
+                    className="h-4 w-4 rounded-sm"
                     style={{ accentColor: 'var(--accent)' }}
                   />
-                  <span className="break-words">{opt.label.fr || `Option ${i + 1}`}</span>
+                  <span className="wrap-break-word">{opt.label.fr || `Option ${i + 1}`}</span>
                 </label>
                 {checked && subfields.length > 0 && (
                   <div className="ml-6 mt-2 space-y-3 border-l-2 border-accent/30 pl-4">
@@ -815,10 +815,10 @@ function MultipleChoice({
                 disabled={preview}
                 checked={selected.has(opt.id)}
                 onChange={() => toggle(opt.id)}
-                className="h-4 w-4 rounded"
+                className="h-4 w-4 rounded-sm"
                 style={{ accentColor: 'var(--accent)' }}
               />
-              <span className="break-words">{opt.label.fr || `Option ${i + 1}`}</span>
+              <span className="wrap-break-word">{opt.label.fr || `Option ${i + 1}`}</span>
             </label>
           ))}
         </div>
@@ -836,10 +836,10 @@ function MultipleChoice({
               disabled={preview}
               checked={selected.has(OTHER_VALUE)}
               onChange={() => toggle(OTHER_VALUE)}
-              className="h-4 w-4 rounded"
+              className="h-4 w-4 rounded-sm"
               style={{ accentColor: 'var(--accent)' }}
             />
-            <span className="break-words italic text-text-secondary">{otherLabel}</span>
+            <span className="wrap-break-word italic text-text-secondary">{otherLabel}</span>
           </label>
           {selected.has(OTHER_VALUE) && (
             <input
@@ -848,7 +848,7 @@ function MultipleChoice({
               onChange={(e) => setOtherText(e.target.value)}
               disabled={preview}
               placeholder="Précisez…"
-              className="mt-1 w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none"
+              className="mt-1 w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden"
             />
           )}
         </div>
@@ -1089,10 +1089,10 @@ function NpsScale({
             value={hasValue ? currentValue : Math.round((min + max) / 2)}
             onChange={(e) => handleValueChange(Number(e.target.value))}
             className={cn(
-              "scale-slider flex-grow flex-1 appearance-none h-1 bg-border-strong rounded-lg cursor-pointer outline-none transition-all",
-              "focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
-              "[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-[var(--accent)] [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:active:scale-125 [&::-webkit-slider-thumb]:shadow-sm",
-              "[&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-[var(--accent)] [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:transition-transform [&::-moz-range-thumb]:hover:scale-110 [&::-moz-range-thumb]:active:scale-125 [&::-moz-range-thumb]:shadow-sm"
+              "scale-slider grow flex-1 appearance-none h-1 bg-border-strong rounded-lg cursor-pointer outline-hidden transition-all",
+              "focus:outline-hidden focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2",
+              "[&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-(--accent) [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:hover:scale-110 [&::-webkit-slider-thumb]:active:scale-125 [&::-webkit-slider-thumb]:shadow-xs",
+              "[&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-(--accent) [&::-moz-range-thumb]:border-none [&::-moz-range-thumb]:transition-transform [&::-moz-range-thumb]:hover:scale-110 [&::-moz-range-thumb]:active:scale-125 [&::-moz-range-thumb]:shadow-xs"
             )}
           />
           <span className="scale-slider-value text-sm font-semibold text-accent font-mono min-w-[28px] text-right shrink-0 select-none">
@@ -1450,7 +1450,7 @@ function ExpandedCreatorZone({ field, type, labels, onChange, canSwitchMode, glo
                 patchValidation({ media_url: e.target.value || undefined });
               }}
               placeholder="https://youtube.com/watch?v=..."
-              className="w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none"
+              className="w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden"
             />
             <p className="text-xs text-text-tertiary mt-1">
               Formats acceptés : youtu.be/ID · youtube.com/watch?v=ID · vimeo.com/ID
@@ -1705,7 +1705,7 @@ function ResizableImage({
   };
 
 
-  const handleStyle = "absolute w-2 h-2 bg-blue-500 border border-white rounded-full shadow-sm hover:bg-blue-600 cursor-pointer";
+  const handleStyle = "absolute w-2 h-2 bg-blue-500 border border-white rounded-full shadow-xs hover:bg-blue-600 cursor-pointer";
 
   return (
     <div className={`flex ${alignClass}`}>
@@ -1765,7 +1765,7 @@ function ResizableImage({
         {/* Indicateur de verrouillage du ratio */}
         {ratioLocked && (
           <div className="absolute -top-6 left-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-            <div className="flex items-center gap-1 text-xs text-blue-600 font-medium bg-white/90 backdrop-blur px-2 py-1 rounded shadow-sm">
+            <div className="flex items-center gap-1 text-xs text-blue-600 font-medium bg-white/90 backdrop-blur px-2 py-1 rounded-sm shadow-xs">
               🔒 Ratio verrouillé
             </div>
           </div>
@@ -1999,14 +1999,14 @@ function CreatorContent({ type, mediaUrl, alignment, field, compact = false, pre
     const fileElement = (
       <div className={`relative rounded-xl border-2 p-4 transition-all hover:shadow-md ${fileConfig.bgColor} w-full`}>
         {/* Coin avec type de fichier */}
-        <div className="absolute -top-1 -right-1 rounded-md bg-gray-600 px-2 py-0.5 text-xs font-semibold text-white shadow-sm">
+        <div className="absolute -top-1 -right-1 rounded-md bg-gray-600 px-2 py-0.5 text-xs font-semibold text-white shadow-xs">
           {fileConfig.type}
         </div>
 
         {/* Contenu principal */}
         <div className="flex items-start gap-3 pt-2">
           {/* Icône du fichier */}
-          <div className="flex-shrink-0">
+          <div className="shrink-0">
             <svg
               width="32"
               height="32"
@@ -2044,7 +2044,7 @@ function CreatorContent({ type, mediaUrl, alignment, field, compact = false, pre
                 link.click();
                 document.body.removeChild(link);
               }}
-              className="flex-shrink-0 rounded-full p-2 text-text-tertiary hover:bg-white hover:text-text-secondary transition-all"
+              className="shrink-0 rounded-full p-2 text-text-tertiary hover:bg-white hover:text-text-secondary transition-all"
               title="Télécharger le fichier"
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -2133,7 +2133,7 @@ function MatrixField({
               key={row.id}
               className={rIdx < rows.length - 1 ? 'border-b border-dashed border-border' : ''}
             >
-              <td className="break-words px-3 py-2 text-text-primary">
+              <td className="wrap-break-word px-3 py-2 text-text-primary">
                 {row.label.fr || `Ligne ${rIdx + 1}`}
               </td>
               {cols.map((col) => {
@@ -2149,7 +2149,7 @@ function MatrixField({
                       disabled={preview}
                       checked={isChecked || false}
                       onChange={(e) => handleChange(row.id, col.id, e.target.checked)}
-                      className={`h-4 w-4 ${inputType === 'checkbox' ? 'rounded' : ''}`}
+                      className={`h-4 w-4 ${inputType === 'checkbox' ? 'rounded-sm' : ''}`}
                       style={{ accentColor: 'var(--accent)' }}
                     />
                   </td>
@@ -2208,7 +2208,7 @@ function ShortTextWithCounter({
             onChange({ placeholder: { ...current, fr: e.target.value } });
           }}
           placeholder={placeholder || 'Votre réponse'}
-          className="w-full rounded-md border border-dashed border-border-strong bg-transparent px-3 py-2 text-sm text-text-tertiary placeholder:text-text-tertiary/40 focus:border-accent focus:bg-bg-elevated/50 focus:outline-none"
+          className="w-full rounded-md border border-dashed border-border-strong bg-transparent px-3 py-2 text-sm text-text-tertiary placeholder:text-text-tertiary/40 focus:border-accent focus:bg-bg-elevated/50 focus:outline-hidden"
         />
       );
     }
@@ -2225,7 +2225,7 @@ function ShortTextWithCounter({
           placeholder={placeholder}
           disabled={preview}
           className={cn(
-            'w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none break-words',
+            'w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden wrap-break-word',
             preview && 'disabled:cursor-default disabled:opacity-100',
             isAtLimit && !preview && 'border-orange-400 focus:border-orange-400'
           )}
@@ -2369,7 +2369,7 @@ function ShortTextWithCounter({
           placeholder={finalPlaceholder}
           disabled={preview}
           className={cn(
-            'flex-1 rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none',
+            'flex-1 rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden',
             preview && 'disabled:cursor-default disabled:opacity-100',
             rangeError ? 'border-danger focus:border-danger' : ''
           )}
@@ -2393,7 +2393,7 @@ function ShortTextWithCounter({
             onBlur={() => setTouched(true)}
             required
             className={cn(
-              "shrink-0 rounded-md border bg-bg-base px-3 py-2 text-sm text-text-primary focus:outline-none",
+              "shrink-0 rounded-md border bg-bg-base px-3 py-2 text-sm text-text-primary focus:outline-hidden",
               unitError
                 ? "border-red-500 focus:border-red-500"
                 : "border-border-strong focus:border-accent"
@@ -2470,7 +2470,7 @@ function LongTextWithCounter({
           onChange({ placeholder: { ...current, fr: e.target.value } });
         }}
         placeholder={placeholder || 'Votre réponse…'}
-        className="w-full rounded-md border border-dashed border-border-strong bg-transparent px-3 py-2 text-sm text-text-tertiary placeholder:text-text-tertiary/40 focus:border-accent focus:bg-bg-elevated/50 focus:outline-none resize-y"
+        className="w-full rounded-md border border-dashed border-border-strong bg-transparent px-3 py-2 text-sm text-text-tertiary placeholder:text-text-tertiary/40 focus:border-accent focus:bg-bg-elevated/50 focus:outline-hidden resize-y"
       />
     );
   }
@@ -2487,7 +2487,7 @@ function LongTextWithCounter({
         placeholder={placeholder}
         disabled={preview}
         className={cn(
-          'w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-none break-words',
+          'w-full rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent focus:outline-hidden wrap-break-word',
           preview && 'disabled:cursor-default disabled:opacity-100',
           isAtLimit && !preview && 'border-orange-400 focus:border-orange-400'
         )}
@@ -2559,7 +2559,7 @@ function NumberInputWithValidation({
           onChange({ placeholder: { ...current, fr: e.target.value } });
         }}
         placeholder={placeholder || '4'}
-        className="w-full rounded-md border border-dashed border-border-strong bg-transparent px-3 py-2 text-sm text-text-tertiary placeholder:text-text-tertiary/40 focus:border-accent focus:bg-bg-elevated/50 focus:outline-none"
+        className="w-full rounded-md border border-dashed border-border-strong bg-transparent px-3 py-2 text-sm text-text-tertiary placeholder:text-text-tertiary/40 focus:border-accent focus:bg-bg-elevated/50 focus:outline-hidden"
       />
     );
   }

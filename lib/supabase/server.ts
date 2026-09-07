@@ -10,16 +10,19 @@ type CookieToSet = { name: string; value: string; options?: CookieOptions };
  * Agit avec les droits de l'utilisateur connecté : la RLS s'applique.
  */
 export function createClient() {
-  const cookieStore = cookies();
-
+  // `cookies()` est asynchrone depuis Next.js 15, et le contrat de
+  // `@supabase/ssr` accepte des accesseurs asynchrones. On attend donc le store
+  // *dans* les accesseurs plutôt que de rendre `createClient` asynchrone : les
+  // soixante-dix appels de l'application restent inchangés.
   return createServerClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
     db: { schema: PAPYRUS_SCHEMA },
     cookies: {
-      getAll() {
-        return cookieStore.getAll();
+      async getAll() {
+        return (await cookies()).getAll();
       },
-      setAll(cookiesToSet: CookieToSet[]) {
+      async setAll(cookiesToSet: CookieToSet[]) {
         try {
+          const cookieStore = await cookies();
           cookiesToSet.forEach(({ name, value, options }) =>
             cookieStore.set(name, value, options)
           );

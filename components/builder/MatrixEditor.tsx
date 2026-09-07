@@ -117,7 +117,7 @@ function SubEditor({
               onChange={(e) => update(opt.id, e.target.value)}
               placeholder={`${placeholder} ${i + 1}`}
               maxLength={LIMITS.OPTION_LABEL_MAX}
-              className="h-8 flex-1 rounded-md border border-border-strong bg-bg-base px-2.5 text-sm text-text-primary focus:border-accent focus:outline-none"
+              className="h-8 flex-1 rounded-md border border-border-strong bg-bg-base px-2.5 text-sm text-text-primary focus:border-accent focus:outline-hidden"
             />
             {scoringEnabled && (
               <div className="flex items-center gap-0.5 rounded-md border border-border-strong bg-bg-base px-1.5 py-1">
@@ -128,7 +128,7 @@ function SubEditor({
                   <button
                     type="button"
                     onClick={() => updatePoints(opt.id, (opt.points ?? 0) + 1)}
-                    className="rounded p-0.5 text-text-tertiary hover:bg-accent/10 hover:text-accent"
+                    className="rounded-sm p-0.5 text-text-tertiary hover:bg-accent/10 hover:text-accent"
                     aria-label="Augmenter les points"
                   >
                     <ChevronUp className="h-2.5 w-2.5" />
@@ -136,7 +136,7 @@ function SubEditor({
                   <button
                     type="button"
                     onClick={() => updatePoints(opt.id, Math.max(0, (opt.points ?? 0) - 1))}
-                    className="rounded p-0.5 text-text-tertiary hover:bg-accent/10 hover:text-accent"
+                    className="rounded-sm p-0.5 text-text-tertiary hover:bg-accent/10 hover:text-accent"
                     aria-label="Diminuer les points"
                   >
                     <ChevronDown className="h-2.5 w-2.5" />
@@ -148,7 +148,7 @@ function SubEditor({
               type="button"
               onClick={() => remove(opt.id)}
               disabled={items.length <= 1}
-              className="rounded p-1 text-text-tertiary opacity-0 transition hover:bg-danger/10 hover:text-danger group-hover:opacity-100 disabled:opacity-0"
+              className="rounded-sm p-1 text-text-tertiary opacity-0 transition hover:bg-danger/10 hover:text-danger group-hover:opacity-100 disabled:opacity-0"
               aria-label="Supprimer"
             >
               <X className="h-3.5 w-3.5" />

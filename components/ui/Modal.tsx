@@ -100,7 +100,7 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
               </h3>
               <button
                 onClick={onClose}
-                className="rounded-md p-1 text-text-tertiary transition hover:bg-bg-elevated hover:text-text-primary focus:outline-none focus:ring-2 focus:ring-accent-cta"
+                className="rounded-md p-1 text-text-tertiary transition hover:bg-bg-elevated hover:text-text-primary focus:outline-hidden focus:ring-2 focus:ring-accent-cta"
                 aria-label="Fermer"
               >
                 <X className="h-4 w-4" />

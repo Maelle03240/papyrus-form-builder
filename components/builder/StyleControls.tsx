@@ -53,7 +53,7 @@ export function StyleControls({ style, onChange, introColor, onIntroColorChange 
               type="button"
               onClick={() => patch({ label_color: c })}
               className={cn(
-                'h-4 w-4 rounded border transition',
+                'h-4 w-4 rounded-sm border transition',
                 style.label_color === c ? 'ring-1 ring-accent ring-offset-1 ring-offset-bg-surface' : 'border-border'
               )}
               style={{ backgroundColor: c }}
@@ -65,7 +65,7 @@ export function StyleControls({ style, onChange, introColor, onIntroColorChange 
           <DebouncedColorInput
             value={style.label_color ?? '#052139'}
             onChange={(val) => patch({ label_color: val })}
-            className="h-9 w-12 cursor-pointer rounded border border-border-strong bg-bg-base"
+            className="h-9 w-12 cursor-pointer rounded-sm border border-border-strong bg-bg-base"
           />
           <Input
             value={style.label_color ?? ''}
@@ -82,7 +82,7 @@ export function StyleControls({ style, onChange, introColor, onIntroColorChange 
             <DebouncedColorInput
               value={introColor ?? '#4A6B82'}
               onChange={(val) => onIntroColorChange(val)}
-              className="h-9 w-12 cursor-pointer rounded border border-border-strong bg-bg-base"
+              className="h-9 w-12 cursor-pointer rounded-sm border border-border-strong bg-bg-base"
               aria-label="Couleur de l'intro"
             />
             <Input
@@ -119,7 +119,7 @@ export function StyleControls({ style, onChange, introColor, onIntroColorChange 
                 type="button"
                 onClick={() => patch({ font_family: f.value })}
                 className={cn(
-                  'flex flex-col items-center gap-0.5 rounded border px-1.5 py-1.5 transition',
+                  'flex flex-col items-center gap-0.5 rounded-sm border px-1.5 py-1.5 transition',
                   active ? 'border-accent bg-accent/5' : 'border-border-strong hover:border-accent'
                 )}
               >
@@ -152,7 +152,7 @@ export function StyleControls({ style, onChange, introColor, onIntroColorChange 
                 type="button"
                 onClick={() => patch({ label_size: s.value })}
                 className={cn(
-                  'rounded border py-1.5 text-xs font-medium transition',
+                  'rounded-sm border py-1.5 text-xs font-medium transition',
                   active
                     ? 'border-accent bg-accent/5 text-text-primary'
                     : 'border-border-strong text-text-secondary hover:border-accent'
@@ -181,7 +181,7 @@ export function StyleControls({ style, onChange, introColor, onIntroColorChange 
                 type="button"
                 onClick={() => patch({ label_align: value })}
                 className={cn(
-                  'flex items-center justify-center rounded border py-1.5 transition',
+                  'flex items-center justify-center rounded-sm border py-1.5 transition',
                   active
                     ? 'border-accent bg-accent/5 text-text-primary'
                     : 'border-border-strong text-text-secondary hover:border-accent'
@@ -200,7 +200,7 @@ export function StyleControls({ style, onChange, introColor, onIntroColorChange 
               patch({ label_weight: style.label_weight === 'bold' ? 'normal' : ('bold' as LabelWeight) })
             }
             className={cn(
-              'flex items-center justify-center gap-1 rounded border py-1.5 text-xs transition',
+              'flex items-center justify-center gap-1 rounded-sm border py-1.5 text-xs transition',
               style.label_weight === 'bold'
                 ? 'border-accent bg-accent/5 text-text-primary'
                 : 'border-border-strong text-text-secondary hover:border-accent'
@@ -212,7 +212,7 @@ export function StyleControls({ style, onChange, introColor, onIntroColorChange 
             type="button"
             onClick={() => patch({ label_italic: !style.label_italic })}
             className={cn(
-              'flex items-center justify-center gap-1 rounded border py-1.5 text-xs transition',
+              'flex items-center justify-center gap-1 rounded-sm border py-1.5 text-xs transition',
               style.label_italic
                 ? 'border-accent bg-accent/5 text-text-primary'
                 : 'border-border-strong text-text-secondary hover:border-accent'

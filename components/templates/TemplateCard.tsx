@@ -38,7 +38,7 @@ export function TemplateCard({
   const Icon = resolveTemplateIcon(entry.icon);
 
   return (
-    <div className="group flex flex-col rounded-2xl border border-border bg-bg-surface p-5 transition duration-150 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-sm">
+    <div className="group flex flex-col rounded-2xl border border-border bg-bg-surface p-5 transition duration-150 hover:-translate-y-0.5 hover:border-border-strong hover:shadow-xs">
       <div className="flex items-start justify-between gap-2">
         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-bg-elevated text-text-secondary">
           <Icon className="h-5 w-5" />
@@ -47,7 +47,7 @@ export function TemplateCard({
           type="button"
           onClick={onToggleFavorite}
           className={cn(
-            'rounded p-1.5 transition',
+            'rounded-sm p-1.5 transition',
             favorite
               ? 'text-mooove-electric'
               : 'text-text-tertiary opacity-0 hover:text-mooove-electric group-hover:opacity-100 focus-visible:opacity-100'
@@ -101,7 +101,7 @@ export function TemplateCard({
 
 function Badge({ children }: { children: React.ReactNode }) {
   return (
-    <span className="rounded bg-bg-elevated px-2 py-0.5 text-[10px] text-text-tertiary">
+    <span className="rounded-sm bg-bg-elevated px-2 py-0.5 text-[10px] text-text-tertiary">
       {children}
     </span>
   );

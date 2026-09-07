@@ -227,7 +227,7 @@ export function FormSettingsTab({ form }: { form: Form }) {
             <select
               value={draft.defaultLanguage}
               onChange={(event) => patch({ defaultLanguage: event.target.value })}
-              className="h-9 w-44 rounded-md border border-border-strong bg-bg-base px-2 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+              className="h-9 w-44 rounded-md border border-border-strong bg-bg-base px-2 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
             >
               {LANGUAGES.map((language) => (
                 <option key={language.value} value={language.value}>
@@ -303,7 +303,7 @@ export function FormSettingsTab({ form }: { form: Form }) {
                       data_retention_days: Math.max(1, Number(event.target.value) || 1)
                     })
                   }
-                  className="h-9 w-24 rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+                  className="h-9 w-24 rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
                 />
                 <span className="text-sm text-text-secondary">jours</span>
               </div>
@@ -388,7 +388,7 @@ export function FormSettingsTab({ form }: { form: Form }) {
                   <select
                     value={draft.notifications.respondent.to_field_id}
                     onChange={(event) => patchRespondent({ to_field_id: event.target.value })}
-                    className="h-9 w-full max-w-md rounded-md border border-border-strong bg-bg-base px-2 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+                    className="h-9 w-full max-w-md rounded-md border border-border-strong bg-bg-base px-2 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
                   >
                     <option value="">Première question de type email</option>
                     {emailFields.map((field) => (
@@ -505,7 +505,7 @@ export function FormSettingsTab({ form }: { form: Form }) {
                     : null
                 })
               }
-              className="h-9 rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+              className="h-9 rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
             />
           )}
         </SettingRow>
@@ -529,7 +529,7 @@ export function FormSettingsTab({ form }: { form: Form }) {
                 onChange={(event) =>
                   patchSettings({ max_submissions: Math.max(1, Number(event.target.value) || 1) })
                 }
-                className="h-9 w-28 rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+                className="h-9 w-28 rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
               />
               <span className="text-sm text-text-secondary">réponses au maximum</span>
             </div>
@@ -552,7 +552,7 @@ export function FormSettingsTab({ form }: { form: Form }) {
               onChange={(event) => patchSettings({ closed_message: event.target.value })}
               rows={3}
               placeholder="Les inscriptions sont closes. Merci de votre intérêt !"
-              className="w-full max-w-xl rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+              className="w-full max-w-xl rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
             />
           )}
         </SettingRow>
@@ -575,7 +575,7 @@ export function FormSettingsTab({ form }: { form: Form }) {
               <select
                 value={draft.settings.duplicate_field_id ?? ''}
                 onChange={(event) => patchSettings({ duplicate_field_id: event.target.value })}
-                className="h-9 w-full max-w-md rounded-md border border-border-strong bg-bg-base px-2 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+                className="h-9 w-full max-w-md rounded-md border border-border-strong bg-bg-base px-2 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
               >
                 <option value="">— Choisir une question —</option>
                 {identifiableFields.map((field) => (
@@ -722,7 +722,7 @@ function TextField({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className="h-9 w-full max-w-xl rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent-cta focus:outline-none"
+        className="h-9 w-full max-w-xl rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent-cta focus:outline-hidden"
       />
       {hint && <span className="mt-1.5 block max-w-xl text-xs text-text-tertiary">{hint}</span>}
     </label>
@@ -804,7 +804,7 @@ function TemplateEditor({
         onChange={(event) => onChange(event.target.value)}
         rows={6}
         placeholder={placeholder}
-        className="w-full max-w-xl rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm leading-relaxed text-text-primary placeholder:text-text-tertiary focus:border-accent-cta focus:outline-none"
+        className="w-full max-w-xl rounded-md border border-border-strong bg-bg-base px-3 py-2 text-sm leading-relaxed text-text-primary placeholder:text-text-tertiary focus:border-accent-cta focus:outline-hidden"
       />
       <div className="mt-2 flex max-w-xl flex-wrap items-center gap-1.5">
         <span className="text-xs text-text-tertiary">Insérer :</span>

@@ -15,7 +15,8 @@ export const maxDuration = 60;
  * réponses, ou après une panne d'API : les envois qui n'ont pas pu être poussés
  * sont rattrapés d'un coup.
  */
-export async function POST(_request: Request, { params }: { params: { id: string } }) {
+export async function POST(_request: Request, context: { params: Promise<{ id: string }> }) {
+  const params = await context.params;
   const guard = await requireFormAccess(params.id);
   if ('error' in guard) return guard.error;
 

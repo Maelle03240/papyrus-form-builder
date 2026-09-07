@@ -209,9 +209,9 @@ export default function TeamSettingsPage() {
   if (loading) {
     return (
       <div className="space-y-6 animate-pulse">
-        <div className="h-8 bg-bg-overlay rounded w-48"></div>
-        <div className="h-32 bg-bg-overlay rounded"></div>
-        <div className="h-64 bg-bg-overlay rounded"></div>
+        <div className="h-8 bg-bg-overlay rounded-sm w-48"></div>
+        <div className="h-32 bg-bg-overlay rounded-sm"></div>
+        <div className="h-64 bg-bg-overlay rounded-sm"></div>
       </div>
     );
   }

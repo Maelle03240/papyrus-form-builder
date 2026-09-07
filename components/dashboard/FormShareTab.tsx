@@ -118,7 +118,7 @@ export function FormShareTab({ form }: { form: Form }) {
             readOnly
             value={publicUrl}
             onFocus={(e) => e.currentTarget.select()}
-            className="h-10 flex-1 rounded-md border border-border-strong bg-bg-base px-3 font-mono text-sm text-text-primary focus:border-accent focus:outline-none"
+            className="h-10 flex-1 rounded-md border border-border-strong bg-bg-base px-3 font-mono text-sm text-text-primary focus:border-accent focus:outline-hidden"
           />
           <Button
             variant="secondary"
@@ -180,7 +180,7 @@ export function FormShareTab({ form }: { form: Form }) {
             value={snippet}
             onFocus={(e) => e.currentTarget.select()}
             rows={embedSettings.mode === 'popup' ? 5 : 4}
-            className="w-full resize-none rounded-md border border-border-strong bg-bg-base px-3 py-2 font-mono text-xs leading-relaxed text-text-primary focus:border-accent focus:outline-none"
+            className="w-full resize-none rounded-md border border-border-strong bg-bg-base px-3 py-2 font-mono text-xs leading-relaxed text-text-primary focus:border-accent focus:outline-hidden"
           />
 
           <div className="mt-2 flex items-center justify-between gap-2">

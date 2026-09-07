@@ -74,7 +74,7 @@ export function PreviewModal({ form, onClose }: Props) {
     <div className="absolute inset-0 flex flex-col overflow-hidden isolate" style={{ background: 'var(--papyrus-bg)', ...accentStyle }}>
 
       {/* Toolbar bien positionnée avec z-index prioritaire et safe zone */}
-      <div className="relative z-[100] w-full" style={{ boxSizing: 'border-box' }}>
+      <div className="relative z-100 w-full" style={{ boxSizing: 'border-box' }}>
         <PreviewToolbar 
           form={form} 
           device={device} 
@@ -241,7 +241,7 @@ function DeviceButton({
       type="button"
       onClick={onClick}
       className={cn(
-        'flex items-center gap-1.5 rounded px-2.5 py-1 text-xs transition',
+        'flex items-center gap-1.5 rounded-sm px-2.5 py-1 text-xs transition',
         active ? 'bg-bg-elevated text-text-primary' : 'text-text-secondary hover:text-text-primary'
       )}
     >
@@ -269,7 +269,7 @@ function PreviewHeader({ form }: { form: Form }) {
         {form.description && (
           <p
             className="papyrus-meta mt-2 text-base"
-            style={{ color: form.theme.text_color ?? 'var(--text-secondary)' }}
+            style={{ color: form.theme.text_color ?? 'var(--fg-secondary)' }}
           >
             {form.description}
           </p>
@@ -909,7 +909,7 @@ function TypeformPreview({
             exit={{ opacity: 0, y: direction === 'forward' ? -40 : 40 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
             className={cn(
-              'flex w-full flex-col rounded-xl border bg-bg-surface shadow-sm',
+              'flex w-full flex-col rounded-xl border bg-bg-surface shadow-xs',
               device === 'mobile' ? 'max-w-sm p-6' : 'max-w-2xl p-10',
               isStatement ? 'border-transparent bg-transparent shadow-none' : 'border-border'
             )}
@@ -926,7 +926,7 @@ function TypeformPreview({
                 {form.description && (
                   <p
                     className="papyrus-meta mt-2 text-base"
-                    style={{ color: form.theme.text_color ?? 'var(--text-secondary)' }}
+                    style={{ color: form.theme.text_color ?? 'var(--fg-secondary)' }}
                   >
                     {form.description}
                   </p>
@@ -1092,7 +1092,7 @@ function FieldQuestion({
           fontClass,
           weightClass,
           style.label_italic && 'italic',
-          'flex items-center text-text-primary break-words whitespace-pre-wrap'
+          'flex items-center text-text-primary wrap-break-word whitespace-pre-wrap'
         )}
         style={{
           color: style.label_color,
@@ -1143,7 +1143,7 @@ function FieldQuestion({
       {field.description.fr && (
         <p
           className={cn(
-            "papyrus-meta mt-1 text-sm break-words whitespace-pre-wrap",
+            "papyrus-meta mt-1 text-sm wrap-break-word whitespace-pre-wrap",
             isRespondentUpload ? 'italic text-text-tertiary font-normal' : ''
           )}
           style={{ wordBreak: 'break-word', overflowWrap: 'break-word' }}

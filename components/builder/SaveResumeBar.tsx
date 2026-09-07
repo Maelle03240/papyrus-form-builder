@@ -6,7 +6,7 @@ import { RotateCcw, Save } from 'lucide-react';
 interface Props {
   formId: string;
   /** Conteneur dont on observe les inputs (la modal d'aperçu, ou la page /f/[slug]). */
-  containerRef: React.RefObject<HTMLElement>;
+  containerRef: React.RefObject<HTMLElement | null>;
 }
 
 /**

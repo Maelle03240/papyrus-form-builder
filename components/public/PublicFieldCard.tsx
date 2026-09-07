@@ -180,7 +180,7 @@ function PublicFieldQuestion({
           style?.label_italic ? 'italic' : ''
         )}
         style={{
-          color: style?.label_color || 'var(--text-primary)',
+          color: style?.label_color || 'var(--fg-primary)',
           fontFamily: style?.font_family === 'serif' ? 'var(--font-display)' : style?.font_family === 'mono' ? 'var(--font-mono)' : 'var(--font-body)'
         }}
       >

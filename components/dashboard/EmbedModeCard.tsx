@@ -45,7 +45,7 @@ export function EmbedModeCard({
       className={cn(
         'group flex flex-col items-center gap-3 rounded-2xl border p-3 text-center transition',
         selected
-          ? 'border-accent-cta bg-accent-cta/5 shadow-sm'
+          ? 'border-accent-cta bg-accent-cta/5 shadow-xs'
           : 'border-border bg-bg-surface hover:border-border-strong'
       )}
     >

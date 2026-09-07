@@ -9,8 +9,8 @@ import { parseEmbedOptions } from '@/lib/embed';
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
-  params: { slug: string };
-  searchParams: Record<string, string | string[] | undefined>;
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 /**
@@ -26,11 +26,12 @@ interface PageProps {
  * canonique du formulaire.
  */
 export default async function FormEmbedPage({ params, searchParams }: PageProps) {
-  const form = await getPublicForm(params.slug);
+  const [{ slug }, query] = await Promise.all([params, searchParams]);
+  const form = await getPublicForm(slug);
 
   if (!form) notFound();
 
-  const embed = parseEmbedOptions(searchParams);
+  const embed = parseEmbedOptions(query);
 
   if (form.is_closed) return <ClosedFormPage form={form} />;
 

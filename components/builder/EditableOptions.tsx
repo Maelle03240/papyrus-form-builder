@@ -129,10 +129,10 @@ export function EditableOptions({ type, field, onChange, scoringEnabled = false 
               onKeyDown={(e) => handleKeyDown(e, opt)}
               placeholder={`Option ${i + 1}`}
               maxLength={LIMITS.OPTION_LABEL_MAX}
-              className="h-8 min-w-0 flex-1 rounded bg-transparent px-2 text-sm text-text-primary placeholder:text-text-tertiary focus:bg-bg-elevated/60 focus:outline-none"
+              className="h-8 min-w-0 flex-1 rounded-sm bg-transparent px-2 text-sm text-text-primary placeholder:text-text-tertiary focus:bg-bg-elevated/60 focus:outline-hidden"
             />
             {scoringEnabled && (
-              <div className="flex shrink-0 items-center gap-0.5 rounded-md border border-border bg-bg-surface px-1.5 py-0.5 shadow-sm">
+              <div className="flex shrink-0 items-center gap-0.5 rounded-md border border-border bg-bg-surface px-1.5 py-0.5 shadow-xs">
                 <span className="text-xs font-semibold text-text-primary min-w-[14px] text-center">
                   {(opt.points ?? 0) > 0 ? `+${opt.points}` : `${opt.points ?? 0}`}
                 </span>
@@ -141,7 +141,7 @@ export function EditableOptions({ type, field, onChange, scoringEnabled = false 
                   <button
                     type="button"
                     onClick={() => updatePoints(opt.id, (opt.points ?? 0) + 1)}
-                    className="rounded p-0.5 text-text-tertiary hover:bg-accent/15 hover:text-accent transition"
+                    className="rounded-sm p-0.5 text-text-tertiary hover:bg-accent/15 hover:text-accent transition"
                     aria-label="Augmenter les points"
                   >
                     <ChevronUp className="h-2 w-2" />
@@ -149,7 +149,7 @@ export function EditableOptions({ type, field, onChange, scoringEnabled = false 
                   <button
                     type="button"
                     onClick={() => updatePoints(opt.id, Math.max(0, (opt.points ?? 0) - 1))}
-                    className="rounded p-0.5 text-text-tertiary hover:bg-accent/15 hover:text-accent transition"
+                    className="rounded-sm p-0.5 text-text-tertiary hover:bg-accent/15 hover:text-accent transition"
                     aria-label="Diminuer les points"
                   >
                     <ChevronDown className="h-2 w-2" />
@@ -162,7 +162,7 @@ export function EditableOptions({ type, field, onChange, scoringEnabled = false 
               onClick={() => removeAt(opt.id)}
               disabled={options.length <= 1}
               className={cn(
-                'rounded p-1 text-text-tertiary transition opacity-0 group-hover:opacity-100',
+                'rounded-sm p-1 text-text-tertiary transition opacity-0 group-hover:opacity-100',
                 'hover:bg-danger/10 hover:text-danger disabled:cursor-not-allowed disabled:opacity-30'
               )}
               aria-label="Supprimer l'option"
@@ -183,7 +183,7 @@ export function EditableOptions({ type, field, onChange, scoringEnabled = false 
             onChange={(e) => patchValidation({ other_label: e.target.value })}
             placeholder="Autre…"
             maxLength={LIMITS.OPTION_LABEL_MAX}
-            className="h-8 w-32 shrink-0 rounded bg-transparent px-2 text-sm italic text-text-secondary placeholder:not-italic focus:bg-bg-elevated/60 focus:outline-none"
+            className="h-8 w-32 shrink-0 rounded-sm bg-transparent px-2 text-sm italic text-text-secondary placeholder:not-italic focus:bg-bg-elevated/60 focus:outline-hidden"
           />
           <span className="papyrus-meta truncate text-xs not-italic text-text-tertiary">
             i. le répondant pourra écrire sa réponse
@@ -191,7 +191,7 @@ export function EditableOptions({ type, field, onChange, scoringEnabled = false 
           <button
             type="button"
             onClick={toggleOther}
-            className="rounded p-1 text-text-tertiary transition opacity-0 group-hover:opacity-100 hover:bg-danger/10 hover:text-danger"
+            className="rounded-sm p-1 text-text-tertiary transition opacity-0 group-hover:opacity-100 hover:bg-danger/10 hover:text-danger"
             aria-label="Retirer Autre"
           >
             <X className="h-3.5 w-3.5" />

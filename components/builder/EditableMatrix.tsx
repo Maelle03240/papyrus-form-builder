@@ -78,13 +78,13 @@ export function EditableMatrix({ field, onChange }: Props) {
                   onChange={(e) => updateCol(col.id, e.target.value)}
                   placeholder={`Col. ${i + 1}`}
                   maxLength={LIMITS.OPTION_LABEL_MAX}
-                  className="h-7 w-full rounded bg-transparent pl-1 pr-4 text-center text-[11px] font-medium uppercase tracking-wide text-text-secondary placeholder:normal-case placeholder:tracking-normal placeholder:text-text-tertiary focus:bg-bg-elevated/60 focus:outline-none"
+                  className="h-7 w-full rounded-sm bg-transparent pl-1 pr-4 text-center text-[11px] font-medium uppercase tracking-wide text-text-secondary placeholder:normal-case placeholder:tracking-normal placeholder:text-text-tertiary focus:bg-bg-elevated/60 focus:outline-hidden"
                 />
                 <button
                   type="button"
                   onClick={() => removeCol(col.id)}
                   disabled={cols.length <= 1}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 rounded bg-bg-base/90 p-0.5 text-text-tertiary opacity-0 transition hover:bg-danger/10 hover:text-danger group-hover:opacity-100 disabled:opacity-0"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 rounded-sm bg-bg-base/90 p-0.5 text-text-tertiary opacity-0 transition hover:bg-danger/10 hover:text-danger group-hover:opacity-100 disabled:opacity-0"
                   aria-label="Supprimer la colonne"
                 >
                   <X className="h-3 w-3" />
@@ -95,7 +95,7 @@ export function EditableMatrix({ field, onChange }: Props) {
               <button
                 type="button"
                 onClick={addCol}
-                className="rounded p-1 text-text-tertiary transition hover:bg-bg-elevated hover:text-text-primary"
+                className="rounded-sm p-1 text-text-tertiary transition hover:bg-bg-elevated hover:text-text-primary"
                 aria-label="Ajouter une colonne"
                 title="Ajouter une colonne"
               >
@@ -113,13 +113,13 @@ export function EditableMatrix({ field, onChange }: Props) {
                   onChange={(e) => updateRow(row.id, e.target.value)}
                   placeholder={`Ligne ${i + 1}`}
                   maxLength={LIMITS.OPTION_LABEL_MAX}
-                  className="h-7 w-full rounded bg-transparent pl-1 pr-5 text-sm text-text-primary placeholder:text-text-tertiary focus:bg-bg-elevated/60 focus:outline-none"
+                  className="h-7 w-full rounded-sm bg-transparent pl-1 pr-5 text-sm text-text-primary placeholder:text-text-tertiary focus:bg-bg-elevated/60 focus:outline-hidden"
                 />
                 <button
                   type="button"
                   onClick={() => removeRow(row.id)}
                   disabled={rows.length <= 1}
-                  className="absolute right-0 top-1/2 -translate-y-1/2 rounded bg-bg-base/90 p-0.5 text-text-tertiary opacity-0 transition hover:bg-danger/10 hover:text-danger group-hover:opacity-100 disabled:opacity-0"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 rounded-sm bg-bg-base/90 p-0.5 text-text-tertiary opacity-0 transition hover:bg-danger/10 hover:text-danger group-hover:opacity-100 disabled:opacity-0"
                   aria-label="Supprimer la ligne"
                 >
                   <X className="h-3 w-3" />
@@ -131,7 +131,7 @@ export function EditableMatrix({ field, onChange }: Props) {
                     type={inputType}
                     name={mode === 'single' ? `${field.id}-${row.id}` : undefined}
                     disabled
-                    className={cn('h-4 w-4', inputType === 'checkbox' ? 'rounded' : '')}
+                    className={cn('h-4 w-4', inputType === 'checkbox' ? 'rounded-sm' : '')}
                     style={{ accentColor: 'var(--accent)' }}
                   />
                 </td>
@@ -144,7 +144,7 @@ export function EditableMatrix({ field, onChange }: Props) {
               <button
                 type="button"
                 onClick={addRow}
-                className="flex items-center gap-1 rounded px-1 py-0.5 text-xs text-text-tertiary transition hover:bg-bg-elevated hover:text-text-primary"
+                className="flex items-center gap-1 rounded-sm px-1 py-0.5 text-xs text-text-tertiary transition hover:bg-bg-elevated hover:text-text-primary"
               >
                 <Plus className="h-3 w-3" /> Ajouter une ligne
               </button>

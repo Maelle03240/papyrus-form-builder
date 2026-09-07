@@ -51,12 +51,12 @@ export function OptionsEditor({ type, options, onChange, scoringEnabled = false 
               onChange={(e) => update(opt.id, e.target.value)}
               placeholder="Texte de l'option"
               maxLength={LIMITS.OPTION_LABEL_MAX}
-              className="h-8 flex-1 rounded-md border border-border-strong bg-bg-base px-2.5 text-sm text-text-primary focus:border-accent focus:outline-none"
+              className="h-8 flex-1 rounded-md border border-border-strong bg-bg-base px-2.5 text-sm text-text-primary focus:border-accent focus:outline-hidden"
             />
             <button
               type="button"
               onClick={() => remove(opt.id)}
-              className="rounded p-1 text-text-tertiary opacity-0 transition hover:bg-danger/10 hover:text-danger group-hover:opacity-100"
+              className="rounded-sm p-1 text-text-tertiary opacity-0 transition hover:bg-danger/10 hover:text-danger group-hover:opacity-100"
               aria-label="Supprimer l'option"
             >
               <X className="h-3.5 w-3.5" />

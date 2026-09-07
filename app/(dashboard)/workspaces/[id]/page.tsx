@@ -264,8 +264,8 @@ export default function WorkspacePage() {
   if (loading) {
     return (
       <div className="mx-auto max-w-7xl">
-        <div className="h-8 w-48 bg-bg-elevated animate-pulse rounded mb-4" />
-        <div className="h-4 w-96 bg-bg-elevated animate-pulse rounded mb-8" />
+        <div className="h-8 w-48 bg-bg-elevated animate-pulse rounded-sm mb-4" />
+        <div className="h-4 w-96 bg-bg-elevated animate-pulse rounded-sm mb-8" />
         <div className="grid grid-cols-4 gap-4 mb-8">
           {[1,2,3,4].map(i => (
             <div key={i} className="h-24 bg-bg-elevated animate-pulse rounded-lg" />
@@ -369,7 +369,7 @@ export default function WorkspacePage() {
             placeholder="Rechercher un formulaire..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-bg-surface text-text-primary placeholder:text-text-tertiary focus:outline-none focus:border-accent transition"
+            className="w-full pl-10 pr-4 py-2 border border-border rounded-lg bg-bg-surface text-text-primary placeholder:text-text-tertiary focus:outline-hidden focus:border-accent transition"
           />
         </div>
       </div>
@@ -409,7 +409,7 @@ export default function WorkspacePage() {
                   type="text"
                   readOnly
                   value={`${window?.location?.origin || ''}/workspaces/${workspace.id}`}
-                  className="flex-1 text-sm text-text-secondary bg-transparent border-none outline-none cursor-text select-all"
+                  className="flex-1 text-sm text-text-secondary bg-transparent border-none outline-hidden cursor-text select-all"
                   onClick={(e) => e.currentTarget.select()}
                 />
                 <Button
@@ -440,7 +440,7 @@ export default function WorkspacePage() {
                     placeholder="collaborateur@mooove.live"
                     value={newMemberEmail}
                     onChange={(e) => setNewMemberEmail(e.target.value)}
-                    className="flex-1 h-10 px-3 border border-border bg-bg-surface text-sm rounded-md focus:border-accent focus:outline-none"
+                    className="flex-1 h-10 px-3 border border-border bg-bg-surface text-sm rounded-md focus:border-accent focus:outline-hidden"
                   />
                   <Button type="submit" variant="cta" loading={memberLoading} size="sm">
                     Inviter
@@ -453,7 +453,7 @@ export default function WorkspacePage() {
                     type="checkbox"
                     checked={sendEmailInvite}
                     onChange={(e) => setSendEmailInvite(e.target.checked)}
-                    className="w-4 h-4 text-accent border-border rounded focus:ring-accent focus:ring-2"
+                    className="w-4 h-4 text-accent border-border rounded-sm focus:ring-accent focus:ring-2"
                   />
                   <span className="text-text-secondary">
                     Envoyer un email d'invitation avec le lien de l'espace de travail
@@ -559,7 +559,7 @@ function StatCard({
       className={`rounded-lg border p-5 transition text-left w-full ${
         active
           ? 'border-accent bg-accent/5'
-          : 'border-border bg-bg-surface hover:border-border-strong hover:shadow-sm'
+          : 'border-border bg-bg-surface hover:border-border-strong hover:shadow-xs'
       }`}
     >
       <div className={`flex items-center gap-2 ${color}`}>
@@ -575,7 +575,7 @@ function FormCard({ form }: { form: Form }) {
   return (
     <Link
       href={`/forms/${form.id}`}
-      className="group block rounded-lg border border-border bg-bg-surface p-5 transition hover:border-border-strong hover:shadow-sm"
+      className="group block rounded-lg border border-border bg-bg-surface p-5 transition hover:border-border-strong hover:shadow-xs"
     >
       <div className="flex items-start justify-between mb-3">
         <div className="font-display text-lg text-text-primary leading-tight group-hover:text-accent transition">

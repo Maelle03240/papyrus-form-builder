@@ -315,7 +315,7 @@ function RuleCard({
               type="button"
               onClick={() => onChange({ conditions_operator: 'AND' })}
               className={cn(
-                "px-2 py-0.5 text-[10px] font-bold rounded transition",
+                "px-2 py-0.5 text-[10px] font-bold rounded-sm transition",
                 rule.conditions_operator === 'AND' ? "bg-accent text-white" : "text-text-secondary hover:text-text-primary"
               )}
             >
@@ -325,7 +325,7 @@ function RuleCard({
               type="button"
               onClick={() => onChange({ conditions_operator: 'OR' })}
               className={cn(
-                "px-2 py-0.5 text-[10px] font-bold rounded transition",
+                "px-2 py-0.5 text-[10px] font-bold rounded-sm transition",
                 rule.conditions_operator === 'OR' ? "bg-accent text-white" : "text-text-secondary hover:text-text-primary"
               )}
             >
@@ -353,7 +353,7 @@ function RuleCard({
                   <select
                     value={cond.source_field_id}
                     onChange={(e) => handleConditionChange(condIdx, { source_field_id: e.target.value })}
-                    className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-none"
+                    className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-hidden"
                   >
                     {sourceFields.map((f) => (
                       <option key={f.id} value={f.id}>
@@ -369,7 +369,7 @@ function RuleCard({
                   <select
                     value={cond.operator}
                     onChange={(e) => handleConditionChange(condIdx, { operator: e.target.value as any })}
-                    className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-none"
+                    className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-hidden"
                   >
                     {getOperatorsForFieldType(condField?.type || '').map((op) => (
                       <option key={op.value} value={op.value}>
@@ -386,7 +386,7 @@ function RuleCard({
                     <select
                       value={cond.value}
                       onChange={(e) => handleConditionChange(condIdx, { value: e.target.value })}
-                      className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-none"
+                      className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-hidden"
                     >
                       {(condField?.options || []).map((o) => (
                         <option key={o.id} value={o.id}>
@@ -399,7 +399,7 @@ function RuleCard({
                       value={cond.value}
                       onChange={(e) => handleConditionChange(condIdx, { value: e.target.value })}
                       placeholder="Valeur"
-                      className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-none"
+                      className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-hidden"
                     />
                   )}
                 </div>
@@ -409,7 +409,7 @@ function RuleCard({
                 <button
                   type="button"
                   onClick={() => handleRemoveCondition(condIdx)}
-                  className="p-1 text-text-tertiary hover:text-danger rounded transition hover:bg-bg-elevated"
+                  className="p-1 text-text-tertiary hover:text-danger rounded-sm transition hover:bg-bg-elevated"
                   title="Supprimer cette condition"
                 >
                   <X className="h-3.5 w-3.5" />
@@ -443,7 +443,7 @@ function RuleCard({
                 target_field_id: newAction === 'end_form' ? undefined : newTargets[0]?.id
               });
             }}
-            className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-none"
+            className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-hidden"
           >
             {availableActions.map((a) => (
               <option key={a.value} value={a.value}>
@@ -465,7 +465,7 @@ function RuleCard({
               <select
                 value={rule.target_field_id ?? ''}
                 onChange={(e) => onChange({ target_field_id: e.target.value })}
-                className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-none"
+                className="h-7 w-full rounded-md border border-border bg-bg-surface px-2 text-xs focus:border-accent focus:outline-hidden"
               >
                 <option value="">Choisir</option>
                 {targets.map((f) => {

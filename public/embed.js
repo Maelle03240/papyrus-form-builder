@@ -165,7 +165,7 @@
   function alreadySeen(url) {
     try {
       return window.localStorage.getItem(POPUP_SEEN_PREFIX + url) === '1';
-    } catch (error) {
+    } catch {
       return false;
     }
   }
@@ -173,7 +173,7 @@
   function markSeen(url) {
     try {
       window.localStorage.setItem(POPUP_SEEN_PREFIX + url, '1');
-    } catch (error) {
+    } catch {
       /* Stockage indisponible : le popup se réaffichera, sans conséquence. */
     }
   }

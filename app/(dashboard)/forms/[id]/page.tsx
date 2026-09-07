@@ -1057,7 +1057,7 @@ function OverviewTab({ form, submissions, loading }: OverviewTabProps) {
             await updateForm(localForm.id, { theme: updatedTheme });
             toast.success('Tableau de bord réinitialisé');
           }}
-          className="mt-4 rounded bg-accent px-4 py-2 text-xs font-semibold text-white hover:bg-accent-hover transition"
+          className="mt-4 rounded-sm bg-accent px-4 py-2 text-xs font-semibold text-white hover:bg-accent-hover transition"
         >
           Réinitialiser le tableau de bord
         </button>
@@ -1104,8 +1104,8 @@ function OverviewTab({ form, submissions, loading }: OverviewTabProps) {
                   margin={{ top: 4, right: 15, left: 4, bottom: 4 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="var(--border-weak)" />
-                  <XAxis type="number" allowDecimals={false} stroke="var(--text-tertiary)" fontSize={10} />
-                  <YAxis dataKey="title" type="category" stroke="var(--text-tertiary)" fontSize={10} width={100} />
+                  <XAxis type="number" allowDecimals={false} stroke="var(--fg-tertiary)" fontSize={10} />
+                  <YAxis dataKey="title" type="category" stroke="var(--fg-tertiary)" fontSize={10} width={100} />
                   <Tooltip
                     formatter={(value) => [`${value} répondant${Number(value) > 1 ? 's' : ''}`]}
                     contentStyle={{ fontSize: 11, backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border)' }}
@@ -1469,7 +1469,7 @@ function ResponsesTab({ form, submissions: allSubmissions, setSubmissions, loadi
                             if (e.key === 'Enter') { e.preventDefault(); saveEdit(); }
                             if (e.key === 'Escape') setEditingCell(null);
                           }}
-                          className="w-full rounded border border-accent bg-bg-base px-2 py-0.5 text-sm focus:outline-none"
+                          className="w-full rounded-sm border border-accent bg-bg-base px-2 py-0.5 text-sm focus:outline-hidden"
                         />
                       ) : (
                         <div className="flex min-w-0 items-center gap-1.5">
@@ -1496,7 +1496,7 @@ function ResponsesTab({ form, submissions: allSubmissions, setSubmissions, loadi
                             <div className="invisible flex shrink-0 items-center gap-0.5 group-hover/cell:visible">
                               <button
                                 onClick={() => handleCopyCell(renderedVal, cellKey)}
-                                className="rounded p-0.5 text-text-tertiary transition-colors hover:bg-bg-elevated hover:text-text-primary"
+                                className="rounded-sm p-0.5 text-text-tertiary transition-colors hover:bg-bg-elevated hover:text-text-primary"
                                 title="Copier"
                               >
                                 {isCopied ? (
@@ -1508,7 +1508,7 @@ function ResponsesTab({ form, submissions: allSubmissions, setSubmissions, loadi
                               {!isUrl && (
                                 <button
                                   onClick={() => startEdit(sub.id, f.id, renderedVal)}
-                                  className="rounded p-0.5 text-text-tertiary transition-colors hover:bg-bg-elevated hover:text-text-primary"
+                                  className="rounded-sm p-0.5 text-text-tertiary transition-colors hover:bg-bg-elevated hover:text-text-primary"
                                   title="Modifier"
                                 >
                                   <Pencil className="h-3 w-3" />

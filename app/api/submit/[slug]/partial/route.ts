@@ -30,7 +30,8 @@ export const dynamic = 'force-dynamic';
 const MAX_BODY_BYTES = 512 * 1024;
 const MAX_ANSWER_LENGTH = 10_000;
 
-export async function POST(request: NextRequest, { params }: { params: { slug: string } }) {
+export async function POST(request: NextRequest, context: { params: Promise<{ slug: string }> }) {
+  const params = await context.params;
   const { slug } = params;
   const ip = clientIp(request.headers);
 

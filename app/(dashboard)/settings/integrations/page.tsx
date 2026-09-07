@@ -225,7 +225,7 @@ export default function IntegrationsPage() {
           <select
             value={teamId}
             onChange={(e) => setTeamId(e.target.value)}
-            className="h-11 w-full max-w-sm rounded-xl border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+            className="h-11 w-full max-w-sm rounded-xl border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
           >
             {workspaces.map((workspace) => (
               <option key={workspace.id} value={workspace.id}>

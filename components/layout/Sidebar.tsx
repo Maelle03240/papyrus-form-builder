@@ -531,12 +531,12 @@ export function Sidebar({
       <>
         {/* Overlay pour fermer le menu */}
         <div
-          className="fixed inset-0 z-[9998]"
+          className="fixed inset-0 z-9998"
           onClick={onClose}
         />
         {/* Menu dropdown */}
         <div
-          className="fixed z-[9999] rounded-lg border border-border bg-bg-surface p-3 animate-in fade-in duration-100"
+          className="fixed z-9999 rounded-lg border border-border bg-bg-surface p-3 animate-in fade-in duration-100"
           style={{
             minWidth: 'clamp(160px, 20vw, 200px)',
             top: dropdownPosition.top,
@@ -550,7 +550,7 @@ export function Sidebar({
               onClose();
               router.push(`/forms/${formId}/edit`);
             }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
           >
             <Edit2 className="h-4 w-4 text-text-tertiary" />
             Modifier
@@ -565,7 +565,7 @@ export function Sidebar({
                 setEditFormTitle(f.title);
               }
             }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
           >
             <Edit2 className="h-4 w-4 text-text-tertiary" />
             Renommer
@@ -581,7 +581,7 @@ export function Sidebar({
                 toast.success('Lien de partage copié !');
               }
             }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
           >
             <Share2 className="h-4 w-4 text-text-tertiary" />
             Copier le lien de partage
@@ -592,7 +592,7 @@ export function Sidebar({
               onClose();
               setMovingFormId(formId);
             }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
           >
             <FolderInput className="h-4 w-4 text-text-tertiary" />
             Changer d'espace de travail
@@ -603,7 +603,7 @@ export function Sidebar({
               onClose();
               handleDuplicateForm(formId);
             }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
           >
             <Copy className="h-4 w-4 text-text-tertiary" />
             Dupliquer
@@ -615,7 +615,7 @@ export function Sidebar({
               onClose();
               handleDeleteFormClick(formId);
             }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-danger hover:bg-danger/5 transition font-semibold rounded"
+            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-danger hover:bg-danger/5 transition font-semibold rounded-sm"
           >
             <Trash2 className="h-4 w-4" />
             Supprimer
@@ -635,12 +635,12 @@ export function Sidebar({
       <>
         {/* Overlay pour fermer le menu */}
         <div
-          className="fixed inset-0 z-[9998]"
+          className="fixed inset-0 z-9998"
           onClick={onClose}
         />
         {/* Menu dropdown */}
         <div
-          className="fixed z-[9999] rounded-lg border border-border bg-bg-surface p-3 animate-in fade-in duration-100"
+          className="fixed z-9999 rounded-lg border border-border bg-bg-surface p-3 animate-in fade-in duration-100"
           style={{
             minWidth: 'clamp(150px, 18vw, 180px)',
             top: workspaceDropdownPosition.top,
@@ -654,7 +654,7 @@ export function Sidebar({
               onClose();
               handleStartRename(ws, e);
             }}
-            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
           >
             Renommer
           </button>
@@ -667,7 +667,7 @@ export function Sidebar({
                   setManagingWorkspace(ws);
                   loadMembers(ws.id);
                 }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded"
+                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-text-secondary hover:bg-bg-elevated hover:text-text-primary transition rounded-sm"
               >
                 Membres
               </button>
@@ -677,7 +677,7 @@ export function Sidebar({
                   onClose();
                   setDeletingWorkspace(ws);
                 }}
-                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-danger hover:bg-danger/5 transition font-semibold rounded"
+                className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm text-danger hover:bg-danger/5 transition font-semibold rounded-sm"
               >
                 Supprimer
               </button>
@@ -707,7 +707,7 @@ export function Sidebar({
       >
         <button
           onClick={() => router.push('/dashboard')}
-          className="flex items-center gap-2 text-left focus:outline-none"
+          className="flex items-center gap-2 text-left focus:outline-hidden"
         >
           {/* Logo Papyrus */}
           <img
@@ -795,7 +795,7 @@ export function Sidebar({
                             value={renameValue}
                             onChange={(e) => setRenameValue(e.target.value)}
                             onBlur={() => setRenamingId(null)}
-                            className="w-full px-1 py-0.5 border border-border bg-bg-surface rounded text-xs font-normal focus:outline-none focus:border-accent"
+                            className="w-full px-1 py-0.5 border border-border bg-bg-surface rounded-sm text-xs font-normal focus:outline-hidden focus:border-accent"
                             autoFocus
                           />
                         </form>
@@ -829,7 +829,7 @@ export function Sidebar({
                                   handleOpenWorkspaceMenu(ws.id, buttonElement);
                                 }
                               }}
-                              className="p-0.5 rounded opacity-0 group-hover:opacity-100 hover:bg-border text-text-tertiary hover:text-text-primary transition"
+                              className="p-0.5 rounded-sm opacity-0 group-hover:opacity-100 hover:bg-border text-text-tertiary hover:text-text-primary transition"
                               aria-label="Options de l'espace"
                             >
                               <MoreHorizontal className="h-4 w-4" />
@@ -840,7 +840,7 @@ export function Sidebar({
                         {/* Accordion trigger */}
                         <button
                           onClick={(e) => toggleAccordion(ws.id, e)}
-                          className="p-0.5 rounded text-text-tertiary hover:text-text-primary transition"
+                          className="p-0.5 rounded-sm text-text-tertiary hover:text-text-primary transition"
                         >
                           {isOpen ? (
                             <ChevronDown className="h-4 w-4" />
@@ -876,7 +876,7 @@ export function Sidebar({
                                       onBlur={() => {
                                         handleRenameFormSubmit(form.id);
                                       }}
-                                      className="w-full px-1 py-0.5 border border-border bg-bg-surface rounded text-xs font-normal focus:outline-none focus:border-accent text-text-primary"
+                                      className="w-full px-1 py-0.5 border border-border bg-bg-surface rounded-sm text-xs font-normal focus:outline-hidden focus:border-accent text-text-primary"
                                       autoFocus
                                       onKeyDown={(e) => {
                                         if (e.key === 'Escape') setEditingFormId(null);
@@ -888,7 +888,7 @@ export function Sidebar({
                                     href={`/forms/${form.id}`}
                                     style={{ height: 'clamp(24px, 1.8vw, 28px)', fontSize: 'var(--sidebar-text-sm)' }}
                                     className={cn(
-                                      'flex items-center gap-2 px-1 text-text-secondary hover:text-text-primary rounded hover:bg-bg-elevated transition truncate flex-1',
+                                      'flex items-center gap-2 px-1 text-text-secondary hover:text-text-primary rounded-sm hover:bg-bg-elevated transition truncate flex-1',
                                       pathname === `/forms/${form.id}` && 'text-text-primary font-medium'
                                     )}
                                   >
@@ -917,7 +917,7 @@ export function Sidebar({
                                       handleOpenFormMenu(form.id, buttonElement);
                                     }
                                   }}
-                                  className="p-2 rounded opacity-0 group-hover:opacity-100 hover:bg-border text-text-tertiary hover:text-text-primary transition"
+                                  className="p-2 rounded-sm opacity-0 group-hover:opacity-100 hover:bg-border text-text-tertiary hover:text-text-primary transition"
                                   aria-label="Options du formulaire"
                                 >
                                   <MoreHorizontal className="h-3 w-3" />
@@ -973,7 +973,7 @@ export function Sidebar({
                 value={newWorkspaceName}
                 onChange={(e) => setNewWorkspaceName(e.target.value)}
                 placeholder="Nom du workspace..."
-                className="flex-1 h-8 px-2 text-xs border border-border bg-bg-surface rounded-md focus:border-accent focus:outline-none"
+                className="flex-1 h-8 px-2 text-xs border border-border bg-bg-surface rounded-md focus:border-accent focus:outline-hidden"
                 autoFocus
                 onKeyDown={(e) => {
                   if (e.key === 'Escape') { setIsCreating(false); setNewWorkspaceName(''); }
@@ -981,7 +981,7 @@ export function Sidebar({
               />
               <button
                 type="submit"
-                className="p-1 rounded text-green-600 hover:bg-bg-elevated transition shrink-0"
+                className="p-1 rounded-sm text-green-600 hover:bg-bg-elevated transition shrink-0"
                 aria-label="Confirmer"
               >
                 <Check className="h-4 w-4" />
@@ -989,7 +989,7 @@ export function Sidebar({
               <button
                 type="button"
                 onClick={() => { setIsCreating(false); setNewWorkspaceName(''); }}
-                className="p-1 rounded text-text-tertiary hover:bg-bg-elevated hover:text-text-primary transition shrink-0"
+                className="p-1 rounded-sm text-text-tertiary hover:bg-bg-elevated hover:text-text-primary transition shrink-0"
                 aria-label="Annuler"
               >
                 <X className="h-4 w-4" />
@@ -1160,7 +1160,7 @@ export function Sidebar({
                   type="text"
                   readOnly
                   value={`${typeof window !== 'undefined' ? window.location.origin : ''}/workspaces/${managingWorkspace?.id}`}
-                  className="flex-1 text-sm text-text-secondary bg-transparent border-none outline-none cursor-text select-all"
+                  className="flex-1 text-sm text-text-secondary bg-transparent border-none outline-hidden cursor-text select-all"
                   onClick={(e) => e.currentTarget.select()}
                 />
                 <Button
@@ -1193,7 +1193,7 @@ export function Sidebar({
                     placeholder="collaborateur@mooove.live"
                     value={newMemberEmail}
                     onChange={(e) => setNewMemberEmail(e.target.value)}
-                    className="flex-1 h-10 px-3 border border-border bg-bg-surface text-sm rounded-md focus:border-accent focus:outline-none"
+                    className="flex-1 h-10 px-3 border border-border bg-bg-surface text-sm rounded-md focus:border-accent focus:outline-hidden"
                   />
                   <Button type="submit" variant="cta" loading={memberLoading} size="sm">
                     Inviter
@@ -1206,7 +1206,7 @@ export function Sidebar({
                     type="checkbox"
                     checked={sendEmailInvite}
                     onChange={(e) => setSendEmailInvite(e.target.checked)}
-                    className="w-4 h-4 text-accent border-border rounded focus:ring-accent focus:ring-2"
+                    className="w-4 h-4 text-accent border-border rounded-sm focus:ring-accent focus:ring-2"
                   />
                   <span className="text-text-secondary">
                     Envoyer un email d'invitation avec le lien de l'espace de travail

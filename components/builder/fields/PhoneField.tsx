@@ -43,7 +43,7 @@ export function PhoneField({ placeholder, field, onChange }: PhoneFieldProps) {
             alt="Maurice"
             style={{ borderRadius: '2px', flexShrink: 0 }}
           />
-          <span style={{ color: 'var(--text-secondary)' }}>+230</span>
+          <span style={{ color: 'var(--fg-secondary)' }}>+230</span>
         </div>
 
         {/* INPUT NUMÉRO — éditable si on est en mode édition, sinon statique/disabled */}
@@ -63,7 +63,7 @@ export function PhoneField({ placeholder, field, onChange }: PhoneFieldProps) {
               background: 'transparent',
               fontSize: '14px',
               outline: 'none',
-              color: 'var(--text-tertiary)',
+              color: 'var(--fg-tertiary)',
             }}
           />
         ) : (
@@ -78,7 +78,7 @@ export function PhoneField({ placeholder, field, onChange }: PhoneFieldProps) {
               background: 'transparent',
               fontSize: '14px',
               outline: 'none',
-              color: 'var(--text-tertiary)',
+              color: 'var(--fg-tertiary)',
               cursor: 'default'
             }}
           />

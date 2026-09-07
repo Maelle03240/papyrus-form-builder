@@ -35,7 +35,8 @@ function escapeHtml(value: string): string {
     .replace(/'/g, '&#39;');
 }
 
-export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
+export async function POST(request: NextRequest, context: { params: Promise<{ id: string }> }) {
+  const params = await context.params;
   const apiKey = getResendApiKey();
   if (!apiKey) {
     return NextResponse.json({ error: 'Service email non configuré' }, { status: 503 });

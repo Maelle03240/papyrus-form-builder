@@ -46,7 +46,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
     if (created) allTeams = [created];
   }
 
-  const activeTeamId = cookies().get('papyrus:active-team-id')?.value;
+  const activeTeamId = (await cookies()).get('papyrus:active-team-id')?.value;
   const activeTeam =
     allTeams.find((team) => team.id === activeTeamId) ??
     allTeams[0] ?? { id: '', name: 'Mon espace', plan: 'free' };

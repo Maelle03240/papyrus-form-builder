@@ -8,7 +8,7 @@ import { PasswordGate } from '@/components/public/PasswordGate';
 export const dynamic = 'force-dynamic';
 
 interface PageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 /**
@@ -25,7 +25,8 @@ interface PageProps {
  * suit a droit à une explication.
  */
 export default async function FormPublicPage({ params }: PageProps) {
-  const form = await getPublicForm(params.slug);
+  const { slug } = await params;
+  const form = await getPublicForm(slug);
 
   if (!form) notFound();
 
@@ -37,7 +38,8 @@ export default async function FormPublicPage({ params }: PageProps) {
 }
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
-  const form = await getPublicForm(params.slug);
+  const { slug } = await params;
+  const form = await getPublicForm(slug);
 
   if (!form) {
     return { title: 'Formulaire indisponible', robots: { index: false, follow: false } };

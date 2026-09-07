@@ -6,7 +6,7 @@ export default function BillingPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[70vh] px-4 text-center space-y-6">
       {/* Icon with elegant background circle */}
-      <div className="flex items-center justify-center w-24 h-24 rounded-full bg-bg-surface border border-border shadow-sm">
+      <div className="flex items-center justify-center w-24 h-24 rounded-full bg-bg-surface border border-border shadow-xs">
         <CreditCard className="w-12 h-12 text-text-tertiary" />
       </div>
 

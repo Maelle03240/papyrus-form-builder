@@ -135,7 +135,7 @@ export function EmbedPanel({ form, initialMode, onClose, onPersist }: Props) {
               <select
                 value={settings.mode}
                 onChange={(event) => update('mode', event.target.value as EmbedMode)}
-                className="h-10 w-full rounded-xl border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+                className="h-10 w-full rounded-xl border border-border-strong bg-bg-base px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
               >
                 <option value="standard">Standard</option>
                 <option value="popup">Popup</option>
@@ -172,7 +172,7 @@ export function EmbedPanel({ form, initialMode, onClose, onPersist }: Props) {
                   value={snippet}
                   rows={settings.mode === 'popup' ? 5 : 4}
                   onFocus={(event) => event.currentTarget.select()}
-                  className="w-full resize-none rounded-lg border border-border-strong bg-bg-surface p-2 font-mono text-[11px] leading-relaxed text-text-primary focus:border-accent-cta focus:outline-none"
+                  className="w-full resize-none rounded-lg border border-border-strong bg-bg-surface p-2 font-mono text-[11px] leading-relaxed text-text-primary focus:border-accent-cta focus:outline-hidden"
                 />
                 <Button
                   size="sm"
@@ -210,7 +210,7 @@ export function EmbedPanel({ form, initialMode, onClose, onPersist }: Props) {
                         onChange={(event) =>
                           update('height', Math.max(120, Number(event.target.value) || 120))
                         }
-                        className="h-9 flex-1 rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary disabled:opacity-50 focus:border-accent-cta focus:outline-none"
+                        className="h-9 flex-1 rounded-md border border-border-strong bg-bg-base px-3 text-sm text-text-primary disabled:opacity-50 focus:border-accent-cta focus:outline-hidden"
                       />
                       <span className="text-xs text-text-tertiary">px</span>
                     </div>
@@ -272,7 +272,7 @@ export function EmbedPanel({ form, initialMode, onClose, onPersist }: Props) {
                         onChange={(event) =>
                           update('popup_trigger', event.target.value as PopupTrigger)
                         }
-                        className="h-9 w-full rounded-md border border-border-strong bg-bg-surface px-2 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+                        className="h-9 w-full rounded-md border border-border-strong bg-bg-surface px-2 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
                       >
                         {(Object.keys(TRIGGER_LABELS) as PopupTrigger[]).map((trigger) => (
                           <option key={trigger} value={trigger}>
@@ -290,7 +290,7 @@ export function EmbedPanel({ form, initialMode, onClose, onPersist }: Props) {
                         <input
                           value={settings.popup_button_label ?? ''}
                           onChange={(event) => update('popup_button_label', event.target.value)}
-                          className="h-9 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+                          className="h-9 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
                         />
                       </label>
                     )}
@@ -308,7 +308,7 @@ export function EmbedPanel({ form, initialMode, onClose, onPersist }: Props) {
                           onChange={(event) =>
                             update('popup_delay', Math.max(0, Number(event.target.value) || 0))
                           }
-                          className="h-9 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+                          className="h-9 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
                         />
                       </label>
                     )}
@@ -329,7 +329,7 @@ export function EmbedPanel({ form, initialMode, onClose, onPersist }: Props) {
                               Math.min(100, Math.max(1, Number(event.target.value) || 1))
                             )
                           }
-                          className="h-9 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-none"
+                          className="h-9 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
                         />
                       </label>
                     )}
@@ -397,10 +397,10 @@ function EmbedPreview({
     return (
       <div className="relative min-h-full rounded-xl border border-border bg-bg-surface p-8">
         <div className="space-y-2">
-          <div className="h-3 w-1/3 rounded bg-text-tertiary/25" />
-          <div className="h-2 w-full rounded bg-text-tertiary/15" />
-          <div className="h-2 w-4/5 rounded bg-text-tertiary/15" />
-          <div className="h-2 w-2/3 rounded bg-text-tertiary/15" />
+          <div className="h-3 w-1/3 rounded-sm bg-text-tertiary/25" />
+          <div className="h-2 w-full rounded-sm bg-text-tertiary/15" />
+          <div className="h-2 w-4/5 rounded-sm bg-text-tertiary/15" />
+          <div className="h-2 w-2/3 rounded-sm bg-text-tertiary/15" />
         </div>
 
         <div className="mt-8">

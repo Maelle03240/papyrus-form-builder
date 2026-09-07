@@ -702,7 +702,7 @@ export default function BuilderPage() {
                   if (e.key === 'Enter') (e.target as HTMLInputElement).blur();
                 }}
                 style={{ gridRow: '1', gridColumn: '1' }}
-                className="w-full border-0 bg-transparent font-display text-lg outline-none transition focus:border-b focus:border-accent pr-8"
+                className="w-full border-0 bg-transparent font-display text-lg outline-hidden transition focus:border-b focus:border-accent pr-8"
               />
               {titleDraft.length > LIMITS.FORM_TITLE_MAX * 0.7 && (
                 <span className={cn(
@@ -807,8 +807,8 @@ export default function BuilderPage() {
                 maxLength={LIMITS.FORM_DESCRIPTION_MAX}
                 placeholder="Ajoutez une description (optionnelle)..."
                 rows={2}
-                className="w-full resize-none border-0 bg-transparent font-body text-sm italic outline-none transition placeholder:text-text-tertiary focus:border-b focus:border-accent"
-                style={{ color: form.theme.text_color ?? 'var(--text-secondary)' }}
+                className="w-full resize-none border-0 bg-transparent font-body text-sm italic outline-hidden transition placeholder:text-text-tertiary focus:border-b focus:border-accent"
+                style={{ color: form.theme.text_color ?? 'var(--fg-secondary)' }}
               />
             </div>
 

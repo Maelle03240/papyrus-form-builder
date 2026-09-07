@@ -99,9 +99,9 @@ reproduit pas).
 | --- | --- | --- |
 | Next.js | 14.2.13 | 16.3 |
 | React | 18.3 | 19.2 |
-| TypeScript | 5.6 | 7.0 |
+| TypeScript | 5.6 | 6.0 (voir ci-dessous) |
 | Tailwind | 3.4 | 4.3 (config CSS-first) |
-| ESLint | 8.57 | 10 (flat config) |
+| ESLint | 8.57 | 9.39 (flat config, voir ci-dessous) |
 | Zod | 3.23 | 4.5 |
 | supabase-js / ssr | 2.45 / 0.5 | 2.115 / 0.12 |
 | Recharts | 2.12 | 3.10 |
@@ -109,8 +109,18 @@ reproduit pas).
 | — | — | `openai` 7.10 (nouveau) |
 
 Les trois montées cassantes : **Tailwind 4** (les tokens passent en `@theme`),
-**Recharts 3**, **Framer Motion 13**. TypeScript 7 est une majeure : elle
-remontera probablement des erreurs nouvelles sur 40 000 lignes.
+**Recharts 3**, **Framer Motion 13**.
+
+Deux versions sont volontairement en retrait d'une majeure, parce que l'outillage
+de lint ne suit pas encore :
+
+- **TypeScript 6.0 et non 7.0.** `typescript-eslint` refuse explicitement de se
+  charger contre TS 7 — il lève au chargement de la config. Repasser en 7 dès que
+  le plugin suit (typescript-eslint#10940).
+- **ESLint 9.39 et non 10.** La 10 a retiré `context.getFilename()`, que
+  `eslint-plugin-react` 7.37 — embarqué par `eslint-config-next` — appelle encore.
+
+`next lint` a disparu de la CLI Next 16 : le script `lint` appelle `eslint .`.
 
 ---
 
@@ -166,10 +176,17 @@ instantané `form_versions`** : une seule action pour tout annuler.
 Chaque phase se termine par : migration + types + actions serveur + UI + tests,
 `npm run verify` au vert, push sur `master`.
 
-**0 — Stack et fondations.** Montée de version complète, Tailwind 4, flat config
-ESLint. Ajout de vitest + playwright et d'un script `verify`
-(typecheck + lint + test + build). Livrable : l'application à l'identique, build
-vert, filet de tests en place.
+**0 — Stack et fondations.** ✅ **Fait le 07/09/2026.** Montée de version
+complète, Tailwind 4, flat config ESLint. Ajout de vitest + Playwright et d'un
+script `verify` (typecheck + lint + tests + build), vert de bout en bout.
+
+Ce qui a réellement bougé : `cookies()` attendu dans les accesseurs de
+`@supabase/ssr` plutôt qu'en rendant `createClient` asynchrone (zéro retouche sur
+ses soixante-dix appels) ; `params` promis sur neuf gestionnaires de route et
+trois pages dynamiques ; les refs React 19 élargies en `RefObject<T | null>` ;
+les étiquettes de camembert Recharts 3 normalisées ; `rounded` nu réécrit en
+`rounded-sm`, `outline-none` en `outline-hidden`, l'échelle d'ombres décalée.
+`react-hook-form` et `@hookform/resolvers` ont été retirés : plus aucun import.
 
 **1 — Projets, sections, navigation.** Tables `projects` / `sections`,
 `forms.project_id`, `fields.section_id`, suppression du type `section_break`.
@@ -235,3 +252,13 @@ public, de la tarification et du parcours partenaire.
   phase 0 — c'est le but de la faire en premier, à vide.
 - Le coût des appels `gpt-5.6-terra` est réel : prévoir un budget mensuel par
   équipe dès la phase 7.
+- **59 violations des règles du React Compiler** (`eslint-plugin-react-hooks` v6),
+  révélées par la phase 0 : 31 `set-state-in-effect`, 13 `refs`, 6
+  `static-components`, 5 `immutability`, 2 `preserve-manual-memoization`, 2
+  `purity`. Elles sont en avertissement, pas en erreur — les corriger est une
+  refactorisation à part entière, et le React Compiler restera hors d'atteinte
+  tant qu'elles sont là. À faire décroître phase après phase.
+- **`xlsx` porte une faille haute sans correctif** sur npm (pollution de
+  prototype, ReDoS) : SheetJS ne publie plus sur le registre public. Papyrus ne
+  fait qu'écrire des exports, l'exposition est faible — à remplacer en phase 5,
+  quand les exports seront repris de toute façon.

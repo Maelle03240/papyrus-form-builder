@@ -7,6 +7,7 @@ import { join } from 'node:path';
 import { evaluateLogicRules } from '../lib/logic-evaluation';
 import { isAnswerEmpty } from '../lib/submission-format';
 import type { Field, LogicRule } from '../types';
+import * as nodeFs from 'node:fs';
 
 const DIR = join(process.cwd(), 'lib/templates/catalog');
 
@@ -177,7 +178,7 @@ for (const slug of [
 // bloqué par une question qu'il n'a pas vue.
 console.log('\n== invariant sur les 51 modèles : tout refus porte sur un champ visible ==');
 {
-  const { readdirSync } = require('node:fs') as typeof import('node:fs');
+  const { readdirSync } = nodeFs;
   const slugs = readdirSync(DIR)
     .filter((f) => f.endsWith('.json') && !['index.json', '_order.json'].includes(f))
     .map((f) => f.replace(/\.json$/, ''));

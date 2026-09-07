@@ -95,15 +95,15 @@ export function TemplatePreviewDrawer({ entry, busy, onClose, onUse }: Props) {
             <h2 className="font-display text-xl leading-tight">{entry.title.fr}</h2>
             <p className="papyrus-meta mt-0.5 text-xs">{entry.template_description.fr}</p>
             <div className="mt-2 flex flex-wrap gap-1.5 text-[10px] text-text-tertiary">
-              <span className="rounded bg-bg-elevated px-2 py-0.5">{entry.category}</span>
-              <span className="rounded bg-bg-elevated px-2 py-0.5">
+              <span className="rounded-sm bg-bg-elevated px-2 py-0.5">{entry.category}</span>
+              <span className="rounded-sm bg-bg-elevated px-2 py-0.5">
                 {modeLabel(entry.display_mode)}
               </span>
-              <span className="rounded bg-bg-elevated px-2 py-0.5">
+              <span className="rounded-sm bg-bg-elevated px-2 py-0.5">
                 {entry.field_count} champ{entry.field_count > 1 ? 's' : ''}
               </span>
               {entry.page_count > 0 && (
-                <span className="rounded bg-bg-elevated px-2 py-0.5">
+                <span className="rounded-sm bg-bg-elevated px-2 py-0.5">
                   {entry.page_count} page{entry.page_count > 1 ? 's' : ''}
                 </span>
               )}
@@ -153,8 +153,8 @@ function SkeletonList() {
     <div className="space-y-3" aria-hidden>
       {Array.from({ length: 6 }).map((_, i) => (
         <div key={i} className="rounded-xl border border-border p-4">
-          <div className="h-3 w-1/3 animate-pulse rounded bg-bg-elevated" />
-          <div className="mt-2 h-2.5 w-2/3 animate-pulse rounded bg-bg-elevated" />
+          <div className="h-3 w-1/3 animate-pulse rounded-sm bg-bg-elevated" />
+          <div className="mt-2 h-2.5 w-2/3 animate-pulse rounded-sm bg-bg-elevated" />
         </div>
       ))}
     </div>
@@ -254,7 +254,7 @@ function FieldRow({ field }: { field: TemplateField }) {
             <p className="papyrus-meta mt-0.5 text-[11px]">{field.description.fr}</p>
           )}
         </div>
-        <span className="shrink-0 rounded bg-bg-elevated px-2 py-0.5 text-[10px] text-text-tertiary">
+        <span className="shrink-0 rounded-sm bg-bg-elevated px-2 py-0.5 text-[10px] text-text-tertiary">
           {meta?.label ?? field.type}
         </span>
       </div>
@@ -265,7 +265,7 @@ function FieldRow({ field }: { field: TemplateField }) {
             <span
               key={option.id}
               className={cn(
-                'rounded bg-bg-elevated px-1.5 py-0.5 text-[10px] text-text-tertiary',
+                'rounded-sm bg-bg-elevated px-1.5 py-0.5 text-[10px] text-text-tertiary',
                 option.points !== undefined && 'ring-1 ring-accent-cta/40'
               )}
               title={option.points !== undefined ? `${option.points} point(s)` : undefined}

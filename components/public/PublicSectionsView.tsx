@@ -162,7 +162,7 @@ export function PublicSectionsView({
               {form.description && (
                 <p
                   className="papyrus-meta mt-2 text-base"
-                  style={{ color: form.theme.text_color ?? 'var(--text-secondary)' }}
+                  style={{ color: form.theme.text_color ?? 'var(--fg-secondary)' }}
                 >
                   {form.description}
                 </p>

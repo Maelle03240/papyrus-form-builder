@@ -29,7 +29,8 @@ const UpsertSchema = z.object({
 });
 
 /** Intégrations configurées + les 20 derniers évènements de synchronisation. */
-export async function GET(_request: Request, { params }: { params: { id: string } }) {
+export async function GET(_request: Request, context: { params: Promise<{ id: string }> }) {
+  const params = await context.params;
   const guard = await requireFormAccess(params.id);
   if ('error' in guard) return guard.error;
 
@@ -61,7 +62,8 @@ export async function GET(_request: Request, { params }: { params: { id: string 
 }
 
 /** Crée ou met à jour l'intégration d'un fournisseur (une seule par formulaire). */
-export async function POST(request: Request, { params }: { params: { id: string } }) {
+export async function POST(request: Request, context: { params: Promise<{ id: string }> }) {
+  const params = await context.params;
   const guard = await requireFormAccess(params.id);
   if ('error' in guard) return guard.error;
 
@@ -108,7 +110,8 @@ const PatchSchema = z.object({
 });
 
 /** Active ou désactive une intégration sans perdre sa configuration. */
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export async function PATCH(request: Request, context: { params: Promise<{ id: string }> }) {
+  const params = await context.params;
   const guard = await requireFormAccess(params.id);
   if ('error' in guard) return guard.error;
 
@@ -143,7 +146,8 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 }
 
 /** Supprime une intégration. La feuille de calcul, elle, n'est pas touchée. */
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, context: { params: Promise<{ id: string }> }) {
+  const params = await context.params;
   const guard = await requireFormAccess(params.id);
   if ('error' in guard) return guard.error;
 

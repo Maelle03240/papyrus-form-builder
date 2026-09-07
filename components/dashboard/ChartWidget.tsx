@@ -365,7 +365,7 @@ export function ChartWidget({
               key={entry.label}
               className={cn(
                 "flex items-center justify-between text-xs text-text-secondary select-none",
-                isAutres && "cursor-pointer hover:bg-bg-elevated p-1 rounded font-semibold text-accent"
+                isAutres && "cursor-pointer hover:bg-bg-elevated p-1 rounded-sm font-semibold text-accent"
               )}
               onClick={() => {
                 if (isAutres && entry._grouped) {
@@ -414,8 +414,19 @@ export function ChartWidget({
                     cy="50%"
                     outerRadius="70%"
                     labelLine={false}
-                    label={({ cx, cy, midAngle, innerRadius, outerRadius, percent }) => {
+                    label={(props) => {
+                      // Recharts 3 type ces propriétes comme optionnelles, et
+                      // les rayons comme `number | string`. On les normalise
+                      // avant tout calcul : sinon `undefined` se propage
+                      // silencieusement dans la trigonometrie et l'etiquette
+                      // atterrit en NaN.
+                      const percent = Number(props.percent ?? 0);
                       if (percent < 0.05) return null;
+                      const cx = Number(props.cx ?? 0);
+                      const cy = Number(props.cy ?? 0);
+                      const midAngle = Number(props.midAngle ?? 0);
+                      const innerRadius = Number(props.innerRadius ?? 0);
+                      const outerRadius = Number(props.outerRadius ?? 0);
                       const RADIAN = Math.PI / 180;
                       const radius = innerRadius + (outerRadius - innerRadius) * 0.6;
                       const x = cx + radius * Math.cos(-midAngle * RADIAN);
@@ -426,9 +437,13 @@ export function ChartWidget({
                         </text>
                       );
                     }}
-                    onClick={(data) => {
-                      if (data && data.label === 'Autres' && data._grouped) {
-                        setAutresData(data._grouped);
+                    onClick={(payload) => {
+                      // `label` et `_grouped` viennent de nos propres donnees :
+                      // Recharts les recopie dans le point mais ne les connait
+                      // pas dans son typage.
+                      const point = payload as unknown as OptionCount | undefined;
+                      if (point?.label === 'Autres' && point._grouped) {
+                        setAutresData(point._grouped);
                         setShowAutresModal(true);
                       }
                     }}
@@ -481,7 +496,7 @@ export function ChartWidget({
                 x={-10}
                 y={4}
                 textAnchor="end"
-                fill="var(--text-tertiary)"
+                fill="var(--fg-tertiary)"
                 fontSize={11}
                 className="cursor-help"
               >
@@ -503,12 +518,12 @@ export function ChartWidget({
                     margin={{ top: 10, right: 10, left: 10, bottom: 5 }}
                   >
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} />
-                    <XAxis type="number" allowDecimals={false} stroke="var(--text-tertiary)" fontSize={11} />
+                    <XAxis type="number" allowDecimals={false} stroke="var(--fg-tertiary)" fontSize={11} />
                     <YAxis 
                       dataKey="label" 
                       type="category" 
                       width={yAxisWidth} 
-                      stroke="var(--text-tertiary)" 
+                      stroke="var(--fg-tertiary)" 
                       fontSize={11} 
                       tick={<CustomYAxisTick />}
                     />
@@ -534,8 +549,8 @@ export function ChartWidget({
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="label" stroke="var(--text-tertiary)" fontSize={11} />
-                <YAxis allowDecimals={false} stroke="var(--text-tertiary)" fontSize={11} />
+                <XAxis dataKey="label" stroke="var(--fg-tertiary)" fontSize={11} />
+                <YAxis allowDecimals={false} stroke="var(--fg-tertiary)" fontSize={11} />
                 <Tooltip formatter={(value) => [`${value} réponses`]} />
                 <Bar dataKey="count" fill={accentColor} radius={[4, 4, 0, 0]} maxBarSize={40} />
               </BarChart>
@@ -551,8 +566,8 @@ export function ChartWidget({
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                <XAxis dataKey="label" stroke="var(--text-tertiary)" fontSize={10} />
-                <YAxis allowDecimals={false} stroke="var(--text-tertiary)" fontSize={11} />
+                <XAxis dataKey="label" stroke="var(--fg-tertiary)" fontSize={10} />
+                <YAxis allowDecimals={false} stroke="var(--fg-tertiary)" fontSize={11} />
                 <Tooltip formatter={(value) => [`${value} réponses`]} />
                 <Bar dataKey="count" fill={accentColor} radius={[4, 4, 0, 0]} maxBarSize={30} />
               </BarChart>
@@ -584,8 +599,8 @@ export function ChartWidget({
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={groupedData} margin={{ top: 10, right: 10, left: 0, bottom: 5 }}>
                   <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                  <XAxis dataKey="name" stroke="var(--text-tertiary)" fontSize={11} />
-                  <YAxis allowDecimals={false} stroke="var(--text-tertiary)" fontSize={11} />
+                  <XAxis dataKey="name" stroke="var(--fg-tertiary)" fontSize={11} />
+                  <YAxis allowDecimals={false} stroke="var(--fg-tertiary)" fontSize={11} />
                   <Tooltip />
                   <Legend wrapperStyle={{ fontSize: 11 }} />
                   {cols.map((c, i) => {
@@ -664,7 +679,7 @@ export function ChartWidget({
                           </span>
                           
                           {/* Tooltip personnalisé en pur CSS */}
-                          <div className="absolute z-20 bottom-full mb-1.5 left-1/2 -translate-x-1/2 hidden group-hover/cell:block bg-bg-surface border border-border shadow-lg rounded px-2.5 py-1.5 text-[11px] whitespace-nowrap text-text-primary pointer-events-none transition-all">
+                          <div className="absolute z-20 bottom-full mb-1.5 left-1/2 -translate-x-1/2 hidden group-hover/cell:block bg-bg-surface border border-border shadow-lg rounded-sm px-2.5 py-1.5 text-[11px] whitespace-nowrap text-text-primary pointer-events-none transition-all">
                             <span className="font-semibold">{r.label.fr || r.id}</span>
                             <span className="mx-1 text-text-tertiary">›</span>
                             <span>{c.label.fr || c.id}</span>
@@ -691,7 +706,7 @@ export function ChartWidget({
               <div className="p-4 text-center text-xs text-text-tertiary italic">Aucun texte soumis</div>
             ) : (
               data.map((text, i) => (
-                <div key={i} className="p-3 text-xs text-text-secondary hover:bg-bg-elevated/10 transition-colors break-words">
+                <div key={i} className="p-3 text-xs text-text-secondary hover:bg-bg-elevated/10 transition-colors wrap-break-word">
                   {text}
                 </div>
               ))
@@ -722,7 +737,7 @@ export function ChartWidget({
           {!isExportMode && (
             <button
               type="button"
-              className="chart-drag-handle cursor-grab rounded p-1 text-text-tertiary opacity-0 group-hover/widget:opacity-100 transition hover:bg-bg-elevated hover:text-text-primary active:cursor-grabbing shrink-0"
+              className="chart-drag-handle cursor-grab rounded-sm p-1 text-text-tertiary opacity-0 group-hover/widget:opacity-100 transition hover:bg-bg-elevated hover:text-text-primary active:cursor-grabbing shrink-0"
               title="Glisser pour réordonner"
               aria-label="Glisser pour réordonner"
             >
@@ -742,14 +757,14 @@ export function ChartWidget({
                   setEditTitle(title);
                 }
               }}
-              className="flex-1 rounded border border-accent bg-bg-base px-2 py-0.5 text-base font-semibold focus:outline-none"
+              className="flex-1 rounded-sm border border-accent bg-bg-base px-2 py-0.5 text-base font-semibold focus:outline-hidden"
             />
           ) : (
             <div 
               onClick={() => !isExportMode && setIsEditing(true)} 
               className={cn(
                 "flex items-center gap-2 group/title cursor-pointer truncate max-w-full",
-                !isExportMode && "hover:bg-bg-elevated/40 px-1 rounded transition-colors"
+                !isExportMode && "hover:bg-bg-elevated/40 px-1 rounded-sm transition-colors"
               )}
             >
               <h4 className="text-base font-semibold text-text-primary truncate" title={title}>
@@ -767,7 +782,7 @@ export function ChartWidget({
           <div className="flex shrink-0 items-center gap-1 opacity-0 group-hover/widget:opacity-100 transition-opacity ml-2">
             {/* Toggle spécial pour Matrix */}
             {field.type === 'matrix' && onMatrixTypeChange && (
-              <div className="flex border border-border rounded overflow-hidden">
+              <div className="flex border border-border rounded-sm overflow-hidden">
                 <button
                   type="button"
                   onClick={() => onMatrixTypeChange('heatmap')}
@@ -797,7 +812,7 @@ export function ChartWidget({
             <button
               type="button"
               onClick={onDelete}
-              className="rounded p-1.5 text-text-tertiary transition hover:bg-danger/10 hover:text-danger"
+              className="rounded-sm p-1.5 text-text-tertiary transition hover:bg-danger/10 hover:text-danger"
               title="Supprimer ce graphique du tableau de bord"
             >
               <Trash2 className="h-3.5 w-3.5" />
@@ -850,7 +865,7 @@ export function ChartWidget({
       )}
 
       {/* Zone du Graphique */}
-      <div ref={containerRef} className="flex-grow flex-1 w-full flex items-stretch justify-center min-h-[220px] relative">
+      <div ref={containerRef} className="grow flex-1 w-full flex items-stretch justify-center min-h-[220px] relative">
         {renderChart()}
       </div>
 
@@ -864,7 +879,7 @@ export function ChartWidget({
               </h5>
               <button 
                 onClick={() => setShowAutresModal(false)}
-                className="rounded p-1 text-text-tertiary hover:bg-bg-elevated hover:text-text-primary transition"
+                className="rounded-sm p-1 text-text-tertiary hover:bg-bg-elevated hover:text-text-primary transition"
               >
                 <X className="h-4 w-4" />
               </button>
@@ -882,7 +897,7 @@ export function ChartWidget({
             <div className="border-t border-border bg-bg-elevated/10 px-4 py-2 text-right">
               <button
                 onClick={() => setShowAutresModal(false)}
-                className="rounded bg-accent px-3 py-1 text-xs font-semibold text-white hover:bg-accent-hover transition"
+                className="rounded-sm bg-accent px-3 py-1 text-xs font-semibold text-white hover:bg-accent-hover transition"
               >
                 Fermer
               </button>

@@ -1,8 +1,7 @@
-@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css');
+@import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css')
+layer(base);
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
 
 /* ============================================================================
    Identité visuelle Mooove — V1.0
@@ -18,16 +17,136 @@
    excès — et JAMAIS dans le même bloc visuel que le Cyan.
    ============================================================================ */
 
-:root {
-  /* Palette Mooove — officielle, valeurs de la charte */
-  --mooove-navy: #052139;      /* Couleur principale / autorité */
-  --mooove-cyan: #2ac2de;      /* Accentuation / CTA / énergie */
-  --mooove-amber: #f6923e;     /* Chaleur / humain / contraste chaud */
-  --mooove-electric: #3c5eab;  /* Audace. Affirmation. Ambition. */
-  --mooove-ice: #eff9fe;       /* Couleur texte et fond secondaire */
-  --mooove-sky: #c7eafb;       /* Accents doux / séparateurs */
+/* ============================================================================
+   Thème Tailwind v4
+   ----------------------------------------------------------------------------
+   `inline` n'est pas une préférence de style : c'est ce qui fait fonctionner le
+   thème sombre. Sans lui, Tailwind émettrait `--color-bg-surface: var(--bg-surface)`
+   sur `:root`, où la variable serait résolue **une seule fois**, avec la valeur
+   claire — et toute surface sous `[data-theme='dark']` hériterait de cette
+   valeur claire. Avec `inline`, l'utilitaire porte directement
+   `var(--bg-surface)`, résolu sur l'élément, donc dans le bon thème.
 
-  /* ---- Tokens sémantiques — thème clair (défaut) ----
+   Les noms sont ceux de l'ancienne config v3 : `bg-bg-surface`,
+   `text-text-primary`, `border-border-strong`… Les renommer coûterait un millier
+   de retouches pour zéro gain.
+   ============================================================================ */
+
+@theme inline {
+  /* ---- Palette Mooove — valeurs officielles de la charte ---- */
+  --color-mooove-navy: #052139;
+  --color-mooove-cyan: #2ac2de;
+  --color-mooove-amber: #f6923e;
+  --color-mooove-electric: #3c5eab;
+  --color-mooove-ice: #eff9fe;
+  --color-mooove-sky: #c7eafb;
+
+  /* ---- Tokens sémantiques — pilotés par les variables de `:root` ---- */
+  --color-bg-base: var(--bg-base);
+  --color-bg-surface: var(--bg-surface);
+  --color-bg-elevated: var(--bg-elevated);
+  --color-bg-overlay: var(--bg-overlay);
+
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  --color-text-primary: var(--fg-primary);
+  --color-text-secondary: var(--fg-secondary);
+  --color-text-tertiary: var(--fg-tertiary);
+
+  --color-accent: var(--accent);
+  --color-accent-cta: var(--accent-cta);
+  --color-accent-warm: var(--accent-warm);
+  --color-accent-bold: var(--accent-bold);
+
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
+
+  /*
+   * Ancien nuancier « parchemin ». Conservé comme alias parce qu'une centaine
+   * d'usages (`bg-papyrus-surface`, `border-papyrus-border`…) sont répartis dans
+   * les composants — chaque entrée pointe désormais vers un token Mooove.
+   */
+  --color-papyrus-bg: var(--bg-base);
+  --color-papyrus-surface: var(--bg-surface);
+  --color-papyrus-border: var(--border);
+  --color-papyrus-muted: var(--fg-secondary);
+  --color-papyrus-ink: var(--fg-primary);
+
+  /* ---- Typographie ----
+     « Une seule famille typographique. Deux poids. Zéro compromis. »
+     Aktiv Grotesk est la police de la charte ; elle est sur Adobe Fonts (licence
+     payante). DM Sans, chargée par next/font, en est le substitut libre le plus
+     proche : si un kit Typekit est ajouté au projet, le navigateur prendra
+     Aktiv Grotesk en priorité grâce à l'ordre de ce fallback. */
+  --font-sans:
+    var(--font-aktiv), 'Aktiv Grotesk', 'DM Sans', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-body:
+    var(--font-aktiv), 'Aktiv Grotesk', 'DM Sans', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-display:
+    var(--font-aktiv), 'Aktiv Grotesk', 'DM Sans', -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-serif: Georgia, 'Times New Roman', serif; /* citations uniquement */
+  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+
+  /*
+   * Coins arrondis de la charte : compact 8 px · standard 12 px · cards 20 px.
+   * L'échelle reprend exactement le mapping de l'ancienne config v3, pour que
+   * `rounded-md`, `rounded-xl` ou `rounded-2xl` rendent au pixel près ce qu'ils
+   * rendaient avant. Le `rounded` nu de la v3 valait 8 px : il a été réécrit en
+   * `rounded-sm` dans les composants, la v4 réservant `rounded` à 4 px.
+   */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 12px;
+  --radius-xl: 12px;
+  --radius-2xl: 20px;
+  --radius-3xl: 20px;
+
+  --animate-fade-in: fade-in 200ms ease-out;
+  --animate-slide-up: slide-up 280ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================================
+   Tokens bruts
+   ----------------------------------------------------------------------------
+   Ils vivent hors du bloc `@theme` : ce sont eux que `[data-theme='dark']`
+   redéfinit, et c'est cette redéfinition que les utilitaires ci-dessus suivent.
+
+   Aucun de ces noms n'empiète sur un espace de noms Tailwind v4. C'est pourquoi
+   les couleurs de texte s'appellent `--fg-*` et non `--text-*` : en v4,
+   `--text-*` **est** l'échelle de tailles de police, et redéfinir `--text-sm`
+   changerait la taille de chaque `text-sm` de l'application.
+   ============================================================================ */
+
+:root {
+  /* ---- Thème clair (défaut) ----
      Fond Ice Blue plutôt que blanc pur : la charte l'utilise comme fond
      secondaire, il donne à l'interface sa fraîcheur sans casser le contraste. */
   --bg-base: #f4fafe;
@@ -36,9 +155,9 @@
   --bg-overlay: #dff1fb;
   --border: #c7eafb;
   --border-strong: #9fd4ee;
-  --text-primary: #052139;
-  --text-secondary: #4a6b82;
-  --text-tertiary: #8aa6b8;
+  --fg-primary: #052139;
+  --fg-secondary: #4a6b82;
+  --fg-tertiary: #8aa6b8;
   --accent: #052139;
   --accent-cta: #2ac2de;
   --accent-warm: #f6923e;
@@ -46,22 +165,6 @@
   --success: #1a9e73;
   --warning: #f6923e;
   --danger: #c0392b;
-
-  /* Coins arrondis — compact / standard / cards */
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
-
-  /* ---- Typographie ----
-     « Une seule famille typographique. Deux poids. Zéro compromis. »
-     Aktiv Grotesk est la police de la charte ; elle est sur Adobe Fonts (licence
-     payante). DM Sans, chargée par next/font, en est le substitut libre le plus
-     proche : si un kit Typekit est ajouté au projet, le navigateur prendra
-     Aktiv Grotesk en priorité grâce à l'ordre de ce fallback. */
-  --font-body: var(--font-aktiv), 'Aktiv Grotesk', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-display: var(--font-aktiv), 'Aktiv Grotesk', 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-serif: Georgia, 'Times New Roman', serif; /* citations uniquement */
-  --font-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 
   /* Sidebar — tailles fluides proportionnelles à l'écran */
   --sidebar-width: clamp(200px, 15vw, 280px);
@@ -73,29 +176,10 @@
   --sidebar-logo-size: 48px;
   --sidebar-avatar-size: clamp(26px, 2vw, 32px);
 
-  /* Panels de l'éditeur & Spacings fluides */
+  /* Panneaux de l'éditeur & espacements fluides */
   --palette-width: clamp(220px, 16vw, 280px);
   --settings-width: clamp(260px, 19vw, 320px);
   --layout-padding: clamp(10px, 1.5vw, 16px);
-
-  /* Tailles de texte responsives */
-  --text-xs: clamp(10px, 1.4vw, 12px);
-  --text-sm: clamp(11px, 1.6vw, 14px);
-  --text-base: clamp(13px, 1.8vw, 16px);
-  --text-lg: clamp(16px, 2.2vw, 20px);
-  --text-xl: clamp(18px, 2.6vw, 24px);
-  --text-2xl: clamp(22px, 3.2vw, 32px);
-
-  /* Espacements responsives */
-  --spacing-xs: clamp(4px, 1vw, 8px);
-  --spacing-sm: clamp(6px, 1.5vw, 12px);
-  --spacing-md: clamp(8px, 2vw, 16px);
-  --spacing-lg: clamp(12px, 3vw, 24px);
-  --spacing-xl: clamp(16px, 4vw, 32px);
-
-  /* Hauteurs minimales responsives */
-  --min-touch-target: clamp(32px, 5vw, 44px);
-  --input-height: clamp(32px, 4.5vw, 40px);
 }
 
 /* Thème sombre — le Navy passe au fond, le Cyan devient la couleur d'accent
@@ -107,9 +191,9 @@
   --bg-overlay: #1a4a72;
   --border: #1a4a72;
   --border-strong: #3c5eab;
-  --text-primary: #eff9fe;
-  --text-secondary: #c7eafb;
-  --text-tertiary: #6b8ba5;
+  --fg-primary: #eff9fe;
+  --fg-secondary: #c7eafb;
+  --fg-tertiary: #6b8ba5;
   --accent: #2ac2de;
   --accent-cta: #2ac2de;
   --accent-warm: #f6923e;
@@ -129,7 +213,7 @@
   }
   body {
     background-color: var(--bg-base);
-    color: var(--text-primary);
+    color: var(--fg-primary);
     font-family: var(--font-body);
     font-size: 1rem;
     line-height: 1.6;
@@ -155,7 +239,7 @@
   blockquote {
     font-family: var(--font-serif);
     font-style: italic;
-    color: var(--text-secondary);
+    color: var(--fg-secondary);
   }
   /* Scrollbar discret */
   ::-webkit-scrollbar {
@@ -196,7 +280,7 @@
   .papyrus-numeral {
     font-family: var(--font-body);
     font-style: normal;
-    color: var(--text-secondary);
+    color: var(--fg-secondary);
   }
   /*
    * Damier de l'aperçu d'intégration. Sans lui, « fond transparent » se

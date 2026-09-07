@@ -74,7 +74,7 @@ export function ToastContainer() {
   if (toasts.length === 0) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-[9999] flex flex-col gap-2 max-w-sm w-full pointer-events-none">
+    <div className="fixed bottom-5 right-5 z-9999 flex flex-col gap-2 max-w-sm w-full pointer-events-none">
       {toasts.map((t) => {
         let Icon = Info;
         let iconColor = 'text-mooove-cyan';
@@ -105,7 +105,7 @@ export function ToastContainer() {
           >
             <Icon className={cn('h-5 w-5 shrink-0 mt-0.5', iconColor)} />
             
-            <div className="flex-1 text-sm text-text-primary font-medium leading-relaxed break-words">
+            <div className="flex-1 text-sm text-text-primary font-medium leading-relaxed wrap-break-word">
               {t.message}
               {t.action && (
                 <button

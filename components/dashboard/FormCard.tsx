@@ -64,7 +64,7 @@ export function FormCard({ form, onEdit, onDuplicate, onDelete }: FormCardProps)
     <>
       <div
         onClick={handleCardClick}
-        className="group relative flex flex-col justify-between p-6 h-48 cursor-pointer transition-all duration-200 border bg-bg-surface border-border hover:border-border-strong rounded-2xl shadow-sm hover:shadow-md"
+        className="group relative flex flex-col justify-between p-6 h-48 cursor-pointer transition-all duration-200 border bg-bg-surface border-border hover:border-border-strong rounded-2xl shadow-xs hover:shadow-md"
       >
         {/* Top bar with Badge and Options Menu */}
         <div className="flex items-start justify-between">

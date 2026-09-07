@@ -430,7 +430,7 @@ function FormCard({ form, workspaceName }: { form: Form; workspaceName?: string 
   return (
     <Link
       href={`/forms/${form.id}`}
-      className="group block rounded-lg border border-border bg-bg-surface p-4 transition hover:border-border-strong hover:shadow-sm"
+      className="group block rounded-lg border border-border bg-bg-surface p-4 transition hover:border-border-strong hover:shadow-xs"
     >
       <div className="flex items-start justify-between">
         <div className="font-display text-lg">{form.title}</div>
@@ -467,7 +467,7 @@ function FavoriteTemplateCard({
     <button
       type="button"
       onClick={onUse}
-      className="group flex flex-col items-start gap-2 rounded-lg border border-border bg-bg-surface p-4 text-left transition hover:border-accent hover:shadow-sm"
+      className="group flex flex-col items-start gap-2 rounded-lg border border-border bg-bg-surface p-4 text-left transition hover:border-accent hover:shadow-xs"
     >
       <div className="flex h-9 w-9 items-center justify-center rounded-md bg-bg-elevated text-text-secondary group-hover:bg-accent/10 group-hover:text-accent">
         <Icon className="h-4 w-4" />
