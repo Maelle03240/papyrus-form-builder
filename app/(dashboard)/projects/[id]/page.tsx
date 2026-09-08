@@ -9,9 +9,11 @@ import {
   Handshake,
   ListChecks,
   Plus,
-  Settings as SettingsIcon
+  Settings as SettingsIcon,
+  Sparkles
 } from 'lucide-react';
 
+import { AssistantPanel } from '@/components/ai/AssistantPanel';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
@@ -53,6 +55,16 @@ function ProjectWorkspace() {
   const [counts, setCounts] = useState<Record<string, number>>({});
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  /**
+   * L'assistant, dans le projet aussi.
+   *
+   * Il n'existait que dans l'espace d'un formulaire — donc seulement une fois
+   * qu'un formulaire existait. Quelqu'un qui ouvre un projet vide, ou qui y
+   * revient le lendemain, n'avait plus aucun moyen de lui parler : il fallait
+   * repasser par la création d'un projet pour retrouver l'assistant.
+   */
+  const [assistantOpen, setAssistantOpen] = useState(false);
 
   const load = useCallback(async () => {
     try {
@@ -171,14 +183,26 @@ function ProjectWorkspace() {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full min-h-0">
+      <div className="flex min-w-0 flex-1 flex-col">
       <header className="px-6 pt-8">
         <nav className="text-xs text-text-tertiary" aria-label="Fil d'Ariane">
           <Link href="/projects" className="transition hover:text-text-secondary">
             Projets
           </Link>
         </nav>
-        <h1 className="mt-1 font-display text-2xl font-bold text-text-primary">{project.name}</h1>
+        <div className="mt-1 flex flex-wrap items-start gap-3">
+          <h1 className="font-display text-2xl font-bold text-text-primary">{project.name}</h1>
+          <Button
+            className="ml-auto"
+            variant={assistantOpen ? 'primary' : 'secondary'}
+            size="sm"
+            iconLeft={<Sparkles className="h-3.5 w-3.5" />}
+            onClick={() => setAssistantOpen(!assistantOpen)}
+          >
+            Assistant
+          </Button>
+        </div>
         {project.description && (
           <p className="mt-1 max-w-2xl text-sm text-text-secondary">{project.description}</p>
         )}
@@ -194,6 +218,7 @@ function ProjectWorkspace() {
             forms={forms}
             projectId={project.id}
             onCreate={handleCreateForm}
+            onAssistant={() => setAssistantOpen(true)}
             onChanged={load}
           />
         )}
@@ -214,6 +239,26 @@ function ProjectWorkspace() {
 
         {tab === 'settings' && <SettingsTab project={project} onChanged={load} />}
       </div>
+      </div>
+
+      {assistantOpen && (
+        <aside className="fixed inset-0 z-40 border-l border-border bg-bg-surface lg:static lg:z-auto lg:w-[26rem] lg:shrink-0">
+          <AssistantPanel
+            teamId={project.team_id}
+            projectId={project.id}
+            formId={null}
+            onChanged={load}
+            onClose={() => setAssistantOpen(false)}
+            onCreated={({ form_id }) => {
+              // On recharge sans rediriger : l'assistant enchaîne peut-être
+              // d'autres questions, et déplacer la page sous les doigts de
+              // quelqu'un qui lit est la pire des surprises. Le formulaire
+              // apparaît dans l'onglet, à portée de clic.
+              if (form_id) void load();
+            }}
+          />
+        </aside>
+      )}
     </div>
   );
 }
@@ -226,11 +271,13 @@ function FormsTab({
   forms,
   projectId,
   onCreate,
+  onAssistant,
   onChanged
 }: {
   forms: Form[];
   projectId: string;
   onCreate: () => void;
+  onAssistant: () => void;
   onChanged: () => Promise<void>;
 }) {
   const router = useRouter();
@@ -271,9 +318,18 @@ function FormsTab({
             Un projet peut en contenir plusieurs : une inscription, une enquête de satisfaction, un
             bon de commande.
           </p>
-          <Button className="mt-6" iconLeft={<Plus className="h-4 w-4" />} onClick={onCreate}>
-            Créer un formulaire
-          </Button>
+          <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+            <Button iconLeft={<Sparkles className="h-4 w-4" />} onClick={onAssistant}>
+              Décrire à l’assistant
+            </Button>
+            <Button
+              variant="secondary"
+              iconLeft={<Plus className="h-4 w-4" />}
+              onClick={onCreate}
+            >
+              Partir d’une page blanche
+            </Button>
+          </div>
         </div>
       </div>
     );

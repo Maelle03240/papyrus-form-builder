@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
   ArrowLeft,
@@ -114,6 +115,37 @@ export function NewProjectWizard({ teamId }: Props) {
 
   const [creating, setCreating] = useState(false);
   const [handoff, setHandoff] = useState<{ projectId: string; message: string } | null>(null);
+
+  /**
+   * L'assistant est-il utilisable dans cet espace ?
+   *
+   * `null` tant qu'on ne sait pas. La question se pose **avant** de créer le
+   * projet : sans clé d'API, proposer « Construire avec l'assistant » mène à un
+   * projet vide et à un message d'erreur rouge, et la personne repart en
+   * croyant que le produit est cassé. Il vaut mieux le dire à l'écran, une
+   * phrase plus haut, avec le chemin pour y remédier.
+   */
+  const [aiReady, setAiReady] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const response = await fetch(`/api/ai/settings?team=${teamId}`);
+        const data = await response.json();
+        if (!cancelled) setAiReady(response.ok && data.configured === true && data.enabled === true);
+      } catch {
+        // Réseau coupé, route indisponible : on ne bloque pas la création pour
+        // autant. On retombe sur le chemin manuel, qui n'a besoin de personne.
+        if (!cancelled) setAiReady(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [teamId]);
 
   /**
    * Crée le projet, puis passe la main à l'assistant.
@@ -308,16 +340,41 @@ export function NewProjectWizard({ teamId }: Props) {
             ))}
           </div>
 
-          <Button
-            className="mt-6 w-full"
-            variant="primary"
-            size="lg"
-            loading={creating}
-            iconLeft={<Sparkles className="h-4 w-4" />}
-            onClick={() => void begin(true)}
-          >
-            Construire avec l’assistant
-          </Button>
+          {aiReady === false ? (
+            <>
+              <Button
+                className="mt-6 w-full"
+                variant="primary"
+                size="lg"
+                loading={creating}
+                onClick={() => void begin(false)}
+              >
+                Créer le projet
+              </Button>
+              <p className="mt-3 text-xs leading-relaxed text-text-tertiary">
+                L’assistant n’est pas encore actif dans cet espace de travail. Un administrateur
+                l’allume en enregistrant une clé dans{' '}
+                <Link
+                  href="/settings/assistant"
+                  className="text-accent underline-offset-4 hover:underline"
+                >
+                  Paramètres → Assistant
+                </Link>
+                . Le projet se construit très bien sans lui.
+              </p>
+            </>
+          ) : (
+            <Button
+              className="mt-6 w-full"
+              variant="primary"
+              size="lg"
+              loading={creating || aiReady === null}
+              iconLeft={<Sparkles className="h-4 w-4" />}
+              onClick={() => void begin(true)}
+            >
+              Construire avec l’assistant
+            </Button>
+          )}
         </Screen>
       )}
     </div>

@@ -751,6 +751,17 @@ page — une erreur non rattrapée fait échouer le test qui l'a provoquée.
 
 ## 5. Risques
 
+- **Un écran peut exister et n'être relié à rien.** `/projects/nouveau` — les
+  trois questions puis l'assistant — était en place depuis la phase 6, et trois
+  des quatre boutons « Nouveau projet » ne s'y rendaient pas : le tableau de
+  bord et la barre latérale renvoyaient à la liste, et la liste ouvrait sa
+  propre fenêtre à un champ. La porte d'entrée du produit donnait donc un
+  projet vide, sans formulaire et sans assistant, pendant que la page qui
+  faisait le contraire n'était atteignable que depuis `/forms`. Aucun test ne
+  pouvait le voir : chaque écran s'ouvrait, chacun répondait 200. Ce qui
+  manquait, c'est un test qui parte d'un **bouton** et regarde où il mène ; il
+  existe maintenant pour les deux portes principales.
+
 - **Ce qui n'a pas de test de navigateur n'a pas été vu.** Les neuf défauts de la
   revue ont tous la même forme : le typage est satisfait, les tests unitaires
   passent, la page s'affiche — et quelque chose est faux à l'écran. Trois

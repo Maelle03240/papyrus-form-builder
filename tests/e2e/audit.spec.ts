@@ -163,6 +163,72 @@ test.describe('Revue complète', () => {
   }
 
   // ══════════════════════════════════════════════════════════════════════════
+  // 1 bis. « Nouveau projet » mène à l'assistant de création, partout
+  // ══════════════════════════════════════════════════════════════════════════
+
+  /**
+   * Le défaut que ce test empêche de revenir.
+   *
+   * `/projects/nouveau` — trois questions puis l'assistant — existait, et trois
+   * des quatre portes marquées « Nouveau projet » ne s'y rendaient pas : le
+   * tableau de bord renvoyait à la liste, la barre latérale aussi, et la liste
+   * elle-même ouvrait sa propre fenêtre à un champ. Créer un projet par la
+   * porte d'entrée du produit donnait donc un espace vide : aucun formulaire à
+   * remplir, aucun assistant à qui parler.
+   *
+   * On vérifie l'adresse d'arrivée et non l'apparence : c'est le routage qui
+   * avait divergé, et c'est lui qui peut diverger à nouveau.
+   */
+  const DOORS: { from: string; label: RegExp }[] = [
+    { from: '/projects', label: /Nouveau projet/i },
+    { from: '/dashboard', label: /Nouveau projet/i }
+  ];
+
+  for (const door of DOORS) {
+    test(`« Nouveau projet » depuis ${door.from} ouvre l'assistant`, async ({ page }) => {
+      const errors = watchConsole(page);
+
+      await page.goto(door.from);
+      await expectNoCrash(page);
+
+      await page.getByRole('button', { name: door.label }).first().click();
+      await page.waitForURL('**/projects/nouveau', { timeout: 15_000 });
+
+      // La première question de l'assistant, pas une fenêtre à un champ.
+      await expect(page.locator('body')).toContainText(/Comment s’appelle ce projet|s'appelle ce projet/i, {
+        timeout: 15_000
+      });
+      await expectNoCrash(page);
+
+      expect(errors, `console depuis ${door.from}`).toEqual([]);
+    });
+  }
+
+  test('l’espace d’un projet propose l’assistant', async ({ page }) => {
+    test.skip(!PROJECT, 'E2E_AUDIT_PROJECT non défini');
+    const errors = watchConsole(page);
+
+    await page.goto(`/projects/${PROJECT}`);
+    await expectNoCrash(page);
+
+    // Le panneau n'existait que dans l'espace d'un formulaire : un projet
+    // ouvert le lendemain n'avait plus aucun moyen de parler à l'assistant.
+    const button = page.getByRole('button', { name: /^Assistant$/i }).first();
+    await expect(button).toBeVisible({ timeout: 15_000 });
+    await button.click();
+
+    // La barre latérale est elle aussi un `aside` : on vise le panneau par ce
+    // qu'il contient, et non par sa balise.
+    await expect(page.getByRole('button', { name: /Fermer l’assistant/i })).toBeVisible({
+      timeout: 10_000
+    });
+    await page.waitForTimeout(800);
+    await expectNoCrash(page);
+
+    expect(errors, 'console du panneau assistant').toEqual([]);
+  });
+
+  // ══════════════════════════════════════════════════════════════════════════
   // 2. Les onglets d'un projet et d'un formulaire
   // ══════════════════════════════════════════════════════════════════════════
 

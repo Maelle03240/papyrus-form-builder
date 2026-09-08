@@ -5,12 +5,8 @@ import { useRouter } from 'next/navigation';
 import { Archive, FolderOpen, Plus, Search } from 'lucide-react';
 
 import { Button } from '@/components/ui/Button';
-import { Modal } from '@/components/ui/Modal';
-import { Input } from '@/components/ui/Input';
-import { toast } from '@/components/ui/Toast';
 import { ProjectRow } from '@/components/dashboard/ProjectRow';
-import { listProjects, createProject, readActiveTeamId } from '@/lib/store';
-import { createClient } from '@/lib/supabase/client';
+import { listProjects } from '@/lib/store';
 import type { Project } from '@/types';
 
 /**
@@ -29,9 +25,16 @@ export default function ProjectsPage() {
   const [query, setQuery] = useState('');
   const [showArchived, setShowArchived] = useState(false);
 
-  const [isCreateOpen, setCreateOpen] = useState(false);
-  const [newName, setNewName] = useState('');
-  const [creating, setCreating] = useState(false);
+  /**
+   * Créer un projet, c'est ouvrir l'assistant de création — jamais autre chose.
+   *
+   * Cette page posait sa propre question dans une fenêtre : un nom, puis
+   * l'espace de travail du projet, vide. Le nouveau venu arrivait donc devant
+   * un projet sans formulaire et sans assistant, alors que `/projects/nouveau`
+   * existait et faisait exactement le contraire. Deux chemins pour un même
+   * geste, et c'est le mauvais que prenait la porte d'entrée du produit.
+   */
+  const startProject = useCallback(() => router.push('/projects/nouveau'), [router]);
 
   const load = useCallback(async () => {
     try {
@@ -66,55 +69,6 @@ export default function ProjectsPage() {
     [projects]
   );
 
-  /**
-   * Résout l'espace de travail dans lequel créer le projet.
-   *
-   * Le cookie d'espace actif n'est écrit que par le sélecteur de la barre
-   * latérale : un compte qui vient d'être créé ne l'a pas encore, et créer un
-   * projet est justement la première chose qu'il fera. On interroge donc
-   * l'appartenance réelle en repli, plutôt que d'échouer.
-   */
-  const resolveTeamId = useCallback(async (): Promise<string> => {
-    const fromCookie = readActiveTeamId();
-    if (fromCookie) return fromCookie;
-
-    const supabase = createClient();
-    const {
-      data: { user }
-    } = await supabase.auth.getUser();
-    if (!user) throw new Error('Session expirée.');
-
-    const { data, error: membershipError } = await supabase
-      .from('team_members')
-      .select('team_id')
-      .eq('user_id', user.id)
-      .limit(1)
-      .maybeSingle();
-
-    if (membershipError || !data?.team_id) {
-      throw new Error("Aucun espace de travail disponible pour ce compte.");
-    }
-    return data.team_id as string;
-  }, []);
-
-  const handleCreate = useCallback(async () => {
-    const name = newName.trim();
-    if (!name) return;
-
-    setCreating(true);
-    try {
-      const project = await createProject({ name, teamId: await resolveTeamId() });
-      setCreateOpen(false);
-      setNewName('');
-      router.push(`/projects/${project.id}`);
-    } catch (err) {
-      console.error('Failed to create project:', err);
-      toast.error(err instanceof Error ? err.message : 'Le projet n’a pas pu être créé.');
-    } finally {
-      setCreating(false);
-    }
-  }, [newName, resolveTeamId, router]);
-
   return (
     <div className="mx-auto w-full max-w-5xl px-6 py-10">
       <header className="flex flex-wrap items-end justify-between gap-4">
@@ -125,7 +79,7 @@ export default function ProjectsPage() {
             partenaires.
           </p>
         </div>
-        <Button iconLeft={<Plus className="h-4 w-4" />} onClick={() => setCreateOpen(true)}>
+        <Button iconLeft={<Plus className="h-4 w-4" />} onClick={startProject}>
           Nouveau projet
         </Button>
       </header>
@@ -172,7 +126,7 @@ export default function ProjectsPage() {
           <EmptyState
             archived={showArchived}
             searching={query.trim().length > 0}
-            onCreate={() => setCreateOpen(true)}
+            onCreate={startProject}
           />
         ) : (
           <ul className="space-y-2">
@@ -185,35 +139,6 @@ export default function ProjectsPage() {
         )}
       </div>
 
-      <Modal isOpen={isCreateOpen} onClose={() => setCreateOpen(false)} title="Nouveau projet">
-        <form
-          className="space-y-4"
-          onSubmit={(event) => {
-            event.preventDefault();
-            void handleCreate();
-          }}
-        >
-          <Input
-            autoFocus
-            label="Nom du projet"
-            value={newName}
-            onChange={(event) => setNewName(event.target.value)}
-            placeholder="Conférence du 29 juillet"
-          />
-          <p className="text-xs text-text-tertiary">
-            Vous pourrez ajouter des formulaires, la marque et les partenaires une fois le projet
-            ouvert.
-          </p>
-          <div className="flex justify-end gap-2 pt-1">
-            <Button type="button" variant="secondary" size="sm" onClick={() => setCreateOpen(false)}>
-              Annuler
-            </Button>
-            <Button type="submit" size="sm" loading={creating} disabled={!newName.trim()}>
-              Créer le projet
-            </Button>
-          </div>
-        </form>
-      </Modal>
     </div>
   );
 }

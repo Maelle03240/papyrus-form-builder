@@ -520,8 +520,11 @@ export function Sidebar({
    */
   const handleCreateProjectInWorkspace = (workspaceId: string) => {
     setOpenAccordions((prev) => ({ ...prev, [workspaceId]: true }));
+    // Le cookie d'abord : `/projects/nouveau` lit l'espace actif côté serveur,
+    // et sans lui le projet naîtrait dans le premier espace du compte plutôt
+    // que dans celui sur lequel on vient de cliquer.
     document.cookie = `papyrus:active-team-id=${workspaceId}; path=/; max-age=31536000; SameSite=Lax`;
-    router.push('/projects');
+    router.push('/projects/nouveau');
   };
 
   // Composant dropdown rendu dans un portail
