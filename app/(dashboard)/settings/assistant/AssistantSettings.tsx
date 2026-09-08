@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { AlertTriangle, KeyRound, Sparkles } from 'lucide-react';
+import { AlertTriangle, AudioLines, KeyRound, Sparkles } from 'lucide-react';
 
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -233,6 +233,40 @@ export function AssistantSettings({ teamId }: Props) {
             ))}
           </select>
         </label>
+      </section>
+
+      <section className="space-y-4 rounded-xl border border-border p-6">
+        <div className="flex items-center gap-2">
+          <AudioLines className="h-4 w-4 text-accent" aria-hidden />
+          <h2 className="font-display text-base font-bold text-text-primary">Voix</h2>
+        </div>
+
+        {/* Rien à régler ici, et c'est le renseignement utile : les deux
+            modèles vocaux sont fixes, ils ne suivent pas le choix ci-dessus, et
+            l'un des deux ne se compte pas comme le reste. Le dire coûte un
+            paragraphe ; le taire coûte une facture inexpliquée. */}
+        <p className="max-w-2xl text-sm text-text-secondary">
+          L’assistant s’écoute et se parle. La <strong>dictée</strong> transcrit
+          un enregistrement en texte que vous relisez avant d’envoyer ; la{' '}
+          <strong>conversation vocale</strong> répond pendant que vous parlez et
+          construit en même temps. Les deux utilisent la clé de cet espace, avec
+          des modèles dédiés — le choix ci-dessus ne s’y applique pas.
+        </p>
+
+        <p className="max-w-2xl text-sm text-text-secondary">
+          Une différence à connaître : en conversation vocale, le son va
+          directement de votre navigateur au fournisseur, sans passer par nos
+          serveurs. C’est ce qui rend la réponse immédiate — et c’est pourquoi la
+          consommation d’une session vocale est <strong>déclarée par le
+          navigateur à la fin</strong>, quand celle des messages écrits est
+          mesurée à la source. Le plafond, lui, reste vérifié avant chaque
+          ouverture de session.
+        </p>
+
+        <p className="text-xs text-text-tertiary">
+          Le micro exige une connexion sécurisée : en développement local, seule
+          l’adresse <code className="font-mono">localhost</code> y donne droit.
+        </p>
       </section>
 
       <section className="space-y-5 rounded-xl border border-border p-6">

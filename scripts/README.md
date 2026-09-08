@@ -20,6 +20,24 @@ ssh root@168.231.81.84 'bash /root/papyrus/e2e-test.sh'
 
 Tous nettoient les données qu'ils créent.
 
+### Et le quatrième, depuis le poste de développement
+
+```bash
+node scripts/rls-session-test.mjs
+```
+
+`rls-test.sh` couvre le visiteur anonyme ; il manquait l'autre moitié — ce qu'un
+**membre connecté** peut et ne peut pas faire. Ce script lit `.env.local`, crée
+un compte d'essai, le rattache à une équipe existante, puis fait par PostgREST
+exactement ce que le navigateur fait : lire ses formulaires, créer un projet,
+inviter un collègue. Puis ce qu'il ne doit pas pouvoir faire : écrire une réponse
+à la main, lire une clé d'API, écrire les réglages de l'instance. Il supprime
+ensuite tout ce qu'il a créé.
+
+Écrit pour la phase 8, où il a servi à vérifier la migration `011_hardening` —
+et où il a confirmé qu'inviter un collègue échouait, faute des trois policies
+d'écriture sur `team_invitations`.
+
 ### Pourquoi sur données réelles
 
 Sous PostgREST, une lecture refusée par la RLS renvoie `200 []` et une

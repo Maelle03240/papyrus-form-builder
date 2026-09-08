@@ -99,6 +99,18 @@ rien qu'un hachage réversible).
    remettrait `public_forms` dans son état d'origine, sans la colonne `settings`
    ni le calcul `is_closed`, et les formulaires clos redeviendraient des 404.
 
+   Puis les suivantes, **dans l'ordre des numéros** — jusqu'à
+   `011_hardening.sql`. Toutes se rejouent sans dommage. Deux remarques :
+
+   - À partir de `009`, les appliquer avec **`-U supabase_admin`** et non
+     `-U postgres` : `postgres` n'est pas propriétaire des tables et se voit
+     refuser les `alter table`.
+   - `011_hardening.sql` **retire à `anon` tout droit sur les tables** — le
+     visiteur ne lit que les vues `public_*` — et ramène ceux de `authenticated`
+     au niveau exact de ses policies. Après l'avoir appliquée, lancer
+     `node scripts/rls-session-test.mjs` : c'est ce qui vérifie que le tableau de
+     bord fonctionne encore et que rien ne s'est ouvert au passage.
+
 2. **Exposer le schéma à PostgREST** — dans
    `/etc/easypanel/projects/main/supabase/code/supabase/code/.env` :
    ```

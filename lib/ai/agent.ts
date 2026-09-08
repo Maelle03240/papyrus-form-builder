@@ -65,7 +65,7 @@ export interface AgentTurn {
  * modèles dérapent : inventer un identifiant plutôt que d'aller le lire,
  * supprimer sans demander, publier sans qu'on l'ait demandé.
  */
-function instructions(ctx: ToolContext): string {
+export function agentInstructions(ctx: ToolContext): string {
   return [
     'Tu es l’assistant de Papyrus, un constructeur de formulaires. Tu construis en appelant des outils, un geste à la fois.',
     '',
@@ -113,7 +113,7 @@ export async function* runAgentTurn(turn: AgentTurn): AsyncGenerator<AgentEvent>
     try {
       stream = await client.responses.create({
         model: turn.runtime.model,
-        instructions: instructions(turn.context),
+        instructions: agentInstructions(turn.context),
         input: input as never,
         tools: toolsForOpenAI() as never,
         stream: true

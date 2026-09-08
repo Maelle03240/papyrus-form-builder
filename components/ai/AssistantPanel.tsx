@@ -4,16 +4,21 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   AlertTriangle,
   ArrowUp,
+  AudioLines,
   Check,
   FileUp,
   Loader2,
+  Mic,
   Sparkles,
+  Square,
   Undo2,
   X
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/Button';
 import { toast } from '@/components/ui/Toast';
+import { useDictation } from '@/lib/hooks/useDictation';
+import { useVoiceSession } from '@/lib/hooks/useVoiceSession';
 import { restoreFormVersion } from '@/lib/store';
 import { cn } from '@/lib/utils';
 
@@ -116,10 +121,85 @@ export function AssistantPanel({
   const scroller = useRef<HTMLDivElement>(null);
   const fileInput = useRef<HTMLInputElement>(null);
   const started = useRef(false);
+  /** Vrai tant que l'assistant est en train de parler dans la bulle en cours. */
+  const speaking = useRef(false);
+
+  /**
+   * Deux voix, et une seule conversation à l'écran.
+   *
+   * La dictée écrit dans la zone de saisie : on relit avant d'envoyer. La
+   * conversation en temps réel, elle, agit pendant qu'on parle — ses bulles
+   * arrivent donc directement dans le fil, outils compris, exactement comme
+   * celles de la conversation écrite. Rien ne distingue les deux à la lecture,
+   * et c'est voulu : ce sont les mêmes outils, le même instantané, le même
+   * bouton pour tout défaire.
+   */
+  const pushBubble = useCallback((bubble: Bubble) => {
+    setBubbles((previous) => [...previous, bubble]);
+  }, []);
+
+  const patchOpenBubble = useCallback((patch: (bubble: Bubble) => Bubble) => {
+    setBubbles((previous) => {
+      const next = [...previous];
+      const last = next[next.length - 1];
+      if (!last || last.role !== 'assistant') {
+        next.push(patch({ role: 'assistant', content: '', tools: [] }));
+        return next;
+      }
+      next[next.length - 1] = patch(last);
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
     scroller.current?.scrollTo({ top: scroller.current.scrollHeight, behavior: 'smooth' });
   }, [bubbles]);
+
+  const voice = useVoiceSession({
+    teamId,
+    projectId: anchor.projectId,
+    formId: anchor.formId,
+    handlers: {
+      onUserText: (text) => {
+        speaking.current = false;
+        pushBubble({ role: 'user', content: text });
+      },
+      onAssistantDelta: (delta) => {
+        if (!speaking.current) {
+          speaking.current = true;
+          pushBubble({ role: 'assistant', content: delta, tools: [] });
+          return;
+        }
+        patchOpenBubble((bubble) => ({ ...bubble, content: bubble.content + delta }));
+      },
+      onAssistantDone: () => {
+        speaking.current = false;
+      },
+      onTool: (trace) => {
+        patchOpenBubble((bubble) => ({ ...bubble, tools: [...(bubble.tools ?? []), trace] }));
+        onChanged?.();
+      },
+      onSnapshot: (versionId) => {
+        patchOpenBubble((bubble) => ({ ...bubble, versionId }));
+      },
+      onAnchor: (ids) => {
+        setAnchor({ projectId: ids.projectId, formId: ids.formId });
+        onCreated?.({ project_id: ids.projectId, form_id: ids.formId });
+      },
+      onError: (message) => {
+        toast.error(message);
+      }
+    }
+  });
+
+  const dictation = useDictation({
+    teamId,
+    // La dictée ne part pas toute seule : elle remplit la zone de saisie, et
+    // c'est la personne qui envoie. Un mot mal entendu se corrige avant, pas
+    // après — et « après », ici, veut dire vingt questions à défaire.
+    onText: (text) => setDraft((previous) => (previous ? `${previous} ${text}` : text)),
+    onError: (message) => toast.error(message)
+  });
 
   const send = useCallback(
     async (message: string) => {
@@ -307,6 +387,24 @@ export function AssistantPanel({
         )}
       </header>
 
+      {voice.status !== 'idle' && (
+        <div
+          role="status"
+          className="flex items-center justify-between gap-3 border-b border-accent/30 bg-accent/10 px-4 py-2.5"
+        >
+          <span className="flex items-center gap-2 text-xs font-medium text-text-primary">
+            <AudioLines
+              className={cn('h-4 w-4 text-accent', voice.status === 'live' && 'animate-pulse')}
+              aria-hidden
+            />
+            {voice.status === 'live' ? 'En conversation — parlez.' : 'Connexion du micro…'}
+          </span>
+          <Button variant="ghost" size="sm" onClick={() => void voice.stop()}>
+            Raccrocher
+          </Button>
+        </div>
+      )}
+
       <div ref={scroller} className="min-h-0 flex-1 space-y-4 overflow-y-auto px-4 py-4">
         {bubbles.length === 0 && <EmptyState onPick={(text) => void send(text)} />}
 
@@ -353,6 +451,50 @@ export function AssistantPanel({
             <span className="sr-only">Joindre un brouillon</span>
           </button>
 
+          <button
+            type="button"
+            title={dictation.status === 'recording' ? 'Arrêter la dictée' : 'Dicter'}
+            disabled={busy || reading || dictation.status === 'transcribing'}
+            onClick={() =>
+              dictation.status === 'recording' ? dictation.stop() : void dictation.start()
+            }
+            className={cn(
+              'shrink-0 rounded-lg p-2 transition-colors disabled:opacity-40',
+              dictation.status === 'recording'
+                ? 'bg-danger/10 text-danger'
+                : 'text-text-tertiary hover:bg-bg-elevated hover:text-text-primary'
+            )}
+          >
+            {dictation.status === 'transcribing' ? (
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+            ) : dictation.status === 'recording' ? (
+              <Square className="h-4 w-4 fill-current" aria-hidden />
+            ) : (
+              <Mic className="h-4 w-4" aria-hidden />
+            )}
+            <span className="sr-only">
+              {dictation.status === 'recording' ? 'Arrêter la dictée' : 'Dicter un message'}
+            </span>
+          </button>
+
+          <button
+            type="button"
+            title="Conversation vocale"
+            disabled={busy || voice.status === 'connecting'}
+            onClick={() => (voice.status === 'idle' ? void voice.start() : void voice.stop())}
+            className={cn(
+              'shrink-0 rounded-lg p-2 transition-colors disabled:opacity-40',
+              voice.status === 'idle'
+                ? 'text-text-tertiary hover:bg-bg-elevated hover:text-text-primary'
+                : 'bg-accent/15 text-accent'
+            )}
+          >
+            <AudioLines className="h-4 w-4" aria-hidden />
+            <span className="sr-only">
+              {voice.status === 'idle' ? 'Ouvrir la conversation vocale' : 'Raccrocher'}
+            </span>
+          </button>
+
           <label className="sr-only" htmlFor="assistant-input">
             Votre message
           </label>
@@ -384,9 +526,24 @@ export function AssistantPanel({
             <span className="sr-only">Envoyer</span>
           </button>
         </div>
+
+        {dictation.status === 'recording' && (
+          <p className="mt-2 flex items-center gap-2 text-xs text-text-tertiary" role="status">
+            <span className="h-2 w-2 shrink-0 animate-pulse rounded-full bg-danger" aria-hidden />
+            Enregistrement — {formatSeconds(dictation.seconds)} sur{' '}
+            {formatSeconds(dictation.maxSeconds)}. Le texte se relit avant d’être envoyé.
+          </p>
+        )}
       </div>
     </div>
   );
+}
+
+/** « 1:05 » plutôt que « 65 s » : c'est une durée, on la lit comme une durée. */
+function formatSeconds(total: number): string {
+  const minutes = Math.floor(total / 60);
+  const seconds = total % 60;
+  return `${minutes}:${String(seconds).padStart(2, '0')}`;
 }
 
 function EmptyState({ onPick }: { onPick: (text: string) => void }) {

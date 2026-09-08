@@ -595,9 +595,77 @@ la couche d'outils contre la vraie base** — six questions, une condition
 d'affichage, une règle de logique, trois prix, TVA, publication — puis ouvert et
 rendu correctement à son adresse publique.
 
-**8 — Voix et durcissement.** Realtime en WebRTC, revue RLS de chaque nouvelle
-table, audit des routes `service_role`, couverture Playwright du formulaire
-public, de la tarification et du parcours partenaire.
+**8 — Voix et durcissement.** ✅ **Fait le 08/09/2026.** La voix dans les deux
+sens, la revue des droits table par table, et le rendu public rendu lisible aux
+lecteurs d'écran.
+
+**La voix, deux chemins et non un.** La conversation en temps réel
+(`gpt-realtime-2.1`, WebRTC) ouvre un flux audio du navigateur au fournisseur :
+on parle, ça répond en parlant, et les outils s'appellent pendant la
+conversation. La dictée (`gpt-transcribe`) enregistre, transcrit côté serveur et
+dépose le texte dans la zone de saisie. Le second n'est pas un repli de
+confort : c'est celui qui marche derrière un pare-feu qui filtre UDP, et celui
+dont la consommation est mesurable.
+
+**La clé ne quitte jamais le serveur.** En temps réel, le serveur l'échange
+contre un jeton éphémère qui ne vaut que pour une session. Une clé d'API livrée
+au navigateur serait lisible dans l'onglet réseau par quiconque ouvre les outils
+de développement, et facturée à l'équipe jusqu'à ce que quelqu'un s'en aperçoive.
+
+**Les outils ne s'exécutent jamais dans le navigateur.** Le modèle parle
+directement au navigateur : ses demandes d'outils arrivent donc là-bas. Elles
+repartent aussitôt vers `/api/ai/tool`, qui les exécute sous la session de la
+personne, donc sous RLS — et qui prend l'instantané avant la première écriture,
+sans quoi une construction dictée ne serait pas annulable alors que la même
+construction écrite l'est.
+
+**La consommation vocale est déclarée par le navigateur, et c'est écrit à
+l'écran.** Le son ne passe pas par nos serveurs : le seul endroit où le décompte
+existe est la fin de session, côté client. Refuser de l'enregistrer laisserait
+la voix invisible dans le budget — une dépense réelle absente du compteur, ce
+qui est pire qu'un compteur perfectible. Le plafond, lui, reste vérifié côté
+serveur avant chaque ouverture.
+
+Trois défauts trouvés en éprouvant les droits contre la base de production :
+
+- **Inviter un collègue échouait, et échouait déjà avant cette phase.**
+  `team_invitations` n'avait que des policies de LECTURE, alors que l'écran
+  Paramètres → Équipe y insère, y modifie et y supprime depuis le navigateur.
+  Trois policies ajoutées, une par commande.
+- **`anon` gardait DELETE, INSERT, UPDATE et TRUNCATE sur tout le socle** —
+  `forms`, `fields`, `submissions`, `teams`, `profiles`. Rien ne passait : les
+  policies exigent toutes `is_team_member()`, faux sans session. Mais la seule
+  chose qui séparait un visiteur anonyme de la suppression de tous les
+  formulaires était la clause d'une policy. Le visiteur n'a besoin de RIEN sur
+  les tables : il lit les vues `public_*`.
+- **Les droits de `authenticated` dépassaient partout ses policies** : INSERT
+  sur `submissions`, qui n'a aucune policy d'insertion — une réponse n'entre que
+  par `/api/submit`, qui la valide, la tarife et la gèle. Ils sont ramenés à ce
+  que les policies autorisent, pour que lire les droits d'une table dise la
+  vérité sur ce qu'on peut y faire.
+
+**Le libellé d'une question nomme enfin son champ.** Défaut relevé en phase 4,
+présent pour tous les types à la fois : le `<label>` n'avait ni `for` ni
+imbrication. Deux formes de rattachement, parce que deux formes de question — un
+`<label for>` quand il y a un contrôle à désigner, un groupe nommé
+(`role="group"` + `aria-labelledby`) quand la réponse se donne sur plusieurs
+contrôles. Désigner le premier bouton d'une question à choix dirait à un lecteur
+d'écran que l'intitulé appartient à cette option-là. La mention « obligatoire »
+est dite ; l'astérisque, lui, est masqué — à l'oreille il ne produit rien, ou
+« étoile ».
+
+L'audit des routes `service_role` n'a rien trouvé : les vingt-cinq qui
+l'emploient vérifient toutes les droits de l'appelant, ou sont publiques par
+construction et bornées en cadence (`/api/submit`, `/api/forms/access`,
+`/api/check-duplicate`, `/api/a/join`, `/api/health`).
+
+Vérifié contre la base de production : `scripts/rls-session-test.mjs` (15
+contrôles, avec une vraie session `authenticated`), les quatre nouvelles routes
+vocales (401 sans session, 404 sur une équipe étrangère, 409 avant tout appel au
+fournisseur), et quatorze parcours Playwright — dont l'attribution partenaire
+menée de bout en bout dans un navigateur : le code du bon projet attribue, celui
+d'un projet voisin ne bloque pas l'envoi, et trois visites de trois visiteurs
+comptent trois clics.
 
 ---
 
@@ -623,13 +691,27 @@ public, de la tarification et du parcours partenaire.
   qu'il appelle `describe_form` avant d'agir plutôt que d'inventer, et qu'il
   s'arrête au lieu d'enchaîner sur une suppression.
 
+- **La voix n'a jamais parlé.** Même raison que ci-dessus : sans clé OpenAI sur
+  ce poste, aucune session `gpt-realtime-2.1` n'a été ouverte et aucun
+  enregistrement n'a été transcrit. Ce qui est vérifié : les quatre routes
+  refusent sans session, refusent une équipe étrangère, et refusent faute de clé
+  AVANT tout appel au fournisseur ; un outil s'exécute bien sous la session de
+  l'appelant. Ce qui ne l'est pas : la forme exacte des échanges avec le
+  fournisseur. Deux points fragiles, et ils sont isolés exprès — le point
+  d'entrée de la négociation WebRTC est rendu par le serveur (`sdp_url`), donc
+  une constante à changer plutôt qu'un déploiement de navigateurs ; et les noms
+  d'événements du canal de données sont reconnus par leur suffixe, parce qu'ils
+  ont déjà changé une fois.
+
 - **Le parcours partenaire n'a jamais été parcouru de bout en bout par un vrai
   compte.** L'attribution, le registre, les vues, les droits et les quatre routes
   sont vérifiés sur la base de production ; l'invitation elle-même passe par
   l'API d'administration Supabase, qu'aucun test n'a déclenchée faute de pouvoir
   ouvrir une session de navigateur vers `supabase.mooove.group` depuis ce poste.
   À refaire à la main au premier partenaire réel : ouvrir l'accès, suivre le
-  lien, choisir un mot de passe, atterrir sur le portail.
+  lien, choisir un mot de passe, atterrir sur le portail. La phase 8 a couvert
+  tout le reste du parcours dans un navigateur — page d'accueil, attribution,
+  code étranger, auto-inscription — mais pas l'invitation elle-même.
 
 - **La répartition Google Sheets n'a pas été essayée contre un vrai compte
   Google.** Aucun n'est connecté sur cette instance : le choix de l'onglet et le
@@ -655,19 +737,22 @@ public, de la tarification et du parcours partenaire.
   l'interface ne montre encore à l'auteur qu'une question est masquée à la fois
   par une règle et par un verrou. À surveiller quand la phase 7 laissera l'IA
   écrire les deux.
-- **Aucun libellé de la vue publique n'est associé à son contrôle.** Le `<label>`
-  d'une question n'a ni `for` ni imbrication, pour tous les types de champ : un
-  lecteur d'écran annonce une zone de saisie sans nom, et un test de navigateur
-  ne peut viser un champ que par son invite. Défaut antérieur à la phase 4,
-  découvert en écrivant ses tests, et qui vit dans `FieldRenderer` — partagé avec
-  le constructeur. À reprendre en phase 8, avec le reste du durcissement du rendu
-  public.
-- **59 violations des règles du React Compiler** (`eslint-plugin-react-hooks` v6),
-  révélées par la phase 0 : 31 `set-state-in-effect`, 13 `refs`, 6
+- ~~**Aucun libellé de la vue publique n'est associé à son contrôle.**~~ Corrigé
+  en phase 8 : `lib/field-labelling.ts` décide, par type, si la question peut
+  être un `<label for>` ou doit devenir un groupe nommé. Huit parcours Playwright
+  désignent désormais chaque champ par son libellé et par rien d'autre — si le
+  rattachement disparaît, ils ne trouvent plus rien.
+- **70 violations des règles du React Compiler** (`eslint-plugin-react-hooks`
+  v6), contre 59 à la phase 0 : 40 `set-state-in-effect`, 15 `refs`, 6
   `static-components`, 5 `immutability`, 2 `preserve-manual-memoization`, 2
-  `purity`. Elles sont en avertissement, pas en erreur — les corriger est une
-  refactorisation à part entière, et le React Compiler restera hors d'atteinte
-  tant qu'elles sont là. À faire décroître phase après phase.
+  `purity`. Elles sont en avertissement, pas en erreur — mais **elles ont
+  augmenté, pas décru**, et il faut le dire : chaque écran ajouté depuis la
+  phase 1 charge ses données dans un effet, ce qui est exactement le motif que
+  la règle vise. La phase 8 n'en a ajouté aucune (les deux relevées dans ses
+  propres crochets ont été corrigées à l'écriture), mais elle n'en a pas retiré
+  non plus. Les corriger est une refactorisation à part entière — remonter le
+  chargement dans les composants serveur — et le React Compiler restera hors
+  d'atteinte tant qu'elles sont là.
 - **`xlsx` porte une faille haute sans correctif** sur npm (pollution de
   prototype, ReDoS) : SheetJS ne publie plus sur le registre public. Papyrus ne
   fait qu'écrire des exports, l'exposition est faible — à remplacer en phase 5,

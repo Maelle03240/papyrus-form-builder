@@ -6,6 +6,7 @@ import { Eraser, ExternalLink, EyeOff, Plus, Trash2 } from 'lucide-react';
 import { AutoTextarea } from '@/components/ui/AutoTextarea';
 import { COUNTRIES } from '@/lib/constants/countries';
 import { calcFieldValue } from '@/lib/calculated';
+import type { ControlAttrs } from '@/lib/field-labelling';
 import { useAttachmentUpload } from '@/lib/hooks/useAttachmentUpload';
 import { useFormSlug } from '@/lib/hooks/useFormSlug';
 import { DEFAULT_CURRENCY } from '@/lib/submission-format';
@@ -52,8 +53,8 @@ export function CurrencyField({
   interactive,
   value,
   onValueChange,
-  inputId
-}: FieldProps & { placeholder?: string; inputId?: string }) {
+  controlProps
+}: FieldProps & { placeholder?: string; controlProps?: ControlAttrs }) {
   const code = field.validation?.currency_code || DEFAULT_CURRENCY;
   const after = field.validation?.currency_position === 'after';
 
@@ -72,7 +73,7 @@ export function CurrencyField({
     <div className="flex items-stretch overflow-hidden rounded-md border border-border-strong bg-bg-base focus-within:border-accent">
       {!after && symbol}
       <input
-        id={inputId}
+        {...controlProps}
         type="number"
         inputMode="decimal"
         step="0.01"
@@ -102,13 +103,13 @@ export function CountryField({
   interactive,
   value,
   onValueChange,
-  inputId
-}: FieldProps & { inputId?: string }) {
+  controlProps
+}: FieldProps & { controlProps?: ControlAttrs }) {
   const selected = String(value ?? field.validation?.default_country_code ?? '');
 
   return (
     <select
-      id={inputId}
+      {...controlProps}
       value={interactive ? selected : ''}
       onChange={(event) => onValueChange?.(event.target.value)}
       disabled={!interactive}
@@ -507,7 +508,7 @@ function RepeaterCell({
           interactive={interactive}
           value={value}
           onValueChange={onChange}
-          inputId={domId}
+          controlProps={{ id: domId }}
         />
       );
       break;
@@ -565,7 +566,7 @@ function RepeaterCell({
           interactive={interactive}
           value={value}
           onValueChange={onChange}
-          inputId={domId}
+          controlProps={{ id: domId }}
         />
       );
       break;
@@ -628,10 +629,12 @@ function inputTypeFor(type: SubField['type']): string {
 
 export function CalculatedField({
   field,
-  responses
+  responses,
+  controlProps
 }: {
   field: Field;
   responses?: Record<string, unknown>;
+  controlProps?: ControlAttrs;
 }) {
   // Sans configuration, la valeur serait un zéro immuable : mieux vaut dire à
   // l'auteur ce qui manque que montrer au répondant un total qui ne bouge pas.
@@ -647,6 +650,7 @@ export function CalculatedField({
 
   return (
     <output
+      {...controlProps}
       className="flex items-center justify-between rounded-md border border-border-strong bg-bg-base px-3 py-2"
       aria-live="polite"
     >

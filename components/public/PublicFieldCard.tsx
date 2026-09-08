@@ -3,6 +3,12 @@
 import type { Field, Form } from '@/types';
 import { FieldRenderer } from '@/components/builder/FieldRenderer';
 import type { RendererPricing } from '@/components/builder/fields/OptionPricing';
+import {
+  fieldControlId,
+  fieldDescriptionId,
+  fieldLabelId,
+  labelsSingleControl
+} from '@/lib/field-labelling';
 import { getFieldIcon, isIconVisible } from '@/lib/field-icons';
 import { quantityKey, readQuantityMap, resolvePricing } from '@/lib/pricing';
 import { cn } from '@/lib/utils';
@@ -147,6 +153,7 @@ export function PublicFieldCard({
         <FieldContext.Provider value={field}>
           <FieldRenderer
             field={field}
+            labelled
             preview={false}
             mobile={false}
             value={responses[field.id]}
@@ -173,10 +180,24 @@ function PublicFieldQuestion({
     ['file', 'image', 'video'].includes(field.type) &&
     field.validation?.respondent_mode_enabled === true;
 
+  /**
+   * Un `<label>` seulement quand il y a un contrôle à désigner.
+   *
+   * Pour une question à choix, la balise `<label>` n'a rien à pointer : le
+   * `for` désignerait la première option, et un lecteur d'écran annoncerait
+   * l'intitulé de la question comme le nom de ce bouton-là. Le titre devient
+   * alors un bloc nommé, et `FieldRenderer` enveloppe les contrôles dans un
+   * groupe qui s'y réfère.
+   */
+  const single = labelsSingleControl(field.type);
+  const Title = single ? 'label' : 'div';
+
   return (
     <div className="space-y-1">
       {/* Titre du champ */}
-      <label
+      <Title
+        id={fieldLabelId(field.id)}
+        htmlFor={single ? fieldControlId(field.id) : undefined}
         className={cn(
           'block font-medium',
           style?.label_weight === 'bold' ? 'font-bold' : style?.label_weight === 'normal' ? 'font-normal' : 'font-medium',
@@ -213,14 +234,20 @@ function PublicFieldQuestion({
           )}
           <span>
             {field.label.fr}
-            {field.required && <span className="text-red-500 ml-1">*</span>}
+            {field.required && (
+              <span className="text-red-500 ml-1" aria-hidden="true">
+                *
+              </span>
+            )}
+            {/* « obligatoire » se dit, l'astérisque ne s'entend pas. */}
+            {field.required && <span className="sr-only"> (obligatoire)</span>}
           </span>
         </span>
-      </label>
+      </Title>
 
       {/* Description du champ */}
       {field.description.fr && (
-        <p className={cn(
+        <p id={fieldDescriptionId(field.id)} className={cn(
           'text-sm text-text-secondary leading-relaxed',
           isRespondentUpload ? 'italic text-text-tertiary font-normal' : ''
         )}>

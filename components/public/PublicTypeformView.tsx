@@ -6,6 +6,7 @@ import type { Form, Field } from '@/types';
 import type { ScoreResult } from '@/lib/scoring';
 import type { EmbedOptions } from '@/lib/embed';
 import { isAnswerEmpty } from '@/lib/submission-format';
+import { fieldDescriptionId, fieldLabelId } from '@/lib/field-labelling';
 import { FormHeader } from '@/components/builder/FormHeader';
 import { ScoreDisplay } from '@/components/respondent/ScoreDisplay';
 import { FieldRenderer } from '@/components/builder/FieldRenderer';
@@ -322,20 +323,36 @@ export function PublicTypeformView({
               transition={{ duration: 0.3 }}
             >
 
-              {/* Question */}
+              {/* Question.
+
+                  Le titre reste un `<h2>` — c'est bien un titre, et le mode
+                  « une question par écran » n'a que lui pour repère. Un `<h2>`
+                  ne peut pas porter de `for` : c'est le champ qui s'y rattache,
+                  par `aria-labelledby`, comme il le fait déjà pour un groupe. */}
               <div className="mb-8">
-                <h2 className="font-display text-3xl text-text-primary mb-4">
+                <h2
+                  id={fieldLabelId(currentField.id)}
+                  className="font-display text-3xl text-text-primary mb-4"
+                >
                   <span className="text-accent mr-2">
                     {currentIdx + 1}.
                   </span>
                   {currentField.label.fr}
                   {currentField.required && (
-                    <span className="text-red-500 ml-2">*</span>
+                    <>
+                      <span className="text-red-500 ml-2" aria-hidden="true">
+                        *
+                      </span>
+                      <span className="sr-only"> (obligatoire)</span>
+                    </>
                   )}
                 </h2>
 
                 {currentField.description.fr && (
-                  <p className="text-lg text-text-secondary leading-relaxed">
+                  <p
+                    id={fieldDescriptionId(currentField.id)}
+                    className="text-lg text-text-secondary leading-relaxed"
+                  >
                     {currentField.description.fr}
                   </p>
                 )}
@@ -356,6 +373,7 @@ export function PublicTypeformView({
                 ) : (
                   <FieldRenderer
                     field={currentField}
+                    labelled
                     preview={false}
                     mobile={false}
                     value={responses[currentField.id]}

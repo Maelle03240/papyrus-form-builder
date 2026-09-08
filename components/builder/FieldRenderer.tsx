@@ -24,6 +24,13 @@ import {
 } from './fields/Phase2Fields';
 import { OptionPrice, QuantityRow, type RendererPricing } from './fields/OptionPricing';
 import { formatMoney } from '@/lib/pricing';
+import {
+  controlAttrsFor,
+  fieldDescriptionId,
+  fieldLabelId,
+  isGroupedField,
+  type ControlAttrs
+} from '@/lib/field-labelling';
 
 /** Retourne les types de fichiers acceptés par défaut selon le type de champ */
 function getDefaultAcceptTypes(type: 'image' | 'video' | 'file'): string {
@@ -112,10 +119,45 @@ interface Props {
    * rappel distinct de `onValueChange`.
    */
   pricing?: RendererPricing;
+  /**
+   * L'intitulé de la question est rendu à l'extérieur, avec les identifiants
+   * convenus (`lib/field-labelling`). Le champ s'y rattache alors : le contrôle
+   * unique prend un `id` et un `aria-labelledby`, la question à plusieurs
+   * contrôles est enveloppée dans un groupe nommé.
+   *
+   * Faux dans le constructeur, où la question et son aperçu vivent dans la même
+   * carte, et où deux aperçus du même champ peuvent coexister à l'écran : deux
+   * éléments porteraient alors le même identifiant.
+   */
+  labelled?: boolean;
 }
 
-/** Rendu UI d'un champ — utilisé dans le builder (preview) et la vue publique. */
-export function FieldRenderer({
+/**
+ * Rendu UI d'un champ — constructeur (aperçu) comme vue publique.
+ *
+ * Une question à plusieurs contrôles — choix, note, matrice, oui/non — n'a pas
+ * « son » champ à nommer : désigner le premier bouton par un `<label for>`
+ * dirait à un lecteur d'écran que l'intitulé appartient à cette option-là.
+ * L'ensemble est donc annoncé comme un groupe portant l'intitulé pour nom, et
+ * chaque contrôle garde le sien.
+ */
+export function FieldRenderer(props: Props) {
+  const { field, labelled } = props;
+
+  if (!labelled || !isGroupedField(field.type)) return <FieldControl {...props} />;
+
+  return (
+    <div
+      role="group"
+      aria-labelledby={fieldLabelId(field.id)}
+      aria-describedby={field.description?.fr ? fieldDescriptionId(field.id) : undefined}
+    >
+      <FieldControl {...props} />
+    </div>
+  );
+}
+
+function FieldControl({
   field,
   preview = false,
   mobile = false,
@@ -124,9 +166,12 @@ export function FieldRenderer({
   value,
   onValueChange,
   responses,
-  pricing
+  pricing,
+  labelled = false
 }: Props) {
   const lang = 'fr';
+  /** Vide pour une question à plusieurs contrôles : le groupe porte son nom. */
+  const attrs: ControlAttrs = labelled ? controlAttrsFor(field) : {};
   // Un champ ne collecte réellement une réponse que si quelqu'un l'écoute.
   const isInteractive = typeof onValueChange === 'function';
   const placeholder = field.placeholder?.[lang] ?? '';
@@ -139,6 +184,7 @@ export function FieldRenderer({
       return (
         <ShortTextWithCounter
           field={field}
+          controlAttrs={attrs}
           placeholder={placeholder || 'Votre réponse'}
           required={required}
           preview={preview}
@@ -154,6 +200,7 @@ export function FieldRenderer({
         <ValidatedTextInput
           name={field.id}
           type="email"
+          controlAttrs={attrs}
           required={required && !preview}
           maxLength={LIMITS.EMAIL_MAX_CHARS}
           placeholder={placeholder || 'vous@exemple.com'}
@@ -171,6 +218,7 @@ export function FieldRenderer({
         <ValidatedTextInput
           name={field.id}
           type="url"
+          controlAttrs={attrs}
           required={required && !preview}
           maxLength={LIMITS.URL_MAX_CHARS}
           placeholder={placeholder || 'https://exemple.com'}
@@ -187,6 +235,7 @@ export function FieldRenderer({
       return (
         <LongTextWithCounter
           field={field}
+          controlAttrs={attrs}
           placeholder={placeholder || 'Votre réponse…'}
           required={required}
           preview={preview}
@@ -201,6 +250,7 @@ export function FieldRenderer({
       return (
         <NumberInputWithValidation
           field={field}
+          controlAttrs={attrs}
           placeholder={placeholder || '4'}
           required={required}
           preview={preview}
@@ -237,6 +287,7 @@ export function FieldRenderer({
       return (
         <div className="relative w-full">
           <input
+            {...attrs}
             type="date"
             name={field.id}
             required={required && !preview}
@@ -289,6 +340,7 @@ export function FieldRenderer({
       return (
         <DropdownChoice
           field={field}
+          controlAttrs={attrs}
           pricing={pricing}
           preview={preview}
           baseInput={baseInput}
@@ -380,6 +432,7 @@ export function FieldRenderer({
       return (
         <CurrencyField
           field={field}
+          controlProps={attrs}
           placeholder={placeholder}
           interactive={isInteractive}
           value={value}
@@ -390,6 +443,7 @@ export function FieldRenderer({
     case 'address':
       return (
         <AutoTextarea
+          {...attrs}
           value={isInteractive ? String(value ?? '') : ''}
           onChange={(event) => onValueChange?.(event.target.value)}
           disabled={!isInteractive}
@@ -405,6 +459,7 @@ export function FieldRenderer({
       return (
         <CountryField
           field={field}
+          controlProps={attrs}
           interactive={isInteractive}
           value={value}
           onValueChange={onValueChange}
@@ -444,7 +499,7 @@ export function FieldRenderer({
       );
 
     case 'calculated':
-      return <CalculatedField field={field} responses={responses} />;
+      return <CalculatedField field={field} responses={responses} controlProps={attrs} />;
 
     case 'link':
       return <LinkField field={field} builder={!isInteractive} />;
@@ -494,6 +549,7 @@ const URL_REGEX = /^https?:\/\/[^\s]+$/i;
 function ValidatedTextInput({
   name,
   type,
+  controlAttrs,
   maxLength,
   placeholder,
   baseInput,
@@ -506,6 +562,7 @@ function ValidatedTextInput({
 }: {
   name?: string;
   type: 'email' | 'url';
+  controlAttrs?: ControlAttrs;
   maxLength: number;
   placeholder: string;
   baseInput: string;
@@ -556,6 +613,7 @@ function ValidatedTextInput({
   return (
     <div className="space-y-1">
       <input
+        {...controlAttrs}
         name={name}
         type={type}
         required={required}
@@ -1083,6 +1141,7 @@ function SubfieldRenderer({
 
 function DropdownChoice({
   field,
+  controlAttrs,
   pricing,
   preview,
   baseInput,
@@ -1091,6 +1150,7 @@ function DropdownChoice({
   onChange
 }: {
   field: Field;
+  controlAttrs?: ControlAttrs;
   pricing?: RendererPricing;
   preview: boolean;
   baseInput: string;
@@ -1113,6 +1173,7 @@ function DropdownChoice({
   return (
     <div className="space-y-2">
       <select
+        {...controlAttrs}
         name={field.id}
         className={baseInput}
         disabled={preview}
@@ -2317,6 +2378,7 @@ function MatrixField({
 /** Composant pour champs texte court avec compteur de caractères */
 function ShortTextWithCounter({
   field,
+  controlAttrs,
   placeholder,
   required,
   preview,
@@ -2325,6 +2387,7 @@ function ShortTextWithCounter({
   onValueChange
 }: {
   field: Field;
+  controlAttrs?: ControlAttrs;
   placeholder: string;
   required: boolean;
   preview: boolean;
@@ -2367,6 +2430,7 @@ function ShortTextWithCounter({
     return (
       <div className="space-y-1.5">
         <AutoTextarea
+          {...controlAttrs}
           name={field.id}
           value={currentValue}
           onChange={(e) => handleValueChange(e.target.value)}
@@ -2508,6 +2572,7 @@ function ShortTextWithCounter({
     <div className="space-y-1.5">
       <div className="flex gap-2">
         <input
+          {...controlAttrs}
           name={field.id}
           type="number"
           value={currentValue}
@@ -2585,6 +2650,7 @@ function ShortTextWithCounter({
 /** Composant pour champs texte long avec compteur de caractères */
 function LongTextWithCounter({
   field,
+  controlAttrs,
   placeholder,
   required,
   preview,
@@ -2593,6 +2659,7 @@ function LongTextWithCounter({
   onValueChange
 }: {
   field: Field;
+  controlAttrs?: ControlAttrs;
   placeholder: string;
   required: boolean;
   preview: boolean;
@@ -2629,6 +2696,7 @@ function LongTextWithCounter({
   return (
     <div className="space-y-1.5">
       <AutoTextarea
+        {...controlAttrs}
         name={field.id}
         value={currentValue}
         onChange={(e) => handleValueChange(e.target.value)}
@@ -2675,6 +2743,7 @@ function LongTextWithCounter({
 /** Composant pour champ number avec validation de plage */
 function NumberInputWithValidation({
   field,
+  controlAttrs,
   placeholder,
   required,
   preview,
@@ -2684,6 +2753,7 @@ function NumberInputWithValidation({
   onValueChange
 }: {
   field: Field;
+  controlAttrs?: ControlAttrs;
   placeholder: string;
   required: boolean;
   preview: boolean;
@@ -2757,6 +2827,7 @@ function NumberInputWithValidation({
   return (
     <div className="space-y-1">
       <input
+        {...controlAttrs}
         type="number"
         name={field.id}
         value={currentValue}
