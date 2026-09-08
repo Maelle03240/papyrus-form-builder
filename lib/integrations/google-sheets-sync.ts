@@ -10,15 +10,20 @@ import {
   syncHeaderRow
 } from '@/lib/google/sheets';
 import { buildSubmissionColumns, formatSubmissionRow } from '@/lib/submission-format';
-import type { Form, FormIntegration, GoogleSheetsConfig } from '@/types';
+import type { Field, Form, FormIntegration, GoogleSheetsConfig } from '@/types';
 
 /**
  * Synchronisation des réponses vers Google Sheets.
  *
  * Deux modes :
  *  · `syncSubmissionToSheets` — appelé après chaque envoi, ajoute une ligne ;
- *  · `resyncAllSubmissions` — remplace le contenu de l'onglet par l'intégralité
+ *  · `resyncAllSubmissions` — remplace le contenu des onglets par l'intégralité
  *    des réponses, pour rattraper une feuille désynchronisée.
+ *
+ * Une réponse peut partir dans un onglet choisi par sa propre valeur : c'est la
+ * répartition (`split_field_id`). « Les inscriptions de Port-Louis dans un
+ * onglet, celles de Curepipe dans un autre » est un besoin réel — le contraire,
+ * un seul onglet trié à la main après coup, se refait à chaque nouvelle réponse.
  *
  * Aucune de ces deux fonctions ne doit faire échouer l'envoi d'une réponse : une
  * panne côté Google se solde par une ligne d'erreur dans le journal, pas par une
@@ -78,6 +83,39 @@ async function loadActiveIntegration(formId: string): Promise<SheetsIntegration 
 function buildHeaders(form: Form, includeMetadata: boolean): string[] {
   const headers = buildSubmissionColumns(form).map((column) => column.label);
   return includeMetadata ? [...METADATA_HEADERS, ...headers] : headers;
+}
+
+/**
+ * L'onglet de destination d'une réponse.
+ *
+ * Aucune règle ne correspond : la réponse va dans l'onglet par défaut, jamais
+ * nulle part. Une réponse qui disparaîtrait parce que sa valeur n'était pas
+ * prévue serait le pire des deux mondes — pas d'erreur, pas de ligne.
+ */
+export function resolveTargetSheet(
+  config: GoogleSheetsConfig,
+  responses: Record<string, unknown>
+): string {
+  const fallback = config.sheet_title || 'Réponses';
+  if (!config.split_field_id) return fallback;
+
+  const value = responses[config.split_field_id];
+  // Un choix multiple porte un tableau : c'est la première valeur qui range la
+  // ligne, faute de pouvoir l'écrire dans deux onglets à la fois.
+  const key = Array.isArray(value) ? String(value[0] ?? '') : String(value ?? '');
+  if (!key) return fallback;
+
+  const rule = (config.split_map ?? []).find((entry) => entry.value === key);
+  return rule?.tab?.trim() || fallback;
+}
+
+/** Le libellé d'une option, pour proposer un nom d'onglet par défaut. */
+export function splitOptionsOf(field: Field | undefined): { value: string; label: string }[] {
+  if (!field) return [];
+  return (field.options ?? []).map((option) => ({
+    value: option.id,
+    label: option.label?.fr || option.label?.en || option.id
+  }));
 }
 
 function buildRow(
@@ -145,15 +183,22 @@ export async function syncSubmissionToSheets(
 
     const includeMetadata = config.include_metadata !== false;
     const accessToken = await getAccessTokenForTeam(form.team_id);
+    const target = resolveTargetSheet(
+      config,
+      (submission.responses ?? {}) as Record<string, unknown>
+    );
 
-    await ensureSheet(accessToken, config.spreadsheet_id, config.sheet_title);
+    // L'onglet est créé s'il manque : une répartition qui échouerait parce que
+    // l'utilisateur n'a pas créé les onglets à l'avance ne serait pas une
+    // fonctionnalité, ce serait une case à cocher qui perd des réponses.
+    await ensureSheet(accessToken, config.spreadsheet_id, target);
     await syncHeaderRow(
       accessToken,
       config.spreadsheet_id,
-      config.sheet_title,
+      target,
       buildHeaders(form, includeMetadata)
     );
-    await appendRows(accessToken, config.spreadsheet_id, config.sheet_title, [
+    await appendRows(accessToken, config.spreadsheet_id, target, [
       buildRow(form, submission, includeMetadata)
     ]);
 
@@ -167,7 +212,7 @@ export async function syncSubmissionToSheets(
       formId,
       submissionId,
       status: 'success',
-      message: 'Réponse ajoutée à la feuille.'
+      message: `Réponse ajoutée à l'onglet « ${target} ».`
     });
   } catch (error) {
     const message =
@@ -220,28 +265,41 @@ export async function resyncAllSubmissions(formId: string): Promise<ResyncResult
 
   const includeMetadata = config.include_metadata !== false;
   const accessToken = await getAccessTokenForTeam(form.team_id);
+  const headers = buildHeaders(form, includeMetadata);
 
-  await ensureSheet(accessToken, config.spreadsheet_id, config.sheet_title);
-  await clearRows(accessToken, config.spreadsheet_id, config.sheet_title);
-  await syncHeaderRow(
-    accessToken,
-    config.spreadsheet_id,
-    config.sheet_title,
-    buildHeaders(form, includeMetadata)
-  );
+  /*
+   * Les lignes sont d'abord réparties par onglet, puis écrites onglet par
+   * onglet.
+   *
+   * L'onglet par défaut est toujours présent, même vide : sans lui, désactiver
+   * la répartition laisserait derrière elle les lignes de l'ancienne
+   * configuration, et une resynchronisation censée remettre les choses à plat
+   * afficherait les deux états mélangés.
+   */
+  const byTab = new Map<string, string[][]>();
+  byTab.set(config.sheet_title || 'Réponses', []);
 
-  const rows = (submissions ?? []).map((submission) =>
-    buildRow(form, submission, includeMetadata)
-  );
-
-  // Google plafonne la taille d'une requête : on écrit par paquets de 500.
-  for (let i = 0; i < rows.length; i += 500) {
-    await appendRows(
-      accessToken,
-      config.spreadsheet_id,
-      config.sheet_title,
-      rows.slice(i, i + 500)
+  for (const submission of submissions ?? []) {
+    const tab = resolveTargetSheet(
+      config,
+      (submission.responses ?? {}) as Record<string, unknown>
     );
+    const rows = byTab.get(tab) ?? [];
+    rows.push(buildRow(form, submission, includeMetadata));
+    byTab.set(tab, rows);
+  }
+
+  let written = 0;
+  for (const [tab, rows] of byTab) {
+    await ensureSheet(accessToken, config.spreadsheet_id, tab);
+    await clearRows(accessToken, config.spreadsheet_id, tab);
+    await syncHeaderRow(accessToken, config.spreadsheet_id, tab, headers);
+
+    // Google plafonne la taille d'une requête : on écrit par paquets de 500.
+    for (let i = 0; i < rows.length; i += 500) {
+      await appendRows(accessToken, config.spreadsheet_id, tab, rows.slice(i, i + 500));
+    }
+    written += rows.length;
   }
 
   await createAdminClient()
@@ -249,12 +307,16 @@ export async function resyncAllSubmissions(formId: string): Promise<ResyncResult
     .update({ last_synced_at: new Date().toISOString(), last_error: null })
     .eq('id', integration.id);
 
+  const tabCount = byTab.size;
   await logEvent({
     integrationId: integration.id,
     formId,
     status: 'success',
-    message: `Resynchronisation complète — ${rows.length} ligne${rows.length > 1 ? 's' : ''}.`
+    message:
+      tabCount > 1
+        ? `Resynchronisation complète — ${written} ligne${written > 1 ? 's' : ''} sur ${tabCount} onglets.`
+        : `Resynchronisation complète — ${written} ligne${written > 1 ? 's' : ''}.`
   });
 
-  return { rows: rows.length };
+  return { rows: written };
 }

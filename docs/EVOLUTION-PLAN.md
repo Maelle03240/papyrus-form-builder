@@ -402,10 +402,64 @@ invalid » avec une clé factice, et l'échec est écrit sur la réponse), mais 
 e-mail ne peut partir tant que la clé n'est pas posée. L'accusé de réception
 hérité avait déjà ce défaut, ce qui explique que personne ne l'ait vu.
 
-**5 — Records, Insights, Share, Integrations.** Workflow de statut, filtres, PDF
-par réponse, export XLSX en masse, resynchronisation. Vue Records agrégée au
-niveau projet. Répartition Sheets par valeur de champ vers plusieurs onglets.
-Insights enrichis des indicateurs de tarification.
+**5 — Records, Insights, Share, Integrations.** ✅ **Fait le 08/09/2026.**
+Workflow de statut, filtres, PDF par réponse, export XLSX en masse. Vue Records
+agrégée au niveau projet. Répartition Sheets par valeur de champ vers plusieurs
+onglets. Insights enrichis des indicateurs de tarification. Migration 008
+appliquée. La resynchronisation existait déjà depuis la phase 0 ; elle sait
+désormais réécrire plusieurs onglets.
+
+**`xlsx` est retiré des dépendances.** Sa dernière version publiée sur npm porte
+deux failles **sans correctif** — pollution de prototype et expression régulière
+exponentielle —, et l'auteur ne publie plus que sur son propre serveur : une
+dépendance qu'on ne peut plus mettre à jour n'est pas une dépendance, c'est une
+dette. Remplacée par `write-excel-file`. `npm audit` rend **zéro vulnérabilité**,
+pour la première fois du projet.
+
+**La décision qui structure la phase : une réponse annulée cesse de compter, sans
+disparaître.** `void` la retire du chiffre d'affaires, du quota `max_submissions`
+et du palier d'un tarif dégressif — annuler une inscription doit libérer la place
+qu'elle occupait, sinon l'annulation ne veut rien dire. Elle reste dans le
+décompte des réponses et à l'écran, en retrait : la faire disparaître laisserait
+« où est passée l'inscription de Bruno ? » sans réponse. Trois comptes appliquent
+la règle et doivent rester alignés — la vue `public_forms` (ce que le répondant
+voit), `checkSubmissionLimit` et le compte des tarifs dégressifs (ce que le
+serveur accepte).
+
+**Un seul module filtre et met en colonnes** (`lib/records.ts`), pour le tableau
+comme pour l'export. Le bandeau de chiffres, le tableau et le fichier portent
+donc tous les trois sur les mêmes lignes. Et l'export part du **serveur** avec le
+filtre en paramètre d'URL, plutôt que de sérialiser ce que la page a chargé : les
+deux divergent dès qu'un tableau pagine, et on ne s'en aperçoit qu'après avoir
+envoyé le fichier à quelqu'un.
+
+**Trois pièges rencontrés :**
+
+- **Le même filtre de dates retenait deux ensembles de lignes différents.**
+  « Du 1er au 8 septembre » ne désigne pas le même intervalle d'instants selon
+  l'endroit d'où on le lit : le tableau bornait la journée dans le fuseau du
+  navigateur, l'export dans celui du serveur. Le filtre transporte désormais le
+  décalage horaire (`tz_offset`), et l'absence de valeur vaut UTC — jamais le
+  fuseau de la machine, qui dépend de l'hébergement.
+- **Un classeur à plusieurs formulaires ne peut pas tenir sur une feuille.** Deux
+  formulaires n'ont pas les mêmes questions : les empiler sous un seul en-tête
+  ferait glisser les réponses du second sous les intitulés du premier — un
+  fichier qui s'ouvre sans erreur, se lit sans soupçon, et dit n'importe quoi.
+  L'export projet écrit un onglet par formulaire.
+- **Excel ne refuse pas un onglet mal nommé : il refuse le fichier.** Un onglet
+  tiré d'une réponse libre — « Formule : Table de 6 » — produirait un classeur
+  illisible. Les noms sont donc nettoyés, tronqués à 31 caractères et
+  dédoublonnés après troncature.
+
+**Les montants partent en nombres, pas en texte.** Dans un tableur, une somme est
+ce qu'on fait d'une colonne de prix, et « MUR 3 450,00 » ne s'additionne pas. La
+devise a sa propre colonne ; le numéro de commande, lui, reste du texte, sans
+quoi « SONDE-0007 » s'afficherait « 7 ».
+
+**Le classement de ce qui se vend** sort du détail figé à l'envoi — la décision
+de la phase 3 de conserver l'instantané ligne à ligne plutôt que le seul total.
+C'est ce qui permet de répondre à « qu'est-ce qui se vend », six mois plus tard,
+avec des prix modifiés entre-temps.
 
 **6 — Partenaires et contacts.** Annuaire au niveau équipe, participation par
 projet, code de partage, landing, portail, lien d'auto-inscription, suivi des
@@ -436,6 +490,10 @@ public, de la tarification et du parcours partenaire.
 
 ## 5. Risques
 
+- **La répartition Google Sheets n'a pas été essayée contre un vrai compte
+  Google.** Aucun n'est connecté sur cette instance : le choix de l'onglet et le
+  regroupement de la resynchronisation sont couverts par des tests, l'écriture
+  elle-même ne l'est pas. À vérifier au premier projet qui l'active.
 - Le catalogue de modèles (~600 Ko auto-générés) doit être régénéré et revalidé
   après les phases 1 et 2. Fait : 51 modèles reconstruits et validés à l'issue de
   la phase 2. Ils continuent d'écrire `section_break` — c'est un format de

@@ -868,6 +868,21 @@ export const DEFAULT_PROJECT_INVOICING: ProjectInvoicing = {
 
 export type IntegrationProvider = 'google_sheets';
 
+/**
+ * Une règle de répartition : « quand la réponse vaut ceci, écrire dans cet
+ * onglet ».
+ *
+ * L'onglet est désigné par son NOM et non par un identifiant : c'est ce que
+ * l'utilisateur lit dans Google Sheets, et un onglet absent est créé plutôt que
+ * de faire échouer l'écriture.
+ */
+export interface SheetSplitRule {
+  /** Valeur de la question de répartition — l'identifiant d'option, pas son libellé. */
+  value: string;
+  /** Nom de l'onglet de destination. */
+  tab: string;
+}
+
 export interface GoogleSheetsConfig {
   spreadsheet_id: string;
   spreadsheet_name?: string;
@@ -875,6 +890,15 @@ export interface GoogleSheetsConfig {
   sheet_title: string;
   /** Ajoute les colonnes date d'envoi / langue / identifiant. */
   include_metadata?: boolean;
+  /**
+   * Question dont la réponse choisit l'onglet de destination.
+   *
+   * Vide : tout va dans `sheet_title`. Renseignée, chaque réponse part dans
+   * l'onglet que `split_map` associe à sa valeur — et dans `sheet_title` quand
+   * aucune règle ne correspond, plutôt que nulle part.
+   */
+  split_field_id?: string;
+  split_map?: SheetSplitRule[];
 }
 
 export interface FormIntegration {
@@ -1161,6 +1185,31 @@ export interface FieldTranslation {
   created_at: string;
 }
 
+/**
+ * Où en est une réponse.
+ *
+ * Quatre états, repris de mooove-invoice parce qu'ils décrivent ce que font
+ * réellement les équipes. `void` n'efface rien : la réponse reste lisible, mais
+ * elle cesse de compter — ni dans le quota du formulaire, ni dans le palier d'un
+ * tarif dégressif. Annuler une inscription doit libérer la place qu'elle
+ * occupait, sinon l'annulation ne veut rien dire.
+ */
+export type SubmissionStatus = 'submitted' | 'reviewed' | 'paid' | 'void';
+
+export const SUBMISSION_STATUSES: SubmissionStatus[] = [
+  'submitted',
+  'reviewed',
+  'paid',
+  'void'
+];
+
+export const SUBMISSION_STATUS_LABELS: Record<SubmissionStatus, string> = {
+  submitted: 'Reçue',
+  reviewed: 'Vérifiée',
+  paid: 'Payée',
+  void: 'Annulée'
+};
+
 export interface Submission {
   id: string;
   form_id: string;
@@ -1174,6 +1223,9 @@ export interface Submission {
   session_id?: string | null;
   /** Totaux figés à l'envoi — jamais recalculés ensuite. */
   pricing?: TotalsSnapshot | null;
+  /** Où en est cette réponse — cf. `SUBMISSION_STATUSES`. */
+  status?: SubmissionStatus;
+  status_updated_at?: string | null;
   /**
    * Numéro du bon de commande, tiré de la séquence du projet.
    * Nul quand le module facturation est éteint : un sondage n'en a pas.

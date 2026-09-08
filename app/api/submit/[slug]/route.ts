@@ -282,13 +282,19 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
   if (pricing.enabled) {
     // Le compte des inscriptions n'est lu que par les tarifs dégressifs : c'est
     // une requête de plus, inutile partout ailleurs.
+    //
+    // Les réponses annulées en sont exclues, exactement comme dans la vue
+    // `public_forms` : le tarif affiché au répondant et celui qui lui est
+    // facturé doivent sortir du même compte, sans quoi une annulation ferait
+    // baisser le prix annoncé sans faire baisser la facture.
     let registeredCount = 0;
     if (pricing.tiered?.enabled) {
       const { count } = await supabase
         .from('submissions')
         .select('id', { count: 'exact', head: true })
         .eq('form_id', form.id)
-        .eq('is_partial', false);
+        .eq('is_partial', false)
+        .neq('status', 'void');
       registeredCount = count ?? 0;
 
       // Inscriptions closes : le dernier palier est dépassé et l'auteur a
@@ -336,11 +342,15 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
       );
     }
 
+    // Une inscription annulée ne condamne pas l'adresse : sans cela, annuler
+    // puis se réinscrire serait impossible, et le message parlerait d'une
+    // réponse que l'auteur a justement retirée.
     const { data: existing } = await supabase
       .from('submissions')
       .select('id')
       .eq('form_id', form.id)
       .eq('is_partial', false)
+      .neq('status', 'void')
       .eq('respondent_email', respondentEmail)
       .maybeSingle();
 

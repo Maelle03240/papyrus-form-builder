@@ -19,6 +19,7 @@ import { toast } from '@/components/ui/Toast';
 import { FormCard } from '@/components/dashboard/FormCard';
 import { WorkspaceTabs, type TabItem } from '@/components/dashboard/WorkspaceTabs';
 import { ModuleUnavailable } from '@/components/dashboard/ModuleUnavailable';
+import { ProjectRecordsTab } from '@/components/dashboard/ProjectRecordsTab';
 import {
   getProject,
   getProjectForms,
@@ -196,9 +197,7 @@ function ProjectWorkspace() {
           />
         )}
 
-        {tab === 'records' && (
-          <RecordsTab forms={forms} counts={counts} projectId={project.id} />
-        )}
+        {tab === 'records' && <ProjectRecordsTab forms={forms} projectId={project.id} />}
 
         {tab === 'partners' && (
           <ModuleUnavailable
@@ -300,72 +299,6 @@ function FormsTab({
             onDelete={(id) => void remove(id)}
           />
         ))}
-      </div>
-    </div>
-  );
-}
-
-// ============================================================================
-// Réponses — vue agrégée du projet
-// ============================================================================
-
-function RecordsTab({
-  forms,
-  counts,
-  projectId
-}: {
-  forms: Form[];
-  counts: Record<string, number>;
-  projectId: string;
-}) {
-  if (forms.length === 0) {
-    return (
-      <div className="px-6 py-16 text-center text-sm text-text-secondary">
-        Aucun formulaire, donc aucune réponse.
-      </div>
-    );
-  }
-
-  return (
-    <div className="px-6 py-8">
-      <div className="overflow-x-auto rounded-xl border border-border bg-bg-surface">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-border text-left text-xs text-text-tertiary">
-              <th className="px-5 py-3 font-normal">Formulaire</th>
-              <th className="px-5 py-3 font-normal">Statut</th>
-              <th className="px-5 py-3 text-right font-normal">Réponses</th>
-              <th className="px-5 py-3" />
-            </tr>
-          </thead>
-          <tbody>
-            {forms.map((form) => (
-              <tr key={form.id} className="border-b border-border last:border-b-0">
-                <td className="px-5 py-3 font-medium text-text-primary">
-                  {form.title || 'Formulaire sans titre'}
-                </td>
-                <td className="px-5 py-3 text-text-secondary">
-                  {form.status === 'published'
-                    ? 'Publié'
-                    : form.status === 'closed'
-                      ? 'Clos'
-                      : 'Brouillon'}
-                </td>
-                <td className="px-5 py-3 text-right tabular-nums text-text-primary">
-                  {counts[form.id] ?? 0}
-                </td>
-                <td className="px-5 py-3 text-right">
-                  <Link
-                    href={`/projects/${projectId}/forms/${form.id}?tab=records`}
-                    className="text-sm text-accent-bold transition hover:underline"
-                  >
-                    Ouvrir
-                  </Link>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
     </div>
   );

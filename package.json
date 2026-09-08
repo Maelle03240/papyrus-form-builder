@@ -43,7 +43,7 @@
     "resend": "^6.26.0",
     "server-only": "^0.0.1",
     "tailwind-merge": "^3.6.0",
-    "xlsx": "^0.18.5",
+    "write-excel-file": "^2.3.10",
     "zod": "^4.5.4"
   },
   "devDependencies": {

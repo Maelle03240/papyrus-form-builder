@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import {
   AlertTriangle,
@@ -20,7 +20,13 @@ import { Switch } from '@/components/ui/Switch';
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog';
 import { toast } from '@/components/ui/Toast';
 import { cn } from '@/lib/utils';
-import type { Form, FormIntegration, GoogleSheetsConfig, IntegrationEvent } from '@/types';
+import type {
+  Form,
+  FormIntegration,
+  GoogleSheetsConfig,
+  IntegrationEvent,
+  SheetSplitRule
+} from '@/types';
 
 /**
  * Onglet « Intégrations » d'un formulaire.
@@ -392,7 +398,20 @@ function IntegrationRow({
               />
             </div>
             <p className="mt-0.5 text-sm text-text-secondary">
-              Onglet <span className="font-medium">{config.sheet_title}</span>
+              {/* La répartition change ce que « l'onglet » veut dire : le taire
+                  ferait croire que tout arrive au même endroit. */}
+              {config.split_field_id && (config.split_map?.length ?? 0) > 0 ? (
+                <>
+                  <span className="font-medium">
+                    {(config.split_map?.length ?? 0) + 1} onglets
+                  </span>{' '}
+                  selon les réponses
+                </>
+              ) : (
+                <>
+                  Onglet <span className="font-medium">{config.sheet_title}</span>
+                </>
+              )}
               {config.spreadsheet_url && (
                 <>
                   {' · '}
@@ -606,6 +625,38 @@ function GoogleSheetsEditor({
   const [selectedUrl, setSelectedUrl] = useState(current.spreadsheet_url ?? '');
   const [sheetTitle, setSheetTitle] = useState(current.sheet_title ?? 'Réponses');
   const [includeMetadata, setIncludeMetadata] = useState(current.include_metadata !== false);
+  const [splitFieldId, setSplitFieldId] = useState(current.split_field_id ?? '');
+  const [splitMap, setSplitMap] = useState<SheetSplitRule[]>(current.split_map ?? []);
+
+  // Seules les questions à choix peuvent répartir : leurs valeurs sont connues à
+  // l'avance, donc les onglets aussi. Répartir sur un champ libre créerait un
+  // onglet par réponse distincte — un classeur de deux cents onglets au bout
+  // d'un mois.
+  const splitCandidates = useMemo(
+    () =>
+      (form.fields ?? []).filter(
+        (field) =>
+          ['single_choice', 'dropdown', 'yesno'].includes(field.type) &&
+          (field.type === 'yesno' || (field.options?.length ?? 0) > 0)
+      ),
+    [form.fields]
+  );
+
+  const splitField = splitCandidates.find((field) => field.id === splitFieldId);
+
+  const splitValues = useMemo(() => {
+    if (!splitField) return [];
+    if (splitField.type === 'yesno') {
+      return [
+        { value: 'yes', label: 'Oui' },
+        { value: 'no', label: 'Non' }
+      ];
+    }
+    return (splitField.options ?? []).map((option) => ({
+      value: option.id,
+      label: option.label?.fr || option.label?.en || option.id
+    }));
+  }, [splitField]);
 
   const [newTitle, setNewTitle] = useState(`${form.title} — réponses`);
   const [linkInput, setLinkInput] = useState('');
@@ -690,7 +741,14 @@ function GoogleSheetsEditor({
             spreadsheet_name: spreadsheetName || undefined,
             spreadsheet_url: spreadsheetUrl || undefined,
             sheet_title: targetSheet,
-            include_metadata: includeMetadata
+            include_metadata: includeMetadata,
+            // La carte est purgée des valeurs sans onglet : une règle vide ne
+            // fait rien, et la garder laisserait croire à une répartition
+            // configurée là où il n'y en a pas.
+            split_field_id: splitFieldId || undefined,
+            split_map: splitFieldId
+              ? splitMap.filter((rule) => rule.tab.trim() !== '')
+              : undefined
           }
         })
       });
@@ -857,6 +915,68 @@ function GoogleSheetsEditor({
             label="Ajouter les colonnes techniques"
             description="Date de soumission, langue et identifiant de la réponse, en tête de ligne."
           />
+
+          {splitCandidates.length > 0 && (
+            <div className="space-y-3 rounded-xl border border-border bg-bg-base p-4">
+              <label className="block">
+                <span className="mb-1.5 block text-sm text-text-secondary">
+                  Répartir dans plusieurs onglets
+                </span>
+                <select
+                  value={splitFieldId}
+                  onChange={(event) => {
+                    setSplitFieldId(event.target.value);
+                    setSplitMap([]);
+                  }}
+                  className="h-9 w-full rounded-md border border-border-strong bg-bg-surface px-3 text-sm text-text-primary focus:border-accent-cta focus:outline-hidden"
+                >
+                  <option value="">Un seul onglet</option>
+                  {splitCandidates.map((field) => (
+                    <option key={field.id} value={field.id}>
+                      Selon « {field.label?.fr || 'Question sans libellé'} »
+                    </option>
+                  ))}
+                </select>
+                <span className="mt-1.5 block text-xs text-text-tertiary">
+                  Une réponse dont la valeur n’est pas listée ci-dessous part dans
+                  l’onglet « {sheetTitle.trim() || 'Réponses'} » — jamais nulle part.
+                </span>
+              </label>
+
+              {splitValues.length > 0 && (
+                <ul className="space-y-2">
+                  {splitValues.map((choice) => {
+                    const rule = splitMap.find((entry) => entry.value === choice.value);
+                    return (
+                      <li key={choice.value} className="flex items-center gap-3">
+                        <span
+                          className="min-w-0 flex-1 truncate text-sm text-text-secondary"
+                          title={choice.label}
+                        >
+                          {choice.label}
+                        </span>
+                        <span className="shrink-0 text-xs text-text-tertiary">→</span>
+                        <input
+                          value={rule?.tab ?? ''}
+                          onChange={(event) => {
+                            const tab = event.target.value;
+                            setSplitMap((prev) => {
+                              const rest = prev.filter((entry) => entry.value !== choice.value);
+                              return tab ? [...rest, { value: choice.value, tab }] : rest;
+                            });
+                          }}
+                          placeholder={sheetTitle.trim() || 'Réponses'}
+                          aria-label={`Onglet pour « ${choice.label} »`}
+                          maxLength={31}
+                          className="h-8 w-40 shrink-0 rounded-md border border-border-strong bg-bg-surface px-2 text-sm text-text-primary placeholder:text-text-tertiary focus:border-accent-cta focus:outline-hidden"
+                        />
+                      </li>
+                    );
+                  })}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="flex items-center justify-end gap-2 border-t border-border px-5 py-4">

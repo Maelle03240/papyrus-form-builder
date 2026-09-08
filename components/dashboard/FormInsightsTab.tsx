@@ -17,10 +17,12 @@ import {
 } from 'recharts';
 import { Button } from '@/components/ui/Button';
 import { ChartWidget } from '@/components/dashboard/ChartWidget';
+import { RevenueInsights } from '@/components/dashboard/records/RevenueInsights';
 import { updateForm } from '@/lib/store';
 
 import { toast } from '@/components/ui/Toast';
 import { calculateFormScore, DEFAULT_SCORE_LEVELS } from '@/lib/scoring';
+import type { RecordRow } from '@/lib/records';
 import type { Form, Field, ChartLayoutItem } from '@/types';
 
 /**
@@ -511,6 +513,12 @@ export function FormInsightsTab({ form, submissions, loading }: FormInsightsTabP
 
   return (
     <div className="space-y-6">
+      {/* Tarification — en tête, avant les graphiques par question.
+          Sur un formulaire d'inscription payante, « combien » se lit avant
+          « qui a répondu quoi » : c'est le chiffre qu'on vient chercher. Le
+          bloc s'efface de lui-même quand aucune réponse ne porte de total. */}
+      <RevenueInsights submissions={submissions as unknown as RecordRow[]} />
+
       {/* Score de maturité */}
       {localForm.scoring_enabled && scoreStats && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

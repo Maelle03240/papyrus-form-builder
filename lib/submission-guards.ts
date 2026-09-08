@@ -18,13 +18,23 @@ export interface GuardFailure {
   error: string;
 }
 
-/** Nombre de réponses abouties (les ébauches ne comptent pas). */
+/**
+ * Nombre de réponses abouties.
+ *
+ * Ni les ébauches — jamais envoyées — ni les réponses annulées. Annuler une
+ * inscription doit libérer la place qu'elle occupait : sans cette exclusion, un
+ * formulaire limité à cent places reste fermé après dix annulations, et rien
+ * dans l'interface n'explique pourquoi. La vue `public_forms` applique la même
+ * règle, et les deux doivent rester alignées : l'une décide de ce que le
+ * répondant voit, l'autre de ce que le serveur accepte.
+ */
 export async function countCompletedSubmissions(formId: string): Promise<number> {
   const { count } = await createAdminClient()
     .from('submissions')
     .select('id', { count: 'exact', head: true })
     .eq('form_id', formId)
-    .eq('is_partial', false);
+    .eq('is_partial', false)
+    .neq('status', 'void');
 
   return count ?? 0;
 }
@@ -73,11 +83,14 @@ export async function checkDuplicateAnswer(
   const value = formatAnswer(field, responses[field.id]).trim().toLowerCase();
   if (!value) return null;
 
+  // Une réponse annulée ne bloque pas un nouvel envoi : c'est précisément ce
+  // qu'on attend d'une annulation quand quelqu'un se réinscrit.
   const { data: existing } = await createAdminClient()
     .from('submissions')
     .select('id, responses')
     .eq('form_id', form.id)
-    .eq('is_partial', false);
+    .eq('is_partial', false)
+    .neq('status', 'void');
 
   const clash = (existing ?? []).some((submission) => {
     if (excludeSubmissionId && submission.id === excludeSubmissionId) return false;
