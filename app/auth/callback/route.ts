@@ -62,6 +62,13 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(loginUrl(decision.reason));
   }
 
+  // Un partenaire n'obtient ni profil ni espace de travail : il n'est pas
+  // membre de l'équipe, et lui en créer un lui ouvrirait un tableau de bord
+  // vide dont personne n'aurait décidé l'existence.
+  if (user.app_metadata?.papyrus_role === 'partner') {
+    return NextResponse.redirect(absoluteUrl(request, redirectTo.startsWith('/p') ? redirectTo : '/p'));
+  }
+
   await ensureProfileAndWorkspace(user.id, user.email ?? '', user.user_metadata);
 
   return NextResponse.redirect(absoluteUrl(request, redirectTo));

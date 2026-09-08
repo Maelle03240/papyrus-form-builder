@@ -1,6 +1,7 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { SUPABASE_ANON_KEY, SUPABASE_URL } from '@/lib/env';
+import { VISITOR_COOKIE, VISITOR_COOKIE_MAX_AGE } from '@/lib/visitor';
 
 type CookieToSet = { name: string; value: string; options?: CookieOptions };
 
@@ -9,6 +10,16 @@ type CookieToSet = { name: string; value: string; options?: CookieOptions };
  * Doit être appelé depuis middleware.ts à la racine du projet.
  */
 export async function updateSession(request: NextRequest) {
+  // Le cookie de visite est posé AVANT la création de la réponse, et il est
+  // écrit sur la REQUÊTE autant que sur la réponse.
+  //
+  // Ne l'écrire que sur la réponse suffirait à le déposer chez le visiteur,
+  // mais la page rendue au même instant, elle, ne le verrait pas : la toute
+  // première visite d'un nouveau venu ne serait donc jamais comptée. Un
+  // partenaire dont le lien amène une inscription lirait « 0 visite,
+  // 1 inscription » — et conclurait, à raison, que le compteur est faux.
+  const visitor = mintVisitor(request);
+
   let response = NextResponse.next({ request });
 
   const supabase = createServerClient(
@@ -53,6 +64,14 @@ export async function updateSession(request: NextRequest) {
     pathname.startsWith('/embed/') || // même formulaire, rendu pour une iframe
     pathname === '/embed.js' || // script d'intégration chargé par les sites hôtes
     pathname.startsWith('/invite/') || // acceptation d'invitation
+    // Programme partenaire. `/a/…` (page d'accueil, auto-inscription) est
+    // entièrement public ; `/p/…` (portail) ne l'est qu'en apparence — la page
+    // exige une session et vérifie elle-même que le jeton désigne bien le
+    // partenaire connecté. La laisser passer ici lui permet d'afficher son
+    // écran de connexion plutôt qu'une redirection vers celui du personnel.
+    pathname.startsWith('/a/') ||
+    pathname.startsWith('/p/') ||
+    pathname.startsWith('/api/a/') ||
     pathname.startsWith('/api/submit') || // réception des réponses
     // Déverrouillage d'un formulaire protégé par mot de passe. Exact, et non
     // `startsWith('/api/forms')` : le reste de /api/forms gère les intégrations
@@ -81,6 +100,34 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
+  if (visitor) {
+    response.cookies.set(VISITOR_COOKIE, visitor, {
+      maxAge: VISITOR_COOKIE_MAX_AGE,
+      httpOnly: true,
+      sameSite: 'lax',
+      secure: request.nextUrl.protocol === 'https:',
+      path: '/a'
+    });
+  }
+
+  /**
+   * Un partenaire n'entre pas dans l'espace de travail.
+   *
+   * Sans cette redirection il y arriverait : il possède une session Supabase
+   * valide, donc le middleware le laisse passer, et la RLS lui donne un tableau
+   * de bord vide plutôt qu'une porte fermée. Un écran vide n'est pas un refus —
+   * c'est une invitation à croire que quelque chose est cassé.
+   *
+   * Le rôle est lu dans `app_metadata`, que son titulaire ne peut pas modifier :
+   * `user_metadata`, lui, est écrit par le client.
+   */
+  if (user && isStaffRoute(pathname) && isPartnerAccount(user)) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/p';
+    url.search = '';
+    return NextResponse.redirect(url);
+  }
+
   if (user && isAuthRoute) {
     const url = request.nextUrl.clone();
     url.pathname = '/dashboard';
@@ -92,6 +139,43 @@ export async function updateSession(request: NextRequest) {
   applySecurityHeaders(response.headers);
 
   return response;
+}
+
+/**
+ * Attribue un identifiant de visite aux pages d'accueil partenaire.
+ *
+ * Rien qu'un tirage au sort : aucune donnée personnelle, aucune reconnaissance
+ * possible ailleurs, et une durée de vie d'une demi-heure — la fenêtre de
+ * dédoublonnage des visites, pas une de plus. Renvoie la valeur à poser sur la
+ * réponse, ou `null` quand il n'y a rien à faire.
+ */
+function mintVisitor(request: NextRequest): string | null {
+  if (!request.nextUrl.pathname.startsWith('/a/')) return null;
+  if (request.cookies.get(VISITOR_COOKIE)) return null;
+
+  const value = crypto.randomUUID().replace(/-/g, '');
+  request.cookies.set(VISITOR_COOKIE, value);
+  return value;
+}
+
+/** Les pages réservées au personnel — celles qu'un partenaire ne doit pas voir. */
+function isStaffRoute(pathname: string): boolean {
+  return (
+    pathname === '/' ||
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/projects') ||
+    pathname.startsWith('/forms') ||
+    pathname.startsWith('/templates') ||
+    pathname.startsWith('/workspaces') ||
+    pathname.startsWith('/partners') ||
+    pathname.startsWith('/contacts') ||
+    pathname.startsWith('/settings') ||
+    pathname.startsWith('/billing')
+  );
+}
+
+function isPartnerAccount(user: { app_metadata?: Record<string, unknown> | null }): boolean {
+  return user.app_metadata?.papyrus_role === 'partner';
 }
 
 /**

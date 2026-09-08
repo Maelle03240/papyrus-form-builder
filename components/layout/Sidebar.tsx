@@ -24,6 +24,7 @@ import {
   Trash2,
   FolderInput,
   FolderOpen,
+  Handshake,
   Share2
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -487,6 +488,8 @@ export function Sidebar({
   const STATIC_NAV = [
     { href: '/projects', label: 'Projets', icon: FolderOpen },
     { href: '/templates', label: 'Modèles', icon: FileText },
+    { href: '/partners', label: 'Partenaires', icon: Handshake },
+    { href: '/contacts', label: 'Contacts', icon: Users },
     { href: '/settings', label: 'Paramètres', icon: Settings },
     { href: '/billing', label: 'Billing', icon: CreditCard, badge: 'Bientôt' }
   ];

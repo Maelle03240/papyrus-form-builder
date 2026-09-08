@@ -18,6 +18,7 @@
 
 import type {
   Form,
+  PartnerConfig,
   Project,
   ProjectInvoicing,
   ProjectModules,
@@ -29,6 +30,7 @@ import {
   DEFAULT_PROJECT_MODULES,
   DEFAULT_PROJECT_PRICING
 } from '@/types';
+import { partnerConfigOf } from '@/lib/partners';
 import { createClient } from '@/lib/supabase/client';
 
 const PROJECTS_CHANGED = 'papyrus:projects-changed';
@@ -56,6 +58,8 @@ interface ProjectRow {
   invoice_prefix: string | null;
   invoice_next: number | string | null;
   invoice_pad: number | null;
+  partner_config: Partial<PartnerConfig> | null;
+  partner_join_token: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -151,6 +155,8 @@ function toProject(row: ProjectRow, formCount?: number): Project {
     modules: normalizeProjectModules(row.modules),
     pricing: normalizeProjectPricing(row.pricing),
     invoicing: normalizeProjectInvoicing(row),
+    partner_config: partnerConfigOf(row.partner_config),
+    partner_join_token: row.partner_join_token ?? null,
     created_at: row.created_at,
     updated_at: row.updated_at,
     form_count: formCount
@@ -297,7 +303,19 @@ export async function createProject(input: CreateProjectInput): Promise<Project>
 
 export async function updateProject(
   id: string,
-  patch: Partial<Pick<Project, 'name' | 'description' | 'status' | 'languages' | 'default_language' | 'theme'>> & {
+  patch: Partial<
+    Pick<
+      Project,
+      | 'name'
+      | 'description'
+      | 'status'
+      | 'languages'
+      | 'default_language'
+      | 'theme'
+      | 'partner_config'
+      | 'partner_join_token'
+    >
+  > & {
     modules?: Partial<ProjectModules>;
     pricing?: Partial<ProjectPricing>;
     invoicing?: Partial<ProjectInvoicing>;

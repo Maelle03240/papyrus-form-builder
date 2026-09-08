@@ -461,10 +461,80 @@ de la phase 3 de conserver l'instantané ligne à ligne plutôt que le seul tota
 C'est ce qui permet de répondre à « qu'est-ce qui se vend », six mois plus tard,
 avec des prix modifiés entre-temps.
 
-**6 — Partenaires et contacts.** Annuaire au niveau équipe, participation par
-projet, code de partage, landing, portail, lien d'auto-inscription, suivi des
-commissions. Contacts et export. **Authentification partenaire via Supabase Auth
-(rôle `partner`)**, pas de second magasin d'identifiants.
+**6 — Partenaires et contacts.** ✅ **Fait le 08/09/2026.** Annuaire au niveau
+équipe, participation par projet, code de partage, page d'accueil publique
+`/a/[code]`, portail `/p/[token]`, lien d'auto-inscription `/a/join/[token]`,
+registre de commission des deux côtés, carnet de contacts et export XLSX.
+Migration 009. Authentification partenaire sur Supabase Auth, comme décidé.
+
+**L'identité partenaire est un compte Supabase Auth**, marqué
+`app_metadata.papyrus_role = 'partner'` — dans `app_metadata` et non
+`user_metadata`, que son propre titulaire peut modifier. Trois pièges de
+l'existant ont dû être levés pour que ce choix tienne :
+
+- **`/auth/callback` SUPPRIME le compte qu'il refuse.** Un partenaire est par
+  définition extérieur à l'équipe : sur une instance qui restreint les domaines
+  autorisés, chaque partenaire aurait vu son compte détruit à sa première
+  connexion. `evaluateAccess` reconnaît désormais une fiche partenaire, au même
+  titre qu'une invitation nominative.
+- **Le callback créait un espace de travail personnel à tout arrivant.** Un
+  partenaire y aurait reçu son propre Papyrus, vide.
+- **Rien n'empêchait un partenaire d'ouvrir `/dashboard`.** Il a une session
+  valide ; la RLS lui aurait donné des écrans vides plutôt qu'une porte fermée,
+  et un écran vide se lit comme une panne. Le middleware le renvoie à son
+  portail.
+
+**Un partenaire n'a aucune policy sur les tables.** Il lit quatre vues qui se
+filtrent elles-mêmes sur `current_partner_ids()`, et il écrit uniquement par des
+routes en `service_role` qui vérifient ses droits. La surface à relire est donc
+de quatre vues, pas de six tables.
+
+**Trois écarts assumés par rapport à mooove-invoice :**
+
+- **Le partenaire ne voit pas les réponses au formulaire.** mooove-invoice lui
+  ouvre le détail complet de chaque inscription ; ici la vue
+  `partner_registrations` n'expose que la ligne — date, adresse, référence,
+  montant, statut, commission. Un bulletin d'inscription peut contenir un numéro
+  de passeport ou une restriction alimentaire : ce n'est pas l'affaire de
+  l'apporteur d'affaires, et personne n'aurait choisi cette exposition en la
+  voyant écrite.
+- **L'auto-inscription n'ouvre aucun accès.** mooove-invoice connecte le nouveau
+  partenaire sur-le-champ. Intransposable ici : le portail s'ouvre avec un vrai
+  compte d'authentification, et délivrer un lien de connexion à un visiteur
+  anonyme qui a simplement TAPÉ une adresse donnerait le compte de n'importe qui
+  à n'importe qui. La page enregistre une demande ; l'équipe ouvre l'accès.
+- **Les contacts se rassemblent quand on veut**, pas seulement à l'archivage du
+  projet. On écrit aux inscrits pendant l'événement, pas après. Le geste est
+  rejouable et dédoublonné par (projet, adresse).
+
+**L'adresse IP n'est pas conservée** pour compter les visites. mooove-invoice la
+stocke en clair ; Papyrus avait déjà tranché l'inverse pour les réponses (« sans
+sel configuré, on préfère ne rien stocker qu'un hachage faible »), et une IP
+hachée avec un sel connu se retrouve de toute façon par force brute. Le visiteur
+est identifié par un cookie tiré au sort, posé par le middleware, valable trente
+minutes — ce qui compte mieux : derrière un partage de connexion, une IP confond
+dix visiteurs en un seul.
+
+**Deux pièges rencontrés :**
+
+- **La toute première visite d'un nouveau venu n'était pas comptée.** Le cookie
+  n'était écrit que sur la réponse ; la page rendue au même instant ne le voyait
+  donc pas. Un partenaire dont le lien amène une inscription aurait lu
+  « 0 visite, 1 inscription » — et conclu, à raison, que le compteur est faux.
+  Le middleware l'écrit désormais aussi sur la requête. Vérifié en production :
+  une visite fraîche compte 1, cinq visites du même visiteur comptent 1.
+- **Les quatre nouvelles tables étaient invisibles de l'application entière.**
+  Les `alter default privileges` de la migration 001 ne valent que pour les
+  objets créés par le rôle qui les a posés ; ces tables-ci sont créées par
+  `supabase_admin`. Sans droits, la RLS n'est même pas consultée — il n'y a rien
+  à filtrer. Les `grant` sont désormais explicites, comme en migration 003.
+
+**Ce que l'attribution garantit**, vérifié sur la base de production : un code
+valide du projet attribue la réponse ; un code valide d'un AUTRE projet
+n'attribue rien (sans quoi coller le code d'un confrère lui vaudrait des
+commissions qu'il n'a pas apportées) ; un code inconnu n'attribue rien et
+n'empêche pas l'inscription. Le code voyage dans l'URL et jamais dans un cookie :
+un cookie survivrait à la visite d'un autre lien.
 
 **7 — Couche IA.** Réglages (clé chiffrée, modèle, budget), couche outils,
 orchestrateur, assistant de création, panneau de conversation. Suppression de
@@ -489,6 +559,14 @@ public, de la tarification et du parcours partenaire.
 - **Pas d'encaissement de paiement.** Jamais demandé, absent de mooove-invoice.
 
 ## 5. Risques
+
+- **Le parcours partenaire n'a jamais été parcouru de bout en bout par un vrai
+  compte.** L'attribution, le registre, les vues, les droits et les quatre routes
+  sont vérifiés sur la base de production ; l'invitation elle-même passe par
+  l'API d'administration Supabase, qu'aucun test n'a déclenchée faute de pouvoir
+  ouvrir une session de navigateur vers `supabase.mooove.group` depuis ce poste.
+  À refaire à la main au premier partenaire réel : ouvrir l'accès, suivre le
+  lien, choisir un mot de passe, atterrir sur le portail.
 
 - **La répartition Google Sheets n'a pas été essayée contre un vrai compte
   Google.** Aucun n'est connecté sur cette instance : le choix de l'onglet et le

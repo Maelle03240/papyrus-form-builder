@@ -100,6 +100,23 @@ export async function evaluateAccess(email: string | undefined, userId: string):
 
   if (invitation) return { allowed: true };
 
+  // Partenaire déjà inscrit à l'annuaire d'une équipe : accès accordé.
+  //
+  // Sans cette clause, un partenaire dont l'adresse n'est pas sur un domaine
+  // autorisé serait refusé au retour de son lien — et `/auth/callback` SUPPRIME
+  // le compte refusé. Une équipe qui restreint les domaines de son personnel
+  // détruirait donc, sans le savoir, le compte de chacun de ses partenaires à
+  // sa première connexion.
+  const { data: partner } = await admin
+    .from('partners')
+    .select('id')
+    .ilike('email', email.toLowerCase())
+    .eq('status', 'active')
+    .limit(1)
+    .maybeSingle();
+
+  if (partner) return { allowed: true };
+
   const settings = await getAccessSettings();
 
   if (!settings.allowPublicSignup) {

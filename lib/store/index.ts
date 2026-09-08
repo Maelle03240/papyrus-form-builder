@@ -69,3 +69,20 @@ export {
   restoreFormVersion,
   deleteFormVersion
 } from './versions';
+
+export {
+  listPartners,
+  createPartner,
+  updatePartner,
+  deletePartner,
+  listProjectPartners,
+  attachPartner,
+  updateProjectPartner,
+  detachPartner,
+  setCommissionPaid,
+  listContacts,
+  updateContact,
+  deleteContact,
+  gatherProjectContacts
+} from './partners';
+export type { CreatePartnerInput, GatherResult } from './partners';

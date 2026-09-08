@@ -7,6 +7,8 @@ import { sendConfirmationEmail } from '@/lib/email/confirmation';
 import { syncSubmissionToSheets } from '@/lib/integrations/google-sheets-sync';
 import { verifyFormAccessToken } from '@/lib/form-access';
 import { evaluateFormVisibility } from '@/lib/visibility';
+import { isValidPartnerCode } from '@/lib/partners';
+import { resolveAttribution } from '@/lib/partners-server';
 import { applyCalculatedFields } from '@/lib/calculated';
 import { computeTotals, resolvePricing, resolveTier } from '@/lib/pricing';
 import { canBeRequired, isAnswerable, isAnswerEmpty } from '@/lib/submission-format';
@@ -84,6 +86,7 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
     language?: string;
     sessionId?: string;
     accessToken?: string;
+    partnerCode?: string;
   };
   try {
     body = JSON.parse(rawBody);
@@ -100,6 +103,14 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
   const sessionId =
     typeof body.sessionId === 'string' && body.sessionId.length <= 100
       ? body.sessionId
+      : null;
+
+  // Le code du partenaire qui a amené ce visiteur. Il vient de l'URL du
+  // formulaire, jamais d'un cookie : un cookie survivrait à la visite d'un autre
+  // lien et attribuerait l'inscription au mauvais partenaire.
+  const partnerCode =
+    typeof body.partnerCode === 'string' && isValidPartnerCode(body.partnerCode)
+      ? body.partnerCode
       : null;
 
   const supabase = createAdminClient();
@@ -379,6 +390,14 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
     ? calculateFormScore({ ...(form as unknown as Form), fields }, responses as FormResponses)
     : null;
 
+  // L'attribution est résolue AVANT l'insertion : elle fait partie de la
+  // réponse, pas d'un effet de bord. Un code inconnu, désactivé ou emprunté à un
+  // autre projet ne rattache rien — et n'empêche jamais l'inscription.
+  const attributedTo = await resolveAttribution(
+    partnerCode,
+    (form as { project_id?: string | null }).project_id ?? null
+  );
+
   const record = {
     form_id: form.id,
     responses,
@@ -394,7 +413,8 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
     // Les totaux sont figés ici et ne seront jamais recalculés : c'est ce qui
     // permet de rééditer une facture six mois plus tard, avec des prix modifiés
     // entre-temps.
-    pricing: pricingSnapshot
+    pricing: pricingSnapshot,
+    project_partner_id: attributedTo
   };
 
   // L'ébauche devient la réponse définitive : la mettre à jour plutôt que

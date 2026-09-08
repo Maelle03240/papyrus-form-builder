@@ -8,6 +8,7 @@ import { useFormScore } from '@/lib/hooks/useFormScore';
 import { useEmbedBridge } from '@/lib/hooks/useEmbedBridge';
 import { usePartialSubmission } from '@/lib/hooks/usePartialSubmission';
 import { evaluateFormVisibility } from '@/lib/visibility';
+import { PARTNER_CODE_PARAM } from '@/lib/partners';
 import { getBackgroundStyle } from '@/lib/theme';
 import { canBeRequired, isAnswerEmpty } from '@/lib/submission-format';
 import type { EmbedOptions } from '@/lib/embed';
@@ -106,10 +107,29 @@ export function FormPublicView({ form, embed, accessToken }: Props) {
     emit('form-loaded', { formId: form.id, slug: form.slug });
   }, [emit, form.id, form.slug]);
 
+  /**
+   * Le code du partenaire qui a amené ce visiteur, lu dans l'URL.
+   *
+   * Relu à l'envoi et non conservé en état : le paramètre survit à la
+   * navigation interne du formulaire, alors qu'un état perdu par un
+   * rafraîchissement de page ferait disparaître l'attribution sans que
+   * personne s'en aperçoive avant le calcul des commissions.
+   *
+   * Le serveur revérifie que ce code appartient bien au projet du formulaire :
+   * ce qui arrive d'ici est une indication, jamais une autorisation.
+   */
+  const readPartnerCode = (): string | null => {
+    if (typeof window === 'undefined') return null;
+    const value = new URLSearchParams(window.location.search).get(PARTNER_CODE_PARAM);
+    return value && value.length <= 60 ? value : null;
+  };
+
   // Soumission du formulaire
   const handleSubmit = async () => {
     if (isSubmitting) return;
     setIsSubmitting(true);
+
+    const partnerCode = readPartnerCode();
 
     try {
       const response = await fetch(`/api/submit/${form.slug}`, {
@@ -119,7 +139,8 @@ export function FormPublicView({ form, embed, accessToken }: Props) {
           responses,
           language,
           ...(partial.sessionId ? { sessionId: partial.sessionId } : {}),
-          ...(accessToken ? { accessToken } : {})
+          ...(accessToken ? { accessToken } : {}),
+          ...(partnerCode ? { partnerCode } : {})
         })
       });
 

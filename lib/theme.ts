@@ -76,8 +76,16 @@ export const BACKGROUND_PRESETS: BackgroundPreset[] = [
   }
 ];
 
-/** Résout les propriétés de theme en valeur CSS background utilisable. */
-export function getBackgroundStyle(theme: FormTheme): CSSProperties {
+/**
+ * Résout les propriétés de thème en valeur CSS `background` utilisable.
+ *
+ * Le thème est reçu en `Partial` : chaque champ est déjà remplacé par un défaut
+ * plus bas, et un projet ne porte qu'une surcharge partielle du thème de ses
+ * formulaires. Exiger un thème complet obligerait chaque appelant à en
+ * fabriquer un — et à choisir, chacun de son côté, ce que valent les cases
+ * vides.
+ */
+export function getBackgroundStyle(theme: Partial<FormTheme>): CSSProperties {
   const type = theme.bg_type ?? 'color';
 
   switch (type) {

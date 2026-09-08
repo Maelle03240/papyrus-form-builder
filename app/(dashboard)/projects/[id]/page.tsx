@@ -20,6 +20,7 @@ import { FormCard } from '@/components/dashboard/FormCard';
 import { WorkspaceTabs, type TabItem } from '@/components/dashboard/WorkspaceTabs';
 import { ModuleUnavailable } from '@/components/dashboard/ModuleUnavailable';
 import { ProjectRecordsTab } from '@/components/dashboard/ProjectRecordsTab';
+import { ProjectPartnersTab } from '@/components/dashboard/ProjectPartnersTab';
 import {
   getProject,
   getProjectForms,
@@ -200,11 +201,7 @@ function ProjectWorkspace() {
         {tab === 'records' && <ProjectRecordsTab forms={forms} projectId={project.id} />}
 
         {tab === 'partners' && (
-          <ModuleUnavailable
-            icon={Handshake}
-            title="Partenaires"
-            description="Les partenaires promeuvent un projet avec leur propre lien de partage, suivent leurs inscriptions depuis un portail dédié, et voient les commissions qui leur reviennent."
-          />
+          <ProjectPartnersTab project={project} forms={forms} onChanged={load} />
         )}
 
         {tab === 'insights' && (

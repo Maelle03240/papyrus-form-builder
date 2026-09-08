@@ -975,6 +975,17 @@ export interface Project {
    * la main doivent tirer leurs numéros du même compteur.
    */
   invoicing: ProjectInvoicing;
+  /**
+   * Programme partenaire : interrupteur, taux de commission, page d'accueil.
+   *
+   * Sur le projet parce qu'un partenaire promeut un événement, pas une question.
+   */
+  partner_config?: PartnerConfig;
+  /**
+   * Jeton du lien public d'auto-inscription des partenaires — /a/join/<token>.
+   * Nul tant que l'auto-inscription n'a jamais été activée.
+   */
+  partner_join_token?: string | null;
   created_at: string;
   updated_at: string;
   /** Renseigné par les requêtes de liste — jamais une colonne. */
@@ -1235,6 +1246,18 @@ export interface Submission {
   email_sent_at?: string | null;
   /** Motif du dernier échec d'envoi, pour que l'auteur puisse le voir. */
   email_error?: string | null;
+  /**
+   * Lien partenaire par lequel cette réponse est arrivée.
+   *
+   * Figé à l'envoi et jamais recalculé : c'est ce qui permet de payer une
+   * commission six mois plus tard, même si le partenaire a quitté le projet
+   * entre-temps.
+   */
+  project_partner_id?: string | null;
+  /** Commission versée au partenaire. Nul = encore due. */
+  commission_paid_at?: string | null;
+  /** Qui a confirmé le versement — cf. `CommissionConfirmedBy`. */
+  commission_paid_by?: CommissionConfirmedBy;
   completed_at: string;
   actions_triggered: unknown[];
 }
@@ -1269,3 +1292,199 @@ export interface Workspace {
   form_count?: number;
 }
 
+
+// ============================================================================
+// Partenaires, portail et contacts — phase 6
+// ============================================================================
+
+export type PartnerStatus = 'active' | 'disabled';
+
+/** Qui a confirmé le versement d'une commission. La chaîne vide = pas versée. */
+export type CommissionConfirmedBy = '' | 'partner' | 'staff';
+
+/**
+ * Un partenaire de l'espace de travail.
+ *
+ * Il n'est pas membre de l'équipe : il ne voit ni les formulaires, ni les autres
+ * partenaires, ni une seule réponse qu'il n'a pas amenée. Son identité est un
+ * compte Supabase Auth ordinaire, marqué `papyrus_role: 'partner'` — il n'existe
+ * pas de second magasin d'identifiants.
+ */
+export interface Partner {
+  id: string;
+  team_id: string;
+  /** Compte Auth associé. Nul tant que l'invitation n'a pas été honorée. */
+  user_id?: string | null;
+  name: string;
+  email: string;
+  phone: string;
+  website: string;
+  /** URL R2 — jamais une data URL. */
+  logo_url: string;
+  notes: string;
+  status: PartnerStatus;
+  /** Lien de portail permanent : /p/<portal_token>. */
+  portal_token: string;
+  invited_at?: string | null;
+  last_seen_at?: string | null;
+  created_by?: string | null;
+  created_at: string;
+  updated_at: string;
+  /** Renseigné par les requêtes de liste — jamais une colonne. */
+  project_count?: number;
+}
+
+/** Participation d'un partenaire à un projet : son lien, ses chiffres. */
+export interface ProjectPartner {
+  id: string;
+  project_id: string;
+  partner_id: string;
+  /** Slug public du lien de partage : /a/<code>. */
+  code: string;
+  status: PartnerStatus;
+  click_count: number;
+  created_by?: string | null;
+  created_at: string;
+  updated_at: string;
+  /** Jointures de lecture — jamais des colonnes. */
+  partner?: Pick<Partner, 'id' | 'name' | 'email' | 'logo_url' | 'status' | 'portal_token'>;
+}
+
+/**
+ * Réglages du programme partenaire d'un projet.
+ *
+ * Tout est facultatif : un projet sans programme n'a qu'un objet vide, et la
+ * page d'accueil se rabat sur le nom du projet et des libellés par défaut.
+ */
+export interface PartnerConfig {
+  /** Interrupteur maître. Éteint, les liens /a/<code> répondent 404. */
+  enabled?: boolean;
+  /**
+   * Formulaire promu par les partenaires. Vide = le plus ancien formulaire
+   * publié du projet, ce qui couvre le cas courant d'un projet à un formulaire.
+   */
+  form_id?: string | null;
+  /** Pourcentage du total de chaque réponse encaissée. 0 = pas de commission. */
+  commission_percent?: number;
+  heading?: MultilingualText;
+  message?: MultilingualText;
+  /** Visuel de l'événement — URL R2. */
+  image_url?: string;
+  /** Document téléchargeable proposé sous le message (URL R2). */
+  pdf_url?: string;
+  pdf_name?: string;
+  pdf_label?: MultilingualText;
+  cta_label?: MultilingualText;
+  /** Sur-titre au-dessus du logo du partenaire. */
+  partner_label?: MultilingualText;
+  /** Lien public d'auto-inscription des partenaires : /a/join/<token>. */
+  self_register?: boolean;
+  join_heading?: MultilingualText;
+  join_message?: MultilingualText;
+}
+
+export const DEFAULT_PARTNER_CONFIG: PartnerConfig = {
+  enabled: false,
+  commission_percent: 0,
+  self_register: false
+};
+
+/** Ce que la page d'accueil publique /a/<code> connaît du lien. */
+export interface PublicPartnerLink {
+  id: string;
+  code: string;
+  project_id: string;
+  project_name: string;
+  languages: string[];
+  default_language: string;
+  project_theme: Partial<FormTheme>;
+  partner_config: PartnerConfig;
+  partner_name: string;
+  partner_logo_url: string;
+  partner_website: string;
+  /** Nul si le projet n'a aucun formulaire publié : la page le dit alors. */
+  form_slug: string | null;
+  form_title: string | null;
+}
+
+/** Ce que la page publique d'auto-inscription connaît du projet. */
+export interface PublicPartnerJoin {
+  project_id: string;
+  token: string;
+  project_name: string;
+  default_language: string;
+  languages: string[];
+  project_theme: Partial<FormTheme>;
+  partner_config: PartnerConfig;
+}
+
+/** Une participation, vue depuis le portail du partenaire. */
+export interface PartnerPortalLink {
+  id: string;
+  partner_id: string;
+  project_id: string;
+  code: string;
+  status: PartnerStatus;
+  click_count: number;
+  created_at: string;
+  project_name: string;
+  project_status: ProjectStatus;
+  project_pricing: ProjectPricing;
+  partner_config: PartnerConfig;
+  form_slug: string | null;
+  form_title: string | null;
+}
+
+/**
+ * Une inscription amenée par le partenaire, vue depuis son portail.
+ *
+ * Volontairement sans `responses` : le partenaire voit la ligne, pas les
+ * réponses au formulaire. Un bulletin d'inscription peut contenir un numéro de
+ * passeport ou une restriction alimentaire, qui ne regardent pas l'apporteur
+ * d'affaires.
+ */
+export interface PartnerRegistration {
+  id: string;
+  project_partner_id: string;
+  partner_id: string;
+  project_id: string;
+  completed_at: string;
+  respondent_email: string | null;
+  respondent_language: string;
+  status: SubmissionStatus;
+  invoice_number: string | null;
+  pricing: TotalsSnapshot | null;
+  commission_paid_at: string | null;
+  commission_paid_by: CommissionConfirmedBy;
+  commission_percent: number;
+}
+
+/** Un projet que le partenaire connecté peut rejoindre d'un clic. */
+export interface PartnerOpenProject {
+  project_id: string;
+  partner_id: string;
+  project_name: string;
+  partner_config: PartnerConfig;
+}
+
+/**
+ * Une personne issue des réponses d'un projet, conservée après lui.
+ *
+ * `project_name` est dénormalisé exprès : un contact doit survivre à la
+ * suppression de son projet en gardant la trace d'où il vient.
+ */
+export interface Contact {
+  id: string;
+  team_id: string;
+  project_id?: string | null;
+  project_name: string;
+  submission_id?: string | null;
+  name: string;
+  email: string;
+  phone: string;
+  company: string;
+  language: string;
+  notes: string;
+  created_at: string;
+  updated_at: string;
+}
