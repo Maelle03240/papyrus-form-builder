@@ -12,6 +12,7 @@ import {
   Plug,
   Settings as SettingsIcon,
   Share2,
+  Sparkles,
   Wrench
 } from 'lucide-react';
 
@@ -28,6 +29,7 @@ import { FormInsightsTab } from '@/components/dashboard/FormInsightsTab';
 import { FormRecordsTab } from '@/components/dashboard/FormRecordsTab';
 import { FormPricingTab } from '@/components/dashboard/FormPricingTab';
 import { FormEmailTab } from '@/components/dashboard/FormEmailTab';
+import { AssistantPanel } from '@/components/ai/AssistantPanel';
 import { getProject, getForm, updateForm } from '@/lib/store';
 import { createClient } from '@/lib/supabase/client';
 import type { DisplayMode, Form, FormTheme, Project } from '@/types';
@@ -57,6 +59,7 @@ function FormWorkspace() {
   const tab: Tab = TABS.includes(requestedTab as Tab) ? (requestedTab as Tab) : 'setup';
   const sub: SubTab = SUB_TABS.includes(requestedSub as SubTab) ? (requestedSub as SubTab) : 'build';
 
+  const [assistantOpen, setAssistantOpen] = useState(false);
   const [project, setProject] = useState<Project | null>(null);
   const [form, setForm] = useState<Form | null>(null);
   const [submissions, setSubmissions] = useState<Record<string, unknown>[]>([]);
@@ -203,7 +206,8 @@ function FormWorkspace() {
   }
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full min-h-0">
+      <div className="flex min-w-0 flex-1 flex-col">
       <header className="shrink-0 px-6 pt-6">
         <nav className="flex items-center gap-1.5 text-xs text-text-tertiary" aria-label="Fil d'Ariane">
           <Link href="/projects" className="transition hover:text-text-secondary">
@@ -221,6 +225,16 @@ function FormWorkspace() {
           <Badge variant={form.status}>
             {form.status === 'published' ? 'Publié' : form.status === 'closed' ? 'Clos' : 'Brouillon'}
           </Badge>
+
+          <Button
+            className="ml-auto"
+            variant={assistantOpen ? 'primary' : 'secondary'}
+            size="sm"
+            iconLeft={<Sparkles className="h-3.5 w-3.5" />}
+            onClick={() => setAssistantOpen(!assistantOpen)}
+          >
+            Assistant
+          </Button>
         </div>
       </header>
 
@@ -301,6 +315,22 @@ function FormWorkspace() {
           </div>
         )}
       </div>
+      </div>
+
+      {/* Le panneau est un volet, pas une fenêtre flottante : on décrit une
+          modification en gardant le formulaire sous les yeux, et on voit les
+          questions apparaître pendant que l'assistant les pose. */}
+      {assistantOpen && (
+        <aside className="fixed inset-0 z-40 border-l border-border bg-bg-surface lg:static lg:z-auto lg:w-[26rem] lg:shrink-0">
+          <AssistantPanel
+            teamId={form.team_id}
+            projectId={params.id}
+            formId={form.id}
+            onChanged={load}
+            onClose={() => setAssistantOpen(false)}
+          />
+        </aside>
+      )}
     </div>
   );
 }

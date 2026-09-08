@@ -103,11 +103,6 @@ export function getResendApiKey(): string | null {
   return process.env.RESEND_API_KEY?.trim() || null;
 }
 
-/** Clé OpenRouter pour la génération de formulaire par IA — serveur uniquement, optionnelle. */
-export function getOpenRouterApiKey(): string | null {
-  return process.env.OPENROUTER_API_KEY?.trim() || null;
-}
-
 /** Adresse d'expédition par défaut des notifications (doit être un domaine vérifié Resend). */
 export const NOTIFICATION_FROM_EMAIL = (
   process.env.NOTIFICATION_FROM_EMAIL ?? 'notifications@notifications.mooove.group'

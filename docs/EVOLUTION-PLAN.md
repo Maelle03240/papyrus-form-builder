@@ -536,9 +536,64 @@ commissions qu'il n'a pas apportées) ; un code inconnu n'attribue rien et
 n'empêche pas l'inscription. Le code voyage dans l'URL et jamais dans un cookie :
 un cookie survivrait à la visite d'un autre lien.
 
-**7 — Couche IA.** Réglages (clé chiffrée, modèle, budget), couche outils,
-orchestrateur, assistant de création, panneau de conversation. Suppression de
-`/api/generate-form` et d'OpenRouter.
+**7 — Couche IA.** ✅ **Fait le 08/09/2026.** Réglages par espace (clé chiffrée,
+modèle, budget), 34 outils typés, orchestrateur en flux sur l'API Responses,
+assistant de création, panneau de conversation ancré dans le constructeur.
+`/api/generate-form` et OpenRouter supprimés, ainsi que le second chemin où l'on
+collait à la main le JSON produit par son propre ChatGPT. Migration 010.
+
+**Aucun JSON brut, et c'est toute l'architecture.** L'ancienne route demandait un
+objet complet à un modèle et l'importait tel quel : un type de champ inventé, un
+identifiant qui ne désigne rien, une règle logique qui pointe dans le vide
+passaient sans que rien ne les arrête. L'IA appelle désormais des outils nommés,
+validés par Zod, refusés s'ils ne tiennent pas — et **exécutés sous la session de
+l'utilisateur, donc sous RLS**. Elle ne peut toucher aucune donnée que la
+personne devant l'écran ne pourrait toucher elle-même ; un `service_role` ici,
+plus simple à écrire, aurait signifié qu'une phrase mal tournée peut atteindre le
+formulaire d'une autre équipe.
+
+**Les outils de lecture comptent autant que ceux d'écriture.** `describe_form` et
+`describe_project` ne figuraient pas au tableau du plan ; sans eux, le modèle ne
+connaît aucun identifiant de question et doit en inventer pour écrire une règle,
+un prix ou une condition — exactement ce qu'on supprime.
+
+**La clé vit par espace de travail, jamais dans l'environnement.** Une clé
+d'instance ferait payer une équipe pour les appels d'une autre, sans qu'aucune
+des deux puisse le voir. Elle est chiffrée par `lib/crypto.ts` dans une table
+sans AUCUNE policy — comme `tally_credentials` : rien de ce qu'elle contient n'a
+de raison d'atteindre un navigateur, fût-ce chiffré. L'écran n'affiche que son
+empreinte, « sk-…a3f9 ».
+
+**Les tarifs ne sont pas codés en dur.** Une table de prix figée dans le dépôt
+afficherait des montants faux avec l'aplomb d'un chiffre exact le jour où le
+fournisseur change sa grille. Les jetons, eux, sont un fait rendu par l'API :
+l'équipe saisit ses tarifs, le coût est figé à l'écriture avec ceux en vigueur —
+même raison que l'instantané de prix d'une réponse — et le plafond est vérifié
+AVANT chaque tour. À tarifs nuls, le coût vaut zéro et l'écran le dit en toutes
+lettres plutôt que de laisser croire à une surveillance qui n'existe pas.
+
+**Deux pièges rencontrés :**
+
+- **Une règle de logique citant une question inexistante était acceptée.**
+  Trouvé en éprouvant les outils contre la vraie base, pas en test unitaire : la
+  clé étrangère ne protège que la CIBLE d'une règle ; les conditions vivent dans
+  une colonne `jsonb`, où PostgreSQL n'a rien à contrôler. La règle ne se
+  déclenchait jamais, ne journalisait rien, et ne se serait découverte que le
+  jour où un répondant dit n'avoir pas vu la question promise. Les identifiants
+  cités sont désormais vérifiés par `add_logic_rule`, `set_visibility` et
+  `add_email_rule`.
+- **Les écritures sur un champ ne portaient que sur son identifiant.** La RLS
+  s'arrête à l'espace de travail : rien n'empêchait de modifier au passage la
+  question d'un formulaire voisin. Toutes sont bornées au formulaire ouvert.
+
+**Ce qui a été éprouvé en production** : les réglages aller-retour avec la clé
+chiffrée en base et jamais relue, le refus au-delà du plafond (409, avant tout
+appel au fournisseur), le refus d'accès à une autre équipe (404 sur les trois
+routes), un tour complet de bout en bout dont l'erreur du fournisseur est
+traduite en phrase actionnable, et surtout **un formulaire entier construit par
+la couche d'outils contre la vraie base** — six questions, une condition
+d'affichage, une règle de logique, trois prix, TVA, publication — puis ouvert et
+rendu correctement à son adresse publique.
 
 **8 — Voix et durcissement.** Realtime en WebRTC, revue RLS de chaque nouvelle
 table, audit des routes `service_role`, couverture Playwright du formulaire
@@ -559,6 +614,14 @@ public, de la tarification et du parcours partenaire.
 - **Pas d'encaissement de paiement.** Jamais demandé, absent de mooove-invoice.
 
 ## 5. Risques
+
+- **Aucun appel réel à `gpt-5.6-terra` n'a été passé.** Aucune clé OpenAI n'est
+  disponible sur ce poste : la chaîne est vérifiée jusqu'au fournisseur inclus
+  (la clé d'essai est refusée, et le refus est traduit correctement), et la
+  couche d'outils est éprouvée contre la vraie base — mais le jugement du modèle
+  lui-même, lui, ne l'est pas. Ce qui reste à voir au premier vrai message :
+  qu'il appelle `describe_form` avant d'agir plutôt que d'inventer, et qu'il
+  s'arrête au lieu d'enchaîner sur une suppression.
 
 - **Le parcours partenaire n'a jamais été parcouru de bout en bout par un vrai
   compte.** L'attribution, le registre, les vues, les droits et les quatre routes

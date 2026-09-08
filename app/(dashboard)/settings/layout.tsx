@@ -3,7 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Settings, Users, User, Plug, ShieldCheck } from 'lucide-react';
+import { Settings, Users, User, Plug, ShieldCheck, Sparkles } from 'lucide-react';
 import { SettingsHeader } from '@/components/ui/SettingsHeader';
 import { cn } from '@/lib/utils';
 
@@ -26,6 +26,12 @@ const SETTINGS_NAVIGATION = [
     href: '/settings/team',
     icon: Users,
     description: 'Membres et invitations'
+  },
+  {
+    label: 'Assistant',
+    href: '/settings/assistant',
+    icon: Sparkles,
+    description: 'Clé, modèle et budget de l’IA'
   },
   {
     label: 'Intégrations',

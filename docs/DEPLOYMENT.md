@@ -51,11 +51,10 @@ ailleurs. Aucune de ces valeurs ne doit être commitée.
 | `R2_SECRET_ACCESS_KEY` | Vaultwarden — **serveur uniquement** |
 | `R2_PUBLIC_BASE_URL` | `https://media.mooove.ltd` |
 | `NEXT_PUBLIC_R2_PUBLIC_BASE_URL` | `https://media.mooove.ltd` |
-| `APP_ENCRYPTION_KEY` | Chiffre les secrets tiers en base (clés Tally, jetons Google) et signe les jetons d'accès aux formulaires protégés. `openssl rand -base64 32` |
+| `APP_ENCRYPTION_KEY` | Chiffre les secrets tiers en base (clés Tally, **clé d'API de l'assistant**, jetons Google) et signe les jetons d'accès aux formulaires protégés. `openssl rand -base64 32` |
 | `IP_HASH_SALT` | Sel du hachage d'IP des réponses. `openssl rand -hex 16` |
 | `RESEND_API_KEY` | *Optionnel* — sans lui, invitations et notifications de réponse ne partent pas |
 | `NOTIFICATION_FROM_EMAIL` | *Optionnel* — expéditeur des notifications. Domaine vérifié Resend obligatoire |
-| `OPENROUTER_API_KEY` | *Optionnel* — sans lui, la génération IA est désactivée |
 | `GOOGLE_CLIENT_ID` | *Optionnel* — intégration Google Sheets (voir §5) |
 | `GOOGLE_CLIENT_SECRET` | *Optionnel* — **serveur uniquement** |
 | `GOOGLE_REDIRECT_URI` | *Optionnel* — déduit de `NEXT_PUBLIC_APP_URL` si absent |
@@ -71,6 +70,10 @@ Les clés serveur (`SUPABASE_SERVICE_ROLE_KEY`, `R2_SECRET_ACCESS_KEY`,
 Easypanel, mais comme le Dockerfile ne les déclare pas, elles ne sont ni
 utilisées ni gravées dans une couche de l'image. Ne pas ajouter d'`ARG` pour
 elles : elles apparaîtraient alors dans l'historique de l'image.
+
+⚠️ Sans `APP_ENCRYPTION_KEY`, l'assistant IA ne peut pas être configuré du tout :
+l'écran de réglages le dit et refuse d'enregistrer une clé plutôt que de la
+stocker en clair.
 
 ⚠️ Changer `APP_ENCRYPTION_KEY` après coup rend illisibles les clés Tally déjà
 enregistrées ; les équipes concernées devront reconnecter Tally. Sans
