@@ -23,6 +23,13 @@ interface Props {
   scoreResult?: ScoreResult;
   showScoreToRespondent?: boolean;
   embed?: EmbedOptions;
+  /**
+   * Force la mise en page téléphone, pour le cadre étroit de l'aperçu.
+   *
+   * La vraie page publique ne le passe pas : elle s'appuie sur les points de
+   * rupture CSS, qui regardent la fenêtre.
+   */
+  mobile?: boolean;
 }
 
 export function PublicScrollView({
@@ -35,7 +42,8 @@ export function PublicScrollView({
   validateRequiredFields,
   scoreResult,
   showScoreToRespondent,
-  embed
+  embed,
+  mobile
 }: Props) {
   const fields = form.fields?.filter(f => visibleFields.has(f.id)) || [];
   const hasInputs = fields.some(
@@ -73,8 +81,6 @@ export function PublicScrollView({
           <FormHeader
             theme={form.theme}
             selectedElement={null}
-            onSelectBanner={() => { }}
-            onSelectLogo={() => { }}
             preview={true}
           />
           <header className="mb-8">
@@ -115,6 +121,7 @@ export function PublicScrollView({
                 <PublicFieldCard
                   field={field}
                   form={form}
+                  mobile={mobile}
                   span="w-full"
                   responses={responses}
                   updateResponse={updateResponse}

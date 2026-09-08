@@ -7,6 +7,7 @@ import type { ScoreResult } from '@/lib/scoring';
 import type { EmbedOptions } from '@/lib/embed';
 import { isAnswerEmpty } from '@/lib/submission-format';
 import { fieldDescriptionId, fieldLabelId } from '@/lib/field-labelling';
+import { deservesOwnScreen, rendersOwnTitle } from '@/lib/public-fields';
 import { FormHeader } from '@/components/builder/FormHeader';
 import { ScoreDisplay } from '@/components/respondent/ScoreDisplay';
 import { FieldRenderer } from '@/components/builder/FieldRenderer';
@@ -28,6 +29,13 @@ interface Props {
   scoreResult?: ScoreResult;
   showScoreToRespondent?: boolean;
   embed?: EmbedOptions;
+  /**
+   * Force la mise en page téléphone, pour le cadre étroit de l'aperçu.
+   *
+   * La vraie page publique ne le passe pas : elle s'appuie sur les points de
+   * rupture CSS, qui regardent la fenêtre.
+   */
+  mobile?: boolean;
 }
 
 export function PublicTypeformView({
@@ -40,9 +48,21 @@ export function PublicTypeformView({
   validateRequiredFields,
   scoreResult,
   showScoreToRespondent,
-  embed
+  embed,
+  mobile = false
 }: Props) {
-  const fields = form.fields?.filter(f => visibleFields.has(f.id)) || [];
+  /**
+   * Ce qui mérite un écran.
+   *
+   * Le mode « une question par écran » promeut chaque champ en écran plein. Il
+   * promouvait donc aussi ce qui ne pose aucune question : un séparateur
+   * devenait un écran vide et numéroté, un champ caché un écran sans rien
+   * dedans — et le compteur d'accueil annonçait « 27 questions » pour
+   * vingt-cinq. Les deux autres modes ne montraient ni l'un ni l'autre : c'est
+   * ce mode-ci qui divergeait.
+   */
+  const fields =
+    form.fields?.filter((f) => visibleFields.has(f.id) && deservesOwnScreen(f)) || [];
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
@@ -247,8 +267,6 @@ export function PublicTypeformView({
               <FormHeader
                 theme={form.theme}
                 selectedElement={null}
-                onSelectBanner={() => {}}
-                onSelectLogo={() => {}}
                 preview={true}
               />
 
@@ -328,7 +346,12 @@ export function PublicTypeformView({
                   Le titre reste un `<h2>` — c'est bien un titre, et le mode
                   « une question par écran » n'a que lui pour repère. Un `<h2>`
                   ne peut pas porter de `for` : c'est le champ qui s'y rattache,
-                  par `aria-labelledby`, comme il le fait déjà pour un groupe. */}
+                  par `aria-labelledby`, comme il le fait déjà pour un groupe.
+
+                  Sauf pour un texte libre, une image, une vidéo ou un lien :
+                  leur rendu affiche déjà l'intitulé, et l'écran le montrait
+                  donc deux fois de suite. */}
+              {!rendersOwnTitle(currentField.type) && (
               <div className="mb-8">
                 <h2
                   id={fieldLabelId(currentField.id)}
@@ -357,16 +380,16 @@ export function PublicTypeformView({
                   </p>
                 )}
               </div>
+              )}
 
               {/* Champ de saisie */}
               <div className="mb-8">
-                {currentField.type === 'statement' ||
-                  currentField.type === 'image' ||
-                  currentField.type === 'video' ? (
+                {rendersOwnTitle(currentField.type) ? (
                   <PublicFieldCard
                     field={currentField}
                     form={form}
                     span="col-span-2"
+                    mobile={mobile}
                     responses={responses}
                     updateResponse={updateResponse}
                   />
@@ -375,7 +398,7 @@ export function PublicTypeformView({
                     field={currentField}
                     labelled
                     preview={false}
-                    mobile={false}
+                    mobile={mobile}
                     value={responses[currentField.id]}
                     onValueChange={(val) => {
                       updateResponse(currentField.id, val);

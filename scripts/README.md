@@ -38,6 +38,38 @@ ensuite tout ce qu'il a créé.
 et où il a confirmé qu'inviter un collègue échouait, faute des trois policies
 d'écriture sur `team_invitations`.
 
+## La revue complète
+
+```bash
+node scripts/audit-setup.mjs .audit/session.json
+node scripts/audit-form.mjs  .audit/session.json .audit/form.json
+
+E2E_BASE_URL=http://localhost:3100 E2E_SESSION_FILE=.audit/session.json E2E_AUDIT_SLUG=<le slug affiché> E2E_AUDIT_FORM=<l'identifiant affiché> E2E_AUDIT_PROJECT=<celui du projet>   npx playwright test tests/e2e/audit.spec.ts
+
+node scripts/audit-teardown.mjs .audit/session.json .audit/form.json
+```
+
+`tests/e2e/audit.spec.ts` traverse **tout** : chaque écran du tableau de bord,
+chaque onglet d'un projet et d'un formulaire, le constructeur, l'aperçu, les
+trois modes d'affichage, la publication, la réponse publique, et le retour de
+cette réponse dans l'onglet Réponses. Chaque page est écoutée : une erreur de
+console ou une exception non rattrapée fait échouer le test qui l'a provoquée.
+
+Le formulaire de revue porte **les vingt-sept types de champ**, deux sections,
+une règle de logique et de la tarification. C'est en le traversant écran par
+écran qu'on a trouvé le séparateur promu en question numérotée, le champ caché
+devenu un écran vide, l'intitulé affiché deux fois, et le message « ajoutez-en
+dans le panneau de droite » — destiné à l'auteur — montré au répondant sur un
+formulaire publié.
+
+Rien de tout cela n'est visible autrement : le typage est satisfait, les tests
+unitaires passent, et l'écran s'affiche.
+
+L'espace de travail créé est neuf et vide ; `audit-teardown.mjs` supprime le
+projet, l'équipe et le compte d'essai.
+
+---
+
 ### Pourquoi sur données réelles
 
 Sous PostgREST, une lecture refusée par la RLS renvoie `200 []` et une

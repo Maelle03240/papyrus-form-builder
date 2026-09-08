@@ -10,8 +10,17 @@ type HandleId = 'tl' | 'tm' | 'tr' | 'ml' | 'mr' | 'bl' | 'bm' | 'br';
 interface Props {
   theme: FormTheme;
   selectedElement: 'banner' | 'logo' | null;
-  onSelectBanner: () => void;
-  onSelectLogo: () => void;
+  /**
+   * Sélection de la bannière et du logo — le constructeur seulement.
+   *
+   * Facultatifs, et c'est ce qui compte : `ClosedFormPage` est un composant
+   * SERVEUR, et Next refuse qu'un composant serveur passe une fonction à un
+   * composant client. Rendre l'écran « ce formulaire est clos » plantait donc
+   * avec une erreur 500, pour la seule raison qu'il transmettait deux rappels
+   * vides à un en-tête qui, en mode aperçu, ne les appelle jamais.
+   */
+  onSelectBanner?: () => void;
+  onSelectLogo?: () => void;
   onThemeChange?: (patch: Partial<FormTheme>) => void;
   preview?: boolean;
 }

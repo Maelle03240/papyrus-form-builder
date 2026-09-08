@@ -12,6 +12,7 @@ import { resolveAttribution } from '@/lib/partners-server';
 import { applyCalculatedFields } from '@/lib/calculated';
 import { computeTotals, resolvePricing, resolveTier } from '@/lib/pricing';
 import { canBeRequired, isAnswerable, isAnswerEmpty } from '@/lib/submission-format';
+import { isVisibleToRespondent } from '@/lib/public-fields';
 import {
   checkDuplicateAnswer,
   checkSubmissionLimit,
@@ -259,7 +260,14 @@ export async function POST(request: NextRequest, context: { params: Promise<{ sl
 
   // 8. Champs obligatoires — parmi les seuls champs réellement visibles.
   const missingFields = answerableFields
-    .filter((f) => f.required && canBeRequired(f) && visibleFieldIds.has(f.id))
+    // `isVisibleToRespondent` en plus de la visibilité conditionnelle : un bloc
+    // répétable sans sous-question ou un total marqué « ne pas montrer » ne
+    // s'affiche pas, et exiger une réponse à une question qui n'a jamais été
+    // posée rend le formulaire impossible à envoyer — sans que rien ne dise
+    // laquelle manque, puisqu'elle n'est nulle part.
+    .filter(
+      (f) => f.required && canBeRequired(f) && isVisibleToRespondent(f) && visibleFieldIds.has(f.id)
+    )
     .filter((f) => isAnswerEmpty(responses[f.id]));
 
   if (missingFields.length > 0) {

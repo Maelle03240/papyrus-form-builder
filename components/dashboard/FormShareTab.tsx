@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { AnimatePresence } from 'framer-motion';
+import QRCode from 'qrcode';
 import { Check, Code2, Copy, Download, Link2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { toast } from '@/components/ui/Toast';
@@ -33,9 +34,37 @@ export function FormShareTab({ form }: { form: Form }) {
   const baseUrl = getBaseUrl();
   const publicUrl = `${baseUrl}/f/${form.slug}`;
 
-  const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=0&data=${encodeURIComponent(
-    publicUrl
-  )}`;
+  /**
+   * Le QR code, dessiné ici.
+   *
+   * Il venait d'`api.qrserver.com`, et **il ne s'affichait jamais** : la
+   * politique de sécurité de contenu n'autorise `img-src` que pour nos propres
+   * domaines, donc le navigateur bloquait l'image sans un mot à l'écran. Ouvrir
+   * la politique aurait été le geste facile ; il aurait aussi envoyé l'adresse
+   * de chaque formulaire à un service tiers à chaque ouverture de l'onglet, et
+   * fait dépendre une fonctionnalité de la disponibilité de ce service.
+   *
+   * Il est donc calculé dans le navigateur, en `data:` — ce que la politique
+   * autorise déjà. Aucune requête ne sort.
+   */
+  const [qrUrl, setQrUrl] = useState('');
+
+  useEffect(() => {
+    let cancelled = false;
+
+    void QRCode.toDataURL(publicUrl, { width: 400, margin: 1 })
+      .then((url) => {
+        if (!cancelled) setQrUrl(url);
+      })
+      .catch((error: unknown) => {
+        // Un QR absent n'empêche pas de partager : le lien est juste au-dessus.
+        console.error('Génération du QR code échouée:', error);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [publicUrl]);
 
   const snippet = buildEmbedSnippet({
     baseUrl,
@@ -206,16 +235,23 @@ export function FormShareTab({ form }: { form: Form }) {
         <h3 className="mb-3 font-display text-lg">QR Code</h3>
         <div className="flex flex-col items-center gap-3">
           <div className="rounded-md border border-border bg-white p-3">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={qrUrl} alt="QR code du formulaire" width={200} height={200} />
+            {qrUrl ? (
+              // Balise `img` et non `next/image` : la source est une `data:` URL
+              // calculée dans le navigateur, que l'optimiseur ne sait pas traiter.
+              <img src={qrUrl} alt="QR code du formulaire" width={200} height={200} />
+            ) : (
+              <div className="h-[200px] w-[200px] animate-pulse rounded bg-bg-elevated" />
+            )}
           </div>
-          <a
-            href={qrUrl}
-            download={`papyrus-${form.slug}-qr.png`}
-            className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline"
-          >
-            <Download className="h-3.5 w-3.5" /> Télécharger le QR
-          </a>
+          {qrUrl && (
+            <a
+              href={qrUrl}
+              download={`papyrus-${form.slug}-qr.png`}
+              className="inline-flex items-center gap-1.5 text-xs text-accent hover:underline"
+            >
+              <Download className="h-3.5 w-3.5" /> Télécharger le QR
+            </a>
+          )}
         </div>
         <p className="papyrus-meta mt-3 text-center text-xs">
           i. À imprimer ou afficher pour un événement / vitrine.

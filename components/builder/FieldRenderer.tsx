@@ -666,10 +666,19 @@ function ValidatedTextInput({
 
 const OTHER_VALUE = '__other__';
 
+/**
+ * La grille d'options — responsive en CSS, pas seulement par le drapeau.
+ *
+ * `mobile` n'est vrai que dans le cadre téléphone de l'aperçu : la vue publique
+ * ne le passe jamais. Les colonnes étaient donc figées à deux ou trois sur un
+ * vrai téléphone, où trois options tiennent dans trois cent quatre-vingt-dix
+ * pixels en se chevauchant. La classe de base est désormais à une colonne, et
+ * les colonnes n'apparaissent qu'à partir de `sm`.
+ */
 function optionsGridClass(cols: number, mobile: boolean): string {
   if (mobile || cols === 1) return 'space-y-2';
-  if (cols === 3) return 'grid grid-cols-3 gap-2';
-  return 'grid grid-cols-2 gap-2';
+  if (cols === 3) return 'grid grid-cols-1 gap-2 sm:grid-cols-3';
+  return 'grid grid-cols-1 gap-2 sm:grid-cols-2';
 }
 
 function SingleChoice({

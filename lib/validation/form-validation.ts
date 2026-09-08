@@ -63,7 +63,8 @@ function validatePhase2Field(field: Field, form: Form): FormValidationError[] {
     errors.push({
       fieldId: field.id,
       fieldLabel: label(),
-      error: "Ce bloc répétable n'a aucune sous-question : le répondant verra un cadre vide.",
+      error:
+        "Ce bloc répétable n'a aucune sous-question : il ne s'affichera pas du tout sur le formulaire publié.",
       severity: 'error'
     });
   }

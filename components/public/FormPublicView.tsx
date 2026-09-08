@@ -11,6 +11,7 @@ import { evaluateFormVisibility } from '@/lib/visibility';
 import { PARTNER_CODE_PARAM } from '@/lib/partners';
 import { getBackgroundStyle } from '@/lib/theme';
 import { canBeRequired, isAnswerEmpty } from '@/lib/submission-format';
+import { isVisibleToRespondent } from '@/lib/public-fields';
 import type { EmbedOptions } from '@/lib/embed';
 import {} from '@/components/builder/FormHeader';
 import { PublicScrollView } from './PublicScrollView';
@@ -28,9 +29,29 @@ interface Props {
    * Joint à l'envoi : sans lui, un formulaire protégé refuse la soumission.
    */
   accessToken?: string;
+  /**
+   * L'aperçu du constructeur.
+   *
+   * Le même composant, aux deux endroits : c'est tout l'intérêt. L'aperçu
+   * dupliquait auparavant les trois vues, et les deux copies avaient divergé —
+   * l'aperçu évaluait la visibilité avec les seules règles de logique, quand la
+   * vraie page y ajoutait les verrous de champ. Un formulaire pouvait donc
+   * s'afficher correctement à l'auteur et masquer une question au répondant.
+   *
+   * Ce que ce drapeau change, et rien d'autre : on n'envoie pas, on
+   * n'enregistre pas de réponse partielle.
+   */
+  preview?: boolean;
+  /**
+   * Force la mise en page téléphone — le cadre étroit de l'aperçu.
+   *
+   * Les points de rupture CSS regardent la fenêtre, pas le cadre : sans ce
+   * drapeau, le cadre téléphone de l'aperçu afficherait la mise en page bureau.
+   */
+  mobile?: boolean;
 }
 
-export function FormPublicView({ form, embed, accessToken }: Props) {
+export function FormPublicView({ form, embed, accessToken, preview, mobile }: Props) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submissionId, setSubmissionId] = useState<string | null>(null);
   const [invoiceNumber, setInvoiceNumber] = useState<string | null>(null);
@@ -52,7 +73,9 @@ export function FormPublicView({ form, embed, accessToken }: Props) {
 
   // Enregistrement des réponses partielles, si l'auteur l'a activé
   const partial = usePartialSubmission({
-    enabled: settings.partial_submissions === true,
+    // Un aperçu n'enregistre rien : l'auteur qui essaie son propre formulaire
+    // ne doit pas apparaître dans ses réponses en cours.
+    enabled: settings.partial_submissions === true && !preview,
     formId: form.id,
     slug: form.slug,
     language,
@@ -127,6 +150,15 @@ export function FormPublicView({ form, embed, accessToken }: Props) {
   // Soumission du formulaire
   const handleSubmit = async () => {
     if (isSubmitting) return;
+
+    // L'aperçu va jusqu'au bout — écran de remerciement compris, parce que
+    // c'est aussi ce que l'auteur veut voir — mais rien ne part.
+    if (preview) {
+      toast.success('Aperçu : le formulaire n’a pas été envoyé.');
+      setIsSubmitted(true);
+      return;
+    }
+
     setIsSubmitting(true);
 
     const partnerCode = readPartnerCode();
@@ -206,8 +238,12 @@ export function FormPublicView({ form, embed, accessToken }: Props) {
    */
   const validateRequiredFields = () => {
     const fields = form.fields || [];
+    // La même règle que `/api/submit/[slug]` : une question qui n'a pas été
+    // posée ne peut pas être exigée. Les deux listes doivent coïncider, sans
+    // quoi l'écran réclame un champ que le serveur ignore, ou l'inverse.
     const visibleRequiredFields = fields.filter(
-      (f) => f.required && visibleFields.has(f.id) && canBeRequired(f)
+      (f) =>
+        f.required && visibleFields.has(f.id) && canBeRequired(f) && isVisibleToRespondent(f)
     );
 
     const missingFields = visibleRequiredFields.filter((f) => isAnswerEmpty(responses[f.id]));
@@ -242,7 +278,8 @@ export function FormPublicView({ form, embed, accessToken }: Props) {
     validateRequiredFields,
     scoreResult: scoreResult || undefined,
     showScoreToRespondent,
-    embed
+    embed,
+    mobile
   };
 
   // Page de remerciement après soumission

@@ -24,6 +24,13 @@ interface Props {
   scoreResult?: ScoreResult;
   showScoreToRespondent?: boolean;
   embed?: EmbedOptions;
+  /**
+   * Force la mise en page téléphone, pour le cadre étroit de l'aperçu.
+   *
+   * La vraie page publique ne le passe pas : elle s'appuie sur les points de
+   * rupture CSS, qui regardent la fenêtre.
+   */
+  mobile?: boolean;
 }
 
 /** Types de question pour lesquels un clic vaut réponse définitive. */
@@ -39,7 +46,8 @@ export function PublicSectionsView({
   validateRequiredFields,
   scoreResult,
   showScoreToRespondent,
-  embed
+  embed,
+  mobile
 }: Props) {
   const fields = form.fields?.filter(f => visibleFields.has(f.id)) || [];
 
@@ -169,8 +177,6 @@ export function PublicSectionsView({
             <FormHeader
               theme={form.theme}
               selectedElement={null}
-              onSelectBanner={() => {}}
-              onSelectLogo={() => {}}
               preview={true}
             />
             <header className="mb-8">
@@ -211,6 +217,7 @@ export function PublicSectionsView({
                 field={field}
                 form={form}
                 span={span}
+                mobile={mobile}
                 responses={responses}
                 updateResponse={handleAnswer}
               />

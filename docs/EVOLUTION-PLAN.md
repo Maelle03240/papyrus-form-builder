@@ -667,6 +667,74 @@ menée de bout en bout dans un navigateur : le code du bon projet attribue, celu
 d'un projet voisin ne bloque pas l'envoi, et trois visites de trois visiteurs
 comptent trois clics.
 
+**9 — Revue complète.** ✅ **Faite le 08/09/2026.** Les huit phases finies, on a
+traversé l'application écran par écran, connecté, avec un formulaire portant les
+vingt-sept types de champ, deux sections, une règle de logique et de la
+tarification. Neuf défauts, dont aucun ne se voyait au typage ni dans les tests
+unitaires — et dont plusieurs étaient là depuis le début.
+
+**Le plus grave : l'aperçu montait ses propres vues.** Huit cents lignes qui
+recopiaient `components/public/` et devaient rester identiques. Elles ne
+l'étaient plus : l'aperçu évaluait la visibilité avec les seules règles de
+logique, quand la vraie page y ajoutait les verrous portés par les champs et les
+sections. Un formulaire pouvait s'afficher entier à l'auteur et masquer une
+question au répondant, sans que rien ne le signale. L'aperçu monte désormais **la
+vraie vue publique**, avec un drapeau `preview` qui n'empêche que l'envoi. La
+question « est-ce que l'aperçu dit la vérité ? » ne se pose plus.
+
+**Un formulaire clos répondait 500.** `ClosedFormPage` est un composant serveur ;
+il passait deux rappels vides à un composant client, ce que Next refuse de
+sérialiser. Le jour où un formulaire atteignait sa date de clôture, ses
+visiteurs recevaient une erreur serveur au lieu du message rédigé par l'auteur.
+
+**Le mode « une question à la fois » promouvait n'importe quoi en écran.** Un
+séparateur devenait un écran vide et numéroté ; un champ caché, un écran sans
+rien dedans ; et le compteur d'accueil annonçait vingt-sept questions pour
+vingt-trois. Les quatre types qui affichent déjà leur intitulé — texte libre,
+image, vidéo, lien — le voyaient répété deux fois de suite. Les deux autres
+modes ne montraient rien de tout cela : c'est ce mode-là qui divergeait.
+
+**Le texte destiné à l'auteur s'affichait au répondant.** « Aucune source —
+choisissez ce qui doit être compté dans le panneau de droite », sur un
+formulaire publié, devant quelqu'un qui n'a pas de panneau de droite. Même
+chose pour un bloc répétable sans sous-question. Le constructeur et la vue
+publique partagent leurs composants de champ — c'est voulu, l'auteur voit ce que
+le répondant verra — mais rien ne séparait les états d'auteur des états de
+répondant. `lib/public-fields.ts` le fait maintenant.
+
+**« Calculer sans montrer » ne cachait rien.** La case existait dans le
+constructeur, elle n'était honorée nulle part : le total s'affichait quand même.
+La valeur continue d'être calculée et enregistrée ; c'est l'affichage qui est
+retiré.
+
+**Les invitations d'équipe cassaient à quatre endroits**, chacun invisible
+depuis les autres : créer une invitation était refusé par la RLS (corrigé en
+phase 8) ; lister les membres échouait sur `PGRST200`, parce que le code
+demandait à PostgREST de suivre un lien entre `team_members` et `profiles` qui
+n'existe pas — les deux pointent vers `auth.users`, jamais l'un vers l'autre ;
+ouvrir un lien d'invitation ne montrait rien, l'invité n'ayant aucun droit sur
+l'équipe qu'on lui proposait de rejoindre ; et accepter appelait
+`accept_team_invitation`, une fonction que **le code appelle depuis toujours et
+qu'aucune migration n'a jamais créée**. La migration 012 apporte les deux
+fonctions manquantes, en `security definer` et par jeton exact — ouvrir la table
+en lecture aurait laissé n'importe qui énumérer tous les jetons en attente.
+
+**Le QR code de l'onglet Partage ne s'est jamais affiché.** Il venait
+d'`api.qrserver.com`, que la politique de sécurité de contenu n'autorise pas :
+le navigateur bloquait l'image sans un mot à l'écran. Il est désormais calculé
+dans le navigateur, en `data:` — ce qui règle aussi le fait qu'on envoyait
+l'adresse de chaque formulaire à un service tiers à chaque ouverture de l'onglet.
+
+**Les grilles d'options n'étaient pas responsives.** `grid-cols-2` et
+`grid-cols-3` sans point de rupture : le drapeau `mobile` n'est passé que par le
+cadre téléphone de l'aperçu, jamais par la vraie page. Trois options se
+chevauchaient donc sur un vrai téléphone.
+
+Ce qui reste vérifié à la main et ne peut pas l'être autrement : `tests/e2e/audit.spec.ts`,
+vingt-deux parcours, avec `scripts/audit-setup.mjs` pour l'espace d'essai et
+`scripts/audit-teardown.mjs` pour l'effacer. La console est écoutée sur chaque
+page — une erreur non rattrapée fait échouer le test qui l'a provoquée.
+
 ---
 
 ## 4. Décisions prises
@@ -682,6 +750,13 @@ comptent trois clics.
 - **Pas d'encaissement de paiement.** Jamais demandé, absent de mooove-invoice.
 
 ## 5. Risques
+
+- **Ce qui n'a pas de test de navigateur n'a pas été vu.** Les neuf défauts de la
+  revue ont tous la même forme : le typage est satisfait, les tests unitaires
+  passent, la page s'affiche — et quelque chose est faux à l'écran. Trois
+  d'entre eux dataient de la première phase. La leçon vaut plus que les
+  corrections : `tests/e2e/audit.spec.ts` doit être rejoué après chaque phase,
+  pas seulement écrit une fois.
 
 - **Aucun appel réel à `gpt-5.6-terra` n'a été passé.** Aucune clé OpenAI n'est
   disponible sur ce poste : la chaîne est vérifiée jusqu'au fournisseur inclus

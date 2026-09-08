@@ -78,8 +78,6 @@ export function PasswordGate({
           <FormHeader
             theme={form.theme}
             selectedElement={null}
-            onSelectBanner={() => {}}
-            onSelectLogo={() => {}}
             preview
           />
         )}

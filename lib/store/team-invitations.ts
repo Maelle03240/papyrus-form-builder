@@ -49,26 +49,41 @@ export async function isTeamAdmin(teamId: string): Promise<boolean> {
 export async function getTeamMembers(teamId: string): Promise<TeamMemberWithProfile[]> {
   const supabase = createClient();
 
+  /**
+   * Deux requêtes, et non une jointure imbriquée.
+   *
+   * `profiles:user_id (...)` demandait à PostgREST de suivre un lien qui
+   * n'existe pas : `team_members.user_id` référence `auth.users`, et
+   * `profiles.id` aussi — deux flèches vers la même cible, jamais l'une vers
+   * l'autre. PostgREST répondait donc `PGRST200`, la promesse échouait, et
+   * l'écran Paramètres → Équipe restait vide : ni membres, ni invitations, ni
+   * nom d'équipe. Le seul signe visible était une ligne dans la console.
+   *
+   * Le rapprochement se fait ici. Il coûte un aller-retour de plus et ne peut
+   * pas casser : rien à déduire, rien à mettre en cache.
+   */
   const { data, error } = await supabase
     .from('team_members')
-    .select(`
-      user_id,
-      team_id,
-      role,
-      joined_at,
-      profiles:user_id (
-        first_name,
-        last_name,
-        email
-      )
-    `)
+    .select('user_id, team_id, role, joined_at')
     .eq('team_id', teamId)
     .order('joined_at', { ascending: false });
 
   if (error) throw error;
 
-  return (data || []).map(member => {
-    const profile: any = Array.isArray(member.profiles) ? member.profiles[0] : member.profiles;
+  const members = data ?? [];
+  const ids = members.map((member) => member.user_id).filter(Boolean);
+
+  const { data: profiles } = ids.length
+    ? await supabase.from('profiles').select('id, first_name, last_name, email').in('id', ids)
+    : { data: [] };
+
+  const byId = new Map(
+    ((profiles ?? []) as { id: string; first_name?: string; last_name?: string; email?: string }[])
+      .map((profile) => [profile.id, profile])
+  );
+
+  return members.map(member => {
+    const profile = byId.get(member.user_id);
     return {
       user_id: member.user_id,
       team_id: member.team_id,
@@ -113,16 +128,28 @@ export async function createEmailInvitation(
     throw new Error('Only team admins can send invitations');
   }
 
-  // Vérifier si l'utilisateur n'est pas déjà membre
-  const { data: existingMember } = await supabase
-    .from('team_members')
-    .select('user_id')
-    .eq('team_id', teamId)
-    .eq('user_id', await getUserByEmail(email))
-    .single();
+  /**
+   * Déjà membre ?
+   *
+   * La question n'a de sens que si cette adresse correspond à un compte. Le
+   * code interrogeait `team_members` avec `user_id = null` quand ce n'était pas
+   * le cas — une comparaison qui ne renvoie jamais rien, et une requête pour
+   * rien à chaque invitation d'une personne qui n'a pas encore de compte,
+   * c'est-à-dire le cas courant.
+   */
+  const existingUserId = await getUserByEmail(email);
 
-  if (existingMember) {
-    throw new Error('This user is already a member of the team');
+  if (existingUserId) {
+    const { data: existingMember } = await supabase
+      .from('team_members')
+      .select('user_id')
+      .eq('team_id', teamId)
+      .eq('user_id', existingUserId)
+      .maybeSingle();
+
+    if (existingMember) {
+      throw new Error('Cette personne est déjà membre de cet espace de travail.');
+    }
   }
 
   // Annuler les invitations en attente pour ce même email
@@ -224,21 +251,35 @@ export async function acceptInvitation(invitationId: string): Promise<{ success:
 export async function getInvitationByToken(token: string): Promise<TeamInvitation | null> {
   const supabase = createClient();
 
-  const { data, error } = await supabase
-    .from('team_invitations')
-    .select(`
-      *,
-      teams (
-        name
-      )
-    `)
-    .eq('invite_token', token)
-    .eq('status', 'pending')
-    .gt('expires_at', new Date().toISOString())
-    .single();
+  /**
+   * Une fonction, et non une lecture de table.
+   *
+   * L'invité n'est ni membre ni administrateur de l'équipe qu'on lui propose de
+   * rejoindre : aucune policy de lecture ne le concerne, et la lecture directe
+   * renvoyait donc toujours zéro ligne. La page affichait « cette invitation
+   * n'existe pas ou a expiré » à quelqu'un qui tenait un lien parfaitement
+   * valide — depuis toujours.
+   *
+   * Ouvrir `team_invitations` en lecture aurait réglé cela et ouvert bien pire :
+   * qui peut lire la table peut lister tous les jetons en attente, donc
+   * rejoindre n'importe quelle équipe. `invitation_by_token` exige le jeton
+   * exact et ne se parcourt pas.
+   */
+  const { data, error } = await supabase.rpc('invitation_by_token', { p_token: token });
 
-  if (error || !data) return null;
-  return data;
+  const row = Array.isArray(data) ? data[0] : data;
+  if (error || !row) return null;
+
+  return {
+    id: row.id,
+    team_id: row.team_id,
+    role: row.role,
+    invitation_type: row.invitation_type,
+    email: row.email,
+    expires_at: row.expires_at,
+    status: 'pending',
+    teams: { name: row.team_name }
+  } as unknown as TeamInvitation;
 }
 
 /**
@@ -289,11 +330,14 @@ export async function changeMemberRole(teamId: string, userId: string, newRole: 
 async function getUserByEmail(email: string): Promise<string | null> {
   const supabase = createClient();
 
+  // `maybeSingle` : une adresse inconnue est le cas NORMAL quand on invite
+  // quelqu'un. `single` en faisait une erreur PostgREST journalisée à chaque
+  // invitation.
   const { data } = await supabase
     .from('profiles')
     .select('id')
-    .eq('email', email)
-    .single();
+    .eq('email', email.trim().toLowerCase())
+    .maybeSingle();
 
   return data?.id || null;
 }

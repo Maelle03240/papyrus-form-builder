@@ -10,6 +10,7 @@ import {
   labelsSingleControl
 } from '@/lib/field-labelling';
 import { getFieldIcon, isIconVisible } from '@/lib/field-icons';
+import { isVisibleToRespondent } from '@/lib/public-fields';
 import { quantityKey, readQuantityMap, resolvePricing } from '@/lib/pricing';
 import { cn } from '@/lib/utils';
 import { createContext, useMemo } from 'react';
@@ -22,6 +23,13 @@ interface Props {
   span: string;
   responses: Record<string, any>;
   updateResponse: (fieldId: string, response: any) => void;
+  /**
+   * Force la mise en page téléphone, pour le cadre étroit de l'aperçu.
+   *
+   * La vraie page publique ne le passe pas : elle s'appuie sur les points de
+   * rupture CSS, qui regardent la fenêtre.
+   */
+  mobile?: boolean;
 }
 
 export function PublicFieldCard({
@@ -29,7 +37,8 @@ export function PublicFieldCard({
   form,
   span,
   responses,
-  updateResponse
+  updateResponse,
+  mobile = false
 }: Props) {
   const isRespondentUpload =
     ['file', 'image', 'video'].includes(field.type) &&
@@ -53,6 +62,17 @@ export function PublicFieldCard({
       onQuantitiesChange: (next) => updateResponse(quantityKey(field.id), next)
     };
   }, [form, responses, field.id, updateResponse]);
+
+  /**
+   * Rien à demander, rien à montrer.
+   *
+   * Un champ caché, un total que l'auteur a choisi de garder pour lui, un bloc
+   * répétable sans sous-question, un champ calculé sans source : aucun n'attend
+   * de réponse. Les deux derniers affichaient jusqu'ici le message destiné à
+   * l'AUTEUR — « ajoutez-en dans le panneau de droite » — sur un formulaire
+   * publié, devant quelqu'un qui n'a pas de panneau de droite.
+   */
+  if (!isVisibleToRespondent(field)) return null;
 
   // En mode Créateur uniquement : on rend le contenu média enveloppé dans une carte avec titre et description
   if (['file', 'image', 'video'].includes(field.type) && !isRespondentUpload) {
@@ -86,7 +106,7 @@ export function PublicFieldCard({
               }
             }}
             preview={true}
-            mobile={false}
+            mobile={mobile}
           />
         </div>
       </div>
@@ -114,10 +134,6 @@ export function PublicFieldCard({
       </div>
     );
   }
-
-  // Un champ caché ne se voit jamais : sa valeur vient de l'URL, et elle est
-  // déjà en mémoire. Occuper une place dans la grille laisserait un trou.
-  if (field.type === 'hidden') return null;
 
   // Statement = texte libre informatif
   if (field.type === 'statement') {
@@ -155,7 +171,7 @@ export function PublicFieldCard({
             field={field}
             labelled
             preview={false}
-            mobile={false}
+            mobile={mobile}
             value={responses[field.id]}
             onValueChange={(val) => updateResponse(field.id, val)}
             responses={responses}

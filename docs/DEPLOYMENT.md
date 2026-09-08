@@ -105,6 +105,10 @@ rien qu'un hachage réversible).
    - À partir de `009`, les appliquer avec **`-U supabase_admin`** et non
      `-U postgres` : `postgres` n'est pas propriétaire des tables et se voit
      refuser les `alter table`.
+   - `012_team_invitations.sql` apporte `invitation_by_token` et
+     `accept_team_invitation` — cette dernière est appelée par le code depuis
+     toujours et n'avait jamais été créée : sans elle, rejoindre une équipe par
+     invitation échoue.
    - `011_hardening.sql` **retire à `anon` tout droit sur les tables** — le
      visiteur ne lit que les vues `public_*` — et ramène ceux de `authenticated`
      au niveau exact de ses policies. Après l'avoir appliquée, lancer
